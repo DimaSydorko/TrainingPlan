@@ -1,4 +1,6 @@
-{
+import 'dotenv/config';
+
+export default {
   "expo": {
     "name": "TrainingPlanTogether",
     "slug": "TrainingPlanTogether",
@@ -27,6 +29,6 @@
     },
     "web": {
       "favicon": "./src/Assets/favicon.png"
-    }
+    },
   }
 }
