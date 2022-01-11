@@ -1,76 +1,44 @@
-import React, {useState} from 'react'
-import {Text, TextInput, TouchableOpacity, View} from 'react-native'
+import React, {useContext, useState} from 'react'
+import {Text, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import firebase from "../../Utils/firebase";
 
 import {NavigationNavigate} from "../../Utils/constants";
+import {ConfirmButton, MyTextInput} from "../../Common";
+import {AuthContext} from "../../Providers/AuthProvider/AuthProvider";
 import styles from './LoginScreenStyles';
 
 export default function LoginScreen({navigation}: any) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [inputData, setInputData] = useState({email: '', password: ''})
+
+  const {signIn} = useContext(AuthContext)
 
   const onFooterLinkPress = () => {
     navigation.navigate(NavigationNavigate.Registration)
   }
 
-  const onLoginPress = () => {
-    return firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then((response: any) => {
-
-        const uid = response.user.uid
-        const usersRef = firebase.firestore().collection('users')
-        usersRef
-          .doc(uid)
-          .get()
-          .then(firestoreDocument => {
-            if (!firestoreDocument.exists) {
-              alert("User does not exist anymore.")
-              return;
-            }
-            const user = firestoreDocument.data()
-            navigation.navigate('Home', {user})
-          })
-          .catch(error => {
-            alert(error)
-          });
-      })
-      .catch(error => {
-        alert(error)
-      })
+  const onLoginPress = async () => {
+    await signIn(inputData.email, inputData.password)
+    navigation.navigate('Home')
   }
 
   return (
     <View style={styles.container}>
       <KeyboardAwareScrollView
         style={{ flex: 1, width: '100%' }}
-        keyboardShouldPersistTaps="always">
-        <TextInput
-          style={styles.input}
+        keyboardShouldPersistTaps="always"
+      >
+        <MyTextInput
+          value={inputData.email}
+          onChangeText={email => setInputData({...inputData, email})}
           placeholder='E-mail'
-          placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setEmail(text)}
-          value={email}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
         />
-        <TextInput
-          style={styles.input}
-          placeholderTextColor="#aaaaaa"
+        <MyTextInput
           secureTextEntry
+          value={inputData.password}
+          onChangeText={password => setInputData({...inputData, password})}
           placeholder='Password'
-          onChangeText={(text) => setPassword(text)}
-          value={password}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
         />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => onLoginPress()}>
-          <Text style={styles.buttonTitle}>Log in</Text>
-        </TouchableOpacity>
+        <ConfirmButton onPress={onLoginPress} header='Log in'/>
         <View style={styles.footerView}>
           <Text style={styles.footerText}>Don't have an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Sign up</Text></Text>
         </View>

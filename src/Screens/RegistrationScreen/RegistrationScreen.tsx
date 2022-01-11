@@ -1,52 +1,27 @@
-import React, {useState} from 'react'
-import {Text, TextInput, TouchableOpacity, View} from 'react-native'
+import React, {useContext, useState} from 'react'
+import {Text, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import firebase from '../../Utils/firebase';
 
-import {FirebaseDBCollection, NavigationNavigate} from "../../Utils/constants";
+import {AuthContext} from "../../Providers/AuthProvider/AuthProvider";
+import {NavigationNavigate} from "../../Utils/constants";
+import {ConfirmButton, MyTextInput} from "../../Common";
 import styles from '../LoginScreen/LoginScreenStyles';
 
 export default function RegistrationScreen({navigation}: any) {
-  const [fullName, setFullName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const [inputData, setInputData] = useState({fullName: '', email: '', password: '', confirmPassword: ''})
+  const {signUp} = useContext(AuthContext)
 
   const onFooterLinkPress = () => {
     navigation.navigate(NavigationNavigate.Login)
   }
 
-  const onRegisterPress = () => {
-    if (password !== confirmPassword) {
+  const onRegister = async () => {
+    if (inputData.password !== inputData.confirmPassword) {
       alert("Passwords don't match.")
       return
     }
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then((response: any) => {
-        const uid = response.user.uid
-        const data = {
-          id: uid,
-          email,
-          fullName,
-        };
-
-        firebase
-          .firestore()
-          .collection(FirebaseDBCollection.Users)
-          .doc(uid)
-          .set(data)
-          .then(() => {
-            navigation.navigate(NavigationNavigate.Home, {user: data})
-          })
-          .catch((error: string) => {
-            alert(error)
-          });
-      })
-      .catch((error: string) => {
-        alert(error)
-      });
+    signUp(inputData.email, inputData.password, inputData.fullName)
+    navigation.navigate(NavigationNavigate.Home)
   }
 
   return (
@@ -54,49 +29,29 @@ export default function RegistrationScreen({navigation}: any) {
       <KeyboardAwareScrollView
         style={{ flex: 1, width: '100%' }}
         keyboardShouldPersistTaps="always">
-        <TextInput
-          style={styles.input}
+        <MyTextInput
+          value={inputData.fullName}
+          onChangeText={fullName => setInputData({...inputData, fullName})}
           placeholder='Full Name'
-          placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setFullName(text)}
-          value={fullName}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
         />
-        <TextInput
-          style={styles.input}
+        <MyTextInput
+          value={inputData.email}
+          onChangeText={email => setInputData({...inputData, email})}
           placeholder='E-mail'
-          placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setEmail(text)}
-          value={email}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
         />
-        <TextInput
-          style={styles.input}
-          placeholderTextColor="#aaaaaa"
+        <MyTextInput
           secureTextEntry
+          value={inputData.password}
+          onChangeText={password => setInputData({...inputData, password})}
           placeholder='Password'
-          onChangeText={(text) => setPassword(text)}
-          value={password}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
         />
-        <TextInput
-          style={styles.input}
-          placeholderTextColor="#aaaaaa"
+        <MyTextInput
           secureTextEntry
+          value={inputData.confirmPassword}
+          onChangeText={confirmPassword => setInputData({...inputData, confirmPassword})}
           placeholder='Confirm Password'
-          onChangeText={(text) => setConfirmPassword(text)}
-          value={confirmPassword}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
         />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => onRegisterPress()}>
-          <Text style={styles.buttonTitle}>Create account</Text>
-        </TouchableOpacity>
+        <ConfirmButton onPress={onRegister} header='Create account'/>
         <View style={styles.footerView}>
           <Text style={styles.footerText}>Already got an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Log in</Text></Text>
         </View>

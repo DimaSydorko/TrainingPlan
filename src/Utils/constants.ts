@@ -1,6 +1,6 @@
 
 export enum FirebaseDBCollection {
-  Users = 'users',
+  Users = 'users'
 }
 
 export enum NavigationNavigate {
