@@ -1,5 +1,6 @@
 import React from "react";
 import {TextInput, TextStyle} from 'react-native'
+import {colors} from "../../Theme/colors";
 import styles from "./styles";
 
 interface MyTextInputType {
@@ -15,7 +16,7 @@ export default function MyTextInput ({placeholder, style, onChangeText, value, s
   return (
     <TextInput
       style={[styles.input, style]}
-      placeholderTextColor="#aaaaaa"
+      placeholderTextColor={colors.text}
       secureTextEntry={secureTextEntry}
       placeholder={placeholder}
       onChangeText={(text) => onChangeText(text)}

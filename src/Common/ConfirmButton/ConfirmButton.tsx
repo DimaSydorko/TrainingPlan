@@ -1,6 +1,6 @@
 import styles from "./styles";
 import {Text, TextStyle, TouchableOpacity, ViewStyle} from "react-native";
-import React from "react";
+import React, {useEffect, useState} from "react";
 
 interface ConfirmButtonType {
   header: string;
@@ -11,11 +11,17 @@ interface ConfirmButtonType {
 }
 
 export default function ConfirmButton ({ onPress, header, headerStyle, style, disabled = false }:ConfirmButtonType) {
+  const [isPressed, setIsPressed] = useState(false);
+
   return (
     <TouchableOpacity
-      style={[styles.button, style]}
+      style={[styles.button,
+        isPressed ? styles.colorPressed : styles.color, style]}
       onPress={onPress}
+      activeOpacity={1}
       disabled={disabled}
+      onPressIn={() => setIsPressed(true)}
+      onPressOut={() => setIsPressed(false)}
     >
       <Text style={[styles.buttonTitle, headerStyle]}>{header}</Text>
     </TouchableOpacity>

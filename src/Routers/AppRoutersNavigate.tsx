@@ -1,10 +1,11 @@
 import React, {useContext} from 'react'
-import {NavigationContainer} from "@react-navigation/native";
 import 'react-native-gesture-handler';
-import { createStackNavigator } from '@react-navigation/stack'
+import {NavigationContainer} from "@react-navigation/native";
+import {createStackNavigator, StackNavigationOptions} from '@react-navigation/stack'
 import { LoginScreen, HomeScreen, RegistrationScreen } from '../Screens'
-import {NavigationNavigate} from "../Utils/constants";
+import {ScreenName} from "../Utils/constants";
 import {AuthContext} from "../Providers/AuthProvider/AuthProvider";
+import {theme} from "../Theme/theme";
 
 const Stack = createStackNavigator();
 
@@ -15,13 +16,21 @@ export default function AppRoutersNavigate() {
     <NavigationContainer>
       <Stack.Navigator>
         { user ? (
-          <Stack.Screen name={NavigationNavigate.Home}>
-            {() => <HomeScreen extraData={user} />}
+          <Stack.Screen name={ScreenName.Home} options={() => theme.stackScreenOptions() as StackNavigationOptions}>
+            {() => <HomeScreen/>}
           </Stack.Screen>
         ) : (
           <>
-            <Stack.Screen name={NavigationNavigate.Login} component={LoginScreen} />
-            <Stack.Screen name={NavigationNavigate.Registration} component={RegistrationScreen} />
+            <Stack.Screen
+              name={ScreenName.Login}
+              component={LoginScreen}
+              options={() => theme.stackScreenOptions() as StackNavigationOptions}
+            />
+            <Stack.Screen
+              name={ScreenName.Registration}
+              component={RegistrationScreen}
+              options={() => theme.stackScreenOptions() as StackNavigationOptions}
+            />
           </>
         )}
       </Stack.Navigator>
