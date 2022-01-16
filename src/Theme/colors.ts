@@ -6,7 +6,7 @@ export const colors = {
   black: '#353535',
   white: '#FFFFFF',
 
-  bg: '#f1f1f1',
+  background: '#f1f1f1',
   text: '#353535',
-  menu: '#f1f1f1',
+  menu: '#FFFFFF',
 }
