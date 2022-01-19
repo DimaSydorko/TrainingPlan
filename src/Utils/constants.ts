@@ -7,6 +7,10 @@ export enum FirebaseDBCollection {
 export enum ScreenName {
   Registration = 'Registration',
   Login = 'Login',
+  SavedPlans = 'Saved Plans',
+  SavedWorkouts = 'Saved Workouts',
+  Workout = 'Workout',
+  Plan = 'Plan',
   Home = 'Home'
 }
 

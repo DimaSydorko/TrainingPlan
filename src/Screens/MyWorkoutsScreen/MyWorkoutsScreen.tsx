@@ -2,10 +2,10 @@ import React from "react";
 import {Text} from "react-native";
 
 
-export default function PlansScreen() {
+export default function MyWorkoutsScreen() {
   return (
     <>
-      <Text>Plans</Text>
+      <Text>Workouts Screen</Text>
     </>
   )
 }

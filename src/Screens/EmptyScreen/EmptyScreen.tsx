@@ -1,15 +1,15 @@
 import React, {useContext} from 'react'
 import { Text, View } from 'react-native'
-import {theme} from "../../Theme/theme";
 import {AuthContext} from "../../Providers/AuthProvider/AuthProvider";
 import {ConfirmButton} from "../../Common";
+import {theme} from "../../Theme/theme";
 
-export default function HomeScreen() {
+export default function EmptyScreen() {
   const { signOut } = useContext(AuthContext)
 
   return (
-    <View style={[theme.container, theme.background]}>
-      <Text>Home Screen</Text>
+    <View style={[theme.containers.page, theme.view.background]}>
+      <Text>EmptyScreen</Text>
       <ConfirmButton header={'Sign out'} onPress={() => signOut()} />
     </View>
   )

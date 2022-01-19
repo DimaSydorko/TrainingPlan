@@ -1,16 +1,18 @@
 import React, {useContext, useState} from 'react'
 import {Text, View} from 'react-native'
+import {useNavigation} from "@react-navigation/native";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
 import {AsyncStorageKey, ScreenName} from "../../Utils/constants";
 import {ConfirmButton, MyTextInput} from "../../Common";
 import {AuthContext} from "../../Providers/AuthProvider/AuthProvider";
 import {userInitialState} from "../../../constants.local";
 import {asyncStorage} from "../../Utils/asyncStarage";
 import {theme} from "../../Theme/theme";
+import {Page, TextOrdinary} from "../../Common/Parents/Parents";
 
-export default function LoginScreen({navigation}: any) {
+export default function LoginScreen() {
   const [inputData, setInputData] = useState({email: '', password: ''})
+  const navigation = useNavigation<{ navigate: (name: string) => void }>()
 
   const {signIn} = useContext(AuthContext)
 
@@ -28,7 +30,7 @@ export default function LoginScreen({navigation}: any) {
   }
 
   return (
-    <View style={[theme.container, theme.background]}>
+    <Page style={theme.view.background}>
       <KeyboardAwareScrollView
         style={{flex: 1, width: '100%'}}
         keyboardShouldPersistTaps="always"
@@ -46,11 +48,11 @@ export default function LoginScreen({navigation}: any) {
         />
         <ConfirmButton onPress={onLoginPress} header='Log in'/>
         <ConfirmButton onPress={onLoginInitial} header='Log in Phone'/>
-        <View style={[theme.container, theme.margin.top20]}>
-          <Text style={theme.text}>Don't have an account? <Text onPress={onFooterLinkPress}
-                                                                style={theme.link}>Sign up</Text></Text>
-        </View>
+        <Page style={theme.margin.top20}>
+          <TextOrdinary>Don't have an account? <Text onPress={onFooterLinkPress}
+                                                     style={theme.text.link}>Sign up</Text></TextOrdinary>
+        </Page>
       </KeyboardAwareScrollView>
-    </View>
+    </Page>
   )
 }

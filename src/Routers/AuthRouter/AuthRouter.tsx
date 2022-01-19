@@ -8,9 +8,9 @@ import {AuthContext} from "../../Providers/AuthProvider/AuthProvider";
 import {theme} from "../../Theme/theme";
 import AppRouter from "../AppRouter/AppRouter";
 
-const Stack = createStackNavigator();
 
 export default function AuthRouter() {
+  const Stack = createStackNavigator();
   const { user } = useContext(AuthContext)
 
   return (
@@ -28,12 +28,12 @@ export default function AuthRouter() {
             <Stack.Screen
               name={ScreenName.Login}
               component={LoginScreen}
-              options={theme.stackScreenOptions}
+              options={theme.screenOptions}
             />
             <Stack.Screen
               name={ScreenName.Registration}
               component={RegistrationScreen}
-              options={theme.stackScreenOptions}
+              options={theme.screenOptions}
             />
           </>
         )}

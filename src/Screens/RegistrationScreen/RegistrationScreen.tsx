@@ -1,15 +1,17 @@
 import React, {useContext, useState} from 'react'
-import {Text, View} from 'react-native'
+import {Text} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
+import {useNavigation} from "@react-navigation/native";
 import {AuthContext} from "../../Providers/AuthProvider/AuthProvider";
 import {ScreenName} from "../../Utils/constants";
 import {ConfirmButton, MyTextInput} from "../../Common";
 import {theme} from "../../Theme/theme";
+import {Page, TextOrdinary} from "../../Common/Parents/Parents";
 
-export default function RegistrationScreen({navigation}: any) {
-  const [inputData, setInputData] = useState({fullName: '', email: '', password: '', confirmPassword: ''})
+export default function RegistrationScreen() {
+  const navigation = useNavigation<{ navigate: (name: string) => void }>()
   const {signUp} = useContext(AuthContext)
+  const [inputData, setInputData] = useState({fullName: '', email: '', password: '', confirmPassword: ''})
 
   const onFooterLinkPress = () => {
     navigation.navigate(ScreenName.Login)
@@ -25,9 +27,9 @@ export default function RegistrationScreen({navigation}: any) {
   }
 
   return (
-    <View style={[theme.container, theme.background]}>
+    <Page style={theme.view.background}>
       <KeyboardAwareScrollView
-        style={{ flex: 1, width: '100%' }}
+        style={{flex: 1, width: '100%'}}
         keyboardShouldPersistTaps="always">
         <MyTextInput
           value={inputData.fullName}
@@ -52,10 +54,10 @@ export default function RegistrationScreen({navigation}: any) {
           placeholder='Confirm Password'
         />
         <ConfirmButton onPress={onRegister} header='Create account'/>
-        <View style={[theme.container, theme.margin.top20]}>
-          <Text style={theme.text}>Already got an account? <Text onPress={onFooterLinkPress} style={theme.link}>Log in</Text></Text>
-        </View>
+        <Page style={theme.margin.top20}>
+          <TextOrdinary>Already got an account? <Text onPress={onFooterLinkPress} style={theme.text.link}>Log in</Text></TextOrdinary>
+        </Page>
       </KeyboardAwareScrollView>
-    </View>
+    </Page>
   )
 }
