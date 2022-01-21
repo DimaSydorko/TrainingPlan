@@ -12,12 +12,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
     padding: 12,
   },
-  color: {
-    backgroundColor: colors.primary,
-  },
-  colorPressed: {
-    backgroundColor: `${colors.primary}90`,
-  },
   buttonTitle: {
     color: colors.white,
     fontSize: 16,

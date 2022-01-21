@@ -8,14 +8,17 @@ export interface UserDataType {
   friendsUIDs: string[];
 }
 
+export interface ApproachType {
+  weight: number;
+  repeats: number;
+}
+
 export interface ExerciseType {
   name: string;
   breakTimeInSec: number;
   repeats: number;
-  currentRepeats?: number[];
-  weight: number;
+  approaches: ApproachType[];
   imgURL?: string;
-  laps: number;
   // author: {
   //   uid: string;
   //   name: string;

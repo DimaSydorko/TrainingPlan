@@ -1,8 +1,7 @@
 import React from "react";
-import {Text, View} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import {FlexStart, TextSecondary} from "../Parents/Parents";
 import {ExerciseType} from "../../Utils/types";
-import {theme} from "../../Theme/theme";
 import {colors} from "../../Theme/colors";
 
 interface WorkoutDurationType {
@@ -30,12 +29,12 @@ export default function WorkoutDuration({exercises}: WorkoutDurationType) {
   exercises.forEach(exercise => time += exercise.breakTimeInSec);
 
   return (
-    <View style={theme.containers.alignCenter}>
+    <FlexStart>
       <Icon name="timer-outline" size={18} color={`${colors.text}80`}/>
-      <Text style={theme.text.secondary}>
+      <TextSecondary>
         {secondsToMinSec(time)}
-      </Text>
-    </View>
+      </TextSecondary>
+    </FlexStart>
   )
 }
 

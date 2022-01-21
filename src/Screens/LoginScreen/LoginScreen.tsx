@@ -31,10 +31,7 @@ export default function LoginScreen() {
 
   return (
     <Page style={theme.view.background}>
-      <KeyboardAwareScrollView
-        style={{flex: 1, width: '100%'}}
-        keyboardShouldPersistTaps="always"
-      >
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <MyTextInput
           value={inputData.email}
           onChangeText={email => setInputData({...inputData, email})}

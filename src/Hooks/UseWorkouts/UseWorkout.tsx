@@ -10,19 +10,42 @@ const myWorkoutsInitial = [
         name: 'Initial exercise 1',
         breakTimeInSec: 60,
         repeats: 12,
-        currentRepeats: [12, 10, 8],
-        weight: 10,
-        laps: 3,
-      }, {
+        approaches: [
+          {
+            weight: 30,
+            repeats: 12
+          }, {
+            weight: 30,
+            repeats: 10
+          }, {
+            weight: 30,
+            repeats: 8
+          }
+        ],
+      },
+      {
         name: 'Initial exercise 2',
         breakTimeInSec: 30,
         repeats: 12,
-        currentRepeats: [20, 18, 16],
-        weight: 0,
-        laps: 4,
+        approaches: [
+          {
+            weight: 30,
+            repeats: 12
+          }, {
+            weight: 30,
+            repeats: 10
+          }, {
+            weight: 30,
+            repeats: 8
+          }, {
+            weight: 30,
+            repeats: 8
+          }
+        ],
       }
     ],
-  }, {
+  },
+  {
     uid: 'Workout_Uid_2',
     name: 'Initial Workout 2',
     exercises: [
@@ -30,9 +53,18 @@ const myWorkoutsInitial = [
         name: 'Initial exercise 1',
         breakTimeInSec: 60,
         repeats: 12,
-        currentRepeats: [12, 10, 8],
-        weight: 10,
-        laps: 3,
+        approaches: [
+          {
+            weight: 30,
+            repeats: 12
+          }, {
+            weight: 30,
+            repeats: 10
+          }, {
+            weight: 30,
+            repeats: 8
+          }
+        ]
       }
     ],
   }

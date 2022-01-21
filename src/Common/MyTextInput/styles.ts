@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import {colors} from "../../Theme/colors";
+import {screen} from "../../Utils/constants";
 
 export default StyleSheet.create({
   input: {
@@ -10,8 +11,7 @@ export default StyleSheet.create({
     backgroundColor: colors.white,
     marginTop: 10,
     marginBottom: 10,
-    marginLeft: 30,
-    marginRight: 30,
-    paddingLeft: 16,
+    paddingHorizontal: 12,
+    width: screen.vw - 40,
   }
 })

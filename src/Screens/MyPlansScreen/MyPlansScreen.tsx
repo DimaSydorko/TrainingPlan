@@ -2,9 +2,9 @@ import React, {useContext} from "react";
 import {useNavigation} from "@react-navigation/native";
 import {ScreenName} from "../../Utils/constants";
 import {PlansContext} from "../../Providers/PlansProvider/PlansProvider";
+import {CardPressed, Page, TextHeader, TextSecondary} from "../../Common/Parents/Parents";
 import {theme} from "../../Theme/theme";
 import {colors} from "../../Theme/colors";
-import {CardPressed, Page, TextHeader, TextSecondary} from "../../Common/Parents/Parents";
 
 interface MyPlansScreenType {
   setPlaneName: (name: string) => void;

@@ -8,5 +8,6 @@ export const colors = {
 
   background: '#f1f1f1',
   text: '#353535',
+  textSecondary: '#00000080',
   menu: '#FFFFFF',
 }

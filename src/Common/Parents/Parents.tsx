@@ -20,13 +20,13 @@ interface OnPressType {
 
 export const Page = ({children, style}: ParentProps) => {
   return (
-    <SafeAreaView style={[theme.containers.page, style]}>
+    <SafeAreaView style={[theme.containers.center, style]}>
       {children}
     </SafeAreaView>
   )
 }
 
-export const TextSecondary = ({children, color, style}: ParentProps & ColorType) => {
+export const TextSecondary = ({children, color = colors.textSecondary, style}: ParentProps & ColorType) => {
   return (
     <Text style={[{...theme.text.secondary, color}, style]}>
       {children}
@@ -53,6 +53,30 @@ export const TextOrdinary = ({children, color = colors.text, style}: ParentProps
 export const FlexSpaceBetween = ({children, style}: ParentProps) => {
   return (
     <View style={[theme.containers.spaceBetween, style]}>
+      {children}
+    </View>
+  )
+}
+
+export const FlexCenter = ({children, style}: ParentProps) => {
+  return (
+    <View style={[theme.containers.center, style]}>
+      {children}
+    </View>
+  )
+}
+
+export const FlexAlignCenter = ({children, style}: ParentProps) => {
+  return (
+    <View style={[theme.containers.alignCenter, style]}>
+      {children}
+    </View>
+  )
+}
+
+export const FlexEnd = ({children, style}: ParentProps) => {
+  return (
+    <View style={[theme.containers.end, style]}>
       {children}
     </View>
   )

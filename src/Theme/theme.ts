@@ -11,13 +11,13 @@ export const theme = {
     } as TextStyle,
     ordinary: {
       color: colors.text,
-      fontSize: 16,
+      fontSize: 18,
       fontWeight: "500",
     } as TextStyle,
     secondary: {
       color: `${colors.text}80`,
       fontSize: 14,
-      fontWeight: "500",
+      fontWeight: "600",
     } as TextStyle,
     link: {
       color: colors.primary,
@@ -49,7 +49,7 @@ export const theme = {
   },
 
   containers: {
-    page: {
+    center: {
       flex: 1,
       alignItems: 'center'
     } as ViewStyle,
@@ -64,6 +64,17 @@ export const theme = {
       width: '100%',
       display: 'flex',
       justifyContent: "space-between",
+      flexDirection: 'row',
+      alignItems: "center",
+    } as ViewStyle,
+    secondHeader: {
+      marginVertical: 10,
+      paddingHorizontal: 20,
+    } as ViewStyle,
+    end: {
+      width: '100%',
+      display: 'flex',
+      justifyContent: "flex-end",
       flexDirection: 'row',
       alignItems: "center",
     } as ViewStyle,

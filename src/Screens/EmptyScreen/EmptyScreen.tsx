@@ -8,7 +8,7 @@ export default function EmptyScreen() {
   const { signOut } = useContext(AuthContext)
 
   return (
-    <View style={[theme.containers.page, theme.view.background]}>
+    <View style={[theme.containers.center, theme.view.background]}>
       <Text>EmptyScreen</Text>
       <ConfirmButton header={'Sign out'} onPress={() => signOut()} />
     </View>
