@@ -1,16 +1,14 @@
 import React, {useState} from "react";
 import {
   Card,
-  FlexAlignCenter,
+  FlexAlignCenter, FlexCenter,
   FlexSpaceBetween,
   FlexStart,
   TextHeader,
   TextSecondary
 } from "../../Common/Parents/Parents";
 import {secondsToMinSec} from "../../Common/WorkoutDuration/WorkoutDuration";
-import IconButton from "../../Common/IconButton/IconButton";
-import {ConfirmButton, MyTextInput} from "../../Common";
-import {screen} from "../../Utils/constants";
+import {ConfirmButton, IconButton, MyTextInput, SwipeSelector} from "../../Common";
 import {ExerciseType} from "../../Utils/types";
 import {colors} from "../../Theme/colors";
 
@@ -21,6 +19,8 @@ interface ExerciseEditType {
 export default function ExerciseEdit({exercise}: ExerciseEditType) {
   const [isChangeOpened, setIsChangeOpened] = useState(false)
   const [exerciseName, setExerciseName] = useState(exercise.name)
+  const [selectSeconds, setSelectSeconds] = useState(0)
+  const [selectMinutes, setSelectMinutes] = useState(0)
 
   return (
     <Card>
@@ -32,8 +32,8 @@ export default function ExerciseEdit({exercise}: ExerciseEditType) {
           </TextHeader>
           <FlexStart>
             <IconButton name={'pencil-outline'} onPress={() => setIsChangeOpened(true)}/>
-            <IconButton name={'delete-outline'} onPress={() => {
-            }}/>
+            <IconButton name={'eye-off-outline'} onPress={() => {}}/>
+            <IconButton name={'delete-outline'} onPress={() => {}}/>
           </FlexStart>
         </FlexSpaceBetween>
         <FlexSpaceBetween>
@@ -51,8 +51,31 @@ export default function ExerciseEdit({exercise}: ExerciseEditType) {
               placeholder={'Exercise name'}
               onChangeText={name => setExerciseName(name)}
               value={exerciseName}
-              style={{width: screen.vw - 60}}
+              type={'underline'}
             />
+            <FlexCenter>
+              <TextHeader color={colors.textSecondary}>
+                Break
+              </TextHeader>
+            </FlexCenter>
+            <SwipeSelector onChange={number => setSelectMinutes(number)} maxValue={60}/>
+            <FlexCenter>
+              <TextSecondary>
+                min
+              </TextSecondary>
+            </FlexCenter>
+            <SwipeSelector onChange={number => setSelectSeconds(number)} maxValue={60}/>
+            <FlexCenter>
+              <TextSecondary>
+                sec
+              </TextSecondary>
+            </FlexCenter>
+            <FlexCenter>
+              <TextHeader color={colors.textSecondary}>
+                Repeats
+              </TextHeader>
+            </FlexCenter>
+            <SwipeSelector onChange={number => setSelectSeconds(number)} maxValue={100}/>
             <FlexAlignCenter>
               <ConfirmButton header={'Save'} onPress={() => {}}/>
               <ConfirmButton

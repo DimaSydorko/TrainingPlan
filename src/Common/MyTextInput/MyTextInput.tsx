@@ -9,13 +9,27 @@ interface MyTextInputType {
   value: string;
   style?: TextStyle;
   secureTextEntry?: boolean;
+  type?: 'ordinary' | 'underline' | 'secondary'
 }
 
-export default function MyTextInput ({placeholder, style, onChangeText, value, secureTextEntry = false}: MyTextInputType) {
+export default function MyTextInput(
+  {
+    placeholder,
+    style,
+    onChangeText,
+    value,
+    secureTextEntry = false,
+    type = 'ordinary',
+  }: MyTextInputType) {
 
   return (
     <TextInput
-      style={[styles.input, style]}
+      style={[
+        type==='ordinary' && styles.ordinary,
+        type==='underline' && styles.underline,
+        type==='secondary' && styles.secondary,
+        style
+      ]}
       placeholderTextColor={colors.text}
       secureTextEntry={secureTextEntry}
       placeholder={placeholder}

@@ -1,10 +1,11 @@
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {useNavigation} from "@react-navigation/native";
 import {ScreenName} from "../../Utils/constants";
 import {PlansContext} from "../../Providers/PlansProvider/PlansProvider";
-import {CardPressed, Page, TextHeader, TextSecondary} from "../../Common/Parents/Parents";
+import {CardPressed, Page, TextHeader, TextOrdinary, TextSecondary} from "../../Common/Parents/Parents";
 import {theme} from "../../Theme/theme";
 import {colors} from "../../Theme/colors";
+import {SwipeSelector} from "../../Common";
 
 interface MyPlansScreenType {
   setPlaneName: (name: string) => void;
@@ -16,6 +17,8 @@ export default function MyPlansScreen({setPlaneName}: MyPlansScreenType) {
 
   return (
     <Page style={theme.margin.top20}>
+      {/*<SwipeSelector onChange={number => setSelectNumber(number)}/>*/}
+      {/*<TextOrdinary>{selectNumber}</TextOrdinary>*/}
       {plans?.map(plan => (
         <CardPressed
           key={plan.uid}

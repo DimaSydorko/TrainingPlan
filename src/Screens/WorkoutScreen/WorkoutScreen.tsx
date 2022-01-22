@@ -12,6 +12,7 @@ export default function WorkoutScreen() {
   const {selectedWorkout} = useContext(WorkoutContext)
   const [isEditMode, setIsEditMode] = useState(false)
   const [workoutNameInput, setWorkoutNameInput] = useState<string>(selectedWorkout?.name || '')
+  const [workoutLabels, setWorkoutLabels] = useState('')
 
   return selectedWorkout ? (
     <Page>
@@ -30,6 +31,13 @@ export default function WorkoutScreen() {
             placeholder={'Workout Name'}
             onChangeText={workoutName => setWorkoutNameInput(workoutName)}
             value={workoutNameInput}
+            type={'underline'}
+          />
+          <MyTextInput
+            placeholder={'Labels:  #...'}
+            onChangeText={labels => setWorkoutLabels(labels)}
+            value={workoutLabels}
+            type={'secondary'}
           />
           {selectedWorkout.exercises.map(exercise => (
             <ExerciseEdit

@@ -1,5 +1,5 @@
 import {ReactNode} from "react";
-import {SafeAreaView, Text, TextStyle, TouchableOpacity, View, ViewStyle} from "react-native";
+import {SafeAreaView, ScrollView, Text, TextStyle, TouchableOpacity, View, ViewStyle} from "react-native";
 import {theme} from "../../Theme/theme";
 import {colors} from "../../Theme/colors";
 
@@ -21,7 +21,9 @@ interface OnPressType {
 export const Page = ({children, style}: ParentProps) => {
   return (
     <SafeAreaView style={[theme.containers.center, style]}>
-      {children}
+      <ScrollView>
+        {children}
+      </ScrollView>
     </SafeAreaView>
   )
 }
