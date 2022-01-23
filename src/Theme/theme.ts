@@ -49,9 +49,15 @@ export const theme = {
   },
 
   containers: {
-    center: {
+    centerColumn: {
       flex: 1,
       alignItems: 'center'
+    } as ViewStyle,
+    center: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'row',
     } as ViewStyle,
     alignCenter: {
       display: 'flex',
@@ -69,7 +75,8 @@ export const theme = {
     } as ViewStyle,
     secondHeader: {
       marginVertical: 10,
-      paddingHorizontal: 20,
+      paddingHorizontal: 5,
+      width: screen.vw -10
     } as ViewStyle,
     end: {
       width: '100%',

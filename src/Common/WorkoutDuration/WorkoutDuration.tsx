@@ -1,6 +1,6 @@
 import React from "react";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import {FlexStart, TextSecondary} from "../Parents/Parents";
+import {FlexStart, TextSecondary} from "../../Theme/Parents";
 import {ExerciseType} from "../../Utils/types";
 import {colors} from "../../Theme/colors";
 

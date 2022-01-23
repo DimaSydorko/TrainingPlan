@@ -1,11 +1,12 @@
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {useNavigation} from "@react-navigation/native";
+import {View} from "react-native";
 import {WorkoutContext} from "../../Providers/WorkoutProvider/WorkoutProvider";
 import {ScreenName} from "../../Utils/constants";
-import {WorkoutDuration} from "../../Common";
+import {CardPressed, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary} from "../../Theme/Parents";
+import {AddMoreButton, MySwitch, WorkoutDuration} from "../../Common";
 import {theme} from "../../Theme/theme";
 import {colors} from "../../Theme/colors";
-import {CardPressed, FlexStart, Page, TextHeader, TextSecondary} from "../../Common/Parents/Parents";
 
 interface PlanScreenType {
   setWorkoutName: (workoutName: string) => void;
@@ -14,6 +15,7 @@ interface PlanScreenType {
 export default function PlanScreen({setWorkoutName}: PlanScreenType) {
   const {workouts, selectWorkout} = useContext(WorkoutContext)
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
+  const [isEditMode, setIsEditMode] = useState(false)
 
   const onSelect = (workoutUid: string, workoutName: string) => {
     selectWorkout(workoutUid);
@@ -22,7 +24,16 @@ export default function PlanScreen({setWorkoutName}: PlanScreenType) {
   }
 
   return (
-    <Page style={theme.margin.top20}>
+    <Page>
+      <FlexSpaceBetween style={theme.containers.secondHeader}>
+        <View/>
+        <FlexStart>
+          <TextSecondary style={{width: 80}}>
+            Edit Mode:
+          </TextSecondary>
+          <MySwitch value={isEditMode} onValueChange={() => setIsEditMode(b => !b)}/>
+        </FlexStart>
+      </FlexSpaceBetween>
       {workouts?.map(workout => (
         <CardPressed
           key={workout.uid}
@@ -35,6 +46,7 @@ export default function PlanScreen({setWorkoutName}: PlanScreenType) {
           </FlexStart>
         </CardPressed>
       ))}
+      {isEditMode && <AddMoreButton onPress={() => {}} header={'Workout'}/>}
     </Page>
   )
 }

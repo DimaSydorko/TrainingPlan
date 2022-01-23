@@ -1,11 +1,12 @@
 import React, {useContext, useState} from "react";
+import {View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {ScreenName} from "../../Utils/constants";
 import {PlansContext} from "../../Providers/PlansProvider/PlansProvider";
-import {CardPressed, Page, TextHeader, TextOrdinary, TextSecondary} from "../../Common/Parents/Parents";
+import {CardPressed, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary} from "../../Theme/Parents";
+import {AddMoreButton, MySwitch} from "../../Common";
 import {theme} from "../../Theme/theme";
 import {colors} from "../../Theme/colors";
-import {SwipeSelector} from "../../Common";
 
 interface MyPlansScreenType {
   setPlaneName: (name: string) => void;
@@ -14,11 +15,19 @@ interface MyPlansScreenType {
 export default function MyPlansScreen({setPlaneName}: MyPlansScreenType) {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
   const {plans} = useContext(PlansContext)
+  const [isEditMode, setIsEditMode] = useState(false)
 
   return (
-    <Page style={theme.margin.top20}>
-      {/*<SwipeSelector onChange={number => setSelectNumber(number)}/>*/}
-      {/*<TextOrdinary>{selectNumber}</TextOrdinary>*/}
+    <Page>
+      <FlexSpaceBetween style={theme.containers.secondHeader}>
+        <View/>
+        <FlexStart>
+          <TextSecondary style={{width: 80}}>
+            Edit Mode:
+          </TextSecondary>
+          <MySwitch value={isEditMode} onValueChange={() => setIsEditMode(b => !b)}/>
+        </FlexStart>
+      </FlexSpaceBetween>
       {plans?.map(plan => (
         <CardPressed
           key={plan.uid}
@@ -31,6 +40,8 @@ export default function MyPlansScreen({setPlaneName}: MyPlansScreenType) {
           <TextSecondary>{plan.workoutUIDs.length} Workouts</TextSecondary>
         </CardPressed>
       ))}
+      {isEditMode && <AddMoreButton onPress={() => {
+      }} header={'Plan'}/>}
     </Page>
   )
 }

@@ -7,12 +7,14 @@ interface IconButtonType {
   name: string;
   onPress: () => void;
   color?: string;
+  size?: number;
+  disabled?: boolean;
 }
 
-export default function IconButton({name, onPress, color = colors.textSecondary}: IconButtonType) {
+export default function IconButton({name, onPress, size = 24, disabled = false, color = colors.textSecondary}: IconButtonType) {
   return (
-   <TouchableOpacity onPress={onPress}>
-     <Icon name={name} color={color} size={24}/>
+   <TouchableOpacity onPress={onPress} disabled={disabled} style={{opacity: disabled ? 0.5 : 1}}>
+     <Icon name={name} color={color} size={size}/>
    </TouchableOpacity>
   )
 }

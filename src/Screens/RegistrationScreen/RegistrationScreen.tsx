@@ -6,7 +6,7 @@ import {AuthContext} from "../../Providers/AuthProvider/AuthProvider";
 import {ScreenName} from "../../Utils/constants";
 import {ConfirmButton, MyTextInput} from "../../Common";
 import {theme} from "../../Theme/theme";
-import {Page, TextOrdinary} from "../../Common/Parents/Parents";
+import {Page, TextOrdinary} from "../../Theme/Parents";
 
 export default function RegistrationScreen() {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()

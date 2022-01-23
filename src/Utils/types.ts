@@ -19,10 +19,6 @@ export interface ExerciseType {
   repeats: number;
   approaches: ApproachType[];
   imgURL?: string;
-  // author: {
-  //   uid: string;
-  //   name: string;
-  // }
 }
 
 export interface WorkoutType {

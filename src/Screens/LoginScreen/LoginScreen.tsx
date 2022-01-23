@@ -8,7 +8,7 @@ import {AuthContext} from "../../Providers/AuthProvider/AuthProvider";
 import {userInitialState} from "../../../constants.local";
 import {asyncStorage} from "../../Utils/asyncStarage";
 import {theme} from "../../Theme/theme";
-import {Page, TextOrdinary} from "../../Common/Parents/Parents";
+import {Page, TextOrdinary} from "../../Theme/Parents";
 
 export default function LoginScreen() {
   const [inputData, setInputData] = useState({email: '', password: ''})

@@ -1,8 +1,8 @@
 import React, {useContext, useState} from "react";
 import {WorkoutContext} from "../../Providers/WorkoutProvider/WorkoutProvider";
 import {secondsToMinSec} from "../../Common/WorkoutDuration/WorkoutDuration";
-import {Card, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary} from "../../Common/Parents/Parents";
-import {MySwitch, MyTextInput, WorkoutDuration} from "../../Common";
+import {Card, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary} from "../../Theme/Parents";
+import {AddMoreButton, MySwitch, MyTextInput, WorkoutDuration} from "../../Common";
 import ExerciseEdit from "../../Components/ExerciseEdit/ExerciseEdit";
 import ExerciseResult from "../../Components/ExerciseResults/ExerciseResult";
 import {theme} from "../../Theme/theme";
@@ -45,6 +45,7 @@ export default function WorkoutScreen() {
               exercise={exercise}
             />
           ))}
+          <AddMoreButton onPress={() => {}} header={'Exercise'}/>
         </>
       ) : selectedWorkout.exercises.map(exercise => (
         <Card key={`${exercise.name}_${exercise.breakTimeInSec}_${exercise.repeats}`}>

@@ -1,7 +1,7 @@
 import {ReactNode} from "react";
 import {SafeAreaView, ScrollView, Text, TextStyle, TouchableOpacity, View, ViewStyle} from "react-native";
-import {theme} from "../../Theme/theme";
-import {colors} from "../../Theme/colors";
+import {theme} from "./theme";
+import {colors} from "./colors";
 
 interface ParentProps {
   children?: ReactNode;
@@ -20,7 +20,7 @@ interface OnPressType {
 
 export const Page = ({children, style}: ParentProps) => {
   return (
-    <SafeAreaView style={[theme.containers.center, style]}>
+    <SafeAreaView style={[theme.containers.centerColumn, style]}>
       <ScrollView>
         {children}
       </ScrollView>
@@ -55,6 +55,14 @@ export const TextOrdinary = ({children, color = colors.text, style}: ParentProps
 export const FlexSpaceBetween = ({children, style}: ParentProps) => {
   return (
     <View style={[theme.containers.spaceBetween, style]}>
+      {children}
+    </View>
+  )
+}
+
+export const FlexCenterColumn = ({children, style}: ParentProps) => {
+  return (
+    <View style={[theme.containers.centerColumn, style]}>
       {children}
     </View>
   )

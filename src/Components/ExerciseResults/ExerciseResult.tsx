@@ -1,6 +1,6 @@
 import React from "react";
 import {StyleSheet, View, ViewStyle} from "react-native";
-import {TextOrdinary} from "../../Common/Parents/Parents";
+import {TextOrdinary} from "../../Theme/Parents";
 
 interface ExerciseResultsType {
   weight: number;

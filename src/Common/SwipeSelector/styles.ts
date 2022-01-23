@@ -12,7 +12,7 @@ export default StyleSheet.create({
     textAlign: 'center',
   },
   itemsContainer: {
-    paddingHorizontal: 140
+    paddingHorizontal: (screen.vw - 98) / 2
   },
   selectPoint: {
     width: 40,
