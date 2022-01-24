@@ -1,9 +1,9 @@
 import {Dimensions} from "react-native";
 
 export enum FirebaseDBCollection {
-  usersData = 'usersData',
-  plans = 'plans',
-  workouts = 'workouts',
+  UsersData = 'usersData',
+  Plans = 'plans',
+  Workouts = 'workouts',
 }
 
 export enum ScreenName {
@@ -17,7 +17,7 @@ export enum ScreenName {
 }
 
 export enum AsyncStorageKey {
-  user = 'user',
+  User = 'User',
 }
 
 export const screen = {

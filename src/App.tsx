@@ -5,8 +5,12 @@ import {decode, encode} from 'base-64'
 import AuthRouter from "./Routers/AuthRouter/AuthRouter";
 import {AuthProvider} from "./Providers";
 
-if (!global.btoa) {  global.btoa = encode }
-if (!global.atob) { global.atob = decode }
+if (!global.btoa) {
+  global.btoa = encode
+}
+if (!global.atob) {
+  global.atob = decode
+}
 
 function App() {
   return (

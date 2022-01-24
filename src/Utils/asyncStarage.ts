@@ -6,22 +6,23 @@ export const asyncStorage = {
       if (data === null) {
         await AsyncStorage.setItem(key, '');
       } else {
-        const userJson = JSON.stringify(data)
-        await AsyncStorage.setItem(key, userJson);
+        const dataJson = JSON.stringify(data)
+        await AsyncStorage.setItem(key, dataJson);
       }
       return
     }
     catch (error) {
-      alert(error)
+      console.error('AsyncStorageSet', error)
     }
   },
 
   async get(key: string) {
     try {
-      return await AsyncStorage.getItem(key)
+      const data = await AsyncStorage.getItem(key) as string;
+      return JSON.parse(data);
     }
     catch (error) {
-      alert(error)
+      console.error('AsyncStorageGet', error)
     }
   },
 }

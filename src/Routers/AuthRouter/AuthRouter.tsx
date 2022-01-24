@@ -18,7 +18,7 @@ export default function AuthRouter() {
       <Stack.Navigator>
         { user ? (
           <Stack.Screen
-            name={ScreenName.Home}
+            name={ScreenName.Plan}
             options={{headerShown: false}}
           >
             {() => <AppRouter/>}

@@ -7,6 +7,7 @@ import {CardPressed, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondar
 import {AddMoreButton, MySwitch} from "../../Common";
 import {theme} from "../../Theme/theme";
 import {colors} from "../../Theme/colors";
+import {AuthContext} from "../../Providers/AuthProvider/AuthProvider";
 
 interface MyPlansScreenType {
   setPlaneName: (name: string) => void;
@@ -16,7 +17,18 @@ export default function MyPlansScreen({setPlaneName}: MyPlansScreenType) {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
   const {plans} = useContext(PlansContext)
   const [isEditMode, setIsEditMode] = useState(false)
+  const {user, userData, userDataUpdate} = useContext(AuthContext)
 
+  console.log('user', user)
+  console.log('userData', userData)
+
+  const setUserData = async () => {
+  await userDataUpdate(user?.uid || '', {
+    plansUIDs: [],
+    friendsUIDs: ['1', '2', '3'],
+    workoutsUIDs: [],
+  })
+}
   return (
     <Page>
       <FlexSpaceBetween style={theme.containers.secondHeader}>
@@ -40,8 +52,7 @@ export default function MyPlansScreen({setPlaneName}: MyPlansScreenType) {
           <TextSecondary>{plan.workoutUIDs.length} Workouts</TextSecondary>
         </CardPressed>
       ))}
-      {isEditMode && <AddMoreButton onPress={() => {
-      }} header={'Plan'}/>}
+      {isEditMode && <AddMoreButton onPress={setUserData} header={'Plan'}/>}
     </Page>
   )
 }

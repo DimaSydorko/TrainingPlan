@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react'
-import {Text, View} from 'react-native'
+import {Text} from 'react-native'
 import {useNavigation} from "@react-navigation/native";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {AsyncStorageKey, ScreenName} from "../../Utils/constants";
@@ -26,7 +26,7 @@ export default function LoginScreen() {
 
   //TODO Remove LoginInitial before release
   const onLoginInitial = async () => {
-    await asyncStorage.set(AsyncStorageKey.user, userInitialState)
+    // await asyncStorage.set(AsyncStorageKey.User, JSON.parse(userInitialState as any))
   }
 
   return (
