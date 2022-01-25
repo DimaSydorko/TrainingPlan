@@ -1,8 +1,7 @@
 import {useEffect, useState} from "react";
 import {PlanType} from "../../Utils/types";
 import firebase from "../../Utils/firebase";
-import {asyncStorage} from "../../Utils/asyncStarage";
-import {AsyncStorageKey, FirebaseDBCollection} from "../../Utils/constants";
+import {FirebaseDBCollection} from "../../Utils/constants";
 
 const myPlansInitial = [
   {
@@ -17,10 +16,10 @@ const myPlansInitial = [
 ] as PlanType[]
 
 export default function usePlans() {
-  const [plans, setPlans] = useState<PlanType[] | null>(null)
+  const [plans, setPlans] = useState<PlanType[] | null>(myPlansInitial)
 
   useEffect(() => {
-    setPlans(myPlansInitial)
+    // setPlans(myPlansInitial)
   }, [])
 
   const getPlans = () => {

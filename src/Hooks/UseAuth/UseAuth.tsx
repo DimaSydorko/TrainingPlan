@@ -6,23 +6,19 @@ import {UserDataType, UserType} from "../../Utils/types";
 
 export default function useAuth() {
   const [user, setUser] = useState<UserType | null>(null);
-  const [userData, setUserData] = useState<UserDataType | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  let userLocal: UserType | null = null;
 
   const getUserFromStorage = useCallback(async () => {
     const storageUser = await asyncStorage.get(AsyncStorageKey.User)
-    if (storageUser.uid) {
-      setUser(storageUser);
+    if (storageUser) {
+      userLocal = storageUser
       await userDataRequest(storageUser.uid);
     }
   }, [])
 
   useEffect(() => {
-    if (user) {
-      userDataRequest(user.uid)
-        .then(() => {
-          return;
-        })
-    } else {
+    if (!user) {
       getUserFromStorage()
         .then(() => {
           return;
@@ -37,13 +33,19 @@ export default function useAuth() {
       .doc(userUid)
       .get()
       .then(doc => {
-        if (doc.exists) {
+        if (doc.exists && userLocal) {
           const userData = doc.data() as UserDataType
-          setUserData(userData)
+          setUser({...userLocal, data: userData})
+        }
+        if (isLoading) {
+          setIsLoading(false);
         }
       })
       .catch((error: string) => {
         console.error(error)
+        if (isLoading) {
+          setIsLoading(false);
+        }
       });
   }, [])
 
@@ -54,7 +56,9 @@ export default function useAuth() {
       .doc(userUid)
       .set(userData)
       .then(() => {
-        setUserData(userData);
+        if (user) {
+          setUser({...user, data: userData});
+        }
       })
       .catch((error: string) => {
         console.error(error);
@@ -79,12 +83,15 @@ export default function useAuth() {
             console.error(err)
           })
         if (response.user) {
-          response.user.updateProfile({displayName})
+          const responseUser: firebase.User = response.user
+          responseUser.updateProfile({displayName})
             .then(() => {
               userDataUpdate(response.user?.uid || '', emptyUserData)
               asyncStorage
-                .set(AsyncStorageKey.User, response.user)
-                .then(() => setUser(response.user))
+                .set(AsyncStorageKey.User, responseUser)
+                .then(() => {
+                  setUser({...responseUser, data: null})
+                })
             })
         }
       })
@@ -98,10 +105,9 @@ export default function useAuth() {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(async (response) => {
+        userLocal = response.user as UserType
         await userDataRequest(response.user?.uid || '')
-        asyncStorage
-          .set(AsyncStorageKey.User, response.user)
-          .then(() => setUser(response.user as UserType))
+        await asyncStorage.set(AsyncStorageKey.User, response.user)
       })
       .catch(error => {
         console.error(error)
@@ -115,16 +121,18 @@ export default function useAuth() {
       .then(() => {
         asyncStorage
           .set(AsyncStorageKey.User, null)
-          .then(() => setUser(null))
+          .then(() => {
+            setUser(null);
+          })
       });
   }, []);
 
   return {
     user,
-    userData,
-    userDataUpdate,
+    isLoading,
     signUp,
     signIn,
-    signOut
+    signOut,
+    userDataUpdate,
   }
 }

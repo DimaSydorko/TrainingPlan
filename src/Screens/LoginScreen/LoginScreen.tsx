@@ -4,11 +4,11 @@ import {useNavigation} from "@react-navigation/native";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {AsyncStorageKey, ScreenName} from "../../Utils/constants";
 import {ConfirmButton, MyTextInput} from "../../Common";
-import {AuthContext} from "../../Providers/AuthProvider/AuthProvider";
 import {userInitialState} from "../../../constants.local";
 import {asyncStorage} from "../../Utils/asyncStarage";
 import {theme} from "../../Theme/theme";
 import {Page, TextOrdinary} from "../../Theme/Parents";
+import {AuthContext} from "../../Providers";
 
 export default function LoginScreen() {
   const [inputData, setInputData] = useState({email: '', password: ''})
@@ -26,7 +26,7 @@ export default function LoginScreen() {
 
   //TODO Remove LoginInitial before release
   const onLoginInitial = async () => {
-    // await asyncStorage.set(AsyncStorageKey.User, JSON.parse(userInitialState as any))
+    await asyncStorage.set(AsyncStorageKey.User, userInitialState)
   }
 
   return (

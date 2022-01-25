@@ -3,8 +3,7 @@ import {createStackNavigator} from "@react-navigation/stack";
 import {ScreenName} from "../../Utils/constants";
 import {MyPlansScreen, PlanScreen, WorkoutScreen} from "../../Screens";
 import {theme} from "../../Theme/theme";
-import {PlansProvider} from "../../Providers";
-import WorkoutProvider from "../../Providers/WorkoutProvider/WorkoutProvider";
+import {PlansProvider, WorkoutProvider} from "../../Providers";
 
 export default function PlanRouter() {
   const [planName, setPlaneName] = useState('Plan')

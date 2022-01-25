@@ -2,21 +2,24 @@ import React, {useContext} from 'react'
 import 'react-native-gesture-handler';
 import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from '@react-navigation/stack'
-import { LoginScreen, RegistrationScreen } from '../../Screens'
+import {LoginScreen, RegistrationScreen} from '../../Screens'
+import {AppRouter} from "../index";
 import {ScreenName} from "../../Utils/constants";
-import {AuthContext} from "../../Providers/AuthProvider/AuthProvider";
 import {theme} from "../../Theme/theme";
-import AppRouter from "../AppRouter/AppRouter";
+import {AuthContext} from "../../Providers";
+import {TextHeader} from "../../Theme/Parents";
 
 
 export default function AuthRouter() {
   const Stack = createStackNavigator();
-  const { user } = useContext(AuthContext)
+  const {user, isLoading} = useContext(AuthContext)
 
-  return (
+  return isLoading ? (
+    <TextHeader>Loading...</TextHeader>
+  ) : (
     <NavigationContainer>
       <Stack.Navigator>
-        { user ? (
+        {user ? (
           <Stack.Screen
             name={ScreenName.Plan}
             options={{headerShown: false}}
