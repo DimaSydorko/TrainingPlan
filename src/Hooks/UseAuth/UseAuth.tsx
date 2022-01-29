@@ -67,8 +67,6 @@ export default function useAuth() {
 
   const signUp = useCallback((email: string, password: string, displayName: string) => {
     const emptyUserData = {
-      workoutsUIDs: [],
-      plansUIDs: [],
       friendsUIDs: [],
     } as UserDataType
 

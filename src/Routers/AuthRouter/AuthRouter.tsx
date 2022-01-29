@@ -3,11 +3,11 @@ import 'react-native-gesture-handler';
 import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from '@react-navigation/stack'
 import {LoginScreen, RegistrationScreen} from '../../Screens'
-import {AppRouter} from "../index";
 import {ScreenName} from "../../Utils/constants";
 import {theme} from "../../Theme/theme";
 import {AuthContext} from "../../Providers";
 import {TextHeader} from "../../Theme/Parents";
+import AppRouter from "../AppRouter/AppRouter";
 
 
 export default function AuthRouter() {
@@ -21,7 +21,7 @@ export default function AuthRouter() {
       <Stack.Navigator>
         {user ? (
           <Stack.Screen
-            name={ScreenName.Plan}
+            name={ScreenName.App}
             options={{headerShown: false}}
           >
             {() => <AppRouter/>}

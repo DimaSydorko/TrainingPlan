@@ -3,8 +3,6 @@ import {firebase} from "./index";
 export type UserType = firebase.User & {data: UserDataType | null};
 
 export interface UserDataType {
-  workoutsUIDs: string[];
-  plansUIDs: string[];
   friendsUIDs: string[];
 }
 
@@ -23,6 +21,8 @@ export interface ExerciseType {
 
 export interface WorkoutType {
   uid: string;
+  ownerUid: string;
+  planUid?: string;
   name: string;
   labels?: string[];
   exercises: ExerciseType[];
@@ -30,7 +30,8 @@ export interface WorkoutType {
 
 export interface PlanType {
   uid: string;
+  ownerUid: string;
   name: string;
-  workoutUIDs: string[];
+  workoutsCount: number;
   labels?: string[];
 }

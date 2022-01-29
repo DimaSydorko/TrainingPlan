@@ -13,14 +13,18 @@ export enum ScreenName {
   SavedWorkouts = 'Saved Workouts',
   Workout = 'Workout',
   Plan = 'Plan',
-  Home = 'Home'
+  Home = 'Home',
+  App = 'App',
 }
 
 export enum AsyncStorageKey {
   User = 'User',
+  Plans = 'Plans',
 }
 
 export const screen = {
   vw: Dimensions.get('window').width,
   vh: Dimensions.get('window').height
 }
+
+export const QUERY_LIMIT = 30

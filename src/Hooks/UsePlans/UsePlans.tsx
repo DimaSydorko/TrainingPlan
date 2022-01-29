@@ -1,42 +1,108 @@
-import {useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useState} from "react";
 import {PlanType} from "../../Utils/types";
 import firebase from "../../Utils/firebase";
-import {FirebaseDBCollection} from "../../Utils/constants";
-
-const myPlansInitial = [
-  {
-    uid: 'Plan_Uid_1',
-    name: 'Initial Plan 1',
-    workoutUIDs: ['Workout_Uid_1', 'Workout_Uid_2'],
-  }, {
-    uid: 'Plan_Uid_2',
-    name: 'Initial Plan 2',
-    workoutUIDs: ['Workout_Uid_1', 'Workout_Uid_2'],
-  }
-] as PlanType[]
+import {AuthContext} from "../../Providers";
+import {asyncStorage} from "../../Utils/asyncStarage";
+import {AsyncStorageKey, FirebaseDBCollection, QUERY_LIMIT} from "../../Utils/constants";
 
 export default function usePlans() {
-  const [plans, setPlans] = useState<PlanType[] | null>(myPlansInitial)
+  const [plans, setPlans] = useState<PlanType[] | null>(null)
+  const {user} = useContext(AuthContext)
 
   useEffect(() => {
-    // setPlans(myPlansInitial)
+    getPlans().then();
   }, [])
 
-  const getPlans = () => {
-    firebase
-      .firestore()
-      .collection(FirebaseDBCollection.Plans)
-      .doc()
-      .get()
-      .then((response) => {
+  const getPlans = useCallback(async () => {
+    if (user?.data) {
+      const data: PlanType[] = [];
+      await firebase
+        .firestore()
+        .collection(FirebaseDBCollection.Plans)
+        .where('ownerUid', '==', user?.uid)
+        .limit(QUERY_LIMIT)
+        .get()
+        .then(async (snapshot) => {
+          snapshot.docs.forEach(doc => data.push({...doc.data(), uid: doc.id} as PlanType));
+          setPlans(data);
+          await asyncStorage.set(AsyncStorageKey.Plans, data);
+        })
+        .catch((error: string) => {
+          alert(error)
+        })
+    } else {
+      const data = await asyncStorage.get(AsyncStorageKey.Plans) as PlanType[];
+      setPlans(data)
+    }
+  }, []);
 
-      })
-      .catch((error: string) => {
-        alert(error)
-      });
-  }
+  const addPlan = useCallback(async (newPlan: PlanType) => {
+    if (user?.data) {
+     await firebase
+        .firestore()
+        .collection(FirebaseDBCollection.Plans)
+        .add({
+          ownerUid: newPlan.ownerUid,
+          name: newPlan.name,
+          labels: newPlan.labels,
+          workoutsCount: newPlan.workoutsCount,
+        })
+        .then(async (doc) => {
+          await getPlans();
+        })
+        .catch((err) => {
+          console.error(err);
+        })
+    } else {
+      console.log(`Didn't created locale storage for save Plans yet`)
+    }
+  }, [])
+
+  const updatePlan = useCallback(async (newPlan: PlanType) => {
+    if (user?.data) {
+      await firebase
+        .firestore()
+        .collection(FirebaseDBCollection.Plans)
+        .doc(newPlan.uid)
+        .set({
+          ownerUid: newPlan.ownerUid,
+          name: newPlan.name,
+          labels: newPlan.labels,
+          workoutsCount: newPlan.workoutsCount,
+        })
+        .then(async (doc) => {
+          await getPlans();
+        })
+        .catch((err) => {
+          console.error(err);
+        })
+    } else {
+      console.log(`Didn't created locale storage for save Plans yet`)
+    }
+  }, [])
+
+  const deletePlan = useCallback(async (newPlan: PlanType) => {
+    if (user?.data) {
+      await firebase
+        .firestore()
+        .collection(FirebaseDBCollection.Plans)
+        .doc(newPlan.uid)
+        .delete()
+        .then(async (doc) => {
+          await getPlans();
+        })
+        .catch((err) => {
+          console.error(err);
+        })
+    } else {
+      console.log(`Didn't created locale storage for save Plans yet`)
+    }
+  }, [])
 
   return {
-    plans
+    plans,
+    addPlan,
+    deletePlan,
+    updatePlan,
   }
 }

@@ -2,9 +2,9 @@ import React from "react";
 import {Text} from "react-native";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {colors} from "../../Theme/colors";
 import {EmptyScreen} from "../../Screens";
 import {PlanRouter, WorkoutsRouter} from "../index";
-import {colors} from "../../Theme/colors";
 
 type TabType = {
   name: string,

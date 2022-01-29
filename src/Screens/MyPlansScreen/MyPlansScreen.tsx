@@ -4,7 +4,7 @@ import {useNavigation} from "@react-navigation/native";
 import {ScreenName} from "../../Utils/constants";
 import {AuthContext, PlansContext} from "../../Providers";
 import {CardPressed, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary} from "../../Theme/Parents";
-import {AddMoreButton, MySwitch} from "../../Common";
+import {AddMoreButton, IconButton, MySwitch} from "../../Common";
 import {theme} from "../../Theme/theme";
 import {colors} from "../../Theme/colors";
 
@@ -14,16 +14,20 @@ interface MyPlansScreenType {
 
 export default React.memo(function MyPlansScreen({setPlaneName}: MyPlansScreenType) {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
-  const {plans} = useContext(PlansContext)
+  const {plans, addPlan, updatePlan, deletePlan} = useContext(PlansContext)
   const [isEditMode, setIsEditMode] = useState(false)
-  const {user, userDataUpdate} = useContext(AuthContext)
+  const {user} = useContext(AuthContext)
 
-  const setUserData = async () => {
-    await userDataUpdate(user?.uid || '', {
-      plansUIDs: [],
-      friendsUIDs: ['1', '2', '3'],
-      workoutsUIDs: [],
-    })
+  const setNewPlan = async () => {
+    if (user) {
+      await addPlan({
+        uid: '',
+        ownerUid: user.uid,
+        name: 'Test Plan',
+        workoutsCount: 0,
+        labels: [],
+      })
+    }
   }
   return (
     <Page>
@@ -44,11 +48,14 @@ export default React.memo(function MyPlansScreen({setPlaneName}: MyPlansScreenTy
             navigation.navigate(ScreenName.Plan)
           }}
         >
-          <TextHeader color={colors.secondPrimary}>{plan.name}</TextHeader>
-          <TextSecondary>{plan.workoutUIDs.length} Workouts</TextSecondary>
+          <FlexSpaceBetween>
+            <TextHeader color={colors.secondPrimary}>{plan.name}</TextHeader>
+            {isEditMode && <IconButton name={'delete-outline'} onPress={() => deletePlan(plan)}/>}
+          </FlexSpaceBetween>
+          <TextSecondary>{plan.workoutsCount} Workouts</TextSecondary>
         </CardPressed>
       ))}
-      {isEditMode && <AddMoreButton onPress={setUserData} header={'Plan'}/>}
+      {isEditMode && <AddMoreButton onPress={setNewPlan} header={'Plan'}/>}
     </Page>
   )
 })
