@@ -28,7 +28,7 @@ export default function usePlans() {
           await asyncStorage.set(AsyncStorageKey.Plans, data);
         })
         .catch((error: string) => {
-          alert(error)
+          console.error(error)
         })
     } else {
       const data = await asyncStorage.get(AsyncStorageKey.Plans) as PlanType[];

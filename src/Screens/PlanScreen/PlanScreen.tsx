@@ -1,52 +1,74 @@
 import React, {useContext, useState} from "react";
 import {useNavigation} from "@react-navigation/native";
 import {View} from "react-native";
-import {WorkoutContext} from "../../Providers/WorkoutProvider/WorkoutProvider";
 import {ScreenName} from "../../Utils/constants";
+import {AuthContext, WorkoutContext} from "../../Providers";
 import {CardPressed, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary} from "../../Theme/Parents";
-import {AddMoreButton, MySwitch, WorkoutDuration} from "../../Common";
+import {AddMoreButton, IconButton, MySwitch, WorkoutDuration} from "../../Common";
+import {PlanType, WorkoutPlanType} from "../../Utils/types";
 import {theme} from "../../Theme/theme";
 import {colors} from "../../Theme/colors";
+import {icon} from "../../Theme/icons";
 
 interface PlanScreenType {
-  setWorkoutName: (workoutName: string) => void;
+  plan: PlanType;
 }
 
-export default function PlanScreen({setWorkoutName}: PlanScreenType) {
-  const {workouts, selectWorkout} = useContext(WorkoutContext)
+export default function PlanScreen({plan}: PlanScreenType) {
+  const {workouts, selectWorkout, addWorkout, deleteWorkout} = useContext(WorkoutContext)
+  const {user} = useContext(AuthContext);
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
   const [isEditMode, setIsEditMode] = useState(false)
-
-  const onSelect = (workoutUid: string, workoutName: string) => {
-    selectWorkout(workoutUid);
-    setWorkoutName(workoutName);
+  const onSelect = (workout: WorkoutPlanType) => {
+    selectWorkout(workout.uid);
     navigation.navigate(ScreenName.Workout);
+  }
+
+  const onAddWorkout = () => {
+    if (user) {
+      addWorkout({
+        uid: '',
+        planUid: plan.uid,
+        name: 'Test workout',
+        ownerUid: user.uid,
+        labels: '',
+        exercises: [],
+      }, plan)
+    }
+  }
+
+  const onDeleteWorkout = (workoutUid: string) => {
+    deleteWorkout(workoutUid, plan)
   }
 
   return (
     <Page>
       <FlexSpaceBetween style={theme.containers.secondHeader}>
         <View/>
-        <FlexStart>
-          <TextSecondary style={{width: 80}}>
-            Edit Mode:
-          </TextSecondary>
-          <MySwitch value={isEditMode} onValueChange={() => setIsEditMode(b => !b)}/>
-        </FlexStart>
+        {workouts?.length ? (
+          <FlexStart>
+            <TextSecondary style={{width: 80}}>
+              Edit Mode:
+            </TextSecondary>
+            <MySwitch value={isEditMode} onValueChange={() => setIsEditMode(b => !b)}/>
+          </FlexStart>
+        ) : null}
       </FlexSpaceBetween>
       {workouts?.map(workout => (
-        <CardPressed
-          key={workout.uid}
-          onPress={() => onSelect(workout.uid, workout.name)}
-        >
-          <TextHeader color={colors.secondPrimary}>{workout.name}</TextHeader>
-          <FlexStart>
-            <TextSecondary>{workout.exercises.length} Exercises</TextSecondary>
-            <WorkoutDuration exercises={workout.exercises}/>
-          </FlexStart>
+        <CardPressed key={workout.uid} onPress={() => onSelect(workout)}>
+          <FlexSpaceBetween>
+            <View>
+              <TextHeader color={colors.secondPrimary}>{workout.name}</TextHeader>
+              <FlexStart>
+                <TextSecondary>{workout.exercises.length} Exercises</TextSecondary>
+                <WorkoutDuration exercises={workout.exercises}/>
+              </FlexStart>
+            </View>
+            {isEditMode && <IconButton name={icon.delete} onPress={() => onDeleteWorkout(workout.uid)}/>}
+          </FlexSpaceBetween>
         </CardPressed>
       ))}
-      {isEditMode && <AddMoreButton onPress={() => {}} header={'Workout'}/>}
+      {(isEditMode || !workouts?.length) && <AddMoreButton onPress={onAddWorkout} header={'Workout'}/>}
     </Page>
   )
 }

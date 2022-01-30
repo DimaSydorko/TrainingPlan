@@ -1,15 +1,16 @@
 import {createContext} from "react";
-import firebase from "../../Utils/firebase";
 import {ProviderProps} from "../index";
-import useAuth from "../../Hooks/UseAuth/UseAuth";
-import {PlanType, WorkoutType} from "../../Utils/types";
-import usePlans from "../../Hooks/UsePlans/UsePlans";
+import {PlanType, WorkoutPlanType, WorkoutType} from "../../Utils/types";
 import useWorkout from "../../Hooks/UseWorkouts/UseWorkout";
 
 interface WorkoutContextType {
   selectWorkout: (workoutUid: string) => void;
-  selectedWorkout: WorkoutType | null;
-  workouts: WorkoutType[] | null
+  selectedWorkout: WorkoutPlanType | null;
+  workouts: WorkoutPlanType[] | null;
+  getWorkouts: (planUid: string) => Promise<void>;
+  addWorkout: (workout: WorkoutPlanType, plan: PlanType) => Promise<void>;
+  updateWorkout: (workout: WorkoutPlanType) => Promise<void>;
+  deleteWorkout: (workoutUid: string, plan: PlanType) => Promise<void>;
 }
 
 export const WorkoutContext = createContext<WorkoutContextType>(null!);
@@ -19,6 +20,10 @@ export default function WorkoutProvider({children}: ProviderProps) {
     selectWorkout,
     selectedWorkout,
     workouts,
+    getWorkouts,
+    addWorkout,
+    updateWorkout,
+    deleteWorkout,
   } = useWorkout()
 
   return (
@@ -26,6 +31,10 @@ export default function WorkoutProvider({children}: ProviderProps) {
       selectWorkout,
       selectedWorkout,
       workouts,
+      getWorkouts,
+      addWorkout,
+      updateWorkout,
+      deleteWorkout,
     }}>
       {children}
     </WorkoutContext.Provider>

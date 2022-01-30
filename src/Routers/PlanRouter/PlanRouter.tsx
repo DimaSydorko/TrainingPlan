@@ -1,39 +1,36 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {createStackNavigator} from "@react-navigation/stack";
 import {ScreenName} from "../../Utils/constants";
 import {MyPlansScreen, PlanScreen, WorkoutScreen} from "../../Screens";
+import {WorkoutContext} from "../../Providers";
 import {theme} from "../../Theme/theme";
-import {PlansProvider, WorkoutProvider} from "../../Providers";
+import {PlanType} from "../../Utils/types";
 
 export default function PlanRouter() {
-  const [planName, setPlaneName] = useState('Plan')
-  const [workoutName, setWorkoutName] = useState('Workout')
+  const [plan, setPlan] = useState<PlanType | null>(null)
+  const {selectedWorkout} = useContext(WorkoutContext)
   const Stack = createStackNavigator();
 
   return (
-    <PlansProvider>
-      <WorkoutProvider>
-        <Stack.Navigator>
-          <Stack.Screen
-            name={ScreenName.SavedWorkouts}
-            options={{...theme.screenOptions, title: 'All saved Plans'}}
-          >
-            {() => <MyPlansScreen setPlaneName={setPlaneName}/>}
-          </Stack.Screen>
-          <Stack.Screen
-            name={ScreenName.Plan}
-            options={{...theme.screenOptions, title: planName}}
-          >
-            {() => <PlanScreen setWorkoutName={setWorkoutName}/>}
-          </Stack.Screen>
-          <Stack.Screen
-            name={ScreenName.Workout}
-            options={{...theme.screenOptions, title: workoutName}}
-          >
-            {() => <WorkoutScreen/>}
-          </Stack.Screen>
-        </Stack.Navigator>
-      </WorkoutProvider>
-    </PlansProvider>
+    <Stack.Navigator>
+      <Stack.Screen
+        name={ScreenName.SavedWorkouts}
+        options={{...theme.screenOptions, title: 'All saved Plans'}}
+      >
+        {() => <MyPlansScreen setPlan={setPlan}/>}
+      </Stack.Screen>
+      <Stack.Screen
+        name={ScreenName.Plan}
+        options={{...theme.screenOptions, title: plan?.name}}
+      >
+        {() => <PlanScreen plan={plan as PlanType}/>}
+      </Stack.Screen>
+      <Stack.Screen
+        name={ScreenName.Workout}
+        options={{...theme.screenOptions, title: selectedWorkout?.name}}
+      >
+        {() => <WorkoutScreen/>}
+      </Stack.Screen>
+    </Stack.Navigator>
   )
 }

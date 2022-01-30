@@ -2,17 +2,29 @@ import React, {useContext, useState} from "react";
 import {secondsToMinSec} from "../../Common/WorkoutDuration/WorkoutDuration";
 import {WorkoutContext} from "../../Providers";
 import {Card, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary} from "../../Theme/Parents";
-import {AddMoreButton, MySwitch, MyTextInput, WorkoutDuration} from "../../Common";
+import {AddMoreButton, ConfirmButton, MySwitch, MyTextInput, WorkoutDuration} from "../../Common";
 import ExerciseEdit from "../../Components/ExerciseEdit/ExerciseEdit";
 import ExerciseResult from "../../Components/ExerciseResults/ExerciseResult";
 import {theme} from "../../Theme/theme";
 import {colors} from "../../Theme/colors";
+import {ExerciseType, WorkoutPlanType} from "../../Utils/types";
 
 export default function WorkoutScreen() {
-  const {selectedWorkout} = useContext(WorkoutContext)
+  const {selectedWorkout, updateWorkout} = useContext(WorkoutContext)
   const [isEditMode, setIsEditMode] = useState(false)
   const [workoutNameInput, setWorkoutNameInput] = useState<string>(selectedWorkout?.name || '')
-  const [workoutLabels, setWorkoutLabels] = useState('')
+  const [workoutLabels, setWorkoutLabels] = useState<string>(selectedWorkout?.labels || '')
+  const [workoutExercises, setWorkoutExercises] = useState<ExerciseType[] | null>(selectedWorkout?.exercises || null)
+
+  const onSaveWorkout = async () => {
+    await updateWorkout({
+      ...selectedWorkout,
+      name: workoutNameInput,
+      labels: workoutLabels,
+      exercises: workoutExercises,
+    } as WorkoutPlanType);
+    setIsEditMode(false)
+  }
 
   return selectedWorkout ? (
     <Page>
@@ -47,6 +59,7 @@ export default function WorkoutScreen() {
           ))}
           <AddMoreButton onPress={() => {
           }} header={'Exercise'}/>
+          <ConfirmButton onPress={onSaveWorkout} header={'Save workout'}/>
         </>
       ) : selectedWorkout.exercises.map(exercise => (
         <Card key={`${exercise.name}_${exercise.breakTimeInSec}_${exercise.repeats}`}>

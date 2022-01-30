@@ -2,8 +2,8 @@ import React, {useContext, useState} from 'react'
 import {Text} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useNavigation} from "@react-navigation/native";
-import {AuthContext} from "../../Providers/AuthProvider/AuthProvider";
 import {ScreenName} from "../../Utils/constants";
+import {AuthContext} from "../../Providers";
 import {ConfirmButton, MyTextInput} from "../../Common";
 import {theme} from "../../Theme/theme";
 import {Page, TextOrdinary} from "../../Theme/Parents";

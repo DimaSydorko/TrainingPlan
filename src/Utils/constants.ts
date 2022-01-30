@@ -20,6 +20,7 @@ export enum ScreenName {
 export enum AsyncStorageKey {
   User = 'User',
   Plans = 'Plans',
+  Workouts = 'workouts',
 }
 
 export const screen = {

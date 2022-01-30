@@ -14,6 +14,7 @@ import {ExerciseType} from "../../Utils/types";
 import {colors} from "../../Theme/colors";
 import {View} from "react-native";
 import styles from "./styles";
+import {icon} from "../../Theme/icons";
 
 interface ExerciseEditType {
   exercise: ExerciseType;
@@ -24,10 +25,17 @@ type IsType = {
   laps: boolean;
   repeats: boolean;
   change: boolean;
+  visible: boolean;
 }
 
 export default function ExerciseEdit({exercise}: ExerciseEditType) {
-  const [is, setIs] = useState<IsType>({break: false, change: false, laps: false, repeats: false})
+  const [is, setIs] = useState<IsType>({
+    break: false,
+    change: false,
+    laps: false,
+    repeats: false,
+    visible: false,
+  })
   const [exerciseName, setExerciseName] = useState(exercise.name)
   const [selectSeconds, setSelectSeconds] = useState(0)
   const [selectMinutes, setSelectMinutes] = useState(0)
@@ -38,14 +46,16 @@ export default function ExerciseEdit({exercise}: ExerciseEditType) {
       {!is.change ? (
         <>
           <FlexSpaceBetween>
-            <TextHeader color={colors.secondPrimary}>
+            <TextHeader color={exercise.isVisible ? colors.secondPrimary : colors.textSecondary}>
               {exercise.name}
             </TextHeader>
             <FlexStart>
-              <IconButton name={'pencil-outline'} onPress={() => setIs({...is, change: true})}/>
-              <IconButton name={'eye-off-outline'} onPress={() => {
-              }}/>
-              <IconButton name={'delete-outline'} onPress={() => {
+              <IconButton name={icon.edit} onPress={() => setIs({...is, change: true})}/>
+              <IconButton
+                name={is.visible ? icon.visibilityOff : icon.visibilityOn}
+                onPress={() => setIs({...is, visible: !is.visible})}
+              />
+              <IconButton name={icon.delete} onPress={() => {
               }}/>
             </FlexStart>
           </FlexSpaceBetween>
@@ -110,7 +120,8 @@ export default function ExerciseEdit({exercise}: ExerciseEditType) {
           {is.laps && <ButtonCounter value={laps} onChange={number => setLaps(number)}/>}
 
           <FlexAlignCenter>
-            <ConfirmButton header={'Save'} style={styles.button} onPress={() => {}}/>
+            <ConfirmButton header={'Save'} style={styles.button} onPress={() => {
+            }}/>
             <ConfirmButton
               header={'Cancel'}
               style={styles.button}
