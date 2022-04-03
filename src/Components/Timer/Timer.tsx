@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import {colors} from "../../Theme/colors";
 
 interface AlertProps {
   label: string;
@@ -56,17 +57,19 @@ const TimeCircle = ({ sqSize, strokeWidth, percentage }: CirclePropsType) => {
 
   return (
     <svg width={sqSize} height={sqSize} viewBox={viewBox}>
-      <Circle color={`${colors.blue.blueGray}50`} dashOffsetCircle={33} />
-      <Circle color={colors.red.medium} dashOffsetCircle={dashOffset} />
-      <text className={classes.textTime} x="50%" y="50%" dy=".3em" textAnchor="middle">
+      <Circle color={`${colors.primary}50`} dashOffsetCircle={33} />
+      <Circle color={colors.primary} dashOffsetCircle={dashOffset} />
+      <text
+        // className={classes.textTime}
+        x="50%" y="50%" dy=".3em" textAnchor="middle">
         {`${Math.round(timeLeft)}`}
       </text>
     </svg>
   );
 }
-return (
-  <>
-    <Circle/>
-  </>
-)
-});
+// return (
+//   <>
+//     <Circle/>
+//   </>
+// )
+};

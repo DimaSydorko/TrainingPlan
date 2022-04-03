@@ -1,8 +1,10 @@
-import React, {useContext, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {ScreenName} from "../../Utils/constants";
-import {AuthContext, PlansContext, WorkoutContext} from "../../Providers";
+import {useAppDispatch, usePlans, useUser} from "../../Hooks/redux";
+import {plansActionCreators} from "../../store/reducers/PlansReducer/PlansActionCreators";
+import {workoutActionCreators} from "../../store/reducers/WorkoutReducer/WorkoutActionCreators";
 import {CardPressed, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary} from "../../Theme/Parents";
 import {AddMoreButton, IconButton, MySwitch} from "../../Common";
 import {PlanType} from "../../Utils/types";
@@ -16,30 +18,41 @@ interface MyPlansScreenType {
 
 export default React.memo(function MyPlansScreen({setPlan}: MyPlansScreenType) {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
-  const {plans, addPlan, updatePlan, deletePlan} = useContext(PlansContext)
-  const {getWorkouts} = useContext(WorkoutContext)
-  const {user} = useContext(AuthContext)
+  const dispatch = useAppDispatch()
+  const {plans, isLoading} = usePlans()
+  const {user} = useUser()
   const [isEditMode, setIsEditMode] = useState(false)
 
+  useEffect(() => {
+    if (!user) return
+    dispatch(plansActionCreators.getPlans(user.uid))
+  }, [])
+
   const setNewPlan = async () => {
-    if (user) {
-      await addPlan({
-        uid: '',
-        ownerUid: user.uid,
-        name: 'Test Plan',
-        workoutsCount: 0,
-        labels: [],
-      })
-    }
+    if (!user) return
+    dispatch(plansActionCreators.addPlan({
+      uid: '',
+      ownerUid: user.uid,
+      name: 'Test Plan',
+      workoutsCount: 0,
+      labels: [],
+      userUid: user.uid,
+    }))
   }
   const onPlanPress = (plan: PlanType) => {
     setPlan(plan)
-    getWorkouts(plan.uid)
+    dispatch(workoutActionCreators.getWorkouts(plan.uid))
     navigation.navigate(ScreenName.Plan)
+  }
+
+  const onDelete = (plan: PlanType) => {
+    if (!user) return
+    dispatch(plansActionCreators.deletePlan({...plan, userUid: user.uid}))
   }
 
   return (
     <Page>
+      {isLoading && <TextHeader>Loading...</TextHeader>}
       <FlexSpaceBetween style={theme.containers.secondHeader}>
         <View/>
         {plans?.length ? (
@@ -58,7 +71,7 @@ export default React.memo(function MyPlansScreen({setPlan}: MyPlansScreenType) {
               <TextHeader color={colors.secondPrimary}>{plan.name}</TextHeader>
               <TextSecondary>{plan.workoutsCount} Workouts</TextSecondary>
             </View>
-            {isEditMode && <IconButton name={icon.delete} onPress={() => deletePlan(plan)}/>}
+            {isEditMode && <IconButton name={icon.delete} onPress={() => onDelete(plan)}/>}
           </FlexSpaceBetween>
         </CardPressed>
       ))}

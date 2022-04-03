@@ -1,16 +1,18 @@
-import React, {useContext, useState} from 'react'
+import React, {useState} from 'react'
 import {Text} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {useAppDispatch, useUser} from "../../Hooks/redux";
+import {userActionCreators} from "../../store/reducers/UserReducer/UserActionCreators";
 import {useNavigation} from "@react-navigation/native";
 import {ScreenName} from "../../Utils/constants";
-import {AuthContext} from "../../Providers";
 import {ConfirmButton, MyTextInput} from "../../Common";
+import {Page, TextHeader, TextOrdinary} from "../../Theme/Parents";
 import {theme} from "../../Theme/theme";
-import {Page, TextOrdinary} from "../../Theme/Parents";
 
 export default function RegistrationScreen() {
+  const dispatch = useAppDispatch()
+  const {error, isLoading} = useUser()
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
-  const {signUp} = useContext(AuthContext)
   const [inputData, setInputData] = useState({fullName: '', email: '', password: '', confirmPassword: ''})
 
   const onFooterLinkPress = () => {
@@ -22,8 +24,11 @@ export default function RegistrationScreen() {
       alert("Passwords don't match.")
       return
     }
-    signUp(inputData.email, inputData.password, inputData.fullName)
-    navigation.navigate(ScreenName.Home)
+    dispatch(userActionCreators.signUp({
+      email: inputData.email,
+      password: inputData.password,
+      displayName: inputData.password
+    }))
   }
 
   return (
@@ -31,6 +36,7 @@ export default function RegistrationScreen() {
       <KeyboardAwareScrollView
         style={{flex: 1, width: '100%'}}
         keyboardShouldPersistTaps="always">
+        <TextHeader>{error}</TextHeader>
         <MyTextInput
           value={inputData.fullName}
           onChangeText={fullName => setInputData({...inputData, fullName})}
@@ -53,7 +59,7 @@ export default function RegistrationScreen() {
           onChangeText={confirmPassword => setInputData({...inputData, confirmPassword})}
           placeholder='Confirm Password'
         />
-        <ConfirmButton onPress={onRegister} header='Create account'/>
+        <ConfirmButton disabled={isLoading} onPress={onRegister} header='Create account'/>
         <Page style={theme.margin.top20}>
           <TextOrdinary>Already got an account? <Text onPress={onFooterLinkPress} style={theme.text.link}>Log in</Text></TextOrdinary>
         </Page>

@@ -1,8 +1,10 @@
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import {useNavigation} from "@react-navigation/native";
 import {View} from "react-native";
+import {useAppDispatch, useUser, useWorkout} from "../../Hooks/redux";
 import {ScreenName} from "../../Utils/constants";
-import {AuthContext, WorkoutContext} from "../../Providers";
+import {selectWorkout} from "../../store/reducers/WorkoutReducer/WorkoutSlice";
+import {workoutActionCreators} from "../../store/reducers/WorkoutReducer/WorkoutActionCreators";
 import {CardPressed, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary} from "../../Theme/Parents";
 import {AddMoreButton, IconButton, MySwitch, WorkoutDuration} from "../../Common";
 import {PlanType, WorkoutPlanType} from "../../Utils/types";
@@ -15,30 +17,34 @@ interface PlanScreenType {
 }
 
 export default function PlanScreen({plan}: PlanScreenType) {
-  const {workouts, selectWorkout, addWorkout, deleteWorkout} = useContext(WorkoutContext)
-  const {user} = useContext(AuthContext);
+  const dispatch = useAppDispatch()
+  const {workouts} = useWorkout()
+  const {user} = useUser();
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
   const [isEditMode, setIsEditMode] = useState(false)
+
   const onSelect = (workout: WorkoutPlanType) => {
-    selectWorkout(workout.uid);
+    dispatch(selectWorkout(workout.uid))
     navigation.navigate(ScreenName.Workout);
   }
 
   const onAddWorkout = () => {
-    if (user) {
-      addWorkout({
-        uid: '',
-        planUid: plan.uid,
-        name: 'Test workout',
-        ownerUid: user.uid,
-        labels: '',
-        exercises: [],
-      }, plan)
-    }
+    if (!user) return
+    dispatch(workoutActionCreators.addWorkout({
+      uid: '',
+      planUid: plan.uid,
+      name: 'Test workout',
+      ownerUid: user.uid,
+      labels: [],
+      exercises: [],
+      userUid: user.uid,
+      workoutsCount: workouts.length,
+    }))
   }
 
   const onDeleteWorkout = (workoutUid: string) => {
-    deleteWorkout(workoutUid, plan)
+    if (!user) return
+    dispatch(workoutActionCreators.deleteWorkout({workoutUid, ...plan, userUid: user.uid}))
   }
 
   return (

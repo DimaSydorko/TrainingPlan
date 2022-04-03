@@ -2,10 +2,10 @@ import React from "react";
 import {Text} from "react-native";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {colors} from "../../Theme/colors";
-import {EmptyScreen} from "../../Screens";
-import {WorkoutsRouter} from "../index";
-import PlanRouterIndex from "../PlanRouter";
+import WorkoutsRouter from "./WorkoutsRouter";
+import PlanRouter from "./PlanRouter";
+import {EmptyScreen} from "../Screens";
+import {colors} from "../Theme/colors";
 
 type TabType = {
   name: string,
@@ -17,7 +17,7 @@ type TabType = {
 const tabs = [
   {
     name: 'All saved Plans',
-    component: PlanRouterIndex,
+    component: PlanRouter,
     buttonLabel: 'My Plans',
     icon: (color) => {
       return <Icon name="clipboard-list-outline" size={28} color={color}/>

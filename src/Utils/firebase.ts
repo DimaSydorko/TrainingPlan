@@ -6,6 +6,7 @@ import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/functions';
 import {firebaseSDK} from "../../constants.local";
+import {FirebaseDBCollection} from "./constants";
 
 
 const firebaseConfig = {
@@ -23,5 +24,10 @@ const firebaseConfig = {
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
+
+export const FB_auth = firebase.auth()
+export const FB_Collection_UsersData = firebase.firestore().collection(FirebaseDBCollection.UsersData)
+export const FB_Collection_Workouts = firebase.firestore().collection(FirebaseDBCollection.Workouts)
+export const FB_Collection_Plans = firebase.firestore().collection(FirebaseDBCollection.Plans)
 
 export default firebase;

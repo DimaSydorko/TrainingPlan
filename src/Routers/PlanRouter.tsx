@@ -1,15 +1,15 @@
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import {createStackNavigator} from "@react-navigation/stack";
-import {ScreenName} from "../../Utils/constants";
-import {MyPlansScreen, PlanScreen, WorkoutScreen} from "../../Screens";
-import {WorkoutContext} from "../../Providers";
-import {theme} from "../../Theme/theme";
-import {PlanType} from "../../Utils/types";
+import {ScreenName} from "../Utils/constants";
+import {MyPlansScreen, PlanScreen, WorkoutScreen} from "../Screens";
+import {useWorkout} from "../Hooks/redux";
+import {theme} from "../Theme/theme";
+import {PlanType} from "../Utils/types";
 
 export default function PlanRouter() {
   const [plan, setPlan] = useState<PlanType | null>(null)
-  const {selectedWorkout} = useContext(WorkoutContext)
-  const Stack = createStackNavigator();
+  const {selectedWorkout} = useWorkout()
+  const Stack = createStackNavigator()
 
   return (
     <Stack.Navigator>

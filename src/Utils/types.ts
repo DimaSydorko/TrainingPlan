@@ -1,6 +1,8 @@
-import {firebase} from "./index";
-
-export type UserType = firebase.User & {data: UserDataType | null};
+export interface UserType {
+  uid: string
+  displayName: string
+  photoURL?: string
+}
 
 export interface UserDataType {
   friendsUIDs: string[];
@@ -25,7 +27,7 @@ export interface WorkoutType {
   ownerUid: string;
   planUid?: string;
   name: string;
-  labels?: string;
+  labels?: string[];
   exercises: ExerciseType[];
 }
 

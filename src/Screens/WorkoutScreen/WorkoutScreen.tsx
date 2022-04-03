@@ -1,28 +1,34 @@
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
+import {useAppDispatch, useUser, useWorkout} from "../../Hooks/redux";
+import {workoutActionCreators} from "../../store/reducers/WorkoutReducer/WorkoutActionCreators";
 import {secondsToMinSec} from "../../Common/WorkoutDuration/WorkoutDuration";
-import {WorkoutContext} from "../../Providers";
 import {Card, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary} from "../../Theme/Parents";
 import {AddMoreButton, ConfirmButton, MySwitch, MyTextInput, WorkoutDuration} from "../../Common";
 import ExerciseEdit from "../../Components/ExerciseEdit/ExerciseEdit";
 import ExerciseResult from "../../Components/ExerciseResults/ExerciseResult";
 import {theme} from "../../Theme/theme";
 import {colors} from "../../Theme/colors";
-import {ExerciseType, WorkoutPlanType} from "../../Utils/types";
+import {ExerciseType} from "../../Utils/types";
 
 export default function WorkoutScreen() {
-  const {selectedWorkout, updateWorkout} = useContext(WorkoutContext)
+  const dispatch = useAppDispatch()
+  const {selectedWorkout} = useWorkout()
+  const {user} = useUser()
   const [isEditMode, setIsEditMode] = useState(false)
   const [workoutNameInput, setWorkoutNameInput] = useState<string>(selectedWorkout?.name || '')
-  const [workoutLabels, setWorkoutLabels] = useState<string>(selectedWorkout?.labels || '')
+  const [workoutLabels, setWorkoutLabels] = useState<string[]>(selectedWorkout?.labels || [])
   const [workoutExercises, setWorkoutExercises] = useState<ExerciseType[] | null>(selectedWorkout?.exercises || null)
 
   const onSaveWorkout = async () => {
-    await updateWorkout({
+    if (!workoutExercises || !user || !selectedWorkout) return
+    dispatch(workoutActionCreators.updateWorkout({
       ...selectedWorkout,
       name: workoutNameInput,
       labels: workoutLabels,
       exercises: workoutExercises,
-    } as WorkoutPlanType);
+      userUid: user.uid,
+      workoutUid: selectedWorkout.uid
+    }));
     setIsEditMode(false)
   }
 
@@ -47,8 +53,8 @@ export default function WorkoutScreen() {
           />
           <MyTextInput
             placeholder={'Labels:  #...'}
-            onChangeText={labels => setWorkoutLabels(labels)}
-            value={workoutLabels}
+            onChangeText={value => setWorkoutLabels([value])}
+            value={workoutLabels[0]}
             type={'secondary'}
           />
           {selectedWorkout.exercises.map(exercise => (
