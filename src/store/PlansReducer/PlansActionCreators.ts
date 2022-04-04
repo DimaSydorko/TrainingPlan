@@ -1,7 +1,7 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {FB_Collection_Plans} from "../../../Utils/firebase";
-import {PlanType} from "../../../Utils/types";
-import {QUERY_LIMIT} from "../../../Utils/constants";
+import {FB_Collection_Plans} from "../../Utils/firebase";
+import {PlanType} from "../../Utils/types";
+import {QUERY_LIMIT} from "../../Utils/constants";
 
 export const plansActionCreators = {
   getPlans: createAsyncThunk(

@@ -1,7 +1,7 @@
 import {combineReducers,  configureStore} from "@reduxjs/toolkit";
-import userReducer from './reducers/UserReducer/UserSlice';
-import plansReducer from './reducers/PlansReducer/PlansSlice';
-import workoutReducer from './reducers/WorkoutReducer/WorkoutSlice';
+import userReducer from './UserReducer/UserSlice';
+import plansReducer from './PlansReducer/PlansSlice';
+import workoutReducer from './WorkoutReducer/WorkoutSlice';
 
 const rootReducer = combineReducers({
   userReducer,

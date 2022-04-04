@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useAppDispatch, useUser, useWorkout} from "../../Hooks/redux";
-import {workoutActionCreators} from "../../store/reducers/WorkoutReducer/WorkoutActionCreators";
+import {workoutActionCreators} from "../../store/WorkoutReducer/WorkoutActionCreators";
 import {secondsToMinSec} from "../../Common/WorkoutDuration/WorkoutDuration";
 import {Card, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary} from "../../Theme/Parents";
 import {AddMoreButton, ConfirmButton, MySwitch, MyTextInput, WorkoutDuration} from "../../Common";

@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {Text} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useAppDispatch, useUser} from "../../Hooks/redux";
-import {userActionCreators} from "../../store/reducers/UserReducer/UserActionCreators";
+import {userActionCreators} from "../../store/UserReducer/UserActionCreators";
 import {useNavigation} from "@react-navigation/native";
 import {ScreenName} from "../../Utils/constants";
 import {ConfirmButton, MyTextInput} from "../../Common";

@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {workoutActionCreators} from "./WorkoutActionCreators";
-import {WorkoutPlanType} from "../../../Utils/types";
+import {WorkoutPlanType} from "../../Utils/types";
 
 interface WorkoutSlice {
   workouts: WorkoutPlanType[]

@@ -1,7 +1,7 @@
 import React from 'react'
 import {Text, View} from 'react-native'
 import {useAppDispatch} from "../../Hooks/redux";
-import {userActionCreators} from "../../store/reducers/UserReducer/UserActionCreators";
+import {userActionCreators} from "../../store/UserReducer/UserActionCreators";
 import {ConfirmButton} from "../../Common";
 import {theme} from "../../Theme/theme";
 

@@ -3,11 +3,12 @@ import {Text} from 'react-native'
 import {useNavigation} from "@react-navigation/native";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useAppDispatch, useUser} from "../../Hooks/redux";
-import {userActionCreators} from "../../store/reducers/UserReducer/UserActionCreators";
+import {userActionCreators} from "../../store/UserReducer/UserActionCreators";
 import {ScreenName} from "../../Utils/constants";
 import {ConfirmButton, MyTextInput} from "../../Common";
 import {theme} from "../../Theme/theme";
 import {Page, TextOrdinary} from "../../Theme/Parents";
+import Loading from "../../Common/Loading/Loading";
 
 export default function LoginScreen() {
   const dispatch = useAppDispatch()

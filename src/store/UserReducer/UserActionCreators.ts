@@ -1,6 +1,6 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {FB_auth, FB_Collection_UsersData} from "../../../Utils/firebase";
-import {UserDataType, UserType} from "../../../Utils/types";
+import {FB_auth, FB_Collection_UsersData} from "../../Utils/firebase";
+import {UserDataType, UserType} from "../../Utils/types";
 import {initialUserData} from "./UserSlice";
 
 export const userActionCreators = {

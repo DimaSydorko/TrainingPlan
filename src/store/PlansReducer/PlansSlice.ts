@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {plansActionCreators} from "./PlansActionCreators";
-import {PlanType} from "../../../Utils/types";
+import {PlanType} from "../../Utils/types";
 
 interface PlansSlice {
   plans: PlanType[]

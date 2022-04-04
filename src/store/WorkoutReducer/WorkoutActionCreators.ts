@@ -1,9 +1,9 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {FB_Collection_Workouts} from "../../../Utils/firebase";
+import {FB_Collection_Workouts} from "../../Utils/firebase";
 import {plansActionCreators} from "../PlansReducer/PlansActionCreators";
 import {selectWorkout} from "./WorkoutSlice";
-import {QUERY_LIMIT} from "../../../Utils/constants";
-import {PlanType, WorkoutPlanType} from "../../../Utils/types";
+import {QUERY_LIMIT} from "../../Utils/constants";
+import {PlanType, WorkoutPlanType} from "../../Utils/types";
 
 export const workoutActionCreators = {
   getWorkouts: createAsyncThunk(
