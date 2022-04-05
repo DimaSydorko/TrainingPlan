@@ -37,6 +37,19 @@ export const plansSlice = createSlice({
       state.isLoading = false
       state.error = ''
     },
+    [plansActionCreators.deletePlan.fulfilled.type]: (state, {payload}: PayloadAction<string>) => {
+      state.plans = state.plans.filter(plan => plan.uid !== payload)
+      state.isLoading = false
+      state.error = ''
+    },
+    [plansActionCreators.updatePlan.fulfilled.type]: (state, {payload}: PayloadAction<PlanType>) => {
+      state.plans = state.plans.map(plan => {
+        if (plan.uid === payload.uid) return payload
+        else return plan
+      })
+      state.isLoading = false
+      state.error = ''
+    },
     [plansActionCreators.getPlans.pending.type]: onLoading,
     [plansActionCreators.addPlan.pending.type]: onLoading,
     [plansActionCreators.deletePlan.pending.type]: onLoading,

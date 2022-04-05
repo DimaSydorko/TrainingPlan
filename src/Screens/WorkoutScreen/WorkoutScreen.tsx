@@ -26,8 +26,6 @@ export default function WorkoutScreen() {
       name: workoutNameInput,
       labels: workoutLabels,
       exercises: workoutExercises,
-      userUid: user.uid,
-      workoutUid: selectedWorkout.uid
     }));
     setIsEditMode(false)
   }

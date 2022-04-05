@@ -42,6 +42,19 @@ export const workoutSlice = createSlice({
       state.isLoading = false
       state.error = ''
     },
+    [workoutActionCreators.updateWorkout.fulfilled.type]: (state, {payload}: PayloadAction<WorkoutPlanType>) => {
+      state.workouts = state.workouts.map(workout => {
+        if (workout.uid === payload.uid) return payload
+        return workout
+      })
+      state.isLoading = false
+      state.error = ''
+    },
+    [workoutActionCreators.deleteWorkout.fulfilled.type]: (state, {payload}: PayloadAction<string>) => {
+      state.workouts = state.workouts.filter(workout => workout.uid !== payload)
+      state.isLoading = false
+      state.error = ''
+    },
     [workoutActionCreators.getWorkouts.pending.type]: onLoading,
     [workoutActionCreators.addWorkout.pending.type]: onLoading,
     [workoutActionCreators.deleteWorkout.pending.type]: onLoading,

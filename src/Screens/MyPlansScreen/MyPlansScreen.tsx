@@ -45,9 +45,8 @@ export default React.memo(function MyPlansScreen({setPlan}: MyPlansScreenType) {
     navigation.navigate(ScreenName.Plan)
   }
 
-  const onDelete = (plan: PlanType) => {
-    if (!user) return
-    dispatch(plansActionCreators.deletePlan({...plan, userUid: user.uid}))
+  const onDelete = (planUid: string) => {
+    dispatch(plansActionCreators.deletePlan(planUid))
   }
 
   return (
@@ -70,7 +69,7 @@ export default React.memo(function MyPlansScreen({setPlan}: MyPlansScreenType) {
               <TextHeader color={colors.secondPrimary}>{plan.name}</TextHeader>
               <TextSecondary>{plan.workoutsCount} Workouts</TextSecondary>
             </View>
-            {isEditMode && <IconButton iconName={icon.delete} onPress={() => onDelete(plan)}/>}
+            {isEditMode && <IconButton iconName={icon.delete} onPress={() => onDelete(plan.uid)}/>}
           </FlexSpaceBetween>
         </CardPressed>
       ))}

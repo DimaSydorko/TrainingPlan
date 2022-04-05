@@ -1,12 +1,12 @@
 import React, {useState} from "react";
 import {createStackNavigator} from "@react-navigation/stack";
-import {ScreenName} from "../Utils/constants";
+import {usePlans, useUser, useWorkout} from "../Hooks/redux";
 import {MyPlansScreen, PlanScreen, WorkoutScreen} from "../Screens";
 import NotificationHandler from "../Components/NotificationHandler/NotificationHandler";
-import {usePlans, useUser, useWorkout} from "../Hooks/redux";
-import {theme} from "../Theme/theme";
-import {PlanType} from "../Utils/types";
 import Loading from "../Common/Loading/Loading";
+import {ScreenName} from "../Utils/constants";
+import {PlanType} from "../Utils/types";
+import {theme} from "../Theme/theme";
 
 export default function PlanRouter() {
   const [plan, setPlan] = useState<PlanType | null>(null)

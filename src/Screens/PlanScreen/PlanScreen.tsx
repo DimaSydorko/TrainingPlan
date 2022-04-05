@@ -37,14 +37,13 @@ export default function PlanScreen({plan}: PlanScreenType) {
       ownerUid: user.uid,
       labels: [],
       exercises: [],
-      userUid: user.uid,
       workoutsCount: workouts.length,
     }))
   }
 
   const onDeleteWorkout = (workoutUid: string) => {
     if (!user) return
-    dispatch(workoutActionCreators.deleteWorkout({workoutUid, ...plan, userUid: user.uid}))
+    dispatch(workoutActionCreators.deleteWorkout({workoutUid, ...plan}))
   }
 
   return (
