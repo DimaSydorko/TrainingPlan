@@ -8,11 +8,10 @@ import {ScreenName} from "../../Utils/constants";
 import {ConfirmButton, MyTextInput} from "../../Common";
 import {theme} from "../../Theme/theme";
 import {Page, TextOrdinary} from "../../Theme/Parents";
-import Loading from "../../Common/Loading/Loading";
 
 export default function LoginScreen() {
   const dispatch = useAppDispatch()
-  const {error} = useUser()
+  const {error, isLoading} = useUser()
   const [inputData, setInputData] = useState({email: '', password: ''})
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
 
@@ -39,7 +38,7 @@ export default function LoginScreen() {
           onChangeText={password => setInputData({...inputData, password})}
           placeholder='Password'
         />
-        <ConfirmButton onPress={onLoginPress} header='Log in'/>
+        <ConfirmButton disabled={isLoading} onPress={onLoginPress} header='Log in'/>
         <Page style={theme.margin.top20}>
           <TextOrdinary>Don't have an account? <Text onPress={onFooterLinkPress}
                                                      style={theme.text.link}>Sign up</Text></TextOrdinary>

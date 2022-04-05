@@ -5,7 +5,7 @@ import {colors} from "./colors";
 
 interface ParentProps {
   children?: ReactNode;
-  style?: ViewStyle | TextStyle;
+  style?: ViewStyle | TextStyle | ViewStyle[] | TextStyle[];
 }
 
 interface ColorType {

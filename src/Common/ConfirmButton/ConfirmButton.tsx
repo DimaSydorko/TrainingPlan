@@ -12,10 +12,24 @@ interface ConfirmButtonType {
   style?: ViewStyle;
 }
 
-export default function ConfirmButton ({ onPress, header, headerStyle, color = colors.primary, style, disabled = false }:ConfirmButtonType) {
+export default function ConfirmButton({
+  onPress,
+  header,
+  headerStyle,
+  color = colors.primary,
+  style,
+  disabled = false
+}: ConfirmButtonType) {
   return (
     <TouchableOpacity
-      style={[styles.button, {backgroundColor: color}, style]}
+      style={[
+        styles.button,
+        {
+          backgroundColor: disabled ? colors.disabled : color,
+          opacity: disabled ? 0.8 : 1
+        },
+        style
+      ]}
       onPress={onPress}
       activeOpacity={0.5}
       disabled={disabled}

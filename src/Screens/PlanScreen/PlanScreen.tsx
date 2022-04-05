@@ -70,7 +70,7 @@ export default function PlanScreen({plan}: PlanScreenType) {
                 <WorkoutDuration exercises={workout.exercises}/>
               </FlexStart>
             </View>
-            {isEditMode && <IconButton name={icon.delete} onPress={() => onDeleteWorkout(workout.uid)}/>}
+            {isEditMode && <IconButton iconName={icon.delete} onPress={() => onDeleteWorkout(workout.uid)}/>}
           </FlexSpaceBetween>
         </CardPressed>
       ))}

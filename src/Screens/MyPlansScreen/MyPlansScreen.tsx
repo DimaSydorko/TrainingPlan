@@ -19,7 +19,7 @@ interface MyPlansScreenType {
 export default React.memo(function MyPlansScreen({setPlan}: MyPlansScreenType) {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
   const dispatch = useAppDispatch()
-  const {plans, isLoading} = usePlans()
+  const {plans} = usePlans()
   const {user} = useUser()
   const [isEditMode, setIsEditMode] = useState(false)
 
@@ -52,7 +52,6 @@ export default React.memo(function MyPlansScreen({setPlan}: MyPlansScreenType) {
 
   return (
     <Page>
-      {isLoading && <TextHeader>Loading...</TextHeader>}
       <FlexSpaceBetween style={theme.containers.secondHeader}>
         <View/>
         {plans?.length ? (
@@ -71,7 +70,7 @@ export default React.memo(function MyPlansScreen({setPlan}: MyPlansScreenType) {
               <TextHeader color={colors.secondPrimary}>{plan.name}</TextHeader>
               <TextSecondary>{plan.workoutsCount} Workouts</TextSecondary>
             </View>
-            {isEditMode && <IconButton name={icon.delete} onPress={() => onDelete(plan)}/>}
+            {isEditMode && <IconButton iconName={icon.delete} onPress={() => onDelete(plan)}/>}
           </FlexSpaceBetween>
         </CardPressed>
       ))}

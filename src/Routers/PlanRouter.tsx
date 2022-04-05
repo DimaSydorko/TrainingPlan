@@ -2,19 +2,23 @@ import React, {useState} from "react";
 import {createStackNavigator} from "@react-navigation/stack";
 import {ScreenName} from "../Utils/constants";
 import {MyPlansScreen, PlanScreen, WorkoutScreen} from "../Screens";
-import {useWorkout} from "../Hooks/redux";
+import NotificationHandler from "../Components/NotificationHandler/NotificationHandler";
+import {usePlans, useUser, useWorkout} from "../Hooks/redux";
 import {theme} from "../Theme/theme";
 import {PlanType} from "../Utils/types";
 import Loading from "../Common/Loading/Loading";
 
 export default function PlanRouter() {
   const [plan, setPlan] = useState<PlanType | null>(null)
-  const {selectedWorkout} = useWorkout()
   const Stack = createStackNavigator()
+  const workout = useWorkout()
+  const plans = usePlans()
+  const user = useUser()
 
   return (
     <>
-      <Loading/>
+      <NotificationHandler/>
+      {(workout.isLoading || plans.isLoading || user.isLoading) && <Loading/>}
       <Stack.Navigator>
         <Stack.Screen
           name={ScreenName.SavedWorkouts}
@@ -30,7 +34,7 @@ export default function PlanRouter() {
         </Stack.Screen>
         <Stack.Screen
           name={ScreenName.Workout}
-          options={{...theme.screenOptions, title: selectedWorkout?.name}}
+          options={{...theme.screenOptions, title: workout.selectedWorkout?.name}}
         >
           {() => <WorkoutScreen/>}
         </Stack.Screen>

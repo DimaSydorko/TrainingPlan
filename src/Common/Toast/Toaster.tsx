@@ -1,0 +1,29 @@
+import React from "react";
+import {StyleSheet, View} from "react-native";
+
+const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    width: '100%',
+    top: 0,
+    left: 0,
+    zIndex: 1000,
+    opacity: 0.8,
+  },
+})
+
+interface ToasterType {
+  toasts: (JSX.Element | boolean)[],
+}
+
+export default React.memo(function Toaster({toasts}: ToasterType) {
+  return (
+    <View style={styles.container}>
+      {toasts.map((toast, idx) => (
+        <View key={idx}>
+          {toast}
+        </View>
+      ))}
+    </View>
+  )
+})

@@ -1,6 +1,5 @@
 import {ActivityIndicator, SafeAreaView, StyleSheet} from "react-native";
 import {colors} from "../../Theme/colors";
-import {usePlans, useUser, useWorkout} from "../../Hooks/redux";
 
 const styles = StyleSheet.create({
   bg: {
@@ -18,13 +17,9 @@ const styles = StyleSheet.create({
 })
 
 export default function Loading() {
-  const workout = useWorkout()
-  const plans = usePlans()
-  const user = useUser()
-
-  return (workout.isLoading || plans.isLoading || user.isLoading) ? (
+  return (
     <SafeAreaView style={styles.bg}>
       <ActivityIndicator size="large" color={colors.secondPrimary}/>
     </SafeAreaView>
-  ) : null
+  )
 }

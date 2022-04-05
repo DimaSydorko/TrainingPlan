@@ -3,6 +3,9 @@ export const colors = {
   second: '',
   secondPrimary: '#FF5858',
 
+  error: '#fa6e6e',
+  disabled: '#787777',
+
   black: '#353535',
   white: '#FFFFFF',
 

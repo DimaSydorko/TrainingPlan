@@ -23,11 +23,11 @@ export default function ButtonCounter({value = 0, step = 1, onChange, dataType =
       <IconButton
         size={32}
         disabled={count <= 0}
-        name={'minus-circle-outline'}
+        iconName={'minus-circle-outline'}
         onPress={() => setCount(val => val -= step)}
       />
       <TextHeader color={colors.secondPrimary}>{count}{dataType}</TextHeader>
-      <IconButton name={'plus-circle-outline'} size={32} onPress={() => setCount(val => val += step)}/>
+      <IconButton iconName={'plus-circle-outline'} size={32} onPress={() => setCount(val => val += step)}/>
     </FlexSpaceBetween>
   )
 }

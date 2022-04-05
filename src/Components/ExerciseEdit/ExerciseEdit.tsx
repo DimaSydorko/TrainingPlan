@@ -50,12 +50,12 @@ export default function ExerciseEdit({exercise}: ExerciseEditType) {
               {exercise.name}
             </TextHeader>
             <FlexStart>
-              <IconButton name={icon.edit} onPress={() => setIs({...is, change: true})}/>
+              <IconButton iconName={icon.edit} onPress={() => setIs({...is, change: true})}/>
               <IconButton
-                name={is.visible ? icon.visibilityOff : icon.visibilityOn}
+                iconName={is.visible ? icon.visibilityOff : icon.visibilityOn}
                 onPress={() => setIs({...is, visible: !is.visible})}
               />
-              <IconButton name={icon.delete} onPress={() => {
+              <IconButton iconName={icon.delete} onPress={() => {
               }}/>
             </FlexStart>
           </FlexSpaceBetween>

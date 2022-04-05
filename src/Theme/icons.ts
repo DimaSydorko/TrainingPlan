@@ -4,4 +4,5 @@ export const icon = {
   visibilityOn: 'eye-outline',
   visibilityOff: 'eye-off-outline',
   delete: 'delete-outline',
+  close: 'close',
 }
