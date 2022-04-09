@@ -1,16 +1,16 @@
 import React from 'react'
-import 'react-native-gesture-handler';
-import {NavigationContainer} from "@react-navigation/native";
-import {createStackNavigator} from '@react-navigation/stack'
-import {useUser} from "../Hooks/redux";
-import AppRouter from "./AppRouter";
-import {LoginScreen, RegistrationScreen} from '../Screens'
-import {ScreenName} from "../Utils/constants";
-import {theme} from "../Theme/theme";
+import 'react-native-gesture-handler'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
+import { useUser } from '../Hooks/redux'
+import AppRouter from './AppRouter'
+import { LoginScreen, RegistrationScreen } from '../Screens'
+import { ScreenName } from '../Utils/constants'
+import { theme } from '../Theme/theme'
 
 export default function AuthRouter() {
-  const Stack = createStackNavigator();
-  const {user} = useUser()
+  const Stack = createStackNavigator()
+  const { user } = useUser()
 
   return (
     <NavigationContainer>
@@ -18,9 +18,9 @@ export default function AuthRouter() {
         {user?.uid ? (
           <Stack.Screen
             name={ScreenName.App}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           >
-            {() => <AppRouter/>}
+            {() => <AppRouter />}
           </Stack.Screen>
         ) : (
           <>

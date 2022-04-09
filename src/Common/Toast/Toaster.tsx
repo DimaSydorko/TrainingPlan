@@ -1,5 +1,5 @@
-import React from "react";
-import {StyleSheet, View} from "react-native";
+import React from 'react'
+import { StyleSheet, View } from 'react-native'
 
 const styles = StyleSheet.create({
   container: {
@@ -16,7 +16,7 @@ interface ToasterType {
   toasts: (JSX.Element | boolean)[],
 }
 
-export default React.memo(function Toaster({toasts}: ToasterType) {
+export default React.memo(function Toaster({ toasts }: ToasterType) {
   return (
     <View style={styles.container}>
       {toasts.map((toast, idx) => (

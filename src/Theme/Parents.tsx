@@ -1,7 +1,7 @@
-import {ReactNode} from "react";
-import {SafeAreaView, ScrollView, Text, TextStyle, TouchableOpacity, View, ViewStyle} from "react-native";
-import {theme} from "./theme";
-import {colors} from "./colors";
+import { ReactNode } from 'react'
+import { SafeAreaView, ScrollView, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native'
+import { theme } from './theme'
+import { colors } from './colors'
 
 interface ParentProps {
   children?: ReactNode;
@@ -18,7 +18,7 @@ interface OnPressType {
   onPressIn?: () => void;
 }
 
-export const Page = ({children, style}: ParentProps) => {
+export const Page = ({ children, style }: ParentProps) => {
   return (
     <SafeAreaView style={[theme.containers.centerColumn, style]}>
       <ScrollView>
@@ -28,31 +28,31 @@ export const Page = ({children, style}: ParentProps) => {
   )
 }
 
-export const TextSecondary = ({children, color = colors.textSecondary, style}: ParentProps & ColorType) => {
+export const TextSecondary = ({ children, color = colors.textSecondary, style }: ParentProps & ColorType) => {
   return (
-    <Text style={[{...theme.text.secondary, color}, style]}>
+    <Text style={[{ ...theme.text.secondary, color }, style]}>
       {children}
     </Text>
   )
 }
 
-export const TextHeader = ({children, color = colors.text, style}: ParentProps & ColorType) => {
+export const TextHeader = ({ children, color = colors.text, style }: ParentProps & ColorType) => {
   return (
-    <Text style={[{...theme.text.header, color}, style]}>
+    <Text style={[{ ...theme.text.header, color }, style]}>
       {children}
     </Text>
   )
 }
 
-export const TextOrdinary = ({children, color = colors.text, style}: ParentProps & ColorType) => {
+export const TextOrdinary = ({ children, color = colors.text, style }: ParentProps & ColorType) => {
   return (
-    <Text style={[{...theme.text.ordinary, color}, style]}>
+    <Text style={[{ ...theme.text.ordinary, color }, style]}>
       {children}
     </Text>
   )
 }
 
-export const FlexSpaceBetween = ({children, style}: ParentProps) => {
+export const FlexSpaceBetween = ({ children, style }: ParentProps) => {
   return (
     <View style={[theme.containers.spaceBetween, style]}>
       {children}
@@ -60,7 +60,7 @@ export const FlexSpaceBetween = ({children, style}: ParentProps) => {
   )
 }
 
-export const FlexCenterColumn = ({children, style}: ParentProps) => {
+export const FlexCenterColumn = ({ children, style }: ParentProps) => {
   return (
     <View style={[theme.containers.centerColumn, style]}>
       {children}
@@ -68,7 +68,7 @@ export const FlexCenterColumn = ({children, style}: ParentProps) => {
   )
 }
 
-export const FlexCenter = ({children, style}: ParentProps) => {
+export const FlexCenter = ({ children, style }: ParentProps) => {
   return (
     <View style={[theme.containers.center, style]}>
       {children}
@@ -76,7 +76,7 @@ export const FlexCenter = ({children, style}: ParentProps) => {
   )
 }
 
-export const FlexAlignCenter = ({children, style}: ParentProps) => {
+export const FlexAlignCenter = ({ children, style }: ParentProps) => {
   return (
     <View style={[theme.containers.alignCenter, style]}>
       {children}
@@ -84,7 +84,7 @@ export const FlexAlignCenter = ({children, style}: ParentProps) => {
   )
 }
 
-export const FlexEnd = ({children, style}: ParentProps) => {
+export const FlexEnd = ({ children, style }: ParentProps) => {
   return (
     <View style={[theme.containers.end, style]}>
       {children}
@@ -92,7 +92,7 @@ export const FlexEnd = ({children, style}: ParentProps) => {
   )
 }
 
-export const FlexStart = ({children, style}: ParentProps) => {
+export const FlexStart = ({ children, style }: ParentProps) => {
   return (
     <View style={[theme.containers.alignCenter, style]}>
       {children}
@@ -100,7 +100,7 @@ export const FlexStart = ({children, style}: ParentProps) => {
   )
 }
 
-export const Card = ({children, style}: ParentProps) => {
+export const Card = ({ children, style }: ParentProps) => {
   return (
     <View style={[theme.view.card, theme.view.shadow, style]}>
       {children}
@@ -108,7 +108,7 @@ export const Card = ({children, style}: ParentProps) => {
   )
 }
 
-export const CardPressed = ({children, onPress, onPressOut, onPressIn, style}: ParentProps & OnPressType) => {
+export const CardPressed = ({ children, onPress, onPressOut, onPressIn, style }: ParentProps & OnPressType) => {
   return (
     <TouchableOpacity
       style={[theme.view.card, theme.view.shadow, style]}

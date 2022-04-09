@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from "react";
-import {Text, View, ViewStyle} from 'react-native'
-import {ScrollView} from 'react-native-gesture-handler';
-import {FlexAlignCenter, FlexCenterColumn} from "../../Theme/Parents";
-import {colors} from "../../Theme/colors";
-import {theme} from "../../Theme/theme";
-import {screen} from "../../Utils/constants";
-import styles from "./styles";
+import React, { useEffect, useState } from 'react'
+import { Text, View, ViewStyle } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
+import { FlexAlignCenter, FlexCenterColumn } from '../../Theme/Parents'
+import { colors } from '../../Theme/colors'
+import { theme } from '../../Theme/theme'
+import { screen } from '../../Utils/constants'
+import styles from './styles'
 
 interface SwipeSelectorType {
   onChange: (number: number) => void;
@@ -14,13 +14,13 @@ interface SwipeSelectorType {
   style?: ViewStyle;
 }
 
-export default function SwipeSelector({onChange, step = 1, maxValue = 60, style}: SwipeSelectorType) {
+export default function SwipeSelector({ onChange, step = 1, maxValue = 60, style }: SwipeSelectorType) {
   let list: number[] = []
   const [scroll, setScroll] = useState(0)
 
   useEffect(() => {
     onChange(scroll)
-  },[scroll])
+  }, [scroll])
 
   for (let i = 0; i < maxValue; i += step) {
     list.push(i)
@@ -31,38 +31,39 @@ export default function SwipeSelector({onChange, step = 1, maxValue = 60, style}
   }
 
   const visibleSeater = (value: number) => {
-    const diff = Math.abs(scroll - value);
+    const diff = Math.abs(scroll - value)
 
-    let opacity = '40';
+    let opacity = '40'
     switch (diff) {
       case 0: {
-        opacity = 'FF';
-        break;
+        opacity = 'FF'
+        break
       }
       case 1: {
-        opacity = 'C0';
-        break;
+        opacity = 'C0'
+        break
       }
       case 2: {
-        opacity = '80';
-        break;
+        opacity = '80'
+        break
       }
-      default: break;
+      default:
+        break
     }
     return opacity
   }
 
   function str_pad_left(string: number, pad: string, length: number) {
-    return (new Array(length + 1).join(pad) + string).slice(-length);
+    return (new Array(length + 1).join(pad) + string).slice(-length)
   }
 
   return (
-    <View style={{width: screen.vw - 60}}>
+    <View style={{ width: screen.vw - 60 }}>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={200}
-        decelerationRate="fast"
+        decelerationRate='fast'
         onScroll={event => {
           if (scroll !== toFixed(event.nativeEvent.contentOffset.x)) {
             setScroll(toFixed(event.nativeEvent.contentOffset.x))
@@ -74,7 +75,7 @@ export default function SwipeSelector({onChange, step = 1, maxValue = 60, style}
           {list.map(value => (
             <Text
               key={value}
-              style={[styles.item, theme.text.ordinary, {color: `${colors.text}${visibleSeater(value)}`}]}
+              style={[styles.item, theme.text.ordinary, { color: `${colors.text}${visibleSeater(value)}` }]}
             >
               {str_pad_left(value, '0', 2)}
             </Text>
@@ -82,7 +83,7 @@ export default function SwipeSelector({onChange, step = 1, maxValue = 60, style}
         </FlexAlignCenter>
       </ScrollView>
       <FlexCenterColumn>
-        <View style={styles.selectPoint}/>
+        <View style={styles.selectPoint} />
       </FlexCenterColumn>
     </View>
   )

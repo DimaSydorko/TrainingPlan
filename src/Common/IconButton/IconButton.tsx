@@ -1,7 +1,7 @@
-import React from "react";
-import {TouchableOpacity, ViewStyle} from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import {colors} from "../../Theme/colors";
+import React from 'react'
+import { TouchableOpacity, ViewStyle } from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { colors } from '../../Theme/colors'
 
 interface IconButtonType {
   iconName: string
@@ -26,7 +26,7 @@ export default function IconButton({
       opacity: disabled ? 0.5 : 1,
       borderRadius: 50,
     }, style]}>
-      <Icon name={iconName} color={color} size={size}/>
+      <Icon name={iconName} color={color} size={size} />
     </TouchableOpacity>
   )
 }

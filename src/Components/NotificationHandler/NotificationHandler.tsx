@@ -1,8 +1,8 @@
-import React from "react";
-import {useAppDispatch, usePlans, useWorkout} from "../../Hooks/redux";
-import {errorPlansClear} from "../../store/PlansReducer/PlansSlice";
-import {errorWorkoutClear} from "../../store/WorkoutReducer/WorkoutSlice";
-import {Toast, Toaster} from "../../Common";
+import React from 'react'
+import { useAppDispatch, usePlans, useWorkout } from '../../Hooks/redux'
+import { errorPlansClear } from '../../store/PlansReducer/PlansSlice'
+import { errorWorkoutClear } from '../../store/WorkoutReducer/WorkoutSlice'
+import { Toast, Toaster } from '../../Common'
 
 export default React.memo(function NotificationHandler() {
   const dispatch = useAppDispatch()
@@ -27,6 +27,6 @@ export default React.memo(function NotificationHandler() {
           pressAfterTime={8000}
         />
       ),
-    ]}/>
+    ]} />
   )
 })

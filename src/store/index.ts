@@ -1,9 +1,9 @@
-import {combineReducers,  configureStore} from "@reduxjs/toolkit";
-import storage from 'redux-persist/lib/storage';
-import { persistReducer } from 'redux-persist';
-import userReducer from './UserReducer/UserSlice';
-import plansReducer from './PlansReducer/PlansSlice';
-import workoutReducer from './WorkoutReducer/WorkoutSlice';
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import storage from 'redux-persist/lib/storage'
+import { persistReducer } from 'redux-persist'
+import userReducer from './UserReducer/UserSlice'
+import plansReducer from './PlansReducer/PlansSlice'
+import workoutReducer from './WorkoutReducer/WorkoutSlice'
 
 const rootReducer = combineReducers({
   userReducer,
@@ -14,9 +14,9 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: 'root',
   storage,
-};
+}
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const setupStore = () => {
   return configureStore({

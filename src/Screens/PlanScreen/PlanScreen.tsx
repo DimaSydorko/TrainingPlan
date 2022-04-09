@@ -1,31 +1,31 @@
-import React, {useState} from "react";
-import {useNavigation} from "@react-navigation/native";
-import {View} from "react-native";
-import {useAppDispatch, useUser, useWorkout} from "../../Hooks/redux";
-import {ScreenName} from "../../Utils/constants";
-import {selectWorkout} from "../../store/WorkoutReducer/WorkoutSlice";
-import {workoutActionCreators} from "../../store/WorkoutReducer/WorkoutActionCreators";
-import {CardPressed, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary} from "../../Theme/Parents";
-import {AddMoreButton, IconButton, MySwitch, WorkoutDuration} from "../../Common";
-import {PlanType, WorkoutPlanType} from "../../Utils/types";
-import {theme} from "../../Theme/theme";
-import {colors} from "../../Theme/colors";
-import {icon} from "../../Theme/icons";
+import React, { useState } from 'react'
+import { useNavigation } from '@react-navigation/native'
+import { View } from 'react-native'
+import { useAppDispatch, useUser, useWorkout } from '../../Hooks/redux'
+import { ScreenName } from '../../Utils/constants'
+import { selectWorkout } from '../../store/WorkoutReducer/WorkoutSlice'
+import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
+import { CardPressed, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary } from '../../Theme/Parents'
+import { AddMoreButton, IconButton, MySwitch, WorkoutDuration } from '../../Common'
+import { PlanType, WorkoutPlanType } from '../../Utils/types'
+import { theme } from '../../Theme/theme'
+import { colors } from '../../Theme/colors'
+import { icon } from '../../Theme/icons'
 
 interface PlanScreenType {
   plan: PlanType;
 }
 
-export default function PlanScreen({plan}: PlanScreenType) {
+export default function PlanScreen({ plan }: PlanScreenType) {
   const dispatch = useAppDispatch()
-  const {workouts} = useWorkout()
-  const {user} = useUser();
+  const { workouts } = useWorkout()
+  const { user } = useUser()
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
   const [isEditMode, setIsEditMode] = useState(false)
 
   const onSelect = (workout: WorkoutPlanType) => {
     dispatch(selectWorkout(workout.uid))
-    navigation.navigate(ScreenName.Workout);
+    navigation.navigate(ScreenName.Workout)
   }
 
   const onAddWorkout = () => {
@@ -43,19 +43,19 @@ export default function PlanScreen({plan}: PlanScreenType) {
 
   const onDeleteWorkout = (workoutUid: string) => {
     if (!user) return
-    dispatch(workoutActionCreators.deleteWorkout({workoutUid, ...plan}))
+    dispatch(workoutActionCreators.deleteWorkout({ workoutUid, ...plan }))
   }
 
   return (
     <Page>
       <FlexSpaceBetween style={theme.containers.secondHeader}>
-        <View/>
+        <View />
         {workouts?.length ? (
           <FlexStart>
-            <TextSecondary style={{width: 80}}>
+            <TextSecondary style={{ width: 80 }}>
               Edit Mode:
             </TextSecondary>
-            <MySwitch value={isEditMode} onValueChange={() => setIsEditMode(b => !b)}/>
+            <MySwitch value={isEditMode} onValueChange={() => setIsEditMode(b => !b)} />
           </FlexStart>
         ) : null}
       </FlexSpaceBetween>
@@ -66,14 +66,14 @@ export default function PlanScreen({plan}: PlanScreenType) {
               <TextHeader color={colors.secondPrimary}>{workout.name}</TextHeader>
               <FlexStart>
                 <TextSecondary>{workout.exercises.length} Exercises</TextSecondary>
-                <WorkoutDuration exercises={workout.exercises}/>
+                <WorkoutDuration exercises={workout.exercises} />
               </FlexStart>
             </View>
-            {isEditMode && <IconButton iconName={icon.delete} onPress={() => onDeleteWorkout(workout.uid)}/>}
+            {isEditMode && <IconButton iconName={icon.delete} onPress={() => onDeleteWorkout(workout.uid)} />}
           </FlexSpaceBetween>
         </CardPressed>
       ))}
-      {(isEditMode || !workouts?.length) && <AddMoreButton onPress={onAddWorkout} header={'Workout'}/>}
+      {(isEditMode || !workouts?.length) && <AddMoreButton onPress={onAddWorkout} header={'Workout'} />}
     </Page>
   )
 }

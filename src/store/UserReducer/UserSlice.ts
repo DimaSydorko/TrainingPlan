@@ -1,6 +1,6 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {UserDataType, UserType} from "../../Utils/types";
-import {userActionCreators} from "./UserActionCreators";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { UserDataType, UserType } from '../../Utils/types'
+import { userActionCreators } from './UserActionCreators'
 
 interface UserSlice {
   user: UserType | null
@@ -20,7 +20,7 @@ const initialState: UserSlice = {
   error: '',
 }
 
-const onError = (state: UserSlice, {payload}: PayloadAction<string>) => {
+const onError = (state: UserSlice, { payload }: PayloadAction<string>) => {
   state.isLoading = false
   state.error = payload
 }
@@ -29,13 +29,13 @@ const onLoading = (state: UserSlice) => {
   state.isLoading = true
 }
 
-const onDataUpdate = (state: UserSlice, {payload}: PayloadAction<UserDataType>) => {
+const onDataUpdate = (state: UserSlice, { payload }: PayloadAction<UserDataType>) => {
   state.data = payload
   state.isLoading = false
   state.error = ''
 }
 
-const onLogin = (state: UserSlice, {payload}: PayloadAction<UserType>) => {
+const onLogin = (state: UserSlice, { payload }: PayloadAction<UserType>) => {
   state.user = payload
   state.isLoading = false
   state.error = ''
@@ -47,7 +47,7 @@ export const userSlice = createSlice({
   reducers: {
     errorUserClear(state) {
       state.error = ''
-    }
+    },
   },
   extraReducers: {
     [userActionCreators.signOut.fulfilled.type]: (state) => {
@@ -73,7 +73,7 @@ export const userSlice = createSlice({
     [userActionCreators.dataUpdate.rejected.type]: onError,
     [userActionCreators.dataRequest.rejected.type]: onError,
 
-  }
+  },
 })
 export const { errorUserClear } = userSlice.actions
-export default userSlice.reducer;
+export default userSlice.reducer

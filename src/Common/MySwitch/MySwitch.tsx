@@ -1,6 +1,6 @@
-import React from "react";
-import {Switch} from 'react-native-switch';
-import {colors} from "../../Theme/colors";
+import React from 'react'
+import { Switch } from 'react-native-switch'
+import { colors } from '../../Theme/colors'
 
 interface MySwitchType {
   value: boolean;
@@ -9,7 +9,7 @@ interface MySwitchType {
   color?: string;
 }
 
-export default function MySwitch({value, disabled, onValueChange, color = colors.secondPrimary}: MySwitchType) {
+export default function MySwitch({ value, disabled, onValueChange, color = colors.secondPrimary }: MySwitchType) {
   return (
     <Switch
       value={!value}

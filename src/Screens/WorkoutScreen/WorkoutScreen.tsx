@@ -1,19 +1,19 @@
-import React, {useState} from "react";
-import {useAppDispatch, useUser, useWorkout} from "../../Hooks/redux";
-import {workoutActionCreators} from "../../store/WorkoutReducer/WorkoutActionCreators";
-import {secondsToMinSec} from "../../Common/WorkoutDuration/WorkoutDuration";
-import {Card, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary} from "../../Theme/Parents";
-import {AddMoreButton, ConfirmButton, MySwitch, MyTextInput, WorkoutDuration} from "../../Common";
-import ExerciseEdit from "../../Components/ExerciseEdit/ExerciseEdit";
-import ExerciseResult from "../../Components/ExerciseResults/ExerciseResult";
-import {theme} from "../../Theme/theme";
-import {colors} from "../../Theme/colors";
-import {ExerciseType} from "../../Utils/types";
+import React, { useState } from 'react'
+import { useAppDispatch, useUser, useWorkout } from '../../Hooks/redux'
+import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
+import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
+import { Card, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary } from '../../Theme/Parents'
+import { AddMoreButton, ConfirmButton, MySwitch, MyTextInput, WorkoutDuration } from '../../Common'
+import ExerciseEdit from '../../Components/ExerciseEdit/ExerciseEdit'
+import ExerciseResult from '../../Components/ExerciseResults/ExerciseResult'
+import { theme } from '../../Theme/theme'
+import { colors } from '../../Theme/colors'
+import { ExerciseType } from '../../Utils/types'
 
 export default function WorkoutScreen() {
   const dispatch = useAppDispatch()
-  const {selectedWorkout} = useWorkout()
-  const {user} = useUser()
+  const { selectedWorkout } = useWorkout()
+  const { user } = useUser()
   const [isEditMode, setIsEditMode] = useState(false)
   const [workoutNameInput, setWorkoutNameInput] = useState<string>(selectedWorkout?.name || '')
   const [workoutLabels, setWorkoutLabels] = useState<string[]>(selectedWorkout?.labels || [])
@@ -26,19 +26,19 @@ export default function WorkoutScreen() {
       name: workoutNameInput,
       labels: workoutLabels,
       exercises: workoutExercises,
-    }));
+    }))
     setIsEditMode(false)
   }
 
   return selectedWorkout ? (
     <Page>
       <FlexSpaceBetween style={theme.containers.secondHeader}>
-        <WorkoutDuration exercises={selectedWorkout?.exercises}/>
+        <WorkoutDuration exercises={selectedWorkout?.exercises} />
         <FlexStart>
-          <TextSecondary style={{width: 80}}>
+          <TextSecondary style={{ width: 80 }}>
             Edit Mode:
           </TextSecondary>
-          <MySwitch value={isEditMode} onValueChange={() => setIsEditMode(b => !b)}/>
+          <MySwitch value={isEditMode} onValueChange={() => setIsEditMode(b => !b)} />
         </FlexStart>
       </FlexSpaceBetween>
       {isEditMode ? (
@@ -62,8 +62,8 @@ export default function WorkoutScreen() {
             />
           ))}
           <AddMoreButton onPress={() => {
-          }} header={'Exercise'}/>
-          <ConfirmButton onPress={onSaveWorkout} header={'Save workout'}/>
+          }} header={'Exercise'} />
+          <ConfirmButton onPress={onSaveWorkout} header={'Save workout'} />
         </>
       ) : selectedWorkout.exercises.map(exercise => (
         <Card key={`${exercise.name}_${exercise.breakTimeInSec}_${exercise.repeats}`}>

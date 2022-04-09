@@ -1,4 +1,3 @@
-
 export const icon = {
   edit: 'pencil-outline',
   visibilityOn: 'eye-outline',

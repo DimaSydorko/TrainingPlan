@@ -1,6 +1,6 @@
-import React from "react";
-import {StyleSheet, View, ViewStyle} from "react-native";
-import {TextOrdinary} from "../../Theme/Parents";
+import React from 'react'
+import { StyleSheet, View, ViewStyle } from 'react-native'
+import { TextOrdinary } from '../../Theme/Parents'
 
 interface ExerciseResultsType {
   weight: number;
@@ -12,20 +12,20 @@ const styles = StyleSheet.create({
   container: {
     marginVertical: 3,
     display: 'flex',
-    alignItems: "center",
+    alignItems: 'center',
     justifyContent: 'flex-start',
     flexDirection: 'row',
   } as ViewStyle,
   textRepWeight: {
     width: '35%',
-    textAlign: 'center'
+    textAlign: 'center',
   } as ViewStyle,
   textCurrPrev: {
-    width: '30%'
+    width: '30%',
   },
 })
 
-export default function ExerciseResult({weight, repeats, isPrevious = true}: ExerciseResultsType) {
+export default function ExerciseResult({ weight, repeats, isPrevious = true }: ExerciseResultsType) {
   return (
     <View style={styles.container}>
       <TextOrdinary style={styles.textCurrPrev}>

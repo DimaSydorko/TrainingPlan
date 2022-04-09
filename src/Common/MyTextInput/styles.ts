@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native';
-import {colors} from "../../Theme/colors";
-import {screen} from "../../Utils/constants";
+import { StyleSheet } from 'react-native'
+import { colors } from '../../Theme/colors'
+import { screen } from '../../Utils/constants'
 
 export default StyleSheet.create({
   ordinary: {
@@ -17,12 +17,12 @@ export default StyleSheet.create({
     width: screen.vw - 60,
     marginVertical: 10,
     height: 36,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     paddingHorizontal: 4,
     borderBottomColor: colors.black,
     borderBottomWidth: 1,
     fontSize: 18,
-    borderRadius: 0
+    borderRadius: 0,
   },
   secondary: {
     width: screen.vw - 60,
@@ -33,6 +33,6 @@ export default StyleSheet.create({
     color: colors.textSecondary,
     borderBottomWidth: 1,
     fontSize: 14,
-    borderRadius: 0
-  }
+    borderRadius: 0,
+  },
 })

@@ -1,7 +1,7 @@
-import {createAsyncThunk} from "@reduxjs/toolkit";
-import {FB_auth, FB_Collection_UsersData} from "../../Utils/firebase";
-import {UserDataType, UserType} from "../../Utils/types";
-import {initialUserData} from "./UserSlice";
+import { createAsyncThunk } from '@reduxjs/toolkit'
+import { FB_auth, FB_Collection_UsersData } from '../../Utils/firebase'
+import { UserDataType, UserType } from '../../Utils/types'
+import { initialUserData } from './UserSlice'
 
 export const userActionCreators = {
   signUp: createAsyncThunk(
@@ -10,9 +10,9 @@ export const userActionCreators = {
       try {
         const response = await FB_auth.createUserWithEmailAndPassword(props.email, props.password)
         thunkAPI.dispatch(
-          userActionCreators.dataUpdate({userUid: response.user?.uid || '', data: initialUserData})
+          userActionCreators.dataUpdate({ userUid: response.user?.uid || '', data: initialUserData }),
         )
-        await response.user?.updateProfile({displayName: props.displayName})
+        await response.user?.updateProfile({ displayName: props.displayName })
         return {
           uid: response.user?.uid,
           displayName: response.user?.displayName || '',
@@ -27,7 +27,7 @@ export const userActionCreators = {
     async (props: { email: string, password: string }, thunkAPI) => {
       try {
         const response = await FB_auth.signInWithEmailAndPassword(props.email, props.password)
-        thunkAPI.dispatch(userActionCreators.dataRequest(response.user?.uid || ''));
+        thunkAPI.dispatch(userActionCreators.dataRequest(response.user?.uid || ''))
         return {
           uid: response.user?.uid,
           displayName: response.user?.displayName || '',
@@ -65,6 +65,6 @@ export const userActionCreators = {
       } catch (e) {
         return thunkAPI.rejectWithValue(e.message)
       }
-    }
-  )
+    },
+  ),
 }

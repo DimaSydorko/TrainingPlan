@@ -1,4 +1,4 @@
-import {Dimensions} from "react-native";
+import { Dimensions } from 'react-native'
 
 export enum FirebaseDBCollection {
   UsersData = 'usersData',
@@ -25,7 +25,7 @@ export enum AsyncStorageKey {
 
 export const screen = {
   vw: Dimensions.get('window').width,
-  vh: Dimensions.get('window').height
+  vh: Dimensions.get('window').height,
 }
 
 export const QUERY_LIMIT = 30

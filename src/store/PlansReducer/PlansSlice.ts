@@ -1,6 +1,6 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {plansActionCreators} from "./PlansActionCreators";
-import {PlanType} from "../../Utils/types";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { plansActionCreators } from './PlansActionCreators'
+import { PlanType } from '../../Utils/types'
 
 interface PlansSlice {
   plans: PlanType[]
@@ -14,7 +14,7 @@ const initialState: PlansSlice = {
   error: '',
 }
 
-const onError = (state: PlansSlice, {payload}: PayloadAction<string>) => {
+const onError = (state: PlansSlice, { payload }: PayloadAction<string>) => {
   state.isLoading = false
   state.error = payload
 }
@@ -29,20 +29,20 @@ export const plansSlice = createSlice({
   reducers: {
     errorPlansClear(state) {
       state.error = ''
-    }
+    },
   },
   extraReducers: {
-    [plansActionCreators.getPlans.fulfilled.type]: (state, {payload}: PayloadAction<PlanType[]>) => {
+    [plansActionCreators.getPlans.fulfilled.type]: (state, { payload }: PayloadAction<PlanType[]>) => {
       state.plans = payload
       state.isLoading = false
       state.error = ''
     },
-    [plansActionCreators.deletePlan.fulfilled.type]: (state, {payload}: PayloadAction<string>) => {
+    [plansActionCreators.deletePlan.fulfilled.type]: (state, { payload }: PayloadAction<string>) => {
       state.plans = state.plans.filter(plan => plan.uid !== payload)
       state.isLoading = false
       state.error = ''
     },
-    [plansActionCreators.updatePlan.fulfilled.type]: (state, {payload}: PayloadAction<PlanType>) => {
+    [plansActionCreators.updatePlan.fulfilled.type]: (state, { payload }: PayloadAction<PlanType>) => {
       state.plans = state.plans.map(plan => {
         if (plan.uid === payload.uid) return payload
         else return plan
@@ -52,14 +52,12 @@ export const plansSlice = createSlice({
     },
     [plansActionCreators.getPlans.pending.type]: onLoading,
     [plansActionCreators.addPlan.pending.type]: onLoading,
-    [plansActionCreators.deletePlan.pending.type]: onLoading,
-    [plansActionCreators.updatePlan.pending.type]: onLoading,
 
     [plansActionCreators.getPlans.rejected.type]: onError,
     [plansActionCreators.addPlan.rejected.type]: onError,
     [plansActionCreators.deletePlan.rejected.type]: onError,
     [plansActionCreators.updatePlan.rejected.type]: onError,
-  }
+  },
 })
-export const {errorPlansClear} = plansSlice.actions
-export default plansSlice.reducer;
+export const { errorPlansClear } = plansSlice.actions
+export default plansSlice.reducer

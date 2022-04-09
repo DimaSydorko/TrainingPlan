@@ -1,5 +1,5 @@
-import {ActivityIndicator, SafeAreaView, StyleSheet} from "react-native";
-import {colors} from "../../Theme/colors";
+import { ActivityIndicator, SafeAreaView, StyleSheet } from 'react-native'
+import { colors } from '../../Theme/colors'
 
 const styles = StyleSheet.create({
   bg: {
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
 export default function Loading() {
   return (
     <SafeAreaView style={styles.bg}>
-      <ActivityIndicator size="large" color={colors.secondPrimary}/>
+      <ActivityIndicator size='large' color={colors.secondPrimary} />
     </SafeAreaView>
   )
 }

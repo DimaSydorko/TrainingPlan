@@ -1,10 +1,10 @@
-import React, {useEffect} from "react";
-import {StyleSheet} from "react-native";
-import {IconButton} from "../index";
-import {FlexSpaceBetween, TextOrdinary} from "../../Theme/Parents";
-import {icon} from "../../Theme/icons";
-import {theme} from "../../Theme/theme";
-import {colors} from "../../Theme/colors";
+import React, { useEffect } from 'react'
+import { StyleSheet } from 'react-native'
+import { IconButton } from '../index'
+import { FlexSpaceBetween, TextOrdinary } from '../../Theme/Parents'
+import { icon } from '../../Theme/icons'
+import { theme } from '../../Theme/theme'
+import { colors } from '../../Theme/colors'
 
 const styles = StyleSheet.create({
   container: {
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     minHeight: 48,
     maxWidth: 480,
-    alignItems: "center",
+    alignItems: 'center',
     justifyContent: 'space-between',
     borderStyle: 'solid',
     borderWidth: 1.5,
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   err: {
     backgroundColor: colors.error,
     borderColor: 'rgba(76,76,76,0.84)',
-  }
+  },
 })
 
 interface ToastType {
@@ -33,7 +33,7 @@ interface ToastType {
   pressAfterTime?: number
 }
 
-export default React.memo(function Toast({message, variant = 'error', onPress, pressAfterTime}: ToastType) {
+export default React.memo(function Toast({ message, variant = 'error', onPress, pressAfterTime }: ToastType) {
 
   useEffect(() => {
     if (pressAfterTime) {
@@ -44,11 +44,11 @@ export default React.memo(function Toast({message, variant = 'error', onPress, p
   return (
     <FlexSpaceBetween style={[
       styles.container,
-      variant === "error" ? styles.err : {},
-      theme.view.shadow
+      variant === 'error' ? styles.err : {},
+      theme.view.shadow,
     ]}>
-      <TextOrdinary>{variant === "error" && 'Error:'} {message}</TextOrdinary>
-      <IconButton iconName={icon.close} onPress={onPress}/>
+      <TextOrdinary>{variant === 'error' && 'Error:'} {message}</TextOrdinary>
+      <IconButton iconName={icon.close} onPress={onPress} />
     </FlexSpaceBetween>
   )
 })

@@ -1,7 +1,7 @@
-import {TextStyle, ViewStyle} from "react-native";
-import {StackNavigationOptions} from "@react-navigation/stack";
-import {colors} from "./colors";
-import {screen} from "../Utils/constants";
+import { TextStyle, ViewStyle } from 'react-native'
+import { StackNavigationOptions } from '@react-navigation/stack'
+import { colors } from './colors'
+import { screen } from '../Utils/constants'
 
 export const theme = {
   text: {
@@ -12,17 +12,17 @@ export const theme = {
     ordinary: {
       color: colors.text,
       fontSize: 18,
-      fontWeight: "500",
+      fontWeight: '500',
     } as TextStyle,
     secondary: {
       color: `${colors.text}80`,
       fontSize: 14,
-      fontWeight: "600",
+      fontWeight: '600',
     } as TextStyle,
     link: {
       color: colors.primary,
       fontWeight: 'bold',
-      fontSize: 16
+      fontSize: 16,
     } as TextStyle,
   },
 
@@ -43,15 +43,15 @@ export const theme = {
       shadowRadius: 5,
       shadowOffset: {
         width: 4,
-        height: 2
-      }
+        height: 2,
+      },
     } as ViewStyle,
   },
 
   containers: {
     centerColumn: {
       flex: 1,
-      alignItems: 'center'
+      alignItems: 'center',
     } as ViewStyle,
     center: {
       display: 'flex',
@@ -61,35 +61,35 @@ export const theme = {
     } as ViewStyle,
     alignCenter: {
       display: 'flex',
-      justifyContent: "flex-start",
+      justifyContent: 'flex-start',
       flexDirection: 'row',
-      alignItems: "center",
-      gap: 4
+      alignItems: 'center',
+      gap: 4,
     } as ViewStyle,
     spaceBetween: {
       width: '100%',
       display: 'flex',
-      justifyContent: "space-between",
+      justifyContent: 'space-between',
       flexDirection: 'row',
-      alignItems: "center",
+      alignItems: 'center',
     } as ViewStyle,
     secondHeader: {
       marginVertical: 10,
       paddingHorizontal: 5,
-      width: screen.vw -10
+      width: screen.vw - 10,
     } as ViewStyle,
     end: {
       width: '100%',
       display: 'flex',
-      justifyContent: "flex-end",
+      justifyContent: 'flex-end',
       flexDirection: 'row',
-      alignItems: "center",
+      alignItems: 'center',
     } as ViewStyle,
   },
 
   margin: {
     top20: {
-      marginTop: 20
+      marginTop: 20,
     } as ViewStyle,
   },
   screenOptions: {

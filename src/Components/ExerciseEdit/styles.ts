@@ -1,6 +1,4 @@
-import {StyleSheet} from 'react-native';
-import {screen} from "../../Utils/constants";
-import {colors} from "../../Theme/colors";
+import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
   switchContainer: {
@@ -9,5 +7,5 @@ export default StyleSheet.create({
   },
   button: {
     width: 100,
-  }
+  },
 })

@@ -1,7 +1,7 @@
-import React from "react";
-import {TextInput, TextStyle} from 'react-native'
-import {colors} from "../../Theme/colors";
-import styles from "./styles";
+import React from 'react'
+import { TextInput, TextStyle } from 'react-native'
+import { colors } from '../../Theme/colors'
+import styles from './styles'
 
 interface MyTextInputType {
   placeholder?: string;
@@ -25,18 +25,18 @@ export default function MyTextInput(
   return (
     <TextInput
       style={[
-        type==='ordinary' && styles.ordinary,
-        type==='underline' && styles.underline,
-        type==='secondary' && styles.secondary,
-        style
+        type === 'ordinary' && styles.ordinary,
+        type === 'underline' && styles.underline,
+        type === 'secondary' && styles.secondary,
+        style,
       ]}
       placeholderTextColor={colors.text}
       secureTextEntry={secureTextEntry}
       placeholder={placeholder}
       onChangeText={(text) => onChangeText(text)}
       value={value}
-      underlineColorAndroid="transparent"
-      autoCapitalize="none"
+      underlineColorAndroid='transparent'
+      autoCapitalize='none'
     />
   )
 }

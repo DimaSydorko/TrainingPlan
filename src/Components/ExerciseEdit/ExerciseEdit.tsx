@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from 'react'
 import {
   Card,
   FlexAlignCenter,
@@ -6,15 +6,15 @@ import {
   FlexSpaceBetween,
   FlexStart,
   TextHeader,
-  TextSecondary
-} from "../../Theme/Parents";
-import {secondsToMinSec} from "../../Common/WorkoutDuration/WorkoutDuration";
-import {ButtonCounter, ConfirmButton, IconButton, MySwitch, MyTextInput, SwipeSelector} from "../../Common";
-import {ExerciseType} from "../../Utils/types";
-import {colors} from "../../Theme/colors";
-import {View} from "react-native";
-import styles from "./styles";
-import {icon} from "../../Theme/icons";
+  TextSecondary,
+} from '../../Theme/Parents'
+import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
+import { ButtonCounter, ConfirmButton, IconButton, MySwitch, MyTextInput, SwipeSelector } from '../../Common'
+import { ExerciseType } from '../../Utils/types'
+import { colors } from '../../Theme/colors'
+import { View } from 'react-native'
+import styles from './styles'
+import { icon } from '../../Theme/icons'
 
 interface ExerciseEditType {
   exercise: ExerciseType;
@@ -28,7 +28,7 @@ type IsType = {
   visible: boolean;
 }
 
-export default function ExerciseEdit({exercise}: ExerciseEditType) {
+export default function ExerciseEdit({ exercise }: ExerciseEditType) {
   const [is, setIs] = useState<IsType>({
     break: false,
     change: false,
@@ -50,13 +50,13 @@ export default function ExerciseEdit({exercise}: ExerciseEditType) {
               {exercise.name}
             </TextHeader>
             <FlexStart>
-              <IconButton iconName={icon.edit} onPress={() => setIs({...is, change: true})}/>
+              <IconButton iconName={icon.edit} onPress={() => setIs({ ...is, change: true })} />
               <IconButton
                 iconName={is.visible ? icon.visibilityOff : icon.visibilityOn}
-                onPress={() => setIs({...is, visible: !is.visible})}
+                onPress={() => setIs({ ...is, visible: !is.visible })}
               />
               <IconButton iconName={icon.delete} onPress={() => {
-              }}/>
+              }} />
             </FlexStart>
           </FlexSpaceBetween>
           <FlexSpaceBetween>
@@ -82,17 +82,17 @@ export default function ExerciseEdit({exercise}: ExerciseEditType) {
               Break:
             </TextHeader>
             <View style={styles.switchContainer}>
-              <MySwitch value={is.break} onValueChange={() => setIs(b => ({...b, break: !b.break}))}
-                        color={colors.primary}/>
+              <MySwitch value={is.break} onValueChange={() => setIs(b => ({ ...b, break: !b.break }))}
+                        color={colors.primary} />
             </View>
           </FlexSpaceBetween>
           {is.break && (
             <>
-              <SwipeSelector onChange={number => setSelectMinutes(number)} maxValue={60}/>
+              <SwipeSelector onChange={number => setSelectMinutes(number)} maxValue={60} />
               <TextSecondary>
                 min
               </TextSecondary>
-              <SwipeSelector onChange={number => setSelectSeconds(number)} maxValue={60}/>
+              <SwipeSelector onChange={number => setSelectSeconds(number)} maxValue={60} />
               <TextSecondary>
                 sec
               </TextSecondary>
@@ -104,29 +104,29 @@ export default function ExerciseEdit({exercise}: ExerciseEditType) {
               Repeats:
             </TextHeader>
             <View style={styles.switchContainer}>
-              <MySwitch value={is.repeats} onValueChange={() => setIs(b => ({...b, repeats: !b.repeats}))}
-                        color={colors.primary}/>
+              <MySwitch value={is.repeats} onValueChange={() => setIs(b => ({ ...b, repeats: !b.repeats }))}
+                        color={colors.primary} />
             </View>
           </FlexSpaceBetween>
-          {is.repeats && <SwipeSelector onChange={number => setSelectSeconds(number)} maxValue={100}/>}
+          {is.repeats && <SwipeSelector onChange={number => setSelectSeconds(number)} maxValue={100} />}
 
           <FlexSpaceBetween>
             <TextHeader color={colors.textSecondary}>Laps</TextHeader>
             <View style={styles.switchContainer}>
-              <MySwitch value={is.laps} onValueChange={() => setIs(b => ({...b, laps: !b.laps}))}
-                        color={colors.primary}/>
+              <MySwitch value={is.laps} onValueChange={() => setIs(b => ({ ...b, laps: !b.laps }))}
+                        color={colors.primary} />
             </View>
           </FlexSpaceBetween>
-          {is.laps && <ButtonCounter value={laps} onChange={number => setLaps(number)}/>}
+          {is.laps && <ButtonCounter value={laps} onChange={number => setLaps(number)} />}
 
           <FlexAlignCenter>
             <ConfirmButton header={'Save'} style={styles.button} onPress={() => {
-            }}/>
+            }} />
             <ConfirmButton
               header={'Cancel'}
               style={styles.button}
               color={colors.textSecondary}
-              onPress={() => setIs({...is, change: false})}
+              onPress={() => setIs({ ...is, change: false })}
             />
           </FlexAlignCenter>
         </FlexCenterColumn>

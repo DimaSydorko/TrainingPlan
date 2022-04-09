@@ -1,6 +1,6 @@
-import {StyleSheet} from 'react-native';
-import {screen} from "../../Utils/constants";
-import {colors} from "../../Theme/colors";
+import { StyleSheet } from 'react-native'
+import { screen } from '../../Utils/constants'
+import { colors } from '../../Theme/colors'
 
 export default StyleSheet.create({
   container: {
@@ -12,11 +12,11 @@ export default StyleSheet.create({
     textAlign: 'center',
   },
   itemsContainer: {
-    paddingHorizontal: (screen.vw - 98) / 2
+    paddingHorizontal: (screen.vw - 98) / 2,
   },
   selectPoint: {
     width: 40,
     borderTopWidth: 2,
-    borderTopColor: colors.text
-  }
+    borderTopColor: colors.text,
+  },
 })

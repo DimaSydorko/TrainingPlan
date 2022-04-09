@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
   container: {
@@ -10,6 +10,6 @@ export default StyleSheet.create({
     borderStyle: 'dashed',
   },
   header: {
-    marginLeft: 8
-  }
+    marginLeft: 8,
+  },
 })
