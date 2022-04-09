@@ -4,12 +4,14 @@ import { PlanType } from '../../Utils/types'
 
 interface PlansSlice {
   plans: PlanType[]
+  selectedPlan: PlanType | null,
   isLoading: boolean
   error: string
 }
 
 const initialState: PlansSlice = {
   plans: [],
+  selectedPlan: null,
   isLoading: false,
   error: '',
 }
@@ -29,6 +31,9 @@ export const plansSlice = createSlice({
   reducers: {
     errorPlansClear(state) {
       state.error = ''
+    },
+    selectPlan(state, action: PayloadAction<PlanType>) {
+      state.selectedPlan = action.payload
     },
   },
   extraReducers: {
@@ -59,5 +64,5 @@ export const plansSlice = createSlice({
     [plansActionCreators.updatePlan.rejected.type]: onError,
   },
 })
-export const { errorPlansClear } = plansSlice.actions
+export const { errorPlansClear, selectPlan } = plansSlice.actions
 export default plansSlice.reducer

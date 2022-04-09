@@ -9,7 +9,6 @@ import { PlanType } from '../Utils/types'
 import { theme } from '../Theme/theme'
 
 export default function PlanRouter() {
-  const [plan, setPlan] = useState<PlanType | null>(null)
   const Stack = createStackNavigator()
   const workout = useWorkout()
   const plans = usePlans()
@@ -24,16 +23,16 @@ export default function PlanRouter() {
           name={ScreenName.SavedWorkouts}
           options={{ ...theme.screenOptions, title: 'All saved Plans' }}
         >
-          {() => <MyPlansScreen setPlan={setPlan} />}
+          {() => <MyPlansScreen />}
         </Stack.Screen>
         <Stack.Screen
           name={ScreenName.Plan}
-          options={{ ...theme.screenOptions, title: plan?.name }}
+          options={{ ...theme.screenOptions, title: plans.selectedPlan?.name }}
         >
-          {() => <PlanScreen plan={plan as PlanType} />}
+          {() => <PlanScreen isInPlan />}
         </Stack.Screen>
         <Stack.Screen
-          name={ScreenName.Workout}
+          name={ScreenName.WorkoutInPlan}
           options={{ ...theme.screenOptions, title: workout.selectedWorkout?.name }}
         >
           {() => <WorkoutScreen />}

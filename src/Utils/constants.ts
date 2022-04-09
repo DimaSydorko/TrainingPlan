@@ -11,6 +11,7 @@ export enum ScreenName {
   Login = 'Login',
   SavedPlans = 'Saved Plans',
   SavedWorkouts = 'Saved Workouts',
+  WorkoutInPlan = 'Workout In Plan',
   Workout = 'Workout',
   Plan = 'Plan',
   Home = 'Home',

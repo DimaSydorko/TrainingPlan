@@ -1,16 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { workoutActionCreators } from './WorkoutActionCreators'
-import { WorkoutPlanType } from '../../Utils/types'
+import { WorkoutPlanType, WorkoutType } from '../../Utils/types'
 
 interface WorkoutSlice {
-  workouts: WorkoutPlanType[]
-  selectedWorkout: WorkoutPlanType | null
+  workouts: WorkoutType[]
+  workoutsInPlan: WorkoutPlanType[]
+  selectedWorkout: WorkoutType | null
   isLoading: boolean
   error: string
 }
 
 const initialState: WorkoutSlice = {
   workouts: [],
+  workoutsInPlan: [],
   selectedWorkout: null,
   isLoading: false,
   error: '',
@@ -32,13 +34,16 @@ export const workoutSlice = createSlice({
     errorWorkoutClear(state) {
       state.error = ''
     },
-    selectWorkout(state, action: PayloadAction<string>) {
-      state.selectedWorkout = state.workouts.find(workout => workout.uid === action.payload) || null
+    selectWorkout(state, action: PayloadAction<WorkoutType>) {
+      state.selectedWorkout = action.payload
     },
   },
   extraReducers: {
-    [workoutActionCreators.getWorkouts.fulfilled.type]: (state, { payload }: PayloadAction<WorkoutPlanType[]>) => {
-      state.workouts = payload
+    [workoutActionCreators.getWorkouts.fulfilled.type]: (
+      state, { payload }: PayloadAction<{ workoutsInPlan?: WorkoutPlanType[], workouts?: WorkoutType[] }>,
+    ) => {
+      if (payload.workoutsInPlan) state.workoutsInPlan = payload.workoutsInPlan
+      if (payload.workouts) state.workouts = payload.workouts
       state.isLoading = false
       state.error = ''
     },

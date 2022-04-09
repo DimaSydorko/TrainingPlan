@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { ScreenName } from '../../Utils/constants'
-import { useAppDispatch, usePlans, useUser } from '../../Hooks/redux'
+import { selectPlan } from '../../store/PlansReducer/PlansSlice'
 import { plansActionCreators } from '../../store/PlansReducer/PlansActionCreators'
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
+import { useAppDispatch, usePlans, useUser } from '../../Hooks/redux'
 import { CardPressed, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { AddMoreButton, IconButton, MySwitch } from '../../Common'
+import { ScreenName } from '../../Utils/constants'
 import { PlanType } from '../../Utils/types'
 import { theme } from '../../Theme/theme'
 import { colors } from '../../Theme/colors'
 import { icon } from '../../Theme/icons'
 
-interface MyPlansScreenType {
-  setPlan: (plan: PlanType) => void;
-}
-
-export default React.memo(function MyPlansScreen({ setPlan }: MyPlansScreenType) {
+export default function MyPlansScreen() {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
   const dispatch = useAppDispatch()
   const { plans } = usePlans()
@@ -40,8 +37,8 @@ export default React.memo(function MyPlansScreen({ setPlan }: MyPlansScreenType)
     }))
   }
   const onPlanPress = (plan: PlanType) => {
-    setPlan(plan)
-    dispatch(workoutActionCreators.getWorkouts(plan.uid))
+    dispatch(selectPlan(plan))
+    dispatch(workoutActionCreators.getWorkouts({ uid: plan.uid, findBy: 'planUid' }))
     navigation.navigate(ScreenName.Plan)
   }
 
@@ -76,4 +73,4 @@ export default React.memo(function MyPlansScreen({ setPlan }: MyPlansScreenType)
       {(isEditMode || !plans?.length) && <AddMoreButton onPress={setNewPlan} header={'Plan'} />}
     </Page>
   )
-})
+}

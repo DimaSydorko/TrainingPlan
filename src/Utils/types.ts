@@ -1,7 +1,7 @@
 export interface UserType {
   uid: string
   displayName: string
-  photoURL?: string
+  photoURL: string | null
 }
 
 export interface UserDataType {

@@ -1,49 +1,54 @@
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { View } from 'react-native'
-import { useAppDispatch, useUser, useWorkout } from '../../Hooks/redux'
-import { ScreenName } from '../../Utils/constants'
 import { selectWorkout } from '../../store/WorkoutReducer/WorkoutSlice'
-import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
-import { CardPressed, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary } from '../../Theme/Parents'
+import useWorkoutPlan from '../../Hooks/useWorkoutPlan'
+import { useAppDispatch, useUser, useWorkout } from '../../Hooks/redux'
+import { WorkoutType } from '../../Utils/types'
+import { ScreenName } from '../../Utils/constants'
 import { AddMoreButton, IconButton, MySwitch, WorkoutDuration } from '../../Common'
-import { PlanType, WorkoutPlanType } from '../../Utils/types'
+import { CardPressed, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { theme } from '../../Theme/theme'
 import { colors } from '../../Theme/colors'
 import { icon } from '../../Theme/icons'
 
 interface PlanScreenType {
-  plan: PlanType;
+  isInPlan?: boolean;
 }
 
-export default function PlanScreen({ plan }: PlanScreenType) {
-  const dispatch = useAppDispatch()
-  const { workouts } = useWorkout()
-  const { user } = useUser()
+export default function WorkoutsScreen({ isInPlan = false }: PlanScreenType) {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
+  const dispatch = useAppDispatch()
+  const workout = useWorkout()
+  const { addWorkout, deleteWorkout, addWorkoutInPlane, deleteWorkoutInPlane } = useWorkoutPlan()
+  const { user } = useUser()
   const [isEditMode, setIsEditMode] = useState(false)
+  const workouts = isInPlan ? workout.workoutsInPlan : workout.workouts
 
-  const onSelect = (workout: WorkoutPlanType) => {
-    dispatch(selectWorkout(workout.uid))
-    navigation.navigate(ScreenName.Workout)
+  const onSelect = (workout: WorkoutType) => {
+    dispatch(selectWorkout(workout))
+    navigation.navigate(isInPlan ? ScreenName.WorkoutInPlan : ScreenName.Workout)
   }
 
   const onAddWorkout = () => {
     if (!user) return
-    dispatch(workoutActionCreators.addWorkout({
+    const newWorkout = {
       uid: '',
-      planUid: plan.uid,
-      name: 'Test workout',
+      planUid: '',
+      name: 'New workout',
       ownerUid: user.uid,
       labels: [],
       exercises: [],
-      workoutsCount: workouts.length,
-    }))
+    }
+    isInPlan
+      ? addWorkoutInPlane(newWorkout)
+      : addWorkout(newWorkout)
   }
 
   const onDeleteWorkout = (workoutUid: string) => {
-    if (!user) return
-    dispatch(workoutActionCreators.deleteWorkout({ workoutUid, ...plan }))
+    isInPlan
+      ? deleteWorkoutInPlane(workoutUid)
+      : deleteWorkout(workoutUid)
   }
 
   return (
@@ -67,6 +72,7 @@ export default function PlanScreen({ plan }: PlanScreenType) {
               <FlexStart>
                 <TextSecondary>{workout.exercises.length} Exercises</TextSecondary>
                 <WorkoutDuration exercises={workout.exercises} />
+                {(!!workout.planUid && !isInPlan) && <TextSecondary>(In Plane)</TextSecondary>}
               </FlexStart>
             </View>
             {isEditMode && <IconButton iconName={icon.delete} onPress={() => onDeleteWorkout(workout.uid)} />}
