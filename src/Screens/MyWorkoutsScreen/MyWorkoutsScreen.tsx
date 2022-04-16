@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { PlanScreen } from '../index'
+import { WorkoutsScreen } from '../index'
 import { useAppDispatch, useUser } from '../../Hooks/redux'
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
 
@@ -15,7 +15,7 @@ export default function MyWorkoutsScreen() {
 
   return (
     <>
-      <PlanScreen />
+      <WorkoutsScreen />
     </>
   )
 }

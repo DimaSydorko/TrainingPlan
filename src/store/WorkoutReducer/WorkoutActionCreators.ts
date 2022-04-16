@@ -8,7 +8,10 @@ export const workoutActionCreators = {
     'workout/getWorkouts',
     async ({ uid, findBy }: { uid: string, findBy: 'ownerUid' | 'planUid' }, thunkAPI) => {
       try {
-        const snapshot = await FB_Collection_Workouts.where(findBy, '==', uid).limit(QUERY_LIMIT).get()
+        const snapshot =
+          findBy === 'ownerUid'
+            ? await FB_Collection_Workouts.where('ownerUid', '==', uid).limit(QUERY_LIMIT).get()
+            : await FB_Collection_Workouts.where('plansUid', 'array-contains', uid).limit(QUERY_LIMIT).get()
         const workouts: WorkoutType[] = []
         snapshot.docs.forEach(doc => workouts.push({ ...doc.data(), uid: doc.id } as WorkoutType))
         return findBy === 'planUid' ? { workoutsInPlan: workouts } : { workouts: workouts }
@@ -20,13 +23,12 @@ export const workoutActionCreators = {
   addWorkout: createAsyncThunk(
     'workout/addWorkout',
     async (props: WorkoutType, thunkAPI) => {
-      let { ownerUid, planUid, name, labels, exercises } = props
-      if (!planUid) planUid = ''
       try {
-        await FB_Collection_Workouts.add({ ownerUid, planUid, name, labels, exercises })
-        if (planUid) {
-          thunkAPI.dispatch(workoutActionCreators.getWorkouts({ uid: planUid, findBy: 'planUid' }))
+        await FB_Collection_Workouts.add(props)
+        if (props.plansUid[0]) {
+          thunkAPI.dispatch(workoutActionCreators.getWorkouts({ uid: props.plansUid[0], findBy: 'planUid' }))
         }
+        return props
       } catch (e) {
         return thunkAPI.rejectWithValue(e.message)
       }

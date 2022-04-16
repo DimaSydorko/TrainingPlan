@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { FB_Collection_Plans } from '../../Utils/firebase'
+import { FB_Collection_Plans, FB_FieldValue } from '../../Utils/firebase'
 import { QUERY_LIMIT } from '../../Utils/constants'
 import { PlanType } from '../../Utils/types'
 
@@ -35,6 +35,17 @@ export const plansActionCreators = {
       const { uid, ...plan } = props
       try {
         await FB_Collection_Plans.doc(uid).set(plan)
+        return props
+      } catch (e) {
+        return thunkAPI.rejectWithValue(e.message)
+      }
+    },
+  ),
+  incrementPlanWorkoutsCount: createAsyncThunk(
+    'plans/updatePlan',
+    async (props: {planUid: string, value: number}, thunkAPI) => {
+      try {
+       await FB_Collection_Plans.doc(props.planUid).update({ workoutsCount: FB_FieldValue.increment(props.value) })
         return props
       } catch (e) {
         return thunkAPI.rejectWithValue(e.message)

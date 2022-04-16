@@ -20,8 +20,8 @@ export default function WorkoutsScreen({ isInPlan = false }: PlanScreenType) {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
   const dispatch = useAppDispatch()
   const workout = useWorkout()
-  const { addWorkout, deleteWorkout, addWorkoutInPlane, deleteWorkoutInPlane } = useWorkoutPlan()
   const { user } = useUser()
+  const { addWorkout, deleteWorkout, addWorkoutInPlane, deleteWorkoutInPlane } = useWorkoutPlan()
   const [isEditMode, setIsEditMode] = useState(false)
   const workouts = isInPlan ? workout.workoutsInPlan : workout.workouts
 
@@ -34,7 +34,7 @@ export default function WorkoutsScreen({ isInPlan = false }: PlanScreenType) {
     if (!user) return
     const newWorkout = {
       uid: '',
-      planUid: '',
+      plansUid: [],
       name: 'New workout',
       ownerUid: user.uid,
       labels: [],
@@ -45,10 +45,10 @@ export default function WorkoutsScreen({ isInPlan = false }: PlanScreenType) {
       : addWorkout(newWorkout)
   }
 
-  const onDeleteWorkout = (workoutUid: string) => {
+  const onDeleteWorkout = (workout: WorkoutType) => {
     isInPlan
-      ? deleteWorkoutInPlane(workoutUid)
-      : deleteWorkout(workoutUid)
+      ? deleteWorkoutInPlane(workout)
+      : deleteWorkout(workout)
   }
 
   return (
@@ -72,10 +72,10 @@ export default function WorkoutsScreen({ isInPlan = false }: PlanScreenType) {
               <FlexStart>
                 <TextSecondary>{workout.exercises.length} Exercises</TextSecondary>
                 <WorkoutDuration exercises={workout.exercises} />
-                {(!!workout.planUid && !isInPlan) && <TextSecondary>(In Plane)</TextSecondary>}
+                {(!!workout.plansUid.length && !isInPlan) && <TextSecondary>(In Plane)</TextSecondary>}
               </FlexStart>
             </View>
-            {isEditMode && <IconButton iconName={icon.delete} onPress={() => onDeleteWorkout(workout.uid)} />}
+            {isEditMode && <IconButton iconName={icon.delete} onPress={() => onDeleteWorkout(workout)} />}
           </FlexSpaceBetween>
         </CardPressed>
       ))}

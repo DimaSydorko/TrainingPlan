@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { workoutActionCreators } from './WorkoutActionCreators'
-import { WorkoutPlanType, WorkoutType } from '../../Utils/types'
+import { WorkoutType } from '../../Utils/types'
 
 interface WorkoutSlice {
   workouts: WorkoutType[]
-  workoutsInPlan: WorkoutPlanType[]
+  workoutsInPlan: WorkoutType[]
   selectedWorkout: WorkoutType | null
   isLoading: boolean
   error: string
@@ -40,14 +40,14 @@ export const workoutSlice = createSlice({
   },
   extraReducers: {
     [workoutActionCreators.getWorkouts.fulfilled.type]: (
-      state, { payload }: PayloadAction<{ workoutsInPlan?: WorkoutPlanType[], workouts?: WorkoutType[] }>,
+      state, { payload }: PayloadAction<{ workoutsInPlan?: WorkoutType[], workouts?: WorkoutType[] }>,
     ) => {
       if (payload.workoutsInPlan) state.workoutsInPlan = payload.workoutsInPlan
       if (payload.workouts) state.workouts = payload.workouts
       state.isLoading = false
       state.error = ''
     },
-    [workoutActionCreators.updateWorkout.fulfilled.type]: (state, { payload }: PayloadAction<WorkoutPlanType>) => {
+    [workoutActionCreators.updateWorkout.fulfilled.type]: (state, { payload }: PayloadAction<WorkoutType>) => {
       state.workouts = state.workouts.map(workout => {
         if (workout.uid === payload.uid) return payload
         return workout
@@ -57,6 +57,10 @@ export const workoutSlice = createSlice({
     },
     [workoutActionCreators.deleteWorkout.fulfilled.type]: (state, { payload }: PayloadAction<string>) => {
       state.workouts = state.workouts.filter(workout => workout.uid !== payload)
+      state.isLoading = false
+      state.error = ''
+    },
+    [workoutActionCreators.addWorkout.fulfilled.type]:(state, { payload }: PayloadAction<void>) => {
       state.isLoading = false
       state.error = ''
     },

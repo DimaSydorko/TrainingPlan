@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { usePlans, useUser, useWorkout } from '../Hooks/redux'
-import { MyPlansScreen, PlanScreen, WorkoutScreen } from '../Screens'
+import { MyPlansScreen, WorkoutScreen, WorkoutsScreen } from '../Screens'
 import NotificationHandler from '../Components/NotificationHandler/NotificationHandler'
 import Loading from '../Common/Loading/Loading'
 import { ScreenName } from '../Utils/constants'
-import { PlanType } from '../Utils/types'
 import { theme } from '../Theme/theme'
 
 export default function PlanRouter() {
@@ -29,7 +28,7 @@ export default function PlanRouter() {
           name={ScreenName.Plan}
           options={{ ...theme.screenOptions, title: plans.selectedPlan?.name }}
         >
-          {() => <PlanScreen isInPlan />}
+          {() => <WorkoutsScreen isInPlan />}
         </Stack.Screen>
         <Stack.Screen
           name={ScreenName.WorkoutInPlan}

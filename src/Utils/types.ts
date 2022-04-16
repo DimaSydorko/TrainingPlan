@@ -25,13 +25,13 @@ export interface ExerciseType {
 export interface WorkoutType {
   uid: string;
   ownerUid: string;
-  planUid?: string;
+  plansUid: string[];
   name: string;
-  labels?: string[];
+  labels: string[];
   exercises: ExerciseType[];
 }
 
-export type WorkoutPlanType = Required<Pick<WorkoutType, 'planUid'>> & Omit<WorkoutType, 'planUid'>
+// export type WorkoutPlanType = Required<Pick<WorkoutType, 'plansUid'>> & Omit<WorkoutType, 'plansUid'>
 
 export interface PlanType {
   uid: string;
