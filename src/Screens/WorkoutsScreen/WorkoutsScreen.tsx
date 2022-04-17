@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { View } from 'react-native'
 import { selectWorkout } from '../../store/WorkoutReducer/WorkoutSlice'
@@ -6,17 +6,16 @@ import useWorkoutPlan from '../../Hooks/useWorkoutPlan'
 import { useAppDispatch, useUser, useWorkout } from '../../Hooks/redux'
 import { WorkoutType } from '../../Utils/types'
 import { ScreenName } from '../../Utils/constants'
-import { AddMoreButton, IconButton, MySwitch, WorkoutDuration } from '../../Common'
-import { CardPressed, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary } from '../../Theme/Parents'
+import { AddMoreButton, MySwitch } from '../../Common'
+import WorkoutCard from './WorkoutCard'
+import { FlexSpaceBetween, FlexStart, Page, TextSecondary } from '../../Theme/Parents'
 import { theme } from '../../Theme/theme'
-import { colors } from '../../Theme/colors'
-import { icon } from '../../Theme/icons'
 
-interface PlanScreenType {
+interface IPlanScreen {
   isInPlan?: boolean;
 }
 
-export default function WorkoutsScreen({ isInPlan = false }: PlanScreenType) {
+export default function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
   const dispatch = useAppDispatch()
   const workout = useWorkout()
@@ -25,10 +24,10 @@ export default function WorkoutsScreen({ isInPlan = false }: PlanScreenType) {
   const [isEditMode, setIsEditMode] = useState(false)
   const workouts = isInPlan ? workout.workoutsInPlan : workout.workouts
 
-  const onSelect = (workout: WorkoutType) => {
+  const onSelect = useCallback((workout: WorkoutType) => {
     dispatch(selectWorkout(workout))
     navigation.navigate(isInPlan ? ScreenName.WorkoutInPlan : ScreenName.Workout)
-  }
+  }, [isInPlan])
 
   const onAddWorkout = () => {
     if (!user) return
@@ -45,11 +44,11 @@ export default function WorkoutsScreen({ isInPlan = false }: PlanScreenType) {
       : addWorkout(newWorkout)
   }
 
-  const onDeleteWorkout = (workout: WorkoutType) => {
+  const onDelete = useCallback((workout: WorkoutType) => {
     isInPlan
       ? deleteWorkoutInPlane(workout)
       : deleteWorkout(workout)
-  }
+  }, [deleteWorkoutInPlane, deleteWorkout, isInPlan])
 
   return (
     <Page>
@@ -65,19 +64,14 @@ export default function WorkoutsScreen({ isInPlan = false }: PlanScreenType) {
         ) : null}
       </FlexSpaceBetween>
       {workouts?.map(workout => (
-        <CardPressed key={workout.uid} onPress={() => onSelect(workout)}>
-          <FlexSpaceBetween>
-            <View>
-              <TextHeader color={colors.secondPrimary}>{workout.name}</TextHeader>
-              <FlexStart>
-                <TextSecondary>{workout.exercises.length} Exercises</TextSecondary>
-                <WorkoutDuration exercises={workout.exercises} />
-                {(!!workout.plansUid.length && !isInPlan) && <TextSecondary>(In Plane)</TextSecondary>}
-              </FlexStart>
-            </View>
-            {isEditMode && <IconButton iconName={icon.delete} onPress={() => onDeleteWorkout(workout)} />}
-          </FlexSpaceBetween>
-        </CardPressed>
+        <WorkoutCard
+          key={workout.uid}
+          workout={workout}
+          isInPlan={isInPlan}
+          isEditMode={isEditMode}
+          onSelect={() => onSelect(workout)}
+          onDelete={() => onDelete(workout)}
+        />
       ))}
       {(isEditMode || !workouts?.length) && <AddMoreButton onPress={onAddWorkout} header={'Workout'} />}
     </Page>

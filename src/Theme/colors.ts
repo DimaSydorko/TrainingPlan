@@ -4,7 +4,7 @@ export const colors = {
   secondPrimary: '#FF5858',
 
   error: '#fa6e6e',
-  disabled: '#787777',
+  disabled: '#a1a1a1',
 
   black: '#353535',
   white: '#FFFFFF',

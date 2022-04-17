@@ -5,13 +5,12 @@ import { selectPlan } from '../../store/PlansReducer/PlansSlice'
 import { plansActionCreators } from '../../store/PlansReducer/PlansActionCreators'
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
 import { useAppDispatch, usePlans, useUser } from '../../Hooks/redux'
-import { CardPressed, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary } from '../../Theme/Parents'
-import { AddMoreButton, IconButton, MySwitch } from '../../Common'
+import { FlexSpaceBetween, FlexStart, Page, TextSecondary } from '../../Theme/Parents'
+import { AddMoreButton, MySwitch } from '../../Common'
+import PlanCard from './PlanCard'
 import { ScreenName } from '../../Utils/constants'
 import { PlanType } from '../../Utils/types'
 import { theme } from '../../Theme/theme'
-import { colors } from '../../Theme/colors'
-import { icon } from '../../Theme/icons'
 
 export default function MyPlansScreen() {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
@@ -60,15 +59,13 @@ export default function MyPlansScreen() {
         ) : null}
       </FlexSpaceBetween>
       {plans?.map(plan => (
-        <CardPressed key={plan.uid} onPress={() => onPlanPress(plan)}>
-          <FlexSpaceBetween>
-            <View>
-              <TextHeader color={colors.secondPrimary}>{plan.name}</TextHeader>
-              <TextSecondary>{plan.workoutsCount} Workouts</TextSecondary>
-            </View>
-            {isEditMode && <IconButton iconName={icon.delete} onPress={() => onDelete(plan.uid)} />}
-          </FlexSpaceBetween>
-        </CardPressed>
+        <PlanCard
+          key={plan.uid}
+          plan={plan}
+          isEditMode={isEditMode}
+          onSelect={() => onPlanPress(plan)}
+          onDelete={() => onDelete(plan.uid)}
+        />
       ))}
       {(isEditMode || !plans?.length) && <AddMoreButton onPress={setNewPlan} header={'Plan'} />}
     </Page>
