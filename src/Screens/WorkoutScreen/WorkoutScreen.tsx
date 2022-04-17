@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { nanoid } from 'nanoid'
 import { useAppDispatch, useUser, useWorkout } from '../../Hooks/redux'
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
 import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
@@ -8,7 +9,7 @@ import ExerciseEdit from '../../Components/ExerciseEdit/ExerciseEdit'
 import ExerciseResult from '../../Components/ExerciseResults/ExerciseResult'
 import { theme } from '../../Theme/theme'
 import { colors } from '../../Theme/colors'
-import { ExerciseType } from '../../Utils/types'
+import { ApproachType, ExerciseType } from '../../Utils/types'
 
 export default function WorkoutScreen() {
   const dispatch = useAppDispatch()
@@ -17,7 +18,11 @@ export default function WorkoutScreen() {
   const [isEditMode, setIsEditMode] = useState(false)
   const [workoutNameInput, setWorkoutNameInput] = useState<string>(selectedWorkout?.name || '')
   const [workoutLabels, setWorkoutLabels] = useState<string[]>(selectedWorkout?.labels || [])
-  const [workoutExercises, setWorkoutExercises] = useState<ExerciseType[] | null>(selectedWorkout?.exercises || null)
+  const [workoutExercises, setWorkoutExercises] = useState<ExerciseType[] | null>(null)
+
+  useEffect(() => {
+    setWorkoutExercises(selectedWorkout?.exercises || null)
+  }, [selectedWorkout?.exercises])
 
   const onSaveWorkout = async () => {
     if (!workoutExercises || !user || !selectedWorkout) return
@@ -28,6 +33,30 @@ export default function WorkoutScreen() {
       exercises: workoutExercises,
     }))
     setIsEditMode(false)
+  }
+
+  const onAddExercise = () => {
+    const newExercise: ExerciseType = {
+      uid: nanoid(),
+      name: 'New exercise',
+      laps: 0,
+      approaches: [{
+        repeats: 0,
+        weight: 0,
+      }] as ApproachType[],
+      isVisible: true,
+      breakTimeInSec: 30,
+      imgURL: '',
+    }
+    setWorkoutExercises(prev => [...(prev || []), newExercise])
+  }
+
+  const onChangeExercise = (exercise: ExerciseType) => {
+    setWorkoutExercises(prev => prev?.map(ex => {
+        if (ex.uid === exercise.uid) return exercise
+        else return ex
+      }) || null,
+    )
   }
 
   return selectedWorkout ? (
@@ -55,18 +84,18 @@ export default function WorkoutScreen() {
             value={workoutLabels[0]}
             type={'secondary'}
           />
-          {selectedWorkout.exercises.map(exercise => (
+          {workoutExercises?.map(exercise => (
             <ExerciseEdit
-              key={`${exercise.name}_${exercise.breakTimeInSec}_${exercise.repeats}`}
+              key={exercise.uid}
               exercise={exercise}
+              onSave={onChangeExercise}
             />
           ))}
-          <AddMoreButton onPress={() => {
-          }} header={'Exercise'} />
+          <AddMoreButton onPress={onAddExercise} header={'Exercise'} />
           <ConfirmButton onPress={onSaveWorkout} header={'Save workout'} />
         </>
-      ) : selectedWorkout.exercises.map(exercise => (
-        <Card key={`${exercise.name}_${exercise.breakTimeInSec}_${exercise.repeats}`}>
+      ) : workoutExercises?.map(exercise => (
+        <Card key={exercise.uid}>
           <FlexSpaceBetween>
             <TextHeader color={colors.secondPrimary}>
               {exercise.name}

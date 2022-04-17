@@ -14,12 +14,13 @@ export interface ApproachType {
 }
 
 export interface ExerciseType {
+  uid: string;
   name: string;
   breakTimeInSec: number;
-  repeats: number;
+  laps: number;
   approaches: ApproachType[];
   isVisible: boolean;
-  imgURL?: string;
+  imgURL: string;
 }
 
 export interface WorkoutType {
@@ -30,8 +31,6 @@ export interface WorkoutType {
   labels: string[];
   exercises: ExerciseType[];
 }
-
-// export type WorkoutPlanType = Required<Pick<WorkoutType, 'plansUid'>> & Omit<WorkoutType, 'plansUid'>
 
 export interface PlanType {
   uid: string;

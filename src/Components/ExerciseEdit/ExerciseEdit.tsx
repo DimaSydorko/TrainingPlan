@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Card,
   FlexAlignCenter,
@@ -16,19 +16,20 @@ import { View } from 'react-native'
 import styles from './styles'
 import { icon } from '../../Theme/icons'
 
-interface ExerciseEditType {
-  exercise: ExerciseType;
+interface IExerciseEdit {
+  exercise: ExerciseType
+  onSave: (exercise: ExerciseType) => void
 }
 
 type IsType = {
-  break: boolean;
-  laps: boolean;
-  repeats: boolean;
-  change: boolean;
-  visible: boolean;
+  break: boolean
+  laps: boolean
+  repeats: boolean
+  change: boolean
+  visible: boolean
 }
 
-export default function ExerciseEdit({ exercise }: ExerciseEditType) {
+export default function ExerciseEdit({ exercise, onSave }: IExerciseEdit) {
   const [is, setIs] = useState<IsType>({
     break: false,
     change: false,
@@ -36,10 +37,33 @@ export default function ExerciseEdit({ exercise }: ExerciseEditType) {
     repeats: false,
     visible: false,
   })
-  const [exerciseName, setExerciseName] = useState(exercise.name)
-  const [selectSeconds, setSelectSeconds] = useState(0)
-  const [selectMinutes, setSelectMinutes] = useState(0)
-  const [laps, setLaps] = useState(0)
+  const [name, setName] = useState(exercise.name)
+  const [selectSeconds, setSelectSeconds] = useState(exercise.breakTimeInSec % 60)
+  const [selectMinutes, setSelectMinutes] = useState(Math.round(exercise.breakTimeInSec / 60))
+  const [laps, setLaps] = useState(exercise.laps)
+
+  useEffect(() => {
+    setIs(prev => ({
+      ...prev,
+      break: !!exercise.breakTimeInSec,
+      laps: !!exercise.laps,
+      visible: exercise.isVisible,
+      })
+    )
+  }, [exercise])
+
+  const handleSubmit = () => {
+    const newExercise: ExerciseType = {
+      ...exercise,
+      name,
+      laps,
+      isVisible: is.visible,
+      breakTimeInSec: selectMinutes * 60 + selectSeconds,
+      // imgURL: '',
+    }
+    onSave(newExercise)
+    setIs(prev => ({ ...prev, change: false }))
+  }
 
   return (
     <Card>
@@ -61,7 +85,7 @@ export default function ExerciseEdit({ exercise }: ExerciseEditType) {
           </FlexSpaceBetween>
           <FlexSpaceBetween>
             <TextSecondary>
-              {exercise.approaches.length} laps {exercise.repeats} rep {exercise.approaches[0].weight} kg
+              {exercise.approaches.length} laps {exercise.laps} rep {exercise.approaches[0].weight} kg
             </TextSecondary>
             <TextSecondary>
               Break: {secondsToMinSec(exercise.breakTimeInSec)}
@@ -72,8 +96,8 @@ export default function ExerciseEdit({ exercise }: ExerciseEditType) {
         <FlexCenterColumn>
           <MyTextInput
             placeholder={'Exercise name'}
-            onChangeText={name => setExerciseName(name)}
-            value={exerciseName}
+            onChangeText={name => setName(name)}
+            value={name}
             type={'underline'}
           />
 
@@ -82,8 +106,11 @@ export default function ExerciseEdit({ exercise }: ExerciseEditType) {
               Break:
             </TextHeader>
             <View style={styles.switchContainer}>
-              <MySwitch value={is.break} onValueChange={() => setIs(b => ({ ...b, break: !b.break }))}
-                        color={colors.primary} />
+              <MySwitch
+                value={is.break}
+                onValueChange={() => setIs(b => ({ ...b, break: !b.break }))}
+                color={colors.primary}
+              />
             </View>
           </FlexSpaceBetween>
           {is.break && (
@@ -104,8 +131,11 @@ export default function ExerciseEdit({ exercise }: ExerciseEditType) {
               Repeats:
             </TextHeader>
             <View style={styles.switchContainer}>
-              <MySwitch value={is.repeats} onValueChange={() => setIs(b => ({ ...b, repeats: !b.repeats }))}
-                        color={colors.primary} />
+              <MySwitch
+                value={is.repeats}
+                onValueChange={() => setIs(b => ({ ...b, repeats: !b.repeats }))}
+                color={colors.primary}
+              />
             </View>
           </FlexSpaceBetween>
           {is.repeats && <SwipeSelector onChange={number => setSelectSeconds(number)} maxValue={100} />}
@@ -113,15 +143,17 @@ export default function ExerciseEdit({ exercise }: ExerciseEditType) {
           <FlexSpaceBetween>
             <TextHeader color={colors.textSecondary}>Laps</TextHeader>
             <View style={styles.switchContainer}>
-              <MySwitch value={is.laps} onValueChange={() => setIs(b => ({ ...b, laps: !b.laps }))}
-                        color={colors.primary} />
+              <MySwitch
+                value={is.laps}
+                onValueChange={() => setIs(b => ({ ...b, laps: !b.laps }))}
+                color={colors.primary}
+              />
             </View>
           </FlexSpaceBetween>
           {is.laps && <ButtonCounter value={laps} onChange={number => setLaps(number)} />}
 
           <FlexAlignCenter>
-            <ConfirmButton header={'Save'} style={styles.button} onPress={() => {
-            }} />
+            <ConfirmButton header={'Save'} style={styles.button} onPress={handleSubmit} />
             <ConfirmButton
               header={'Cancel'}
               style={styles.button}
