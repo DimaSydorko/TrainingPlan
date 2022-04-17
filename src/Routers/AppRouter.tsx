@@ -2,6 +2,7 @@ import React from 'react'
 import { Text } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import NotificationHandler from '../Components/NotificationHandler/NotificationHandler'
 import WorkoutsRouter from './WorkoutsRouter'
 import PlanRouter from './PlanRouter'
 import { EmptyScreen } from '../Screens'
@@ -50,35 +51,38 @@ export default function AppRouter() {
   const Tab = createBottomTabNavigator()
 
   return (
-    <Tab.Navigator
-      sceneContainerStyle={{
-        backgroundColor: colors.background,
-      }}
-    >
-      {tabs.map(({ name, icon, buttonLabel, component }, idx) => (
-        <Tab.Screen
-          key={`${name}_${idx}`}
-          name={name}
-          component={component}
-          options={{
-            tabBarLabel: ({ focused }) => (
-              <Text style={focused ? { color: colors.secondPrimary } : { color: colors.black }}>
-                {buttonLabel}
-              </Text>
-            ),
-            tabBarIcon: ({ focused }) => (
-              icon(focused ? colors.secondPrimary : colors.black)
-            ),
-            headerShown: false,
-            tabBarStyle: {
-              backgroundColor: colors.menu,
-              paddingTop: 5,
-              paddingBottom: 5,
-              height: 55,
-            },
-          }}
-        />
-      ))}
-    </Tab.Navigator>
+    <>
+      <NotificationHandler />
+      <Tab.Navigator
+        sceneContainerStyle={{
+          backgroundColor: colors.background,
+        }}
+      >
+        {tabs.map(({ name, icon, buttonLabel, component }, idx) => (
+          <Tab.Screen
+            key={`${name}_${idx}`}
+            name={name}
+            component={component}
+            options={{
+              tabBarLabel: ({ focused }) => (
+                <Text style={focused ? { color: colors.secondPrimary } : { color: colors.black }}>
+                  {buttonLabel}
+                </Text>
+              ),
+              tabBarIcon: ({ focused }) => (
+                icon(focused ? colors.secondPrimary : colors.black)
+              ),
+              headerShown: false,
+              tabBarStyle: {
+                backgroundColor: colors.menu,
+                paddingTop: 5,
+                paddingBottom: 5,
+                height: 55,
+              },
+            }}
+          />
+        ))}
+      </Tab.Navigator>
+    </>
   )
 }

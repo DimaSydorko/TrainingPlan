@@ -11,7 +11,7 @@ export default function useWorkoutPlan() {
   const addWorkoutInPlane = useCallback((workout: WorkoutType) => {
     if (!selectedPlan) return
     dispatch(workoutActionCreators.addWorkout({ ...workout, plansUid: [selectedPlan.uid] }))
-    dispatch(plansActionCreators.updatePlan({ ...selectedPlan, workoutsCount: selectedPlan.workoutsCount + 1 }))
+    dispatch(plansActionCreators.incrementPlanWorkoutsCount({ planUid: selectedPlan.uid, value: 1 }))
   }, [])
 
   const addWorkout = useCallback((workout: WorkoutType) => {

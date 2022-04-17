@@ -16,7 +16,7 @@ export default React.memo(function NotificationHandler() {
           onPress={() => dispatch(errorPlansClear())}
           variant='error'
           message={plans.error}
-          pressAfterTime={8000}
+          pressAfterTime={16000}
         />
       ),
       !!workout.error && (
@@ -24,7 +24,7 @@ export default React.memo(function NotificationHandler() {
           onPress={() => dispatch(errorWorkoutClear())}
           variant='error'
           message={workout.error}
-          pressAfterTime={8000}
+          pressAfterTime={16000}
         />
       ),
     ]} />

@@ -12,7 +12,7 @@ import { ScreenName } from '../../Utils/constants'
 import { PlanType } from '../../Utils/types'
 import { theme } from '../../Theme/theme'
 
-export default function MyPlansScreen() {
+export default React.memo(function MyPlansScreen() {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
   const dispatch = useAppDispatch()
   const { plans } = usePlans()
@@ -70,4 +70,4 @@ export default function MyPlansScreen() {
       {(isEditMode || !plans?.length) && <AddMoreButton onPress={setNewPlan} header={'Plan'} />}
     </Page>
   )
-}
+})

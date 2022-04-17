@@ -28,7 +28,7 @@ export const workoutActionCreators = {
         if (props.plansUid[0]) {
           thunkAPI.dispatch(workoutActionCreators.getWorkouts({ uid: props.plansUid[0], findBy: 'planUid' }))
         }
-        return props
+        thunkAPI.dispatch(workoutActionCreators.getWorkouts({ uid: props.ownerUid, findBy: 'ownerUid' }))
       } catch (e) {
         return thunkAPI.rejectWithValue(e.message)
       }

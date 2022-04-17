@@ -15,7 +15,7 @@ interface IPlanScreen {
   isInPlan?: boolean;
 }
 
-export default function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
+export default React.memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
   const dispatch = useAppDispatch()
   const workout = useWorkout()
@@ -76,4 +76,4 @@ export default function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
       {(isEditMode || !workouts?.length) && <AddMoreButton onPress={onAddWorkout} header={'Workout'} />}
     </Page>
   )
-}
+})

@@ -20,7 +20,7 @@ const initialState: WorkoutSlice = {
 
 const onError = (state: WorkoutSlice, { payload }: PayloadAction<string>) => {
   state.isLoading = false
-  state.error = payload
+  state.error = `Workout ${payload}`
 }
 
 const onLoading = (state: WorkoutSlice) => {
@@ -57,10 +57,7 @@ export const workoutSlice = createSlice({
     },
     [workoutActionCreators.deleteWorkout.fulfilled.type]: (state, { payload }: PayloadAction<string>) => {
       state.workouts = state.workouts.filter(workout => workout.uid !== payload)
-      state.isLoading = false
-      state.error = ''
-    },
-    [workoutActionCreators.addWorkout.fulfilled.type]:(state, { payload }: PayloadAction<void>) => {
+      state.workoutsInPlan = state.workoutsInPlan.filter(workout => workout.uid !== payload)
       state.isLoading = false
       state.error = ''
     },

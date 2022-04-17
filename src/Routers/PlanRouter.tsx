@@ -2,12 +2,11 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { usePlans, useUser, useWorkout } from '../Hooks/redux'
 import { MyPlansScreen, WorkoutScreen, WorkoutsScreen } from '../Screens'
-import NotificationHandler from '../Components/NotificationHandler/NotificationHandler'
 import Loading from '../Common/Loading/Loading'
 import { ScreenName } from '../Utils/constants'
 import { theme } from '../Theme/theme'
 
-export default function PlanRouter() {
+export default React.memo(function PlanRouter() {
   const Stack = createStackNavigator()
   const workout = useWorkout()
   const plans = usePlans()
@@ -15,7 +14,6 @@ export default function PlanRouter() {
 
   return (
     <>
-      <NotificationHandler />
       {(workout.isLoading || plans.isLoading || user.isLoading) && <Loading />}
       <Stack.Navigator>
         <Stack.Screen
@@ -39,4 +37,4 @@ export default function PlanRouter() {
       </Stack.Navigator>
     </>
   )
-}
+})

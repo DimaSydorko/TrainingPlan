@@ -18,7 +18,7 @@ const initialState: PlansSlice = {
 
 const onError = (state: PlansSlice, { payload }: PayloadAction<string>) => {
   state.isLoading = false
-  state.error = payload
+  state.error = `Plan ${payload}`
 }
 
 const onLoading = (state: PlansSlice) => {
