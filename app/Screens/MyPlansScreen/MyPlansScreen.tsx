@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {memo, useEffect, useState} from 'react'
+import { memo, useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { selectPlan } from '../../store/PlansReducer/PlansSlice'
@@ -7,12 +7,11 @@ import { plansActionCreators } from '../../store/PlansReducer/PlansActionCreator
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
 import { useAppDispatch, usePlans, useUser } from '../../Hooks/redux'
 import { FlexSpaceBetween, FlexStart, Page, TextSecondary } from '../../Theme/Parents'
-import { AddMoreButton, MySwitch, SwipeSelector } from '../../Common'
+import { AddMoreButton, MySwitch } from '../../Common'
 import PlanCard from './PlanCard'
 import { ScreenName } from '../../Utils/constants'
 import { PlanType } from '../../Utils/types'
 import { theme } from '../../Theme/theme'
-import { colors } from '../../Theme/colors'
 
 export default memo(function MyPlansScreen() {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
@@ -28,14 +27,16 @@ export default memo(function MyPlansScreen() {
 
   const setNewPlan = async () => {
     if (!user) return
-    dispatch(plansActionCreators.addPlan({
-      uid: '',
-      ownerUid: user.uid,
-      name: 'Test Plan',
-      workoutsCount: 0,
-      labels: [],
-      userUid: user.uid,
-    }))
+    dispatch(
+      plansActionCreators.addPlan({
+        uid: '',
+        ownerUid: user.uid,
+        name: 'Test Plan',
+        workoutsCount: 0,
+        labels: [],
+        userUid: user.uid,
+      }),
+    )
   }
   const onPlanPress = (plan: PlanType) => {
     dispatch(selectPlan(plan))
@@ -49,14 +50,11 @@ export default memo(function MyPlansScreen() {
 
   return (
     <Page>
-      <SwipeSelector value={10} onChange={number => console.log(number)} maxValue={60} />
       <FlexSpaceBetween style={theme.containers.secondHeader}>
         <View />
         {plans?.length ? (
           <FlexStart>
-            <TextSecondary style={{ width: 80 }}>
-              Edit Mode:
-            </TextSecondary>
+            <TextSecondary style={{ width: 80 }}>Edit Mode:</TextSecondary>
             <MySwitch value={isEditMode} onValueChange={() => setIsEditMode(b => !b)} />
           </FlexStart>
         ) : null}

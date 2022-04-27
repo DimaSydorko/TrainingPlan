@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {memo} from "react"
+import { memo } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { usePlans, useUser, useWorkout } from '../Hooks/redux'
 import { MyPlansScreen, WorkoutScreen, WorkoutsScreen } from '../Screens'
@@ -17,16 +17,10 @@ export default memo(function PlanRouter() {
     <>
       {(workout.isLoading || plans.isLoading || user.isLoading) && <Loading />}
       <Stack.Navigator>
-        <Stack.Screen
-          name={ScreenName.SavedWorkouts}
-          options={{ ...theme.screenOptions, title: 'All saved Plans' }}
-        >
+        <Stack.Screen name={ScreenName.SavedWorkouts} options={{ ...theme.screenOptions, title: 'All saved Plans' }}>
           {() => <MyPlansScreen />}
         </Stack.Screen>
-        <Stack.Screen
-          name={ScreenName.Plan}
-          options={{ ...theme.screenOptions, title: plans.selectedPlan?.name }}
-        >
+        <Stack.Screen name={ScreenName.Plan} options={{ ...theme.screenOptions, title: plans.selectedPlan?.name }}>
           {() => <WorkoutsScreen isInPlan />}
         </Stack.Screen>
         <Stack.Screen

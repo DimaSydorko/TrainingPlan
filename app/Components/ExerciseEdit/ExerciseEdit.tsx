@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { View } from 'react-native'
 import {
   Card,
@@ -11,7 +11,7 @@ import {
   TextSecondary,
 } from '../../Theme/Parents'
 import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
-import { ButtonCounter, ConfirmButton, IconButton, MySwitch, MyTextInput, SwipeSelector } from '../../Common'
+import { ButtonCounter, ConfirmButton, IconButton, MyTextInput, SwipeSelector } from '../../Common'
 import { ExerciseType } from '../../Utils/types'
 import { colors } from '../../Theme/colors'
 import { icon } from '../../Theme/icons'
@@ -23,38 +23,14 @@ interface IExerciseEdit {
   onSave: (exercise: ExerciseType) => void
 }
 
-type IsType = {
-  break: boolean
-  laps: boolean
-  repeats: boolean
-  change: boolean
-  visible: boolean
-}
-
 export default function ExerciseEdit({ exercise, onSave, onDelete }: IExerciseEdit) {
-  const [is, setIs] = useState<IsType>({
-    break: false,
-    change: false,
-    laps: false,
-    repeats: false,
-    visible: false,
-  })
+  const [isEdit, setIsEdit] = useState(false)
+  const [isVisible, setIsVisible] = useState(exercise.isVisible)
   const [name, setName] = useState(exercise.name)
   const [selectSeconds, setSelectSeconds] = useState(exercise.breakTimeInSec % 60)
-  const [selectMinutes, setSelectMinutes] = useState(Math.round(exercise.breakTimeInSec / 60))
+  const [selectMinutes, setSelectMinutes] = useState(Math.floor(exercise.breakTimeInSec / 60))
   const [repeats, setRepeats] = useState(exercise.repeats)
   const [laps, setLaps] = useState(exercise.laps)
-
-  useEffect(() => {
-    setIs(prev => ({
-      ...prev,
-      break: !!exercise.breakTimeInSec,
-      laps: !!exercise.laps,
-      repeats: !!exercise.repeats,
-      visible: exercise.isVisible,
-      })
-    )
-  }, [exercise])
 
   const handleSubmit = () => {
     const newExercise: ExerciseType = {
@@ -62,27 +38,25 @@ export default function ExerciseEdit({ exercise, onSave, onDelete }: IExerciseEd
       name,
       laps,
       repeats,
-      isVisible: is.visible,
+      isVisible,
       breakTimeInSec: selectMinutes * 60 + selectSeconds,
       // imgURL: '',
     }
     onSave(newExercise)
-    setIs(prev => ({ ...prev, change: false }))
+    setIsEdit(false)
   }
 
   return (
     <Card>
-      {!is.change ? (
+      {!isEdit ? (
         <>
           <FlexSpaceBetween>
-            <TextHeader color={is.visible ? colors.textSecondary : colors.secondPrimary}>
-              {exercise.name}
-            </TextHeader>
+            <TextHeader color={isVisible ? colors.textSecondary : colors.secondPrimary}>{exercise.name}</TextHeader>
             <FlexStart>
-              <IconButton iconName={icon.edit} onPress={() => setIs({ ...is, change: true })} />
+              <IconButton iconName={icon.edit} onPress={() => setIsEdit(true)} />
               <IconButton
-                iconName={is.visible ? icon.visibilityOff : icon.visibilityOn}
-                onPress={() => setIs({ ...is, visible: !is.visible })}
+                iconName={isVisible ? icon.visibilityOff : icon.visibilityOn}
+                onPress={() => setIsVisible(prev => !prev)}
               />
               <IconButton iconName={icon.delete} onPress={onDelete} />
             </FlexStart>
@@ -91,9 +65,7 @@ export default function ExerciseEdit({ exercise, onSave, onDelete }: IExerciseEd
             <TextSecondary>
               {exercise.approaches.length} laps {exercise.laps} rep {exercise.approaches[0].weight} kg
             </TextSecondary>
-            <TextSecondary>
-              Break: {secondsToMinSec(exercise.breakTimeInSec)}
-            </TextSecondary>
+            <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
           </FlexSpaceBetween>
         </>
       ) : (
@@ -105,56 +77,31 @@ export default function ExerciseEdit({ exercise, onSave, onDelete }: IExerciseEd
             type={'underline'}
           />
 
-          <FlexSpaceBetween>
-            <TextHeader color={colors.textSecondary}>
-              Break:
-            </TextHeader>
-            <View style={styles.switchContainer}>
-              <MySwitch
-                value={is.break}
-                onValueChange={() => setIs(b => ({ ...b, break: !b.break }))}
-                color={colors.primary}
-              />
+          <TextHeader color={colors.textSecondary}>Break:</TextHeader>
+          <FlexSpaceBetween style={{ paddingHorizontal: 50, paddingVertical: 20 }}>
+            <View>
+              <SwipeSelector onChange={number => setSelectMinutes(number)} value={selectMinutes} maxValue={60} />
+              <TextSecondary style={{ textAlign: 'center' }}>min</TextSecondary>
+            </View>
+            <View>
+              <SwipeSelector onChange={number => setSelectSeconds(number)} value={selectSeconds} maxValue={60} />
+              <TextSecondary style={{ textAlign: 'center' }}>sec</TextSecondary>
             </View>
           </FlexSpaceBetween>
-          {is.break && (
-            <>
-              <SwipeSelector onChange={number => setSelectMinutes(number)} maxValue={60} />
-              <TextSecondary>
-                min
-              </TextSecondary>
-              <SwipeSelector onChange={number => setSelectSeconds(number)} maxValue={60} />
-              <TextSecondary>
-                sec
-              </TextSecondary>
-            </>
-          )}
-
           <FlexSpaceBetween>
-            <TextHeader color={colors.textSecondary}>
-              Repeats:
-            </TextHeader>
-            <View style={styles.switchContainer}>
-              <MySwitch
-                value={is.repeats}
-                onValueChange={() => setIs(b => ({ ...b, repeats: !b.repeats }))}
-                color={colors.primary}
-              />
+            <View>
+              <TextHeader color={colors.textSecondary} style={{ textAlign: 'center' }}>
+                Repeats
+              </TextHeader>
+              <ButtonCounter value={repeats} onChange={number => setRepeats(number)} />
+            </View>
+            <View>
+              <TextHeader color={colors.textSecondary} style={{ textAlign: 'center' }}>
+                Laps
+              </TextHeader>
+              <ButtonCounter value={laps} onChange={number => setLaps(number)} />
             </View>
           </FlexSpaceBetween>
-          {is.repeats && <ButtonCounter value={repeats} onChange={number => setRepeats(number)} />}
-
-          <FlexSpaceBetween>
-            <TextHeader color={colors.textSecondary}>Laps</TextHeader>
-            <View style={styles.switchContainer}>
-              <MySwitch
-                value={is.laps}
-                onValueChange={() => setIs(b => ({ ...b, laps: !b.laps }))}
-                color={colors.primary}
-              />
-            </View>
-          </FlexSpaceBetween>
-          {is.laps && <ButtonCounter value={laps} onChange={number => setLaps(number)} />}
 
           <FlexAlignCenter>
             <ConfirmButton header={'Save'} style={styles.button} onPress={handleSubmit} />
@@ -162,7 +109,7 @@ export default function ExerciseEdit({ exercise, onSave, onDelete }: IExerciseEd
               header={'Cancel'}
               style={styles.button}
               color={colors.textSecondary}
-              onPress={() => setIs({ ...is, change: false })}
+              onPress={() => setIsEdit(false)}
             />
           </FlexAlignCenter>
         </FlexCenterColumn>

@@ -6,7 +6,7 @@ import 'firebase/firestore'
 import 'firebase/storage'
 import 'firebase/functions'
 import { FirebaseDBCollection } from './constants'
-import { firebaseSDK } from '../constants.local'
+import { firebaseSDK } from './constants.local'
 
 const firebaseConfig = {
   apiKey: firebaseSDK.API_KEY,

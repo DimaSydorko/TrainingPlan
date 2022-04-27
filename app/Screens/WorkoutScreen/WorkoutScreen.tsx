@@ -27,52 +27,61 @@ export default function WorkoutScreen() {
 
   const onSaveWorkout = async () => {
     if (!workoutExercises || !user || !selectedWorkout) return
-    dispatch(workoutActionCreators.updateWorkout({
-      ...selectedWorkout,
-      name: workoutNameInput,
-      labels: workoutLabels,
-      exercises: workoutExercises,
-    }))
+    dispatch(
+      workoutActionCreators.updateWorkout({
+        ...selectedWorkout,
+        name: workoutNameInput,
+        labels: workoutLabels,
+        exercises: workoutExercises,
+      }),
+    )
     setIsEditMode(false)
   }
 
   const onAddExercise = () => {
     const newExercise: ExerciseType = {
-      uid: nanoid(),
+      // uid: nanoid(),
+      uid: '' + new Date(),
       name: 'New exercise',
       laps: 0,
       repeats: 0,
-      approaches: [{
-        repeats: 0,
-        weight: 0,
-      }] as ApproachType[],
+      approaches: [
+        {
+          repeats: 0,
+          weight: 0,
+        },
+      ] as ApproachType[],
       isVisible: true,
       breakTimeInSec: 30,
       imgURL: '',
     }
+    console.log(newExercise.uid)
     setWorkoutExercises(prev => [...(prev || []), newExercise])
   }
 
   const onChangeExercise = useCallback((exercise: ExerciseType) => {
-    setWorkoutExercises(prev => prev?.map(ex => {
-        if (ex.uid === exercise.uid) return exercise
-        else return ex
-      }) || null,
+    setWorkoutExercises(
+      prev =>
+        prev?.map(ex => {
+          if (ex.uid === exercise.uid) return exercise
+          else return ex
+        }) || null,
     )
   }, [])
 
-  const onDeleteExercise = useCallback((exercise: ExerciseType) => {
-    setWorkoutExercises(prev => prev?.filter(ex => ex.uid !== exercise.uid) || null)
-  }, [setWorkoutExercises])
+  const onDeleteExercise = useCallback(
+    (exercise: ExerciseType) => {
+      setWorkoutExercises(prev => prev?.filter(ex => ex.uid !== exercise.uid) || null)
+    },
+    [setWorkoutExercises],
+  )
 
   return selectedWorkout ? (
-    <Page>
+    <Page scrollEnabled={false}>
       <FlexSpaceBetween style={theme.containers.secondHeader}>
         <WorkoutDuration exercises={selectedWorkout?.exercises} />
         <FlexStart>
-          <TextSecondary style={{ width: 80 }}>
-            Edit Mode:
-          </TextSecondary>
+          <TextSecondary style={{ width: 80 }}>Edit Mode:</TextSecondary>
           <MySwitch value={isEditMode} onValueChange={() => setIsEditMode(b => !b)} />
         </FlexStart>
       </FlexSpaceBetween>
@@ -101,32 +110,24 @@ export default function WorkoutScreen() {
           <AddMoreButton onPress={onAddExercise} header={'Exercise'} />
           <ConfirmButton onPress={onSaveWorkout} header={'Save workout'} />
         </>
-      ) : workoutExercises?.map(exercise => (
-        <Card key={exercise.uid}>
-          <FlexSpaceBetween>
-            <TextHeader color={colors.secondPrimary}>
-              {exercise.name}
-            </TextHeader>
-            <TextSecondary>
-              Break: {secondsToMinSec(exercise.breakTimeInSec)}
-            </TextSecondary>
-          </FlexSpaceBetween>
-          {exercise.approaches.map((approach, idx) => (
-            <ExerciseResult
-              key={idx}
-              isPrevious
-              weight={approach.weight}
-              repeats={approach.repeats}
-            />
-          ))}
-        </Card>
-      ))}
+      ) : (
+        workoutExercises?.map(exercise => (
+          <Card key={exercise.uid}>
+            <FlexSpaceBetween>
+              <TextHeader color={colors.secondPrimary}>{exercise.name}</TextHeader>
+              <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
+              <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
+            </FlexSpaceBetween>
+            {exercise.approaches.map((approach, idx) => (
+              <ExerciseResult key={idx} isPrevious weight={approach.weight} repeats={approach.repeats} />
+            ))}
+          </Card>
+        ))
+      )}
     </Page>
   ) : (
     <Page>
-      <TextSecondary>
-        Error try reload page
-      </TextSecondary>
+      <TextSecondary>Error try reload page</TextSecondary>
     </Page>
   )
 }
