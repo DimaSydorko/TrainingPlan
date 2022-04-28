@@ -1,16 +1,24 @@
 import * as React from 'react'
 import { useCallback, useEffect, useState } from 'react'
-import { nanoid } from 'nanoid'
 import { useAppDispatch, useUser, useWorkout } from '../../Hooks/redux'
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
 import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
-import { Card, FlexSpaceBetween, FlexStart, Page, TextHeader, TextSecondary } from '../../Theme/Parents'
+import {
+  Card,
+  FlexCenterColumn,
+  FlexSpaceBetween,
+  FlexStart,
+  Page,
+  TextHeader,
+  TextSecondary,
+} from '../../Theme/Parents'
 import { AddMoreButton, ConfirmButton, MySwitch, MyTextInput, WorkoutDuration } from '../../Common'
 import ExerciseEdit from '../../Components/ExerciseEdit/ExerciseEdit'
 import ExerciseResult from '../../Components/ExerciseResults/ExerciseResult'
+import { nanoid } from '../../Utils'
+import { ApproachType, ExerciseType } from '../../Utils/types'
 import { theme } from '../../Theme/theme'
 import { colors } from '../../Theme/colors'
-import { ApproachType, ExerciseType } from '../../Utils/types'
 
 export default function WorkoutScreen() {
   const dispatch = useAppDispatch()
@@ -40,8 +48,7 @@ export default function WorkoutScreen() {
 
   const onAddExercise = () => {
     const newExercise: ExerciseType = {
-      // uid: nanoid(),
-      uid: '' + new Date(),
+      uid: nanoid(),
       name: 'New exercise',
       laps: 0,
       repeats: 0,
@@ -55,7 +62,6 @@ export default function WorkoutScreen() {
       breakTimeInSec: 30,
       imgURL: '',
     }
-    console.log(newExercise.uid)
     setWorkoutExercises(prev => [...(prev || []), newExercise])
   }
 
@@ -77,7 +83,7 @@ export default function WorkoutScreen() {
   )
 
   return selectedWorkout ? (
-    <Page scrollEnabled={false}>
+    <Page>
       <FlexSpaceBetween style={theme.containers.secondHeader}>
         <WorkoutDuration exercises={selectedWorkout?.exercises} />
         <FlexStart>
@@ -85,45 +91,47 @@ export default function WorkoutScreen() {
           <MySwitch value={isEditMode} onValueChange={() => setIsEditMode(b => !b)} />
         </FlexStart>
       </FlexSpaceBetween>
-      {isEditMode ? (
-        <>
-          <MyTextInput
-            placeholder={'Workout Name'}
-            onChangeText={workoutName => setWorkoutNameInput(workoutName)}
-            value={workoutNameInput}
-            type={'underline'}
-          />
-          <MyTextInput
-            placeholder={'Labels:  #...'}
-            onChangeText={value => setWorkoutLabels([value])}
-            value={workoutLabels[0]}
-            type={'secondary'}
-          />
-          {workoutExercises?.map(exercise => (
-            <ExerciseEdit
-              key={exercise.uid}
-              exercise={exercise}
-              onSave={onChangeExercise}
-              onDelete={() => onDeleteExercise(exercise)}
+      <FlexCenterColumn style={{ paddingHorizontal: 8 }}>
+        {isEditMode ? (
+          <>
+            <MyTextInput
+              placeholder={'Workout Name'}
+              onChangeText={workoutName => setWorkoutNameInput(workoutName)}
+              value={workoutNameInput}
+              type={'underline'}
             />
-          ))}
-          <AddMoreButton onPress={onAddExercise} header={'Exercise'} />
-          <ConfirmButton onPress={onSaveWorkout} header={'Save workout'} />
-        </>
-      ) : (
-        workoutExercises?.map(exercise => (
-          <Card key={exercise.uid}>
-            <FlexSpaceBetween>
-              <TextHeader color={colors.secondPrimary}>{exercise.name}</TextHeader>
-              <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
-              <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
-            </FlexSpaceBetween>
-            {exercise.approaches.map((approach, idx) => (
-              <ExerciseResult key={idx} isPrevious weight={approach.weight} repeats={approach.repeats} />
+            <MyTextInput
+              placeholder={'Labels:  #...'}
+              onChangeText={value => setWorkoutLabels([value])}
+              value={workoutLabels[0]}
+              type={'secondary'}
+            />
+            {workoutExercises?.map(exercise => (
+              <ExerciseEdit
+                key={exercise.uid}
+                exercise={exercise}
+                onSave={onChangeExercise}
+                onDelete={() => onDeleteExercise(exercise)}
+              />
             ))}
-          </Card>
-        ))
-      )}
+            <AddMoreButton onPress={onAddExercise} header={'Exercise'} />
+            <ConfirmButton onPress={onSaveWorkout} header={'Save workout'} />
+          </>
+        ) : (
+          workoutExercises?.map(exercise => (
+            <Card key={exercise.uid}>
+              <FlexSpaceBetween>
+                <TextHeader color={colors.secondPrimary}>{exercise.name}</TextHeader>
+                <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
+                <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
+              </FlexSpaceBetween>
+              {exercise.approaches.map((approach, idx) => (
+                <ExerciseResult key={idx} isPrevious weight={approach.weight} repeats={approach.repeats} />
+              ))}
+            </Card>
+          ))
+        )}
+      </FlexCenterColumn>
     </Page>
   ) : (
     <Page>

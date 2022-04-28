@@ -1,11 +1,16 @@
 import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
-  switchContainer: {
-    marginHorizontal: 10,
-    marginTop: 4,
+  breakContainer: {
+    width: 250,
+    paddingHorizontal: 50,
+    height: 180,
   },
-  button: {
-    width: 100,
+  swipeContainer: {
+    height: 150,
+  },
+  breakText: {
+    textAlign: 'center',
+    width: 75,
   },
 })

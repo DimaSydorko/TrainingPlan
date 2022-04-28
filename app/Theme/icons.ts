@@ -4,4 +4,5 @@ export const icon = {
   visibilityOff: 'eye-off-outline',
   delete: 'delete-outline',
   close: 'close',
+  move: 'arrow-split-horizontal',
 }
