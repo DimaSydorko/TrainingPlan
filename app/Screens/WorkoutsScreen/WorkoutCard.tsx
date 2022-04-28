@@ -1,7 +1,7 @@
 import * as React from 'react'
-import {memo, useState} from 'react'
+import { memo, useState } from 'react'
 import { View } from 'react-native'
-import { AppModalType, IconButton, WorkoutDuration } from '../../Common'
+import { AppModal, IconButton, WorkoutDuration } from '../../Common'
 import { CardPressed, FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { WorkoutType } from '../../Utils/types'
 import { icon } from '../../Theme/icons'
@@ -15,7 +15,7 @@ interface IWorkoutCard {
   onDelete: () => void
 }
 
-export default memo(function WorkoutCard ({workout, isInPlan, isEditMode, onDelete, onSelect}: IWorkoutCard) {
+export default memo(function WorkoutCard({ workout, isInPlan, isEditMode, onDelete, onSelect }: IWorkoutCard) {
   const [isDeleteModal, setIsDeleteModal] = useState(false)
   return (
     <>
@@ -26,21 +26,23 @@ export default memo(function WorkoutCard ({workout, isInPlan, isEditMode, onDele
             <FlexStart>
               <TextSecondary>{workout.exercises.length} Exercises</TextSecondary>
               <WorkoutDuration exercises={workout.exercises} />
-              {(!!workout.plansUid.length && !isInPlan) && <TextSecondary>(In Plane)</TextSecondary>}
+              {!!workout.plansUid.length && !isInPlan && <TextSecondary>(In Plane)</TextSecondary>}
             </FlexStart>
           </View>
           {isEditMode && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}
         </FlexSpaceBetween>
       </CardPressed>
-      <AppModalType
+      <AppModal
         isWarning
         header='Delete workout'
         text={`Are you sure you want to delete '${workout.name}' workout ${
           isInPlan
             ? 'from this plan'
-            : `forever?${!!workout.plansUid.length
-              ? ` It's exist in ${workout.plansUid.length} plan${workout.plansUid.length > 1 ? 's' : ''}.`
-              : ''}`
+            : `forever?${
+                !!workout.plansUid.length
+                  ? ` It's exist in ${workout.plansUid.length} plan${workout.plansUid.length > 1 ? 's' : ''}.`
+                  : ''
+              }`
         }`}
         confirmText='Yes, delete'
         isOpen={isDeleteModal}

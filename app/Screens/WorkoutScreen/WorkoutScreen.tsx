@@ -1,5 +1,11 @@
 import * as React from 'react'
 import { useCallback, useEffect, useState } from 'react'
+import {
+  NestableScrollContainer,
+  NestableDraggableFlatList,
+  ScaleDecorator,
+  RenderItemParams,
+} from 'react-native-draggable-flatlist'
 import { useAppDispatch, useUser, useWorkout } from '../../Hooks/redux'
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
 import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
@@ -19,6 +25,12 @@ import { nanoid } from '../../Utils'
 import { ApproachType, ExerciseType } from '../../Utils/types'
 import { theme } from '../../Theme/theme'
 import { colors } from '../../Theme/colors'
+import { TouchableOpacity } from 'react-native'
+
+export const newApproach: ApproachType = {
+  repeats: 0,
+  weight: 0,
+}
 
 export default function WorkoutScreen() {
   const dispatch = useAppDispatch()
@@ -51,13 +63,8 @@ export default function WorkoutScreen() {
       uid: nanoid(),
       name: 'New exercise',
       laps: 0,
-      repeats: 0,
-      approaches: [
-        {
-          repeats: 0,
-          weight: 0,
-        },
-      ] as ApproachType[],
+      repeats: 1,
+      approaches: [newApproach],
       isVisible: true,
       breakTimeInSec: 30,
       imgURL: '',
@@ -82,6 +89,18 @@ export default function WorkoutScreen() {
     [setWorkoutExercises],
   )
 
+  const renderItem = ({ item, drag, isActive }: RenderItemParams<ExerciseType>) => {
+    return (
+      <ScaleDecorator>
+        <Card>
+          <TouchableOpacity onLongPress={drag} disabled={isActive}>
+            <ExerciseEdit exercise={item} onSave={onChangeExercise} onDelete={() => onDeleteExercise(item)} />
+          </TouchableOpacity>
+        </Card>
+      </ScaleDecorator>
+    )
+  }
+
   return selectedWorkout ? (
     <Page>
       <FlexSpaceBetween style={theme.containers.secondHeader}>
@@ -92,7 +111,7 @@ export default function WorkoutScreen() {
         </FlexStart>
       </FlexSpaceBetween>
       <FlexCenterColumn style={{ paddingHorizontal: 8 }}>
-        {isEditMode ? (
+        {isEditMode && (
           <>
             <MyTextInput
               placeholder={'Workout Name'}
@@ -106,31 +125,32 @@ export default function WorkoutScreen() {
               value={workoutLabels[0]}
               type={'secondary'}
             />
-            {workoutExercises?.map(exercise => (
-              <ExerciseEdit
-                key={exercise.uid}
-                exercise={exercise}
-                onSave={onChangeExercise}
-                onDelete={() => onDeleteExercise(exercise)}
-              />
-            ))}
-            <AddMoreButton onPress={onAddExercise} header={'Exercise'} />
-            <ConfirmButton onPress={onSaveWorkout} header={'Save workout'} />
           </>
-        ) : (
-          workoutExercises?.map(exercise => (
-            <Card key={exercise.uid}>
-              <FlexSpaceBetween>
-                <TextHeader color={colors.secondPrimary}>{exercise.name}</TextHeader>
-                <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
-                <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
-              </FlexSpaceBetween>
-              {exercise.approaches.map((approach, idx) => (
-                <ExerciseResult key={idx} isPrevious weight={approach.weight} repeats={approach.repeats} />
-              ))}
-            </Card>
-          ))
         )}
+        <NestableScrollContainer>
+          {isEditMode ? (
+            <NestableDraggableFlatList
+              data={workoutExercises}
+              renderItem={renderItem}
+              keyExtractor={item => item.uid}
+              onDragEnd={({ data }) => setWorkoutExercises(data)}
+            />
+          ) : (
+            workoutExercises?.map(exercise => (
+              <Card key={exercise.uid}>
+                <FlexSpaceBetween>
+                  <TextHeader color={colors.secondPrimary}>{exercise.name}</TextHeader>
+                  <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
+                </FlexSpaceBetween>
+                {exercise.approaches.map((approach, idx) => (
+                  <ExerciseResult key={idx} isPrevious weight={approach.weight} repeats={approach.repeats} />
+                ))}
+              </Card>
+            ))
+          )}
+          {isEditMode && <AddMoreButton onPress={onAddExercise} header={'Exercise'} />}
+          {isEditMode && <ConfirmButton onPress={onSaveWorkout} header={'Save workout'} />}
+        </NestableScrollContainer>
       </FlexCenterColumn>
     </Page>
   ) : (

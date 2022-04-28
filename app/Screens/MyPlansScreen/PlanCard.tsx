@@ -1,7 +1,7 @@
 import * as React from 'react'
-import {memo, useState} from 'react'
+import { memo, useState } from 'react'
 import { View } from 'react-native'
-import { AppModalType, IconButton } from '../../Common'
+import { AppModal, IconButton } from '../../Common'
 import { CardPressed, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { PlanType } from '../../Utils/types'
 import { icon } from '../../Theme/icons'
@@ -14,7 +14,7 @@ interface IPlanCard {
   onDelete: () => void
 }
 
-export default memo(function PlanCard ({plan, isEditMode, onDelete, onSelect}: IPlanCard) {
+export default memo(function PlanCard({ plan, isEditMode, onDelete, onSelect }: IPlanCard) {
   const [isDeleteModal, setIsDeleteModal] = useState(false)
   return (
     <>
@@ -27,7 +27,7 @@ export default memo(function PlanCard ({plan, isEditMode, onDelete, onSelect}: I
           {isEditMode && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}
         </FlexSpaceBetween>
       </CardPressed>
-      <AppModalType
+      <AppModal
         isWarning
         header='Delete plan'
         text={`Are you sure you want to delete '${plan.name}' plan?`}

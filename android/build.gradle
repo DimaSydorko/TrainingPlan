@@ -1,5 +1,9 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
+project.ext.react = [
+  enableHermes: true  // <- here | clean and rebuild if changing
+]
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
