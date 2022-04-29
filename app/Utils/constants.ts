@@ -1,4 +1,6 @@
 import { Dimensions } from 'react-native'
+import { ApproachType, ExerciseType } from './types'
+import { nanoid } from './index'
 
 export enum FirebaseDBCollection {
   UsersData = 'usersData',
@@ -27,6 +29,21 @@ export enum AsyncStorageKey {
 export const screen = {
   vw: Dimensions.get('window').width,
   vh: Dimensions.get('window').height,
+}
+
+export const defaultExercise: ExerciseType = {
+  uid: '',
+  name: 'New exercise',
+  laps: 0,
+  repeats: 0,
+  approaches: [],
+  isVisible: true,
+  breakTimeInSec: 0,
+  imgURL: '',
+}
+export const defaultApproach: ApproachType = {
+  repeats: 0,
+  weight: 0,
 }
 
 export const QUERY_LIMIT = 30

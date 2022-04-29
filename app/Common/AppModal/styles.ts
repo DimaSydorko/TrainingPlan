@@ -32,5 +32,5 @@ export default StyleSheet.create({
   },
   text: {
     textAlign: 'center',
-  }
+  },
 })

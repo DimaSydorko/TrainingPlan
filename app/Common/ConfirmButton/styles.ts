@@ -3,8 +3,7 @@ import { colors } from '../../Theme/colors'
 
 export default StyleSheet.create({
   button: {
-    marginLeft: 30,
-    marginRight: 30,
+    marginHorizontal: 30,
     marginTop: 20,
     height: 48,
     borderRadius: 5,

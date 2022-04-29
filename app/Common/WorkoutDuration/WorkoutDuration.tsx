@@ -1,11 +1,12 @@
 import * as React from 'react'
+import { memo } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { FlexStart, TextSecondary } from '../../Theme/Parents'
 import { ExerciseType } from '../../Utils/types'
 import { colors } from '../../Theme/colors'
 
 interface WorkoutDurationType {
-  exercises: ExerciseType[];
+  exercises: ExerciseType[]
 }
 
 export const secondsToMinSec = (time: number) => {
@@ -24,17 +25,14 @@ export const secondsToMinSec = (time: number) => {
   return minSec
 }
 
-export default function WorkoutDuration({ exercises }: WorkoutDurationType) {
+export default memo(function WorkoutDuration({ exercises }: WorkoutDurationType) {
   let time = 0
-  exercises.forEach(exercise => time += exercise.breakTimeInSec)
+  exercises.forEach(exercise => (time += exercise.laps * exercise.breakTimeInSec))
 
   return (
     <FlexStart>
       <Icon name='timer-outline' size={18} color={`${colors.text}80`} />
-      <TextSecondary>
-        {secondsToMinSec(time)}
-      </TextSecondary>
+      <TextSecondary>{secondsToMinSec(time)}</TextSecondary>
     </FlexStart>
   )
-}
-
+})

@@ -4,8 +4,8 @@ import { View } from 'react-native'
 import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
 import { FlexCenterColumn, FlexEnd, FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { ButtonCounter, IconButton, MyTextInput, SwipeSelector, AppModal } from '../../Common'
+import { defaultApproach } from '../../Utils/constants'
 import { ExerciseType } from '../../Utils/types'
-import { newApproach } from '../../Screens/WorkoutScreen/WorkoutScreen'
 import { colors } from '../../Theme/colors'
 import { icon } from '../../Theme/icons'
 import styles from './styles'
@@ -18,6 +18,7 @@ interface IExerciseEdit {
 
 export default function ExerciseEdit({ exercise, onSave, onDelete }: IExerciseEdit) {
   const [isEdit, setIsEdit] = useState(false)
+  const [isDeleteModal, setIsDeleteModal] = useState(false)
   const [isVisible, setIsVisible] = useState(exercise.isVisible)
   const [name, setName] = useState(exercise.name)
   const [selectSeconds, setSelectSeconds] = useState(exercise.breakTimeInSec % 60)
@@ -29,7 +30,7 @@ export default function ExerciseEdit({ exercise, onSave, onDelete }: IExerciseEd
     const lapsDif = Math.abs(exercise.approaches.length - laps)
     const approaches =
       exercise.approaches.length < laps
-        ? [...exercise.approaches, ...new Array(laps - 1).fill(newApproach)]
+        ? [...exercise.approaches, ...new Array(laps - 1).fill(defaultApproach)]
         : exercise.approaches.slice(lapsDif)
     const newExercise: ExerciseType = {
       ...exercise,
@@ -59,9 +60,15 @@ export default function ExerciseEdit({ exercise, onSave, onDelete }: IExerciseEd
       </FlexSpaceBetween>
       <FlexSpaceBetween>
         <TextSecondary>
-          {exercise.approaches.length} laps {exercise.laps} rep {exercise.approaches[0].weight} kg
+          {exercise.approaches.length ? `${exercise.approaches.length} laps` : ''}
+          {exercise.laps ? `${exercise.laps} rep` : ''}
+          {exercise.approaches.length
+            ? exercise.approaches[0].weight
+              ? ` ${exercise.approaches[0].weight} kg`
+              : ''
+            : ''}
         </TextSecondary>
-        <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
+        {!!exercise.breakTimeInSec && <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>}
       </FlexSpaceBetween>
       <AppModal
         onConfirm={handleSubmit}
@@ -72,7 +79,7 @@ export default function ExerciseEdit({ exercise, onSave, onDelete }: IExerciseEd
       >
         <FlexCenterColumn>
           <FlexEnd>
-            <IconButton iconName={icon.delete} onPress={onDelete} />
+            <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />
             <IconButton
               iconName={isVisible ? icon.visibilityOff : icon.visibilityOn}
               onPress={() => setIsVisible(prev => !prev)}
@@ -111,6 +118,15 @@ export default function ExerciseEdit({ exercise, onSave, onDelete }: IExerciseEd
           </FlexSpaceBetween>
         </FlexCenterColumn>
       </AppModal>
+      <AppModal
+        isWarning
+        isOpen={isDeleteModal}
+        header={'Delete exercise'}
+        confirmText={'Yes, delete'}
+        text={`Are you sure you want to delete '${name}' exercise?`}
+        onConfirm={onDelete}
+        onClose={() => setIsDeleteModal(false)}
+      />
     </>
   )
 }
