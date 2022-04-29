@@ -1,6 +1,9 @@
 import { Dimensions } from 'react-native'
 import { ApproachType, ExerciseType } from './types'
-import { nanoid } from './index'
+
+export const FUTURE_FLAG = {
+  LABELS: false,
+}
 
 export enum FirebaseDBCollection {
   UsersData = 'usersData',

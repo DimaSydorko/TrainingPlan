@@ -15,6 +15,7 @@ export default StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative',
   },
   container: {
     zIndex: 1,
@@ -32,5 +33,10 @@ export default StyleSheet.create({
   },
   text: {
     textAlign: 'center',
+  },
+  extraPlace: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
   },
 })

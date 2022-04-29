@@ -19,10 +19,18 @@ import {
   TextHeader,
   TextSecondary,
 } from '../../Theme/Parents'
-import { AddMoreButton, AppModal, ConfirmButton, MySwitch, MyTextInput, WorkoutDuration } from '../../Common'
+import {
+  AddMoreButton,
+  AppModal,
+  ConfirmButton,
+  GoBackSubmitModal,
+  MySwitch,
+  MyTextInput,
+  WorkoutDuration,
+} from '../../Common'
 import ExerciseEdit from '../../Components/ExerciseEdit/ExerciseEdit'
 import ExerciseResult from '../../Components/ExerciseResults/ExerciseResult'
-import { defaultExercise } from '../../Utils/constants'
+import { defaultExercise, FUTURE_FLAG } from '../../Utils/constants'
 import { deepCompare, nanoid } from '../../Utils'
 import { ExerciseType, WorkoutType } from '../../Utils/types'
 import { theme } from '../../Theme/theme'
@@ -34,6 +42,7 @@ export default function WorkoutScreen() {
   const { user } = useUser()
   const [isEditMode, setIsEditMode] = useState(false)
   const [isSaveChangesModal, setIsSaveChangesModal] = useState(false)
+  const [newExerciseId, setNewExerciseId] = useState('')
   const [workoutNameInput, setWorkoutNameInput] = useState<string>(selectedWorkout?.name || '')
   const [workoutLabels, setWorkoutLabels] = useState<string[]>(selectedWorkout?.labels || [])
   const [workoutExercises, setWorkoutExercises] = useState<ExerciseType[] | null>(null)
@@ -69,24 +78,31 @@ export default function WorkoutScreen() {
   }, [isEditMode, isChanged])
 
   const onAddExercise = useCallback(() => {
-    setWorkoutExercises(prev => [...(prev || []), { uid: nanoid(), ...defaultExercise }])
+    const uid = nanoid()
+    setWorkoutExercises(prev => [...(prev || []), { ...defaultExercise, uid }])
+    setNewExerciseId(uid)
   }, [])
 
-  const onChangeExercise = useCallback((exercise: ExerciseType) => {
-    setWorkoutExercises(
-      prev =>
-        prev?.map(ex => {
-          if (ex.uid === exercise.uid) return exercise
-          else return ex
-        }) || null,
-    )
-  }, [])
+  const onChangeExercise = useCallback(
+    (exercise: ExerciseType) => {
+      if (newExerciseId) setNewExerciseId('')
+      setWorkoutExercises(
+        prev =>
+          prev?.map(ex => {
+            if (ex.uid === exercise.uid) return exercise
+            else return ex
+          }) || null,
+      )
+    },
+    [newExerciseId],
+  )
 
   const onDeleteExercise = useCallback(
     (exercise: ExerciseType) => {
+      if (newExerciseId) setNewExerciseId('')
       setWorkoutExercises(prev => prev?.filter(ex => ex.uid !== exercise.uid) || null)
     },
-    [setWorkoutExercises],
+    [setWorkoutExercises, newExerciseId],
   )
 
   const onSaveRefuse = useCallback(() => {
@@ -94,14 +110,19 @@ export default function WorkoutScreen() {
     setWorkoutNameInput(prev => (deepCompare(selectedWorkout.name, prev) ? prev : selectedWorkout.name))
     setWorkoutExercises(prev => (deepCompare(selectedWorkout.exercises, prev) ? prev : selectedWorkout.exercises))
     setIsEditMode(false)
-  }, [])
+  }, [selectedWorkout.labels, selectedWorkout.name, selectedWorkout.exercises])
 
   const renderItem = ({ item, drag, isActive }: RenderItemParams<ExerciseType>) => {
     return (
       <ScaleDecorator>
         <Card>
           <TouchableOpacity onLongPress={drag} disabled={isActive}>
-            <ExerciseEdit exercise={item} onSave={onChangeExercise} onDelete={() => onDeleteExercise(item)} />
+            <ExerciseEdit
+              exercise={item}
+              isNewExercise={item.uid === newExerciseId}
+              onSave={onChangeExercise}
+              onDelete={() => onDeleteExercise(item)}
+            />
           </TouchableOpacity>
         </Card>
       </ScaleDecorator>
@@ -126,15 +147,16 @@ export default function WorkoutScreen() {
               value={workoutNameInput}
               type={'underline'}
             />
-            <MyTextInput
-              placeholder={'Labels:  #...'}
-              onChangeText={value => setWorkoutLabels([value])}
-              value={workoutLabels[0]}
-              type={'secondary'}
-            />
+            {FUTURE_FLAG.LABELS && (
+              <MyTextInput
+                placeholder={'Labels:  #...'}
+                onChangeText={value => setWorkoutLabels([value])}
+                value={workoutLabels[0]}
+                type={'secondary'}
+              />
+            )}
           </>
         )}
-
         {isEditMode ? (
           <NestableDraggableFlatList
             data={workoutExercises}
@@ -144,7 +166,7 @@ export default function WorkoutScreen() {
           />
         ) : (
           workoutExercises
-            ?.filter(ex => ex.isVisible === true)
+            ?.filter(ex => ex.isVisible !== true)
             ?.map(exercise => (
               <Card key={exercise.uid}>
                 <FlexSpaceBetween>
@@ -160,6 +182,7 @@ export default function WorkoutScreen() {
       </FlexCenterColumn>
       {isEditMode && <AddMoreButton onPress={onAddExercise} header={'Exercise'} />}
       {isEditMode && <ConfirmButton disabled={!isChanged} onPress={onSaveWorkout} header={'Save workout'} />}
+      {isChanged && <GoBackSubmitModal text={`Changes in '${workoutNameInput}' workout aren\`t saved!`} />}
       <AppModal
         isOpen={isSaveChangesModal}
         header={'Save changes?'}

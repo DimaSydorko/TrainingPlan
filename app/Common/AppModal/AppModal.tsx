@@ -2,7 +2,7 @@ import * as React from 'react'
 import { ReactNode } from 'react'
 import { Modal, TouchableOpacity, View, ViewStyle } from 'react-native'
 import { ConfirmButton } from '../index'
-import { FlexCenter, TextHeader, TextSecondary } from '../../Theme/Parents'
+import { FlexCenter, FlexEnd, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { colors } from '../../Theme/colors'
 import styles from './styles'
 
@@ -15,6 +15,7 @@ interface AppModalType {
   header: string
   text?: string
   confirmText?: string
+  extraPlace?: ReactNode
   children?: ReactNode
 }
 
@@ -27,6 +28,7 @@ export default function AppModal({
   isWarning,
   children,
   onRefuse,
+  extraPlace,
   confirmText = 'Confirm',
 }: AppModalType) {
   const buttonStyle: ViewStyle = !onRefuse ? {} : { marginHorizontal: 6 }
@@ -36,6 +38,7 @@ export default function AppModal({
         <View style={styles.container}>
           <FlexCenter>
             <TextHeader>{header}</TextHeader>
+            {!!extraPlace && <FlexEnd style={styles.extraPlace}>{extraPlace}</FlexEnd>}
           </FlexCenter>
           <FlexCenter style={styles.content}>
             {text && <TextSecondary style={styles.text}>{text}</TextSecondary>}

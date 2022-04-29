@@ -40,7 +40,8 @@ export const workoutSlice = createSlice({
   },
   extraReducers: {
     [workoutActionCreators.getWorkouts.fulfilled.type]: (
-      state, { payload }: PayloadAction<{ workoutsInPlan?: WorkoutType[], workouts?: WorkoutType[] }>,
+      state,
+      { payload }: PayloadAction<{ workoutsInPlan?: WorkoutType[]; workouts?: WorkoutType[] }>,
     ) => {
       if (payload.workoutsInPlan) state.workoutsInPlan = payload.workoutsInPlan
       if (payload.workouts) state.workouts = payload.workouts
@@ -48,10 +49,11 @@ export const workoutSlice = createSlice({
       state.error = ''
     },
     [workoutActionCreators.updateWorkout.fulfilled.type]: (state, { payload }: PayloadAction<WorkoutType>) => {
-      state.workouts = state.workouts.map(workout => {
-        if (workout.uid === payload.uid) return payload
-        return workout
-      })
+      state.workouts = state.workouts.map(workout => (workout.uid === payload.uid ? payload : workout))
+      state.workoutsInPlan = state.workoutsInPlan.map(workout => (workout.uid === payload.uid ? payload : workout))
+      if (state.selectedWorkout.uid === payload.uid) {
+        state.selectedWorkout = payload
+      }
       state.isLoading = false
       state.error = ''
     },

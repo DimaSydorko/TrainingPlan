@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { useCallback, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
-import { FlexCenterColumn, FlexEnd, FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
-import { ButtonCounter, IconButton, MyTextInput, SwipeSelector, AppModal } from '../../Common'
+import { FlexCenterColumn, FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
+import { AppModal, ButtonCounter, IconButton, MyTextInput, SwipeSelector } from '../../Common'
 import { defaultApproach } from '../../Utils/constants'
 import { ExerciseType } from '../../Utils/types'
 import { colors } from '../../Theme/colors'
@@ -12,11 +12,12 @@ import styles from './styles'
 
 interface IExerciseEdit {
   exercise: ExerciseType
+  isNewExercise: boolean
   onDelete: () => void
   onSave: (exercise: ExerciseType) => void
 }
 
-export default function ExerciseEdit({ exercise, onSave, onDelete }: IExerciseEdit) {
+export default memo(function ExerciseEdit({ exercise, isNewExercise, onSave, onDelete }: IExerciseEdit) {
   const [isEdit, setIsEdit] = useState(false)
   const [isDeleteModal, setIsDeleteModal] = useState(false)
   const [isVisible, setIsVisible] = useState(exercise.isVisible)
@@ -26,12 +27,21 @@ export default function ExerciseEdit({ exercise, onSave, onDelete }: IExerciseEd
   const [repeats, setRepeats] = useState(exercise.repeats)
   const [laps, setLaps] = useState(exercise.laps)
 
+  useEffect(() => {
+    setIsVisible(prev => (prev === exercise.isVisible ? prev : exercise.isVisible))
+  }, [exercise.isVisible])
+
+  useEffect(() => {
+    if (isNewExercise) setIsEdit(true)
+  }, [isNewExercise])
+
   const handleSubmit = useCallback(() => {
     const lapsDif = Math.abs(exercise.approaches.length - laps)
     const approaches =
       exercise.approaches.length < laps
         ? [...exercise.approaches, ...new Array(laps - 1).fill(defaultApproach)]
         : exercise.approaches.slice(lapsDif)
+
     const newExercise: ExerciseType = {
       ...exercise,
       name,
@@ -54,7 +64,7 @@ export default function ExerciseEdit({ exercise, onSave, onDelete }: IExerciseEd
           <IconButton iconName={icon.edit} onPress={() => setIsEdit(true)} />
           <IconButton
             iconName={isVisible ? icon.visibilityOff : icon.visibilityOn}
-            onPress={() => setIsVisible(prev => !prev)}
+            onPress={() => onSave({ ...exercise, isVisible: !isVisible })}
           />
         </FlexStart>
       </FlexSpaceBetween>
@@ -72,20 +82,26 @@ export default function ExerciseEdit({ exercise, onSave, onDelete }: IExerciseEd
       </FlexSpaceBetween>
       <AppModal
         onConfirm={handleSubmit}
-        onClose={() => setIsEdit(false)}
+        onClose={() => {
+          isNewExercise && onDelete()
+          setIsEdit(false)
+        }}
         isOpen={isEdit}
-        header={'Edit exercise'}
-        confirmText={'Save exercise'}
-      >
-        <FlexCenterColumn>
-          <FlexEnd>
+        header={`${isNewExercise ? 'Create' : 'Edit'} Exercise`}
+        confirmText={'Save Exercise'}
+        extraPlace={
+          <>
             <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />
             <IconButton
               iconName={isVisible ? icon.visibilityOff : icon.visibilityOn}
               onPress={() => setIsVisible(prev => !prev)}
             />
-          </FlexEnd>
+          </>
+        }
+      >
+        <FlexCenterColumn>
           <MyTextInput
+            autoFocus={!!isNewExercise}
             placeholder={'Exercise name'}
             onChangeText={name => setName(name)}
             value={name}
@@ -129,4 +145,4 @@ export default function ExerciseEdit({ exercise, onSave, onDelete }: IExerciseEd
       />
     </>
   )
-}
+})
