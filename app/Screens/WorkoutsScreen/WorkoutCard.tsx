@@ -11,27 +11,24 @@ interface IWorkoutCard {
   workout: WorkoutType
   isEditMode: boolean
   isInPlan: boolean
-  onSelect: () => void
   onDelete: () => void
 }
 
-export default memo(function WorkoutCard({ workout, isInPlan, isEditMode, onDelete, onSelect }: IWorkoutCard) {
+export default memo(function WorkoutCard({ workout, isInPlan, isEditMode, onDelete }: IWorkoutCard) {
   const [isDeleteModal, setIsDeleteModal] = useState(false)
   return (
     <>
-      <CardPressed onPress={() => onSelect()}>
-        <FlexSpaceBetween>
-          <View>
-            <TextHeader color={colors.secondPrimary}>{workout.name}</TextHeader>
-            <FlexStart>
-              <TextSecondary>{workout.exercises.length} Exercises</TextSecondary>
-              <WorkoutDuration exercises={workout.exercises} />
-              {!!workout.plansUid.length && !isInPlan && <TextSecondary>(In Plane)</TextSecondary>}
-            </FlexStart>
-          </View>
-          {isEditMode && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}
-        </FlexSpaceBetween>
-      </CardPressed>
+      <FlexSpaceBetween>
+        <View>
+          <TextHeader color={colors.secondPrimary}>{workout.name}</TextHeader>
+          <FlexStart>
+            <TextSecondary>{workout.exercises.length} Exercises</TextSecondary>
+            <WorkoutDuration exercises={workout.exercises} />
+            {!!workout.plansUid.length && !isInPlan && <TextSecondary>(In Plane)</TextSecondary>}
+          </FlexStart>
+        </View>
+        {isEditMode && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}
+      </FlexSpaceBetween>
       <AppModal
         isWarning
         header='Delete workout'

@@ -8,22 +8,28 @@ export default function useWorkoutPlan() {
   const dispatch = useAppDispatch()
   const { selectedPlan } = usePlans()
 
-  const addWorkoutInPlane = useCallback((workout: WorkoutType) => {
-    if (!selectedPlan) return
-    dispatch(workoutActionCreators.addWorkout({ ...workout, plansUid: [selectedPlan.uid] }))
-    dispatch(plansActionCreators.incrementPlanWorkoutsCount({ planUid: selectedPlan.uid, value: 1 }))
-  }, [])
+  const addWorkoutInPlane = useCallback(
+    (workout: WorkoutType) => {
+      if (!selectedPlan) return
+      dispatch(workoutActionCreators.addWorkout({ ...workout, plansUid: [selectedPlan.uid] }))
+      dispatch(plansActionCreators.incrementPlanWorkoutsCount({ planUid: selectedPlan.uid, value: 1 }))
+    },
+    [selectedPlan]
+  )
 
   const addWorkout = useCallback((workout: WorkoutType) => {
     dispatch(workoutActionCreators.addWorkout(workout))
   }, [])
 
-  const deleteWorkoutInPlane = useCallback((workout: WorkoutType) => {
-    if (!selectedPlan) return
-    const plansUid = workout.plansUid.filter(uid => uid !== selectedPlan.uid)
-    dispatch(workoutActionCreators.updateWorkout({ ...workout, plansUid }))
-    dispatch(plansActionCreators.incrementPlanWorkoutsCount({ planUid: selectedPlan.uid, value: -1 }))
-  }, [])
+  const deleteWorkoutInPlane = useCallback(
+    (workout: WorkoutType) => {
+      if (!selectedPlan) return
+      const plansUid = workout.plansUid.filter(uid => uid !== selectedPlan.uid)
+      dispatch(workoutActionCreators.updateWorkout({ ...workout, plansUid }))
+      dispatch(plansActionCreators.incrementPlanWorkoutsCount({ planUid: selectedPlan.uid, value: -1 }))
+    },
+    [selectedPlan]
+  )
 
   const deleteWorkout = useCallback((workout: WorkoutType) => {
     workout.plansUid.forEach(planUid => {
@@ -32,10 +38,14 @@ export default function useWorkoutPlan() {
     dispatch(workoutActionCreators.deleteWorkout(workout.uid))
   }, [])
 
+  // const moveWorkout = useCallback((workouts: WorkoutType[]) => {
+  //   dispatch(plansActionCreators.updatePlan({...selectedPlan, }))
+  // }, [selectedPlan])
+
   return {
     deleteWorkoutInPlane,
     addWorkoutInPlane,
     deleteWorkout,
-    addWorkout,
+    addWorkout
   }
 }

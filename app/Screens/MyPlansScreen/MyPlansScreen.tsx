@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { memo, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { selectPlan } from '../../store/PlansReducer/PlansSlice'
@@ -7,11 +7,12 @@ import { plansActionCreators } from '../../store/PlansReducer/PlansActionCreator
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
 import { useAppDispatch, usePlans, useUser } from '../../Hooks/redux'
 import { FlexSpaceBetween, FlexStart, Page, TextSecondary } from '../../Theme/Parents'
-import { AddMoreButton, MySwitch } from '../../Common'
+import { MySwitch } from '../../Common'
 import PlanCard from './PlanCard'
-import { defaultPlan, ScreenName } from '../../Utils/constants'
+import { ScreenName } from '../../Utils/constants'
 import { PlanType } from '../../Utils/types'
 import { theme } from '../../Theme/theme'
+import CreatePlan from './CreatePlan'
 
 export default memo(function MyPlansScreen() {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
@@ -25,10 +26,10 @@ export default memo(function MyPlansScreen() {
     dispatch(plansActionCreators.getPlans(user.uid))
   }, [])
 
-  const setNewPlan = async () => {
-    if (!user) return
-    dispatch(plansActionCreators.addPlan({ ...defaultPlan, ownerUid: user.uid }))
-  }
+  const setNewPlan = useCallback((newPlan: PlanType) => {
+    dispatch(plansActionCreators.addPlan(newPlan))
+  }, [])
+
   const onPlanPress = (plan: PlanType) => {
     dispatch(selectPlan(plan))
     dispatch(workoutActionCreators.getWorkouts({ uid: plan.uid, findBy: 'planUid' }))
@@ -59,7 +60,7 @@ export default memo(function MyPlansScreen() {
           onDelete={() => onDelete(plan.uid)}
         />
       ))}
-      {(isEditMode || !plans?.length) && <AddMoreButton onPress={setNewPlan} header={'Plan'} />}
+      {(isEditMode || !plans?.length) && <CreatePlan onAddPlan={setNewPlan} />}
     </Page>
   )
 })
