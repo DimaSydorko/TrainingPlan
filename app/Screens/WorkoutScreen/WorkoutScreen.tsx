@@ -5,7 +5,7 @@ import {
   NestableDraggableFlatList,
   NestableScrollContainer,
   RenderItemParams,
-  ScaleDecorator,
+  ScaleDecorator
 } from 'react-native-draggable-flatlist'
 import { useAppDispatch, useUser, useWorkout } from '../../Hooks/redux'
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
@@ -17,7 +17,7 @@ import {
   FlexStart,
   Page,
   TextHeader,
-  TextSecondary,
+  TextSecondary
 } from '../../Theme/Parents'
 import {
   AddMoreButton,
@@ -26,7 +26,7 @@ import {
   GoBackSubmitModal,
   MySwitch,
   MyTextInput,
-  WorkoutDuration,
+  WorkoutDuration
 } from '../../Common'
 import ExerciseEdit from '../../Components/ExerciseEdit/ExerciseEdit'
 import ExerciseResult from '../../Components/ExerciseResults/ExerciseResult'
@@ -52,9 +52,9 @@ export default function WorkoutScreen() {
       ...selectedWorkout,
       name: workoutNameInput,
       labels: workoutLabels,
-      exercises: workoutExercises,
+      exercises: workoutExercises
     }),
-    [workoutNameInput, workoutLabels, workoutExercises, selectedWorkout],
+    [workoutNameInput, workoutLabels, workoutExercises, selectedWorkout]
   )
   const isChanged = useMemo(() => !deepCompare(selectedWorkout, changedWorkout), [selectedWorkout, changedWorkout])
 
@@ -86,23 +86,17 @@ export default function WorkoutScreen() {
   const onChangeExercise = useCallback(
     (exercise: ExerciseType) => {
       if (newExerciseId) setNewExerciseId('')
-      setWorkoutExercises(
-        prev =>
-          prev?.map(ex => {
-            if (ex.uid === exercise.uid) return exercise
-            else return ex
-          }) || null,
-      )
+      setWorkoutExercises(prev => prev?.map(ex => (ex.uid === exercise.uid ? exercise : ex)) || [])
     },
-    [newExerciseId],
+    [newExerciseId]
   )
 
   const onDeleteExercise = useCallback(
     (exercise: ExerciseType) => {
       if (newExerciseId) setNewExerciseId('')
-      setWorkoutExercises(prev => prev?.filter(ex => ex.uid !== exercise.uid) || null)
+      setWorkoutExercises(prev => prev?.filter(ex => ex.uid !== exercise.uid) || [])
     },
-    [setWorkoutExercises, newExerciseId],
+    [setWorkoutExercises, newExerciseId]
   )
 
   const onSaveRefuse = useCallback(() => {
@@ -113,18 +107,27 @@ export default function WorkoutScreen() {
   }, [selectedWorkout.labels, selectedWorkout.name, selectedWorkout.exercises])
 
   const renderItem = ({ item, drag, isActive }: RenderItemParams<ExerciseType>) => {
+    const isNewExercise = item.uid === newExerciseId
+
+    const exercise = () => (
+      <ExerciseEdit
+        exercise={item}
+        isNewExercise={isNewExercise}
+        onSave={onChangeExercise}
+        onDelete={() => onDeleteExercise(item)}
+      />
+    )
     return (
       <ScaleDecorator>
-        <Card>
-          <TouchableOpacity onLongPress={drag} disabled={isActive}>
-            <ExerciseEdit
-              exercise={item}
-              isNewExercise={item.uid === newExerciseId}
-              onSave={onChangeExercise}
-              onDelete={() => onDeleteExercise(item)}
-            />
-          </TouchableOpacity>
-        </Card>
+        {isNewExercise ? (
+          exercise()
+        ) : (
+          <Card>
+            <TouchableOpacity onLongPress={drag} disabled={isActive}>
+              {exercise()}
+            </TouchableOpacity>
+          </Card>
+        )}
       </ScaleDecorator>
     )
   }
@@ -166,12 +169,14 @@ export default function WorkoutScreen() {
           />
         ) : (
           workoutExercises
-            ?.filter(ex => ex.isVisible !== true)
+            ?.filter(ex => ex.isVisible)
             ?.map(exercise => (
               <Card key={exercise.uid}>
                 <FlexSpaceBetween>
                   <TextHeader color={colors.secondPrimary}>{exercise.name}</TextHeader>
-                  <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
+                  {!!exercise.breakTimeInSec && (
+                    <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
+                  )}
                 </FlexSpaceBetween>
                 {exercise.approaches?.map((approach, idx) => (
                   <ExerciseResult key={idx} isPrevious weight={approach.weight} repeats={approach.repeats} />

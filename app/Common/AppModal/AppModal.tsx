@@ -12,6 +12,7 @@ interface AppModalType {
   onRefuse?: () => void
   isWarning?: boolean
   isOpen: boolean
+  disableAutoClose?: boolean
   header: string
   text?: string
   confirmText?: string
@@ -29,7 +30,8 @@ export default function AppModal({
   children,
   onRefuse,
   extraPlace,
-  confirmText = 'Confirm',
+  disableAutoClose = false,
+  confirmText = 'Confirm'
 }: AppModalType) {
   const buttonStyle: ViewStyle = !onRefuse ? {} : { marginHorizontal: 6 }
   return (
@@ -53,7 +55,7 @@ export default function AppModal({
                 style={buttonStyle}
                 onPress={() => {
                   onRefuse()
-                  onClose()
+                  !disableAutoClose && onClose()
                 }}
               />
             )}
@@ -63,7 +65,7 @@ export default function AppModal({
               style={buttonStyle}
               onPress={() => {
                 onConfirm()
-                onClose()
+                !disableAutoClose && onClose()
               }}
             />
           </FlexCenter>

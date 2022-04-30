@@ -49,7 +49,7 @@ export default memo(function ExerciseEdit({ exercise, isNewExercise, onSave, onD
       repeats,
       isVisible,
       approaches,
-      breakTimeInSec: selectMinutes * 60 + selectSeconds,
+      breakTimeInSec: selectMinutes * 60 + selectSeconds
       // imgURL: '',
     }
     onSave(newExercise)
@@ -58,30 +58,40 @@ export default memo(function ExerciseEdit({ exercise, isNewExercise, onSave, onD
 
   return (
     <>
-      <FlexSpaceBetween>
-        <TextHeader color={isVisible ? colors.textSecondary : colors.secondPrimary}>{exercise.name}</TextHeader>
-        <FlexStart>
-          <IconButton iconName={icon.edit} onPress={() => setIsEdit(true)} />
-          <IconButton
-            iconName={isVisible ? icon.visibilityOff : icon.visibilityOn}
-            onPress={() => onSave({ ...exercise, isVisible: !isVisible })}
-          />
-        </FlexStart>
-      </FlexSpaceBetween>
-      <FlexSpaceBetween>
-        <TextSecondary>
-          {exercise.approaches.length ? `${exercise.approaches.length} laps` : ''}
-          {exercise.laps ? `${exercise.laps} rep` : ''}
-          {exercise.approaches.length
-            ? exercise.approaches[0].weight
-              ? ` ${exercise.approaches[0].weight} kg`
-              : ''
-            : ''}
-        </TextSecondary>
-        {!!exercise.breakTimeInSec && <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>}
-      </FlexSpaceBetween>
+      {!isNewExercise && (
+        <>
+          <FlexSpaceBetween>
+            <TextHeader color={isVisible ? colors.secondPrimary : colors.textSecondary}>{exercise.name}</TextHeader>
+            <FlexStart>
+              <IconButton iconName={icon.edit} onPress={() => setIsEdit(true)} />
+              <IconButton
+                iconName={isVisible ? icon.visibilityOn : icon.visibilityOff}
+                onPress={() => onSave({ ...exercise, isVisible: !isVisible })}
+              />
+            </FlexStart>
+          </FlexSpaceBetween>
+          <FlexSpaceBetween>
+            <TextSecondary>
+              {exercise.approaches.length ? `${exercise.approaches.length} laps` : ''}
+              {exercise.laps ? `${exercise.laps} rep` : ''}
+              {exercise.approaches.length
+                ? exercise.approaches[0].weight
+                  ? ` ${exercise.approaches[0].weight} kg`
+                  : ''
+                : ''}
+            </TextSecondary>
+            {!!exercise.breakTimeInSec && (
+              <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
+            )}
+          </FlexSpaceBetween>
+        </>
+      )}
       <AppModal
-        onConfirm={handleSubmit}
+        disableAutoClose
+        onConfirm={() => {
+          handleSubmit()
+          setIsEdit(false)
+        }}
         onClose={() => {
           isNewExercise && onDelete()
           setIsEdit(false)
@@ -93,7 +103,7 @@ export default memo(function ExerciseEdit({ exercise, isNewExercise, onSave, onD
           <>
             <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />
             <IconButton
-              iconName={isVisible ? icon.visibilityOff : icon.visibilityOn}
+              iconName={isVisible ? icon.visibilityOn : icon.visibilityOff}
               onPress={() => setIsVisible(prev => !prev)}
             />
           </>

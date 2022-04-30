@@ -6,9 +6,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useAppDispatch, useUser } from '../../Hooks/redux'
 import { userActionCreators } from '../../store/UserReducer/UserActionCreators'
 import { ScreenName } from '../../Utils/constants'
-import { ConfirmButton, MyTextInput, SwipeSelector } from '../../Common'
+import { ConfirmButton, MyTextInput } from '../../Common'
+import { FlexCenterColumn, Page, TextOrdinary } from '../../Theme/Parents'
 import { theme } from '../../Theme/theme'
-import { Page, TextOrdinary } from '../../Theme/Parents'
 
 export default function LoginScreen() {
   const dispatch = useAppDispatch()
@@ -27,23 +27,28 @@ export default function LoginScreen() {
   return (
     <Page style={theme.view.background}>
       <Text>{error}</Text>
-      <SwipeSelector value={10} onChange={number => console.log(number)} maxValue={60} />
       <KeyboardAwareScrollView keyboardShouldPersistTaps='always'>
-        <MyTextInput
-          value={inputData.email}
-          onChangeText={email => setInputData({ ...inputData, email })}
-          placeholder='E-mail'
-        />
-        <MyTextInput
-          secureTextEntry
-          value={inputData.password}
-          onChangeText={password => setInputData({ ...inputData, password })}
-          placeholder='Password'
-        />
+        <FlexCenterColumn>
+          <MyTextInput
+            value={inputData.email}
+            onChangeText={email => setInputData({ ...inputData, email })}
+            placeholder='E-mail'
+          />
+          <MyTextInput
+            secureTextEntry
+            value={inputData.password}
+            onChangeText={password => setInputData({ ...inputData, password })}
+            placeholder='Password'
+          />
+        </FlexCenterColumn>
         <ConfirmButton disabled={isLoading} onPress={onLoginPress} header='Log in' />
         <Page style={theme.margin.top20}>
-          <TextOrdinary>Don't have an account? <Text onPress={onFooterLinkPress}
-                                                     style={theme.text.link}>Sign up</Text></TextOrdinary>
+          <TextOrdinary>
+            Don't have an account?{' '}
+            <Text onPress={onFooterLinkPress} style={theme.text.link}>
+              Sign up
+            </Text>
+          </TextOrdinary>
         </Page>
       </KeyboardAwareScrollView>
     </Page>

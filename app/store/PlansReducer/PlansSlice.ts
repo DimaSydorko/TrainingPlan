@@ -4,7 +4,7 @@ import { PlanType } from '../../Utils/types'
 
 interface PlansSlice {
   plans: PlanType[]
-  selectedPlan: PlanType | null,
+  selectedPlan: PlanType | null
   isLoading: boolean
   error: string
 }
@@ -13,7 +13,7 @@ const initialState: PlansSlice = {
   plans: [],
   selectedPlan: null,
   isLoading: false,
-  error: '',
+  error: ''
 }
 
 const onError = (state: PlansSlice, { payload }: PayloadAction<string>) => {
@@ -35,6 +35,12 @@ export const plansSlice = createSlice({
     selectPlan(state, action: PayloadAction<PlanType>) {
       state.selectedPlan = action.payload
     },
+    clearPlaneResults(state) {
+      state.error = ''
+      state.isLoading = false
+      state.plans = initialState.plans
+      state.selectedPlan = initialState.selectedPlan
+    }
   },
   extraReducers: {
     [plansActionCreators.getPlans.fulfilled.type]: (state, { payload }: PayloadAction<PlanType[]>) => {
@@ -48,24 +54,23 @@ export const plansSlice = createSlice({
       state.error = ''
     },
     [plansActionCreators.updatePlan.fulfilled.type]: (state, { payload }: PayloadAction<PlanType>) => {
-      state.plans = state.plans.map(plan => {
-        if (plan.uid === payload.uid) return payload
-        else return plan
-      })
+      state.plans = state.plans.map(plan => (plan.uid === payload.uid ? payload : plan))
+      if (state.selectedPlan.uid === payload.uid) state.selectedPlan = payload
+      state.error = ''
       state.isLoading = false
+    },
+    [plansActionCreators.incrementPlanWorkoutsCount.fulfilled.type]: (
+      state,
+      { payload }: PayloadAction<{ planUid: string; value: number }>
+    ) => {
+      state.plans = state.plans.map(plan =>
+        plan.uid === payload.planUid ? { ...plan, workoutsCount: plan.workoutsCount + payload.value } : plan
+      )
+      if (state?.selectedPlan?.uid === payload.planUid) {
+        state.selectedPlan.workoutsCount = state.selectedPlan.workoutsCount + payload.value
+      }
       state.error = ''
     },
-    [plansActionCreators.incrementPlanWorkoutsCount.fulfilled.type]:
-      (state, { payload }: PayloadAction<{ planUid: string, value: number }>) => {
-        state.plans = state.plans.map(plan => {
-          if (plan.uid === payload.planUid) return { ...plan, workoutsCount: plan.workoutsCount + payload.value }
-          else return plan
-        })
-        if (state?.selectedPlan?.uid === payload.planUid) {
-          state.selectedPlan.workoutsCount = state.selectedPlan.workoutsCount + payload.value
-        }
-        state.error = ''
-      },
     [plansActionCreators.getPlans.pending.type]: onLoading,
     [plansActionCreators.addPlan.pending.type]: onLoading,
 
@@ -73,8 +78,8 @@ export const plansSlice = createSlice({
     [plansActionCreators.addPlan.rejected.type]: onError,
     [plansActionCreators.deletePlan.rejected.type]: onError,
     [plansActionCreators.updatePlan.rejected.type]: onError,
-    [plansActionCreators.incrementPlanWorkoutsCount.rejected.type]: onError,
-  },
+    [plansActionCreators.incrementPlanWorkoutsCount.rejected.type]: onError
+  }
 })
-export const { errorPlansClear, selectPlan } = plansSlice.actions
+export const { errorPlansClear, selectPlan, clearPlaneResults } = plansSlice.actions
 export default plansSlice.reducer

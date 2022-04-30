@@ -12,7 +12,7 @@ interface IGoBackSubmitModal {
 export default memo(function GoBackSubmitModal({
   title = 'Are you sure you want to go back?',
   text,
-  confirmText = 'YES',
+  confirmText = 'YES'
 }: IGoBackSubmitModal) {
   const navigation = useNavigation()
 
@@ -22,9 +22,9 @@ export default memo(function GoBackSubmitModal({
         {
           text: 'Cancel',
           onPress: () => null,
-          style: 'cancel',
+          style: 'cancel'
         },
-        { text: confirmText, onPress: () => BackHandler.exitApp() },
+        { text: confirmText, onPress: () => BackHandler.exitApp() }
       ])
       return true
     }
@@ -37,15 +37,15 @@ export default memo(function GoBackSubmitModal({
       navigation.addListener('beforeRemove', e => {
         e.preventDefault()
         Alert.alert(title, text, [
-          { text: 'Cancel', style: 'cancel', onPress: () => {} },
+          { text: 'Cancel', style: 'cancel', onPress: () => null },
           {
             text: 'YES',
             style: 'destructive',
-            onPress: () => navigation.dispatch(e.data.action),
-          },
+            onPress: () => navigation.dispatch(e.data.action)
+          }
         ])
       }),
-    [navigation],
+    [navigation]
   )
 
   return <View />
