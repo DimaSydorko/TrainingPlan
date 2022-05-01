@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { plansActionCreators } from './PlansActionCreators'
+import { ChangeWorkoutsCountType, plansActionCreators } from './PlansActionCreators'
 import { PlanType } from '../../Utils/types'
 
 interface PlansSlice {
@@ -59,15 +59,20 @@ export const plansSlice = createSlice({
       state.error = ''
       state.isLoading = false
     },
-    [plansActionCreators.incrementPlanWorkoutsCount.fulfilled.type]: (
+    [plansActionCreators.changeWorkoutsCount.fulfilled.type]: (
       state,
-      { payload }: PayloadAction<{ planUid: string; value: number }>
+      { payload }: PayloadAction<ChangeWorkoutsCountType>
     ) => {
+      const changeWorkoutUids = (plan: PlanType) => {
+        return payload.type === 'add'
+          ? [...plan.workoutUids, payload.workoutUid]
+          : plan.workoutUids.filter(uid => uid !== payload.workoutUid)
+      }
       state.plans = state.plans.map(plan =>
-        plan.uid === payload.planUid ? { ...plan, workoutsCount: plan.workoutsCount + payload.value } : plan
+        plan.uid === payload.planUid ? { ...plan, workoutUids: changeWorkoutUids(plan) } : plan
       )
       if (state?.selectedPlan?.uid === payload.planUid) {
-        state.selectedPlan.workoutsCount = state.selectedPlan.workoutsCount + payload.value
+        state.selectedPlan.workoutUids = changeWorkoutUids(state.selectedPlan)
       }
       state.error = ''
     },
@@ -78,7 +83,7 @@ export const plansSlice = createSlice({
     [plansActionCreators.addPlan.rejected.type]: onError,
     [plansActionCreators.deletePlan.rejected.type]: onError,
     [plansActionCreators.updatePlan.rejected.type]: onError,
-    [plansActionCreators.incrementPlanWorkoutsCount.rejected.type]: onError
+    [plansActionCreators.changeWorkoutsCount.rejected.type]: onError
   }
 })
 export const { errorPlansClear, selectPlan, clearPlaneResults } = plansSlice.actions

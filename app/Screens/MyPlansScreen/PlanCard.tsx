@@ -22,7 +22,7 @@ export default memo(function PlanCard({ plan, isEditMode, onDelete, onSelect }: 
         <FlexSpaceBetween>
           <View>
             <TextHeader color={colors.secondPrimary}>{plan.name}</TextHeader>
-            <TextSecondary>{plan.workoutsCount} Workouts</TextSecondary>
+            <TextSecondary>{plan.workoutUids.length} Workouts</TextSecondary>
           </View>
           {isEditMode && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}
         </FlexSpaceBetween>

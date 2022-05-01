@@ -38,7 +38,7 @@ export const defaultPlan: PlanType = {
   uid: '',
   ownerUid: '',
   name: 'New Plan',
-  workoutsCount: 0,
+  workoutUids: [],
   labels: []
 }
 export const defaultWorkout: WorkoutType = {
@@ -52,7 +52,7 @@ export const defaultWorkout: WorkoutType = {
 export const defaultExercise: ExerciseType = {
   uid: '',
   name: 'New exercise',
-  laps: 0,
+  laps: 1,
   repeats: 0,
   approaches: [],
   isVisible: true,

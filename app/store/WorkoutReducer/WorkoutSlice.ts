@@ -70,6 +70,12 @@ export const workoutSlice = createSlice({
       state.isLoading = false
       state.error = ''
     },
+    [workoutActionCreators.addWorkout.fulfilled.type]: (state, { payload }: PayloadAction<WorkoutType>) => {
+      state.workouts.push(payload)
+      if (payload.plansUid[0]) state.workoutsInPlan.push(payload)
+      state.isLoading = false
+      state.error = ''
+    },
     [workoutActionCreators.getWorkouts.pending.type]: onLoading,
     [workoutActionCreators.addWorkout.pending.type]: onLoading,
 

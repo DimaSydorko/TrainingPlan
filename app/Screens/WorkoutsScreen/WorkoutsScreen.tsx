@@ -11,7 +11,7 @@ import {
 import { selectWorkout } from '../../store/WorkoutReducer/WorkoutSlice'
 import { plansActionCreators } from '../../store/PlansReducer/PlansActionCreators'
 import useWorkoutPlan from '../../Hooks/useWorkoutPlan'
-import { useAppDispatch, usePlans, useWorkout } from '../../Hooks/redux'
+import { useAppDispatch, useWorkout } from '../../Hooks/redux'
 import { WorkoutType } from '../../Utils/types'
 import { ScreenName } from '../../Utils/constants'
 import { AppModal, ConfirmButton, GoBackSubmitModal, MySwitch, MyTextInput } from '../../Common'
@@ -28,39 +28,46 @@ interface IPlanScreen {
 export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
   const dispatch = useAppDispatch()
+  const { selectedPlan, addWorkout, deleteWorkout, addWorkoutInPlane, deleteWorkoutInPlane } = useWorkoutPlan()
   const workout = useWorkout()
-  const { selectedPlan } = usePlans()
-  const { addWorkout, deleteWorkout, addWorkoutInPlane, deleteWorkoutInPlane } = useWorkoutPlan()
   const [workouts, setWorkouts] = useState<WorkoutType[]>()
   const [isEditMode, setIsEditMode] = useState(false)
   const [isSaveChangesModal, setIsSaveChangesModal] = useState(false)
   const [planNameInput, setPlanNameInput] = useState<string>(selectedPlan?.name || '')
 
+  const workoutUids = isInPlan ? workouts?.map(w => w.uid) : []
   const isPlanEdit = isEditMode && isInPlan
+  const _workouts = useMemo(
+    () =>
+      isInPlan
+        ? workout.workoutsInPlan
+            .slice()
+            .sort((a, b) => selectedPlan.workoutUids.indexOf(a.uid) - selectedPlan.workoutUids.indexOf(b.uid))
+        : workout.workouts,
+    [isInPlan, workout.workoutsInPlan, workout.workouts]
+  )
   const isChanged = useMemo(
     () =>
       !deepCompare(selectedPlan, {
         ...selectedPlan,
-        name: planNameInput
+        name: planNameInput,
+        workoutUids
       }),
-    [selectedPlan, planNameInput]
+    [selectedPlan, planNameInput, workoutUids]
   )
 
   useEffect(() => {
-    setWorkouts(isInPlan ? workout.workoutsInPlan : workout.workouts)
-  }, [isInPlan, workout.workoutsInPlan, workout.workouts])
+    setWorkouts(_workouts)
+  }, [_workouts])
 
-  const onSelect = useCallback(
-    (workout: WorkoutType) => {
-      dispatch(selectWorkout(workout))
-      navigation.navigate(isInPlan ? ScreenName.WorkoutInPlan : ScreenName.Workout)
-    },
-    [isInPlan]
-  )
+  const onSelect = useCallback((workout: WorkoutType) => {
+    dispatch(selectWorkout(workout))
+    navigation.navigate(isInPlan ? ScreenName.WorkoutInPlan : ScreenName.Workout)
+  }, [])
 
   const onToggleEditMode = useCallback(() => {
     if (isEditMode) {
-      if (isChanged) setIsSaveChangesModal(true)
+      if (isChanged && isInPlan) setIsSaveChangesModal(true)
       else setIsEditMode(!isEditMode)
     } else {
       setIsEditMode(!isEditMode)
@@ -68,26 +75,25 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
   }, [isEditMode, isChanged])
 
   const onSavePlan = useCallback(() => {
-    dispatch(plansActionCreators.updatePlan({ ...selectedPlan, name: planNameInput }))
+    dispatch(plansActionCreators.updatePlan({ ...selectedPlan, name: planNameInput, workoutUids }))
     setIsEditMode(false)
-  }, [selectedPlan, planNameInput])
+  }, [selectedPlan, planNameInput, workoutUids])
 
   const onSaveRefuse = useCallback(() => {
     setPlanNameInput(prev => (prev === selectedPlan.name ? prev : selectedPlan.name))
-  }, [selectedPlan])
+    setWorkouts(_workouts)
+    setIsEditMode(false)
+  }, [selectedPlan, _workouts])
 
-  const onAddWorkout = useCallback(
-    (newWorkout: WorkoutType) => {
-      isInPlan ? addWorkoutInPlane(newWorkout) : addWorkout(newWorkout)
-    },
-    [isInPlan]
-  )
+  const onAddWorkout = useCallback((newWorkout: WorkoutType) => {
+    isInPlan ? addWorkoutInPlane(newWorkout) : addWorkout(newWorkout)
+  }, [])
 
   const onDelete = useCallback(
     (workout: WorkoutType) => {
       isInPlan ? deleteWorkoutInPlane(workout) : deleteWorkout(workout)
     },
-    [deleteWorkoutInPlane, deleteWorkout, isInPlan]
+    [deleteWorkoutInPlane, deleteWorkout]
   )
 
   const renderItem = ({ item, drag, isActive }: RenderItemParams<WorkoutType>) => (
@@ -129,7 +135,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
           />
         ) : (
           workouts?.map(workout => (
-            <CardPressed key={workout.uid} onPress={() => onSelect(workout)}>
+            <CardPressed key={workout.uid} onPress={() => !isEditMode && onSelect(workout)}>
               <WorkoutCard
                 workout={workout}
                 isInPlan={isInPlan}

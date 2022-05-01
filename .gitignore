@@ -63,3 +63,4 @@ buck-out/
 *.local.*
 *.lock
 *.log
+*.bundle

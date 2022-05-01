@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 import { useAppDispatch, usePlans } from './redux'
 import { WorkoutType } from '../Utils/types'
-import { plansActionCreators } from '../store/PlansReducer/PlansActionCreators'
 import { workoutActionCreators } from '../store/WorkoutReducer/WorkoutActionCreators'
+import { plansActionCreators } from '../store/PlansReducer/PlansActionCreators'
 
 export default function useWorkoutPlan() {
   const dispatch = useAppDispatch()
@@ -12,7 +12,6 @@ export default function useWorkoutPlan() {
     (workout: WorkoutType) => {
       if (!selectedPlan) return
       dispatch(workoutActionCreators.addWorkout({ ...workout, plansUid: [selectedPlan.uid] }))
-      dispatch(plansActionCreators.incrementPlanWorkoutsCount({ planUid: selectedPlan.uid, value: 1 }))
     },
     [selectedPlan]
   )
@@ -26,26 +25,28 @@ export default function useWorkoutPlan() {
       if (!selectedPlan) return
       const plansUid = workout.plansUid.filter(uid => uid !== selectedPlan.uid)
       dispatch(workoutActionCreators.updateWorkout({ ...workout, plansUid }))
-      dispatch(plansActionCreators.incrementPlanWorkoutsCount({ planUid: selectedPlan.uid, value: -1 }))
     },
     [selectedPlan]
   )
 
   const deleteWorkout = useCallback((workout: WorkoutType) => {
-    workout.plansUid.forEach(planUid => {
-      dispatch(plansActionCreators.incrementPlanWorkoutsCount({ planUid, value: -1 }))
-    })
-    dispatch(workoutActionCreators.deleteWorkout(workout.uid))
+    dispatch(workoutActionCreators.deleteWorkout(workout))
   }, [])
 
-  // const moveWorkout = useCallback((workouts: WorkoutType[]) => {
-  //   dispatch(plansActionCreators.updatePlan({...selectedPlan, }))
-  // }, [selectedPlan])
+  const moveWorkout = useCallback(
+    (workouts: WorkoutType[]) => {
+      const workoutUids = workouts.map(workout => workout.uid)
+      dispatch(plansActionCreators.updatePlan({ ...selectedPlan, workoutUids }))
+    },
+    [selectedPlan]
+  )
 
   return {
     deleteWorkoutInPlane,
     addWorkoutInPlane,
     deleteWorkout,
-    addWorkout
+    addWorkout,
+    moveWorkout,
+    selectedPlan
   }
 }

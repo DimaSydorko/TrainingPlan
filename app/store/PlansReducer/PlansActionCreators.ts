@@ -3,6 +3,12 @@ import { FB_Collection_Plans, FB_FieldValue } from '../../Utils/firebase'
 import { QUERY_LIMIT } from '../../Utils/constants'
 import { PlanType } from '../../Utils/types'
 
+export interface ChangeWorkoutsCountType {
+  planUid: string
+  workoutUid: string
+  type: 'add' | 'delete'
+}
+
 export const plansActionCreators = {
   getPlans: createAsyncThunk('plans/getPlans', async (userUid: string, thunkAPI) => {
     try {
@@ -32,11 +38,16 @@ export const plansActionCreators = {
       return thunkAPI.rejectWithValue(e.message)
     }
   }),
-  incrementPlanWorkoutsCount: createAsyncThunk(
-    'plans/updatePlan',
-    async (props: { planUid: string; value: number }, thunkAPI) => {
+  changeWorkoutsCount: createAsyncThunk(
+    'plans/changeWorkoutsCount',
+    async (props: ChangeWorkoutsCountType, thunkAPI) => {
       try {
-        await FB_Collection_Plans.doc(props.planUid).update({ workoutsCount: FB_FieldValue.increment(props.value) })
+        await FB_Collection_Plans.doc(props.planUid).update({
+          workoutUids:
+            props.type === 'add'
+              ? FB_FieldValue.arrayUnion(props.workoutUid)
+              : FB_FieldValue.arrayRemove(props.workoutUid)
+        })
         return props
       } catch (e) {
         return thunkAPI.rejectWithValue(e.message)
