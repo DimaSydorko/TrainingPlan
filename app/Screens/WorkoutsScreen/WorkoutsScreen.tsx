@@ -170,7 +170,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
       <AppModal
         isOpen={isSaveChangesModal}
         header={'Save changes?'}
-        confirmText={'Yes, Save'}
+        confirmText={'Yes'}
         text={`Want to save your changes in '${planNameInput}' plan?`}
         onConfirm={onSavePlan}
         onRefuse={onSaveRefuse}

@@ -26,12 +26,15 @@ export default memo(function MyPlansScreen() {
   useEffect(() => {
     if (!user) return
     dispatch(plansActionCreators.getPlans(user.uid))
-  }, [])
+  }, [user])
 
-  const onAddPlan = useCallback((newPlan: PlanType) => {
-    if (isNewPlanModal) dispatch(plansActionCreators.addPlan(newPlan))
-    else dispatch(plansActionCreators.updatePlan(newPlan))
-  }, [])
+  const onAddPlan = useCallback(
+    (newPlan: PlanType) => {
+      if (isNewPlanModal) dispatch(plansActionCreators.addPlan(newPlan))
+      else dispatch(plansActionCreators.updatePlan(newPlan))
+    },
+    [isNewPlanModal]
+  )
 
   const onPlanPress = (plan: PlanType) => {
     if (isEditMode) {

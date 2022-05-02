@@ -64,6 +64,10 @@ export default function WorkoutScreen() {
     setWorkoutExercises(selectedWorkout?.exercises || null)
   }, [selectedWorkout?.exercises])
 
+  useEffect(() => {
+    if (!selectedWorkout.exercises.length) setIsEditMode(true)
+  }, [selectedWorkout.exercises])
+
   const onSaveWorkout = useCallback(async () => {
     if (!workoutExercises || !user || !selectedWorkout) return
     dispatch(workoutActionCreators.updateWorkout(changedWorkout))
@@ -179,7 +183,7 @@ export default function WorkoutScreen() {
       <AppModal
         isOpen={isSaveChangesModal}
         header={'Save changes?'}
-        confirmText={'Yes, Save'}
+        confirmText={'Yes'}
         text={`Want to save your changes in '${workoutNameInput}' workout?`}
         onConfirm={onSaveWorkout}
         onRefuse={onSaveRefuse}

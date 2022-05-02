@@ -1,14 +1,15 @@
 import * as React from 'react'
-import { memo, useCallback, useMemo, useState } from 'react'
-import { View } from 'react-native'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { Keyboard, KeyboardAvoidingView, Platform, View } from 'react-native'
 import { AppModal, ButtonCounter, IconButton, MyTextInput, SwipeSelector } from '../../Common'
 import { defaultApproach, defaultExercise } from '../../Utils/constants'
 import { nanoid } from '../../Utils'
 import { ExerciseType } from '../../Utils/types'
-import { FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
+import { FlexCenter, FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { icon } from '../../Theme/icons'
 import { colors } from '../../Theme/colors'
 import styles from './styles'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 interface IEditExerciseModal {
   exercise?: ExerciseType
@@ -30,6 +31,21 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
   const [repeats, setRepeats] = useState(initialEx.repeats)
   const [laps, setLaps] = useState(initialEx.laps)
   const [isDeleteModal, setIsDeleteModal] = useState(false)
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false)
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true)
+    })
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false)
+    })
+
+    return () => {
+      keyboardDidHideListener.remove()
+      keyboardDidShowListener.remove()
+    }
+  }, [])
 
   const handleSubmit = useCallback(() => {
     const lapsDif = Math.abs(initialEx.approaches.length - laps)
@@ -65,10 +81,10 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
           onClose()
         }}
         header={`${isNewExercise ? 'Create' : 'Edit'} Exercise`}
-        confirmText={'Save Exercise'}
+        confirmText={'Save'}
         extraPlace={
           <>
-            <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />
+            {!isNewExercise && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}
             <IconButton
               iconName={isVisible ? icon.visibilityOn : icon.visibilityOff}
               onPress={() => setIsVisible(prev => !prev)}
@@ -80,33 +96,42 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
           <MyTextInput
             autoFocus={!!isNewExercise}
             placeholder={'Exercise name'}
-            onChangeText={name => setName(name)}
+            onChangeText={setName}
             value={name}
             type={'underline'}
           />
-          <TextHeader color={colors.textSecondary}>Break:</TextHeader>
-          <View style={styles.breakContainer}>
-            <FlexSpaceBetween style={styles.swipeContainer}>
-              <SwipeSelector onChange={number => setSelectMinutes(number)} value={selectMinutes} maxValue={60} />
-              <SwipeSelector onChange={number => setSelectSeconds(number)} value={selectSeconds} maxValue={60} />
-            </FlexSpaceBetween>
-            <FlexSpaceBetween>
-              <TextSecondary style={styles.breakText}>min</TextSecondary>
-              <TextSecondary style={styles.breakText}>sec</TextSecondary>
-            </FlexSpaceBetween>
-          </View>
+          <FlexCenter>
+            <TextHeader color={colors.textSecondary}>Break: </TextHeader>
+            {isKeyboardVisible && (
+              <TextHeader color={colors.secondPrimary}>
+                {selectSeconds} min {selectMinutes} sec
+              </TextHeader>
+            )}
+          </FlexCenter>
+          {!isKeyboardVisible && (
+            <View style={styles.breakContainer}>
+              <FlexSpaceBetween style={styles.swipeContainer}>
+                <SwipeSelector maxValue={60} value={selectMinutes} onChange={setSelectMinutes} />
+                <SwipeSelector step={5} maxValue={60} value={selectSeconds} onChange={setSelectSeconds} />
+              </FlexSpaceBetween>
+              <FlexSpaceBetween>
+                <TextSecondary style={styles.breakText}>min</TextSecondary>
+                <TextSecondary style={styles.breakText}>sec</TextSecondary>
+              </FlexSpaceBetween>
+            </View>
+          )}
           <FlexSpaceBetween>
             <View>
               <TextHeader color={colors.textSecondary} style={{ textAlign: 'center' }}>
                 Repeats
               </TextHeader>
-              <ButtonCounter value={repeats} onChange={number => setRepeats(number)} />
+              <ButtonCounter value={repeats} onChange={setRepeats} />
             </View>
             <View>
               <TextHeader color={colors.textSecondary} style={{ textAlign: 'center' }}>
                 Laps
               </TextHeader>
-              <ButtonCounter value={laps} minValue={1} onChange={number => setLaps(number)} />
+              <ButtonCounter value={laps} minValue={1} onChange={setLaps} />
             </View>
           </FlexSpaceBetween>
         </FlexCenterColumn>

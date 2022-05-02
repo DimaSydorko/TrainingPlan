@@ -10,7 +10,7 @@ export default StyleSheet.create({
     height: 48,
     borderRadius: 5,
     overflow: 'hidden',
-    color: colors.black,
+    color: colors.text,
     backgroundColor: colors.white,
     marginVertical: 10,
     paddingHorizontal: 12,
@@ -22,7 +22,7 @@ export default StyleSheet.create({
     height: 48,
     fontWeight: 'bold',
     paddingHorizontal: 4,
-    borderBottomColor: colors.black,
+    color: colors.text,
     borderBottomWidth: 1,
     fontSize: 18,
     borderRadius: 0

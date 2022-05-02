@@ -33,7 +33,7 @@ export default function AppModal({
   disableAutoClose = false,
   confirmText = 'Confirm'
 }: AppModalType) {
-  const buttonStyle: ViewStyle = !onRefuse ? {} : { marginHorizontal: 6 }
+  const buttonStyle: ViewStyle = !onRefuse ? { width: '40%' } : { marginHorizontal: 6, width: '30%' }
   return (
     <Modal animationType='fade' transparent={true} visible={isOpen} onTouchStart={onClose} onRequestClose={onClose}>
       <FlexCenter style={styles.modal}>
@@ -50,7 +50,7 @@ export default function AppModal({
             <ConfirmButton header={'Cancel'} color={colors.disabled} style={buttonStyle} onPress={onClose} />
             {!!onRefuse && (
               <ConfirmButton
-                header={'Don`t Save'}
+                header={'No'}
                 color={colors.error}
                 style={buttonStyle}
                 onPress={() => {

@@ -4,12 +4,12 @@ import { colors } from '../../Theme/colors'
 import styles from './styles'
 
 interface ConfirmButtonType {
-  header: string;
-  onPress: () => void;
-  headerStyle?: TextStyle;
-  disabled?: boolean;
-  color?: string;
-  style?: ViewStyle;
+  header: string
+  onPress: () => void
+  headerStyle?: TextStyle
+  disabled?: boolean
+  color?: string
+  style?: ViewStyle
 }
 
 export default function ConfirmButton({
@@ -18,7 +18,7 @@ export default function ConfirmButton({
   headerStyle,
   color = colors.primary,
   style,
-  disabled = false,
+  disabled = false
 }: ConfirmButtonType) {
   return (
     <TouchableOpacity
@@ -26,9 +26,9 @@ export default function ConfirmButton({
         styles.button,
         {
           backgroundColor: disabled ? colors.disabled : color,
-          opacity: disabled ? 0.8 : 1,
+          opacity: disabled ? 0.8 : 1
         },
-        style,
+        style
       ]}
       onPress={onPress}
       activeOpacity={0.5}
@@ -38,4 +38,3 @@ export default function ConfirmButton({
     </TouchableOpacity>
   )
 }
-
