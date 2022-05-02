@@ -29,9 +29,10 @@ import {
   WorkoutDuration
 } from '../../Common'
 import ExerciseEdit from '../../Components/ExerciseEdit/ExerciseEdit'
+import EditExerciseModal from '../../Components/ExerciseEdit/EditExerciseModal'
 import ExerciseResult from '../../Components/ExerciseResults/ExerciseResult'
-import { defaultExercise, FUTURE_FLAG } from '../../Utils/constants'
-import { deepCompare, nanoid } from '../../Utils'
+import { FUTURE_FLAG } from '../../Utils/constants'
+import { deepCompare } from '../../Utils'
 import { ExerciseType, WorkoutType } from '../../Utils/types'
 import { theme } from '../../Theme/theme'
 import { colors } from '../../Theme/colors'
@@ -41,11 +42,12 @@ export default function WorkoutScreen() {
   const { selectedWorkout } = useWorkout()
   const { user } = useUser()
   const [isEditMode, setIsEditMode] = useState(false)
+  const [isNewExercise, setIsNewExercise] = useState(false)
   const [isSaveChangesModal, setIsSaveChangesModal] = useState(false)
-  const [newExerciseId, setNewExerciseId] = useState('')
   const [workoutNameInput, setWorkoutNameInput] = useState<string>(selectedWorkout?.name || '')
   const [workoutLabels, setWorkoutLabels] = useState<string[]>(selectedWorkout?.labels || [])
   const [workoutExercises, setWorkoutExercises] = useState<ExerciseType[] | null>(null)
+  const [changeExercise, setChangeExercise] = useState<ExerciseType | null>(null)
 
   const changedWorkout: WorkoutType = useMemo(
     () => ({
@@ -77,26 +79,18 @@ export default function WorkoutScreen() {
     }
   }, [isEditMode, isChanged])
 
-  const onAddExercise = useCallback(() => {
-    const uid = nanoid()
-    setWorkoutExercises(prev => [...(prev || []), { ...defaultExercise, uid }])
-    setNewExerciseId(uid)
+  const onVisibilityToggle = useCallback((exercise: ExerciseType) => {
+    setWorkoutExercises(prev => prev?.map(ex => (ex.uid === exercise.uid ? exercise : ex)) || [])
   }, [])
-
-  const onChangeExercise = useCallback(
-    (exercise: ExerciseType) => {
-      if (newExerciseId) setNewExerciseId('')
-      setWorkoutExercises(prev => prev?.map(ex => (ex.uid === exercise.uid ? exercise : ex)) || [])
-    },
-    [newExerciseId]
-  )
 
   const onDeleteExercise = useCallback(
     (exercise: ExerciseType) => {
-      if (newExerciseId) setNewExerciseId('')
-      setWorkoutExercises(prev => prev?.filter(ex => ex.uid !== exercise.uid) || [])
+      if (!isNewExercise) {
+        setWorkoutExercises(prev => prev?.filter(ex => ex.uid !== exercise.uid) || [])
+        setChangeExercise(null)
+      } else setIsNewExercise(false)
     },
-    [setWorkoutExercises, newExerciseId]
+    [isNewExercise]
   )
 
   const onSaveRefuse = useCallback(() => {
@@ -106,28 +100,22 @@ export default function WorkoutScreen() {
     setIsEditMode(false)
   }, [selectedWorkout.labels, selectedWorkout.name, selectedWorkout.exercises])
 
-  const renderItem = ({ item, drag, isActive }: RenderItemParams<ExerciseType>) => {
-    const isNewExercise = item.uid === newExerciseId
+  const onSaveExercise = useCallback(
+    (newExercise: ExerciseType) => {
+      if (isNewExercise) setWorkoutExercises(prev => [...(prev || []), newExercise])
+      else setWorkoutExercises(prev => prev?.map(ex => (ex.uid === newExercise.uid ? newExercise : ex)) || [])
+    },
+    [isNewExercise]
+  )
 
-    const exercise = () => (
-      <ExerciseEdit
-        exercise={item}
-        isNewExercise={isNewExercise}
-        onSave={onChangeExercise}
-        onDelete={() => onDeleteExercise(item)}
-      />
-    )
+  const renderItem = ({ item, drag, isActive }: RenderItemParams<ExerciseType>) => {
     return (
       <ScaleDecorator>
-        {isNewExercise ? (
-          exercise()
-        ) : (
-          <Card>
-            <TouchableOpacity onLongPress={drag} disabled={isActive}>
-              {exercise()}
-            </TouchableOpacity>
-          </Card>
-        )}
+        <Card>
+          <TouchableOpacity onLongPress={drag} onPress={() => setChangeExercise(item)} disabled={isActive}>
+            <ExerciseEdit exercise={item} isNewExercise={isNewExercise} onVisibilityToggle={onVisibilityToggle} />
+          </TouchableOpacity>
+        </Card>
       </ScaleDecorator>
     )
   }
@@ -185,7 +173,7 @@ export default function WorkoutScreen() {
             ))
         )}
       </FlexCenterColumn>
-      {isEditMode && <AddMoreButton onPress={onAddExercise} header={'Exercise'} />}
+      {isEditMode && <AddMoreButton onPress={() => setIsNewExercise(true)} header={'Exercise'} />}
       {isEditMode && <ConfirmButton disabled={!isChanged} onPress={onSaveWorkout} header={'Save workout'} />}
       {isChanged && <GoBackSubmitModal text={`Changes in '${workoutNameInput}' workout aren\`t saved!`} />}
       <AppModal
@@ -197,6 +185,14 @@ export default function WorkoutScreen() {
         onRefuse={onSaveRefuse}
         onClose={() => setIsSaveChangesModal(false)}
       />
+      {(isNewExercise || !!changeExercise) && (
+        <EditExerciseModal
+          exercise={changeExercise}
+          onClose={() => (isNewExercise ? setIsNewExercise(false) : setChangeExercise(null))}
+          onSave={onSaveExercise}
+          onDelete={() => onDeleteExercise(changeExercise)}
+        />
+      )}
     </NestableScrollContainer>
   ) : (
     <Page>

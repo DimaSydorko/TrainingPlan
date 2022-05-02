@@ -7,12 +7,12 @@ import { plansActionCreators } from '../../store/PlansReducer/PlansActionCreator
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
 import { useAppDispatch, usePlans, useUser } from '../../Hooks/redux'
 import { FlexSpaceBetween, FlexStart, Page, TextSecondary } from '../../Theme/Parents'
-import { MySwitch } from '../../Common'
+import { AddMoreButton, MySwitch } from '../../Common'
+import EditPlanWorkout from '../../Components/EditPlanWorkout/EditPlanWorkout'
 import PlanCard from './PlanCard'
 import { ScreenName } from '../../Utils/constants'
 import { PlanType } from '../../Utils/types'
 import { theme } from '../../Theme/theme'
-import CreatePlan from './CreatePlan'
 
 export default memo(function MyPlansScreen() {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
@@ -20,20 +20,27 @@ export default memo(function MyPlansScreen() {
   const { plans } = usePlans()
   const { user } = useUser()
   const [isEditMode, setIsEditMode] = useState(false)
+  const [isNewPlanModal, setIsNewPlanModal] = useState(false)
+  const [changePlan, setChangePlan] = useState<PlanType | null>(null)
 
   useEffect(() => {
     if (!user) return
     dispatch(plansActionCreators.getPlans(user.uid))
   }, [])
 
-  const setNewPlan = useCallback((newPlan: PlanType) => {
-    dispatch(plansActionCreators.addPlan(newPlan))
+  const onAddPlan = useCallback((newPlan: PlanType) => {
+    if (isNewPlanModal) dispatch(plansActionCreators.addPlan(newPlan))
+    else dispatch(plansActionCreators.updatePlan(newPlan))
   }, [])
 
   const onPlanPress = (plan: PlanType) => {
-    dispatch(selectPlan(plan))
-    dispatch(workoutActionCreators.getWorkouts({ uid: plan.uid, findBy: 'planUid' }))
-    navigation.navigate(ScreenName.Plan)
+    if (isEditMode) {
+      setChangePlan(plan)
+    } else {
+      dispatch(selectPlan(plan))
+      dispatch(workoutActionCreators.getWorkouts({ uid: plan.uid, findBy: 'planUid' }))
+      navigation.navigate(ScreenName.Plan)
+    }
   }
 
   const onDelete = (planUid: string) => {
@@ -60,7 +67,16 @@ export default memo(function MyPlansScreen() {
           onDelete={() => onDelete(plan.uid)}
         />
       ))}
-      {(isEditMode || !plans?.length) && <CreatePlan onAddPlan={setNewPlan} />}
+      {(isEditMode || !plans?.length) && <AddMoreButton onPress={() => setIsNewPlanModal(true)} header={'Plan'} />}
+      {(isNewPlanModal || !!changePlan) && (
+        <EditPlanWorkout
+          isModal
+          type={'Plan'}
+          initialValue={changePlan}
+          onSubmit={onAddPlan}
+          onClose={() => (isNewPlanModal ? setIsNewPlanModal(false) : setChangePlan(null))}
+        />
+      )}
     </Page>
   )
 })

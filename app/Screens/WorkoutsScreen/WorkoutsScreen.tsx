@@ -10,13 +10,14 @@ import {
 } from 'react-native-draggable-flatlist'
 import { selectWorkout } from '../../store/WorkoutReducer/WorkoutSlice'
 import { plansActionCreators } from '../../store/PlansReducer/PlansActionCreators'
+import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
 import useWorkoutPlan from '../../Hooks/useWorkoutPlan'
 import { useAppDispatch, useWorkout } from '../../Hooks/redux'
 import { WorkoutType } from '../../Utils/types'
 import { ScreenName } from '../../Utils/constants'
-import { AppModal, ConfirmButton, GoBackSubmitModal, MySwitch, MyTextInput } from '../../Common'
+import { AddMoreButton, AppModal, ConfirmButton, GoBackSubmitModal, MySwitch, MyTextInput } from '../../Common'
+import EditPlanWorkout from '../../Components/EditPlanWorkout/EditPlanWorkout'
 import WorkoutCard from './WorkoutCard'
-import CreateWorkout from './CreateWorkout'
 import { Card, CardPressed, FlexSpaceBetween, FlexStart, Page, TextSecondary } from '../../Theme/Parents'
 import { theme } from '../../Theme/theme'
 import { deepCompare } from '../../Utils'
@@ -33,6 +34,8 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
   const [workouts, setWorkouts] = useState<WorkoutType[]>()
   const [isEditMode, setIsEditMode] = useState(false)
   const [isSaveChangesModal, setIsSaveChangesModal] = useState(false)
+  const [isNewWorkoutModal, setIsNewWorkoutModal] = useState(false)
+  const [changeWorkout, setChangeWorkout] = useState<WorkoutType | null>(null)
   const [planNameInput, setPlanNameInput] = useState<string>(selectedPlan?.name || '')
 
   const workoutUids = isInPlan ? workouts?.map(w => w.uid) : []
@@ -86,7 +89,8 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
   }, [selectedPlan, _workouts])
 
   const onAddWorkout = useCallback((newWorkout: WorkoutType) => {
-    isInPlan ? addWorkoutInPlane(newWorkout) : addWorkout(newWorkout)
+    if (isNewWorkoutModal) isInPlan ? addWorkoutInPlane(newWorkout) : addWorkout(newWorkout)
+    else dispatch(workoutActionCreators.updateWorkout(newWorkout))
   }, [])
 
   const onDelete = useCallback(
@@ -99,7 +103,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
   const renderItem = ({ item, drag, isActive }: RenderItemParams<WorkoutType>) => (
     <ScaleDecorator>
       <Card>
-        <TouchableOpacity onLongPress={drag} disabled={isActive}>
+        <TouchableOpacity onLongPress={drag} onPress={() => setChangeWorkout(item)} disabled={isActive}>
           <WorkoutCard workout={item} isInPlan={isInPlan} isEditMode={isEditMode} onDelete={() => onDelete(item)} />
         </TouchableOpacity>
       </Card>
@@ -146,9 +150,20 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
           ))
         )}
       </NestableScrollContainer>
-      {(isEditMode || !workouts?.length) && <CreateWorkout onAddWorkout={onAddWorkout} />}
+      {(isEditMode || !workouts?.length) && (
+        <AddMoreButton onPress={() => setIsNewWorkoutModal(true)} header={'Workout'} />
+      )}
       {isEditMode && isInPlan && <ConfirmButton header={'Save Plan'} disabled={!isChanged} onPress={onSavePlan} />}
       {isChanged && isInPlan && <GoBackSubmitModal text={`Changes in '${selectedPlan.name}' plan aren\`t saved!`} />}
+      {(isNewWorkoutModal || !!changeWorkout) && (
+        <EditPlanWorkout
+          isModal
+          type={'Workout'}
+          initialValue={changeWorkout}
+          onSubmit={onAddWorkout}
+          onClose={() => (isNewWorkoutModal ? setIsNewWorkoutModal(false) : setChangeWorkout(null))}
+        />
+      )}
       <AppModal
         isOpen={isSaveChangesModal}
         header={'Save changes?'}

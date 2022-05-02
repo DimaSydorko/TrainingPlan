@@ -18,7 +18,7 @@ export default memo(function PlanCard({ plan, isEditMode, onDelete, onSelect }: 
   const [isDeleteModal, setIsDeleteModal] = useState(false)
   return (
     <>
-      <CardPressed onPress={() => !isEditMode && onSelect()}>
+      <CardPressed onPress={onSelect}>
         <FlexSpaceBetween>
           <View>
             <TextHeader color={colors.secondPrimary}>{plan.name}</TextHeader>

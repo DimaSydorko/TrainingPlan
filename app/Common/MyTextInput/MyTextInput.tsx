@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { TextInput, TextStyle } from 'react-native'
+import { KeyboardAvoidingView, Platform, TextInput, TextStyle } from 'react-native'
 import { colors } from '../../Theme/colors'
 import styles from './styles'
 
@@ -20,24 +20,26 @@ export default function MyTextInput({
   value,
   autoFocus,
   secureTextEntry = false,
-  type = 'ordinary',
+  type = 'ordinary'
 }: MyTextInputType) {
   return (
-    <TextInput
-      style={[
-        type === 'ordinary' && styles.ordinary,
-        type === 'underline' && styles.underline,
-        type === 'secondary' && styles.secondary,
-        style,
-      ]}
-      autoFocus={autoFocus}
-      placeholderTextColor={colors.text}
-      secureTextEntry={secureTextEntry}
-      placeholder={placeholder}
-      onChangeText={text => onChangeText(text)}
-      value={value}
-      underlineColorAndroid='transparent'
-      autoCapitalize='none'
-    />
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
+      <TextInput
+        style={[
+          type === 'ordinary' && styles.ordinary,
+          type === 'underline' && styles.underline,
+          type === 'secondary' && styles.secondary,
+          style
+        ]}
+        autoFocus={autoFocus}
+        placeholderTextColor={colors.text}
+        secureTextEntry={secureTextEntry}
+        placeholder={placeholder}
+        onChangeText={text => onChangeText(text)}
+        value={value}
+        underlineColorAndroid='transparent'
+        autoCapitalize='none'
+      />
+    </KeyboardAvoidingView>
   )
 }

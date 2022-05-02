@@ -3,6 +3,9 @@ import { colors } from '../../Theme/colors'
 import { screen } from '../../Utils/constants'
 
 export default StyleSheet.create({
+  container: {
+    width: '100%'
+  },
   ordinary: {
     height: 48,
     borderRadius: 5,
@@ -11,7 +14,7 @@ export default StyleSheet.create({
     backgroundColor: colors.white,
     marginVertical: 10,
     paddingHorizontal: 12,
-    width: screen.vw - 40,
+    width: screen.vw - 40
   },
   underline: {
     width: '100%',
@@ -22,7 +25,7 @@ export default StyleSheet.create({
     borderBottomColor: colors.black,
     borderBottomWidth: 1,
     fontSize: 18,
-    borderRadius: 0,
+    borderRadius: 0
   },
   secondary: {
     width: '100%',
@@ -33,6 +36,6 @@ export default StyleSheet.create({
     color: colors.textSecondary,
     borderBottomWidth: 1,
     fontSize: 14,
-    borderRadius: 0,
-  },
+    borderRadius: 0
+  }
 })
