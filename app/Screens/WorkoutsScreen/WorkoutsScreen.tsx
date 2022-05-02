@@ -88,10 +88,13 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
     setIsEditMode(false)
   }, [selectedPlan, _workouts])
 
-  const onAddWorkout = useCallback((newWorkout: WorkoutType) => {
-    if (isNewWorkoutModal) isInPlan ? addWorkoutInPlane(newWorkout) : addWorkout(newWorkout)
-    else dispatch(workoutActionCreators.updateWorkout(newWorkout))
-  }, [])
+  const onAddWorkout = useCallback(
+    (newWorkout: WorkoutType) => {
+      if (isNewWorkoutModal) isInPlan ? addWorkoutInPlane(newWorkout) : addWorkout(newWorkout)
+      else dispatch(workoutActionCreators.updateWorkout(newWorkout))
+    },
+    [isNewWorkoutModal]
+  )
 
   const onDelete = useCallback(
     (workout: WorkoutType) => {
