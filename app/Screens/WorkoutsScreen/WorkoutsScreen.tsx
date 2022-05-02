@@ -83,7 +83,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
   }, [selectedPlan, planNameInput, workoutUids])
 
   const onSaveRefuse = useCallback(() => {
-    setPlanNameInput(prev => (prev === selectedPlan.name ? prev : selectedPlan.name))
+    setPlanNameInput(prev => (prev === selectedPlan?.name ? prev : selectedPlan.name))
     setWorkouts(_workouts)
     setIsEditMode(false)
   }, [selectedPlan, _workouts])
@@ -154,7 +154,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
         <AddMoreButton onPress={() => setIsNewWorkoutModal(true)} header={'Workout'} />
       )}
       {isEditMode && isInPlan && <ConfirmButton header={'Save Plan'} disabled={!isChanged} onPress={onSavePlan} />}
-      {isChanged && isInPlan && <GoBackSubmitModal text={`Changes in '${selectedPlan.name}' plan aren\`t saved!`} />}
+      {isChanged && isInPlan && <GoBackSubmitModal text={`Changes in '${selectedPlan?.name}' plan aren\`t saved!`} />}
       {(isNewWorkoutModal || !!changeWorkout) && (
         <EditPlanWorkout
           isModal
