@@ -9,21 +9,19 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     zIndex: 1000,
-    opacity: 0.8,
-  },
+    opacity: 0.8
+  }
 })
 
 interface ToasterType {
-  toasts: (JSX.Element | boolean)[],
+  toasts: (JSX.Element | boolean)[]
 }
 
 export default memo(function Toaster({ toasts }: ToasterType) {
   return (
     <View style={styles.container}>
       {toasts.map((toast, idx) => (
-        <View key={idx}>
-          {toast}
-        </View>
+        <View key={idx}>{toast}</View>
       ))}
     </View>
   )

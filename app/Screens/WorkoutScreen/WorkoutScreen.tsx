@@ -9,16 +9,7 @@ import {
 } from 'react-native-draggable-flatlist'
 import { useAppDispatch, useUser, useWorkout } from '../../Hooks/redux'
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
-import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
-import {
-  Card,
-  FlexCenterColumn,
-  FlexSpaceBetween,
-  FlexStart,
-  Page,
-  TextHeader,
-  TextSecondary
-} from '../../Theme/Parents'
+import { Card, FlexCenterColumn, FlexSpaceBetween, FlexStart, Page, TextSecondary } from '../../Theme/Parents'
 import {
   AddMoreButton,
   AppModal,
@@ -28,9 +19,8 @@ import {
   MyTextInput,
   WorkoutDuration
 } from '../../Common'
-import ExerciseEdit from '../../Components/ExerciseEdit/ExerciseEdit'
-import EditExerciseModal from '../../Components/ExerciseEdit/EditExerciseModal'
-import ExerciseResult from '../../Components/ExerciseResults/ExerciseResult'
+import Exercise from '../../Components/Exercise/Exercise'
+import EditExerciseModal from '../../Components/Exercise/ExerciseEditModal'
 import { FUTURE_FLAG } from '../../Utils/constants'
 import { deepCompare } from '../../Utils'
 import { ExerciseType, WorkoutType } from '../../Utils/types'
@@ -115,9 +105,9 @@ export default function WorkoutScreen() {
   const renderItem = ({ item, drag, isActive }: RenderItemParams<ExerciseType>) => {
     return (
       <ScaleDecorator>
-        <Card>
+        <Card borderLeftColor={item.isVisible ? `${colors.secondPrimary}` : `${colors.secondPrimary}80`}>
           <TouchableOpacity onLongPress={drag} onPress={() => setChangeExercise(item)} disabled={isActive}>
-            <ExerciseEdit exercise={item} isNewExercise={isNewExercise} onVisibilityToggle={onVisibilityToggle} />
+            <Exercise exercise={item} isEdit={isEditMode} onVisibilityToggle={onVisibilityToggle} />
           </TouchableOpacity>
         </Card>
       </ScaleDecorator>
@@ -163,16 +153,8 @@ export default function WorkoutScreen() {
           workoutExercises
             ?.filter(ex => ex.isVisible)
             ?.map(exercise => (
-              <Card key={exercise.uid}>
-                <FlexSpaceBetween>
-                  <TextHeader color={colors.secondPrimary}>{exercise.name}</TextHeader>
-                  {!!exercise.breakTimeInSec && (
-                    <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
-                  )}
-                </FlexSpaceBetween>
-                {exercise.approaches?.map((approach, idx) => (
-                  <ExerciseResult key={idx} isPrevious weight={approach.weight} repeats={approach.repeats} />
-                ))}
+              <Card key={exercise.uid} borderLeftColor={colors.secondPrimary}>
+                <Exercise exercise={exercise} />
               </Card>
             ))
         )}

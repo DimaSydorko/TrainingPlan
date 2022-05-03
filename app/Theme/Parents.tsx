@@ -17,6 +17,7 @@ interface OnPressType {
   onPress: () => void
   onPressOut?: () => void
   onPressIn?: () => void
+  borderLeftColor?: string
 }
 
 interface IPage {
@@ -67,19 +68,48 @@ export const FlexStart = ({ children, style }: ParentProps) => {
   return <View style={[theme.containers.alignCenter, style]}>{children}</View>
 }
 
-export const Card = ({ children, style }: ParentProps) => {
-  return <View style={[theme.view.card, theme.view.shadow, style]}>{children}</View>
-}
+export const Card = ({ children, style, borderLeftColor }: ParentProps & { borderLeftColor?: string }) => (
+  <View
+    style={[
+      theme.view.card,
+      theme.view.shadow,
+      !!borderLeftColor
+        ? {
+            borderLeftColor,
+            borderLeftWidth: 12
+          }
+        : {},
+      style
+    ]}
+  >
+    {children}
+  </View>
+)
 
-export const CardPressed = ({ children, onPress, onPressOut, onPressIn, style }: ParentProps & OnPressType) => {
-  return (
-    <TouchableOpacity
-      style={[theme.view.card, theme.view.shadow, style]}
-      onPress={onPress}
-      onPressOut={onPressOut}
-      onPressIn={onPressIn}
-    >
-      {children}
-    </TouchableOpacity>
-  )
-}
+export const CardPressed = ({
+  children,
+  onPress,
+  onPressOut,
+  onPressIn,
+  style,
+  borderLeftColor
+}: ParentProps & OnPressType) => (
+  <TouchableOpacity
+    style={[
+      theme.view.card,
+      theme.view.shadow,
+      borderLeftColor
+        ? {
+            borderLeftColor,
+            borderLeftWidth: 12
+          }
+        : {},
+      style
+    ]}
+    onPress={onPress}
+    onPressOut={onPressOut}
+    onPressIn={onPressIn}
+  >
+    {children}
+  </TouchableOpacity>
+)

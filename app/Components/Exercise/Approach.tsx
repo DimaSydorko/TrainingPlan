@@ -14,18 +14,18 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    flexDirection: 'row',
+    flexDirection: 'row'
   } as ViewStyle,
   textRepWeight: {
     width: '35%',
-    textAlign: 'center',
+    textAlign: 'center'
   } as ViewStyle,
   textCurrPrev: {
-    width: '30%',
-  },
+    width: '30%'
+  }
 })
 
-export default function ExerciseResult({ weight, repeats, isPrevious = true }: ExerciseResultsType) {
+export default function Approach({ weight, repeats, isPrevious = true }: ExerciseResultsType) {
   return (
     <View style={styles.container}>
       <TextOrdinary style={styles.textCurrPrev}>{`\u2022  ${isPrevious ? 'previous' : 'current'}`}</TextOrdinary>

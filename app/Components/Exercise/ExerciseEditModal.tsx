@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { Keyboard, KeyboardAvoidingView, Platform, View } from 'react-native'
+import { Keyboard, View } from 'react-native'
 import { AppModal, ButtonCounter, IconButton, MyTextInput, SwipeSelector } from '../../Common'
 import { defaultApproach, defaultExercise } from '../../Utils/constants'
 import { nanoid } from '../../Utils'
@@ -9,7 +9,6 @@ import { FlexCenter, FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSeconda
 import { icon } from '../../Theme/icons'
 import { colors } from '../../Theme/colors'
 import styles from './styles'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 interface IEditExerciseModal {
   exercise?: ExerciseType

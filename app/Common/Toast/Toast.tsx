@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
     marginTop: 12,
-    marginHorizontal: 'auto',
+    marginHorizontal: '5%',
     width: '90%',
     borderRadius: 12,
     minHeight: 48,
@@ -19,12 +19,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderStyle: 'solid',
-    borderWidth: 1.5,
+    borderWidth: 1.5
   },
   err: {
     backgroundColor: colors.error,
-    borderColor: 'rgba(76,76,76,0.84)',
-  },
+    borderColor: 'rgba(76,76,76,0.84)'
+  }
 })
 
 interface ToastType {
@@ -35,7 +35,6 @@ interface ToastType {
 }
 
 export default React.memo(function Toast({ message, variant = 'error', onPress, pressAfterTime }: ToastType) {
-
   useEffect(() => {
     if (pressAfterTime) {
       setTimeout(onPress, pressAfterTime)
@@ -43,12 +42,10 @@ export default React.memo(function Toast({ message, variant = 'error', onPress, 
   }, [pressAfterTime])
 
   return (
-    <FlexSpaceBetween style={[
-      styles.container,
-      variant === 'error' ? styles.err : {},
-      theme.view.shadow,
-    ]}>
-      <TextOrdinary>{variant === 'error' && 'Error:'} {message}</TextOrdinary>
+    <FlexSpaceBetween style={[styles.container, variant === 'error' ? styles.err : {}, theme.view.shadow]}>
+      <TextOrdinary>
+        {variant === 'error' && 'Error:'} {message}
+      </TextOrdinary>
       <IconButton iconName={icon.close} onPress={onPress} />
     </FlexSpaceBetween>
   )

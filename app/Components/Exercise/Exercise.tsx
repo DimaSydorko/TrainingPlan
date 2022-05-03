@@ -4,16 +4,17 @@ import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
 import { FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { IconButton } from '../../Common'
 import { ExerciseType } from '../../Utils/types'
+import Approach from './Approach'
 import { colors } from '../../Theme/colors'
 import { icon } from '../../Theme/icons'
 
 interface IExerciseEdit {
   exercise: ExerciseType
-  isNewExercise: boolean
-  onVisibilityToggle: (exercise: ExerciseType) => void
+  isEdit?: boolean
+  onVisibilityToggle?: (exercise: ExerciseType) => void
 }
 
-export default memo(function ExerciseEdit({ exercise, isNewExercise, onVisibilityToggle }: IExerciseEdit) {
+export default memo(function ExerciseEdit({ exercise, isEdit = false, onVisibilityToggle }: IExerciseEdit) {
   const [isVisible, setIsVisible] = useState(exercise.isVisible)
 
   useEffect(() => {
@@ -22,14 +23,16 @@ export default memo(function ExerciseEdit({ exercise, isNewExercise, onVisibilit
 
   return (
     <>
-      {!isNewExercise && (
+      {isEdit ? (
         <>
           <FlexSpaceBetween>
             <TextHeader color={isVisible ? colors.secondPrimary : colors.textSecondary}>{exercise.name}</TextHeader>
-            <IconButton
-              iconName={isVisible ? icon.visibilityOn : icon.visibilityOff}
-              onPress={() => onVisibilityToggle({ ...exercise, isVisible: !isVisible })}
-            />
+            {onVisibilityToggle && (
+              <IconButton
+                iconName={isVisible ? icon.visibilityOn : icon.visibilityOff}
+                onPress={() => onVisibilityToggle({ ...exercise, isVisible: !isVisible })}
+              />
+            )}
           </FlexSpaceBetween>
           <FlexSpaceBetween>
             <TextSecondary>
@@ -45,6 +48,18 @@ export default memo(function ExerciseEdit({ exercise, isNewExercise, onVisibilit
               <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
             )}
           </FlexSpaceBetween>
+        </>
+      ) : (
+        <>
+          <FlexSpaceBetween>
+            <TextHeader color={colors.secondPrimary}>{exercise.name}</TextHeader>
+            {!!exercise.breakTimeInSec && (
+              <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
+            )}
+          </FlexSpaceBetween>
+          {exercise.approaches?.map((approach, idx) => (
+            <Approach key={idx} isPrevious weight={approach.weight} repeats={approach.repeats} />
+          ))}
         </>
       )}
     </>
