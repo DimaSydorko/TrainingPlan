@@ -4,5 +4,10 @@ export const icon = {
   visibilityOff: 'eye-off-outline',
   delete: 'delete-outline',
   close: 'close',
-  move: 'arrow-split-horizontal',
+  skipNext: 'skip-next',
+  skipPrevious: 'skip-previous',
+  play: 'play-circle',
+  playlist: 'playlist-check',
+  back: 'arrow-left',
+  checkCircle: 'check-circle'
 }

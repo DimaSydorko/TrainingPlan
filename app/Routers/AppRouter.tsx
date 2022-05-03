@@ -5,14 +5,15 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import NotificationHandler from '../Components/NotificationHandler/NotificationHandler'
 import WorkoutsRouter from './WorkoutsRouter'
 import PlanRouter from './PlanRouter'
-import { EmptyScreen } from '../Screens'
+import { EmptyScreen, PlayingScreen } from '../Screens'
 import { colors } from '../Theme/colors'
+import { usePlaying } from '../Hooks/redux'
 
 type TabType = {
-  name: string,
-  component: () => JSX.Element,
-  buttonLabel: string,
-  icon: (color: string) => JSX.Element,
+  name: string
+  component: () => JSX.Element
+  buttonLabel: string
+  icon: (color: string) => JSX.Element
 }
 
 const tabs = [
@@ -20,42 +21,46 @@ const tabs = [
     name: 'All saved Plans',
     component: PlanRouter,
     buttonLabel: 'My Plans',
-    icon: (color) => {
+    icon: color => {
       return <Icon name='clipboard-list-outline' size={28} color={color} />
-    },
-  }, {
+    }
+  },
+  {
     name: 'All saved Workouts',
     component: WorkoutsRouter,
     buttonLabel: 'My Workouts',
-    icon: (color) => {
+    icon: color => {
       return <Icon name='clock-fast' size={28} color={color} />
-    },
-  }, {
+    }
+  },
+  {
     name: 'My Suggestion',
     component: EmptyScreen,
     buttonLabel: 'Suggestion',
-    icon: (color) => {
+    icon: color => {
       return <Icon name='tooltip-text-outline' size={28} color={color} />
-    },
-  }, {
+    }
+  },
+  {
     name: 'More',
     component: EmptyScreen,
     buttonLabel: 'More',
-    icon: (color) => {
+    icon: color => {
       return <Icon name='dots-horizontal' size={28} color={color} />
-    },
-  },
+    }
+  }
 ] as TabType[]
 
 export default function AppRouter() {
   const Tab = createBottomTabNavigator()
-
+  const { workout } = usePlaying()
   return (
     <>
       <NotificationHandler />
+      {workout && <PlayingScreen />}
       <Tab.Navigator
         sceneContainerStyle={{
-          backgroundColor: colors.background,
+          backgroundColor: colors.background
         }}
       >
         {tabs.map(({ name, icon, buttonLabel, component }, idx) => (
@@ -65,20 +70,16 @@ export default function AppRouter() {
             component={component}
             options={{
               tabBarLabel: ({ focused }) => (
-                <Text style={focused ? { color: colors.secondPrimary } : { color: colors.black }}>
-                  {buttonLabel}
-                </Text>
+                <Text style={focused ? { color: colors.secondPrimary } : { color: colors.black }}>{buttonLabel}</Text>
               ),
-              tabBarIcon: ({ focused }) => (
-                icon(focused ? colors.secondPrimary : colors.black)
-              ),
+              tabBarIcon: ({ focused }) => icon(focused ? colors.secondPrimary : colors.black),
               headerShown: false,
               tabBarStyle: {
                 backgroundColor: colors.menu,
                 paddingTop: 5,
                 paddingBottom: 5,
-                height: 55,
-              },
+                height: 55
+              }
             }}
           />
         ))}

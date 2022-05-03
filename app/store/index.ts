@@ -5,11 +5,13 @@ import { LogBox } from 'react-native'
 import userReducer from './UserReducer/UserSlice'
 import plansReducer from './PlansReducer/PlansSlice'
 import workoutReducer from './WorkoutReducer/WorkoutSlice'
+import playingReducer from './PlayingReduser/PlayingSlice'
 
 const rootReducer = combineReducers({
   userReducer,
   plansReducer,
-  workoutReducer
+  workoutReducer,
+  playingReducer
 })
 
 const persistConfig = {

@@ -3,6 +3,19 @@ import { StackNavigationOptions } from '@react-navigation/stack'
 import { colors } from './colors'
 import { screen } from '../Utils/constants'
 
+const headerStyle: TextStyle = {
+  backgroundColor: colors.menu,
+  height: 55,
+  shadowColor: colors.black,
+  shadowOpacity: 0.1,
+  shadowRadius: 5,
+  shadowOffset: {
+    width: 4,
+    height: 2
+  },
+  elevation: 4
+}
+
 export const theme = {
   text: {
     header: {
@@ -44,7 +57,8 @@ export const theme = {
       shadowOffset: {
         width: 4,
         height: 2
-      }
+      },
+      elevation: 3
     } as ViewStyle
   },
 
@@ -84,7 +98,8 @@ export const theme = {
       justifyContent: 'flex-end',
       flexDirection: 'row',
       alignItems: 'center'
-    } as ViewStyle
+    } as ViewStyle,
+    headerStyle
   },
 
   margin: {
@@ -93,9 +108,7 @@ export const theme = {
     } as ViewStyle
   },
   screenOptions: {
-    headerStyle: {
-      backgroundColor: colors.menu
-    },
+    headerStyle,
     headerTitleAlign: 'center',
     headerTintColor: colors.text,
     headerTitleStyle: {

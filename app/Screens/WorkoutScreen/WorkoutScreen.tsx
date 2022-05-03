@@ -9,6 +9,7 @@ import {
 } from 'react-native-draggable-flatlist'
 import { useAppDispatch, useUser, useWorkout } from '../../Hooks/redux'
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
+import { startPlaying } from '../../store/PlayingReduser/PlayingSlice'
 import { Card, FlexCenterColumn, FlexSpaceBetween, FlexStart, Page, TextSecondary } from '../../Theme/Parents'
 import {
   AddMoreButton,
@@ -38,6 +39,7 @@ export default function WorkoutScreen() {
   const [workoutLabels, setWorkoutLabels] = useState<string[]>(selectedWorkout?.labels || [])
   const [workoutExercises, setWorkoutExercises] = useState<ExerciseType[] | null>(null)
   const [changeExercise, setChangeExercise] = useState<ExerciseType | null>(null)
+  const isEmpty = !workoutExercises?.filter(ex => ex.isVisible)?.length
 
   const changedWorkout: WorkoutType = useMemo(
     () => ({
@@ -55,8 +57,8 @@ export default function WorkoutScreen() {
   }, [selectedWorkout?.exercises])
 
   useEffect(() => {
-    if (!selectedWorkout.exercises.length) setIsEditMode(true)
-  }, [selectedWorkout.exercises])
+    if (!selectedWorkout.exercises?.filter(ex => ex.isVisible)?.length) setIsEditMode(true)
+  }, [isEmpty])
 
   const onSaveWorkout = useCallback(async () => {
     if (!workoutExercises || !user || !selectedWorkout) return
@@ -67,9 +69,9 @@ export default function WorkoutScreen() {
   const onToggleEditMode = useCallback(() => {
     if (isEditMode) {
       if (isChanged) setIsSaveChangesModal(true)
-      else setIsEditMode(!isEditMode)
+      else setIsEditMode(false)
     } else {
-      setIsEditMode(!isEditMode)
+      setIsEditMode(true)
     }
   }, [isEditMode, isChanged])
 
@@ -102,6 +104,10 @@ export default function WorkoutScreen() {
     [isNewExercise]
   )
 
+  const onStartPlaying = useCallback(() => {
+    dispatch(startPlaying(selectedWorkout))
+  }, [])
+
   const renderItem = ({ item, drag, isActive }: RenderItemParams<ExerciseType>) => {
     return (
       <ScaleDecorator>
@@ -124,7 +130,7 @@ export default function WorkoutScreen() {
         </FlexStart>
       </FlexSpaceBetween>
       <FlexCenterColumn style={{ paddingHorizontal: 8 }}>
-        {isEditMode && (
+        {isEditMode ? (
           <>
             <MyTextInput
               placeholder={'Workout Name'}
@@ -141,6 +147,13 @@ export default function WorkoutScreen() {
               />
             )}
           </>
+        ) : (
+          <ConfirmButton
+            disabled={isEmpty}
+            header={'Start Workout'}
+            onPress={onStartPlaying}
+            style={{ marginBottom: 15, width: '100%', marginHorizontal: 100 }}
+          />
         )}
         {isEditMode ? (
           <NestableDraggableFlatList

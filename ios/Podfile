@@ -23,6 +23,8 @@ target 'TrainingPlanTogether_CLI' do
 
   pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
   target 'TrainingPlanTogether_CLITests' do
     inherit! :complete
     # Pods for testing
