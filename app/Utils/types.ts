@@ -11,6 +11,7 @@ export interface UserDataType {
 export interface ApproachType {
   weight: number
   repeats: number
+  currentRepeats?: number
 }
 
 export interface ExerciseType {
@@ -22,6 +23,10 @@ export interface ExerciseType {
   approaches: ApproachType[]
   isVisible: boolean
   imgURL: string
+}
+
+export type SelectedWorkoutType = WorkoutType & {
+  isPlaying: boolean
 }
 
 export interface WorkoutType {

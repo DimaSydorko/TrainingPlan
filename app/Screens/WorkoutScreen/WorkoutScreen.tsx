@@ -9,7 +9,7 @@ import {
 } from 'react-native-draggable-flatlist'
 import { useAppDispatch, useUser, useWorkout } from '../../Hooks/redux'
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
-import { startPlaying } from '../../store/PlayingReduser/PlayingSlice'
+import { togglePlaying } from '../../store/WorkoutReducer/WorkoutSlice'
 import { Card, FlexCenterColumn, FlexSpaceBetween, FlexStart, Page, TextSecondary } from '../../Theme/Parents'
 import {
   AddMoreButton,
@@ -105,7 +105,7 @@ export default function WorkoutScreen() {
   )
 
   const onStartPlaying = useCallback(() => {
-    dispatch(startPlaying(selectedWorkout))
+    dispatch(togglePlaying(true))
   }, [])
 
   const renderItem = ({ item, drag, isActive }: RenderItemParams<ExerciseType>) => {

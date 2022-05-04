@@ -11,6 +11,7 @@ interface ParentProps {
 
 interface IText {
   color?: string
+  center?: boolean
 }
 
 interface OnPressType {
@@ -32,16 +33,36 @@ export const Page = ({ children, style, scrollEnabled = true }: ParentProps & IP
   )
 }
 
-export const TextSecondary = ({ children, color = colors.textSecondary, style }: ParentProps & IText) => {
-  return <Text style={[{ ...theme.text.secondary, color }, style]}>{children}</Text>
+export const TextSecondary = ({
+  children,
+  color = colors.textSecondary,
+  center = false,
+  style
+}: ParentProps & IText) => {
+  return (
+    <Text
+      style={[
+        {
+          ...theme.text.secondary,
+          textAlign: center ? 'center' : 'left',
+          color
+        },
+        style
+      ]}
+    >
+      {children}
+    </Text>
+  )
 }
 
-export const TextHeader = ({ children, color = colors.text, style }: ParentProps & IText) => {
-  return <Text style={[{ ...theme.text.header, color }, style]}>{children}</Text>
+export const TextHeader = ({ children, color = colors.text, center = false, style }: ParentProps & IText) => {
+  return <Text style={[{ ...theme.text.header, textAlign: center ? 'center' : 'left', color }, style]}>{children}</Text>
 }
 
-export const TextOrdinary = ({ children, color = colors.text, style }: ParentProps & IText) => {
-  return <Text style={[{ ...theme.text.ordinary, color }, style]}>{children}</Text>
+export const TextOrdinary = ({ children, color = colors.text, center = false, style }: ParentProps & IText) => {
+  return (
+    <Text style={[{ ...theme.text.ordinary, textAlign: center ? 'center' : 'left', color }, style]}>{children}</Text>
+  )
 }
 
 export const FlexSpaceBetween = ({ children, style }: ParentProps) => {

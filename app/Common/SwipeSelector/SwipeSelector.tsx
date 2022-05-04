@@ -19,9 +19,8 @@ export default function SwipeSelector({ onChange, value = 0, step = 1, maxValue 
   return (
     <ScrollPicker
       dataSource={list}
-      selectedIndex={value}
-      // renderItem={(data, index, isSelected) => {}}
-      onValueChange={(data, idx) => onChange(idx)}
+      selectedIndex={value / step}
+      onValueChange={(data, idx) => onChange(idx * step)}
       itemHeight={50}
       wrapperWidth={50}
       wrapperHeight={150}

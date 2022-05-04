@@ -4,7 +4,6 @@ import { useAppDispatch } from '../../Hooks/redux'
 import { userActionCreators } from '../../store/UserReducer/UserActionCreators'
 import { clearPlaneResults } from '../../store/PlansReducer/PlansSlice'
 import { clearWorkoutResults } from '../../store/WorkoutReducer/WorkoutSlice'
-import { clearPlayingResults } from '../../store/PlayingReduser/PlayingSlice'
 import { ConfirmButton } from '../../Common'
 import { theme } from '../../Theme/theme'
 import { colors } from '../../Theme/colors'
@@ -19,7 +18,6 @@ export default function EmptyScreen() {
   const clearAll = () => {
     dispatch(clearWorkoutResults())
     dispatch(clearPlaneResults())
-    dispatch(clearPlayingResults())
   }
 
   return (

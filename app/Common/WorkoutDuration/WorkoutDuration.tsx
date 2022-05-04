@@ -9,8 +9,8 @@ interface WorkoutDurationType {
   exercises: ExerciseType[]
 }
 
-export const secondsToMinSec = (time: number) => {
-  let minSec = ''
+export const secondsToMinSec = (time: number, isWords = true) => {
+  let minSec: string
   const minutes = Math.floor(time / 60)
   const seconds = time - minutes * 60
 
@@ -18,10 +18,13 @@ export const secondsToMinSec = (time: number) => {
     return (new Array(length + 1).join(pad) + string).slice(-length)
   }
 
-  if (!seconds) minSec = str_pad_left(minutes, '', 2) + 'min'
-  else if (!minutes) minSec = str_pad_left(seconds, '0', 2) + 'sec'
-  else minSec = str_pad_left(minutes, '', 2) + 'min ' + str_pad_left(seconds, '0', 2) + 'sec'
-
+  if (isWords) {
+    if (!seconds) minSec = str_pad_left(minutes, '', 2) + 'min'
+    else if (!minutes) minSec = str_pad_left(seconds, '0', 2) + 'sec'
+    else minSec = str_pad_left(minutes, '', 2) + 'min ' + str_pad_left(seconds, '0', 2) + 'sec'
+  } else {
+    minSec = str_pad_left(minutes, '0', 2) + ':' + str_pad_left(seconds, '0', 2)
+  }
   return minSec
 }
 

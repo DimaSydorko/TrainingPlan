@@ -2,12 +2,12 @@ import * as React from 'react'
 import { Text } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { useWorkout } from '../Hooks/redux'
 import NotificationHandler from '../Components/NotificationHandler/NotificationHandler'
 import WorkoutsRouter from './WorkoutsRouter'
 import PlanRouter from './PlanRouter'
 import { EmptyScreen, PlayingScreen } from '../Screens'
 import { colors } from '../Theme/colors'
-import { usePlaying } from '../Hooks/redux'
 
 type TabType = {
   name: string
@@ -53,11 +53,11 @@ const tabs = [
 
 export default function AppRouter() {
   const Tab = createBottomTabNavigator()
-  const { workout } = usePlaying()
+  const { selectedWorkout } = useWorkout()
   return (
     <>
       <NotificationHandler />
-      {workout && <PlayingScreen />}
+      {selectedWorkout?.isPlaying && <PlayingScreen />}
       <Tab.Navigator
         sceneContainerStyle={{
           backgroundColor: colors.background

@@ -7,6 +7,7 @@ export const icon = {
   skipNext: 'skip-next',
   skipPrevious: 'skip-previous',
   play: 'play-circle',
+  pause: 'pause-circle',
   playlist: 'playlist-check',
   back: 'arrow-left',
   checkCircle: 'check-circle'

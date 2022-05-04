@@ -35,5 +35,21 @@ export default StyleSheet.create({
       height: 2
     },
     elevation: 2
+  },
+  nextExercise: {
+    height: 48,
+    marginVertical: 10
+  },
+  textCenter: {
+    height: 48
+  },
+  timerContainer: {
+    borderRadius: 100,
+    marginVertical: 15
+  },
+  timerContent: {
+    justifyContent: 'center',
+    maxWidth: screen.vw - 160,
+    maxHeight: screen.vw - 160
   }
 })
