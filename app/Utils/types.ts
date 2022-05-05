@@ -12,6 +12,7 @@ export interface ApproachType {
   weight: number
   repeats: number
   currentRepeats?: number
+  currentWeight?: number
 }
 
 export interface ExerciseType {

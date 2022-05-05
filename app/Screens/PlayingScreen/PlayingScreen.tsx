@@ -1,10 +1,9 @@
 import * as React from 'react'
-import { memo, useCallback, useMemo, useState } from 'react'
-import { SafeAreaView, Text, TouchableOpacity, Vibration, View } from 'react-native'
+import { memo } from 'react'
+import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
-import { togglePlaying } from '../../store/WorkoutReducer/WorkoutSlice'
-import { useAppDispatch, useWorkout } from '../../Hooks/redux'
-import { screen, settings } from '../../Utils/constants'
+import usePlaying from '../../Hooks/usePlaying'
+import { screen } from '../../Utils/constants'
 import { ButtonCounter, IconButton } from '../../Common'
 import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
 import { FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
@@ -13,53 +12,21 @@ import { colors } from '../../Theme/colors'
 import { icon } from '../../Theme/icons'
 import styles from './styles'
 
-const initialPlaying = {
-  idx: 0,
-  lap: 1,
-  updated: Date.now()
-}
-type PlayingType = typeof initialPlaying
-
 export default memo(function PlayingScreen() {
-  const dispatch = useAppDispatch()
-  const { selectedWorkout } = useWorkout()
-  const [isPlaying, setIsPlaying] = useState(true)
-  const [currentWeight, setCurrentWeight] = useState<number>(0)
-  const [currentRepeats, setCurrentRepeats] = useState<number>(0)
-  const [playing, setPlaying] = useState<PlayingType>(initialPlaying)
-  const exercise = useMemo(() => selectedWorkout.exercises[playing.idx], [playing.idx])
-  const exerciseNext = useMemo(() => selectedWorkout.exercises[playing.idx + 1], [playing.idx])
-  const approach = useMemo(() => exercise.approaches[playing.lap - 1], [exercise, playing.lap])
-
-  const onBack = useCallback(() => {
-    dispatch(togglePlaying(false))
-  }, [])
-
-  const onNext = useCallback(() => {
-    settings.isVibration && Vibration.vibrate(100)
-    if (playing.lap < exercise.laps) setPlaying(p => ({ ...p, lap: p.lap + 1, updated: Date.now() }))
-    else {
-      if (selectedWorkout.exercises.length <= playing.idx + 1 && playing.lap <= exercise.laps) {
-        settings.isVibration && Vibration.vibrate(1000)
-        onBack()
-      } else setPlaying(p => ({ idx: p.idx + 1, lap: 1, updated: Date.now() }))
-    }
-  }, [exercise.laps, playing, selectedWorkout.exercises.length])
-
-  const onPrevious = useCallback(() => {
-    settings.isVibration && Vibration.vibrate(100)
-    if (playing.lap > 1) setPlaying(p => ({ ...p, lap: p.lap - 1, updated: Date.now() }))
-    else {
-      if (playing.idx <= 0 && playing.lap <= 2) setPlaying({ idx: 0, lap: 1, updated: Date.now() })
-      else {
-        setPlaying(p => ({ idx: p.idx - 1, lap: selectedWorkout.exercises[playing.idx - 1].laps, updated: Date.now() }))
-      }
-    }
-  }, [playing, selectedWorkout.exercises])
-
-  const onTimerComplete = useCallback(() => {
-    if (!exercise.repeats) onNext()
-  }, [])
+  const {
+    isPlaying,
+    playing,
+    exercise,
+    exerciseNext,
+    approach,
+    onTimerComplete,
+    onTogglePlay,
+    onNext,
+    onBack,
+    onPrevious,
+    setCurrentWeight,
+    setCurrentRepeats
+  } = usePlaying()
 
   return (
     <SafeAreaView style={[theme.containers.centerColumn, styles.page]}>
@@ -92,7 +59,7 @@ export default memo(function PlayingScreen() {
             </TextSecondary>
           )}
         </View>
-        <TouchableOpacity style={styles.timerContainer} onPress={() => setIsPlaying(p => !p)}>
+        <TouchableOpacity style={styles.timerContainer} onPress={onTogglePlay}>
           <CountdownCircleTimer
             key={`${playing.lap}_${playing.idx}_${playing.updated}`}
             isPlaying={isPlaying}
@@ -132,7 +99,7 @@ export default memo(function PlayingScreen() {
         <FlexSpaceBetween style={{ width: '50%' }}>
           <IconButton onPress={onPrevious} iconName={icon.skipPrevious} color={colors.black} size={35} />
           <IconButton
-            onPress={() => setIsPlaying(p => !p)}
+            onPress={onTogglePlay}
             iconName={isPlaying ? icon.pause : icon.play}
             color={colors.primary}
             size={45}

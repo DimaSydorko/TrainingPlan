@@ -8,7 +8,7 @@ import {
   RenderItemParams,
   ScaleDecorator
 } from 'react-native-draggable-flatlist'
-import { selectWorkout } from '../../store/WorkoutReducer/WorkoutSlice'
+import { updateSelectedWorkout } from '../../store/WorkoutReducer/WorkoutSlice'
 import { plansActionCreators } from '../../store/PlansReducer/PlansActionCreators'
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
 import useWorkoutPlan from '../../Hooks/useWorkoutPlan'
@@ -64,7 +64,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
   }, [_workouts])
 
   const onSelect = useCallback((workout: WorkoutType) => {
-    dispatch(selectWorkout(workout))
+    dispatch(updateSelectedWorkout(workout))
     navigation.navigate(isInPlan ? ScreenName.WorkoutInPlan : ScreenName.Workout)
   }, [])
 
