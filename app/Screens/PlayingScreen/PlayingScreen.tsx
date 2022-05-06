@@ -4,9 +4,10 @@ import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import usePlaying from '../../Hooks/usePlaying'
 import { screen } from '../../Utils/constants'
-import { ButtonCounter, IconButton } from '../../Common'
+import { ConfirmButton, IconButton } from '../../Common'
 import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
 import { FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
+import Results from './Results'
 import { theme } from '../../Theme/theme'
 import { colors } from '../../Theme/colors'
 import { icon } from '../../Theme/icons'
@@ -17,17 +18,22 @@ export default memo(function PlayingScreen() {
     isPlaying,
     playing,
     exercise,
-    exerciseNext,
+    current,
     approach,
+    exerciseNext,
     onTimerComplete,
     onTogglePlay,
     onNext,
     onBack,
     onPrevious,
-    setCurrentWeight,
-    setCurrentRepeats
+    setCurrent,
+    onSaveResult,
+    isWaitForSubmit,
+    isTheLastOne
   } = usePlaying()
-
+  const repeatsDiff = current?.repeats - approach?.repeats || 0
+  const weightDiff = current?.weight - approach?.weight || 0
+  const isTheLastOneComplete = isWaitForSubmit && isTheLastOne
   return (
     <SafeAreaView style={[theme.containers.centerColumn, styles.page]}>
       <View style={[theme.containers.headerStyle, styles.header]}>
@@ -50,7 +56,7 @@ export default memo(function PlayingScreen() {
               </TextSecondary>
               <TextSecondary center>
                 Laps {exerciseNext.laps}
-                {!!exerciseNext.approaches[0].weight && `    Weight ${exerciseNext.approaches[0].weight} kg`}
+                {!!exerciseNext.approaches[0]?.weight && `    Weight ${exerciseNext.approaches[0]?.weight} kg`}
               </TextSecondary>
             </>
           ) : (
@@ -63,7 +69,7 @@ export default memo(function PlayingScreen() {
           <CountdownCircleTimer
             key={`${playing.lap}_${playing.idx}_${playing.updated}`}
             isPlaying={isPlaying}
-            duration={exercise.breakTimeInSec}
+            duration={isTheLastOneComplete ? 0 : exercise.breakTimeInSec}
             colors={[colors.primary, colors.primary, colors.secondPrimary] as any}
             colorsTime={[11, 10, 0]}
             onComplete={onTimerComplete}
@@ -82,16 +88,27 @@ export default memo(function PlayingScreen() {
           </CountdownCircleTimer>
         </TouchableOpacity>
 
-        <View style={{ width: screen.vw - 140 }}>
-          <FlexSpaceBetween>
-            <TextHeader color={colors.text}>Weight</TextHeader>
-            <ButtonCounter value={approach.weight} step={5} dataType={' kg'} onChange={setCurrentWeight} />
-          </FlexSpaceBetween>
-          <FlexSpaceBetween>
-            <TextHeader color={colors.text}>Repeats</TextHeader>
-            <ButtonCounter value={approach.repeats} dataType={` / ${exercise.repeats}`} onChange={setCurrentRepeats} />
-          </FlexSpaceBetween>
-        </View>
+        {!!exercise.repeats && (
+          <View style={{ width: screen.vw - 140 }}>
+            <Results
+              type={'weight'}
+              step={5}
+              value={current.weight}
+              onChange={v => setCurrent(p => ({ ...p, weight: v }))}
+              diff={weightDiff}
+            />
+            <Results
+              type={'repeats'}
+              value={current.repeats}
+              repeats={exercise.repeats}
+              onChange={v => setCurrent(p => ({ ...p, repeats: v }))}
+              diff={repeatsDiff}
+            />
+          </View>
+        )}
+        {isTheLastOneComplete && (
+          <ConfirmButton header={'Save Result'} style={{ width: screen.vw - 80 }} onPress={onSaveResult} />
+        )}
       </FlexCenterColumn>
 
       <FlexSpaceBetween style={styles.footer}>
@@ -104,7 +121,13 @@ export default memo(function PlayingScreen() {
             color={colors.primary}
             size={45}
           />
-          <IconButton onPress={onNext} iconName={icon.skipNext} color={colors.black} size={35} />
+          <IconButton
+            onPress={onNext}
+            disabled={isTheLastOneComplete}
+            iconName={icon.skipNext}
+            color={colors.black}
+            size={35}
+          />
         </FlexSpaceBetween>
         <IconButton onPress={() => {}} iconName={icon.playlist} color={colors.black} size={35} />
       </FlexSpaceBetween>

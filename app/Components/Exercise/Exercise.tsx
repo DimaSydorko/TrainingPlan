@@ -37,7 +37,7 @@ export default memo(function ExerciseEdit({ exercise, isEdit = false, onVisibili
           <FlexSpaceBetween>
             <TextSecondary>
               {exercise.approaches.length ? `${exercise.approaches.length} laps` : ''}
-              {exercise.laps ? `${exercise.laps} rep` : ''}
+              {exercise.laps ? ` ${exercise.repeats} rep` : ''}
               {exercise.approaches.length
                 ? exercise.approaches[0].weight
                   ? ` ${exercise.approaches[0].weight} kg`

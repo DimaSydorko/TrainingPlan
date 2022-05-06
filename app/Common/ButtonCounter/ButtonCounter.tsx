@@ -1,51 +1,59 @@
 import * as React from 'react'
-import { useEffect, useState } from 'react'
+import { memo, ReactNode } from 'react'
 import { FlexSpaceBetween, TextHeader } from '../../Theme/Parents'
 import { IconButton } from '../index'
 import { colors } from '../../Theme/colors'
-import styles from './styles'
+import { screen } from '../../Utils/constants'
+import { StyleSheet } from 'react-native'
 
 interface ButtonCounterType {
-  value?: number
+  value: number
   onChange: (value: number) => void
   dataType?: string
   step?: number
   minValue?: number
   maxValue?: number
+  extraWidth?: number
+  children?: ReactNode
 }
 
-export default function ButtonCounter({
-  value = 0,
+export default memo(function ButtonCounter({
+  value,
   step = 1,
   onChange,
   dataType = '',
   minValue = 0,
-  maxValue
+  maxValue,
+  extraWidth = 0,
+  children
 }: ButtonCounterType) {
-  const [count, setCount] = useState(value)
-
-  useEffect(() => {
-    onChange(count)
-  }, [count])
-
   return (
-    <FlexSpaceBetween style={styles.container}>
+    <FlexSpaceBetween style={[styles.container, { width: (screen.vw - 120) / 2 + extraWidth }]}>
       <IconButton
         size={32}
-        disabled={count <= minValue}
+        disableVibration
         iconName={'minus-circle-outline'}
-        onPress={() => setCount(prev => (prev -= step))}
+        disabled={value <= minValue}
+        onPress={() => onChange(value - step)}
       />
       <TextHeader color={colors.secondPrimary}>
-        {count}
+        {value}
         {dataType}
+        {children}
       </TextHeader>
       <IconButton
-        iconName={'plus-circle-outline'}
         size={32}
-        disabled={!!maxValue ? count <= maxValue : undefined}
-        onPress={() => setCount(prev => (prev += step))}
+        disableVibration
+        iconName={'plus-circle-outline'}
+        disabled={!!maxValue ? value <= maxValue : undefined}
+        onPress={() => onChange(value + step)}
       />
     </FlexSpaceBetween>
   )
-}
+})
+
+const styles = StyleSheet.create({
+  container: {
+    margin: 10
+  }
+})

@@ -51,7 +51,7 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
     let approaches =
       repeats > 0
         ? initialEx.approaches.length < laps
-          ? [...initialEx.approaches, ...new Array(laps).fill(defaultApproach)]
+          ? [...initialEx.approaches, ...new Array(lapsDif).fill(defaultApproach)]
           : initialEx.approaches.slice(lapsDif)
         : []
 
@@ -63,7 +63,6 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
       isVisible,
       approaches,
       breakTimeInSec: selectMinutes * 60 + selectSeconds
-      // imgURL: '',
     }
     onSave(newExercise)
     onClose()
@@ -122,15 +121,15 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
           <FlexSpaceBetween>
             <View>
               <TextHeader color={colors.textSecondary} style={{ textAlign: 'center' }}>
-                Repeats
-              </TextHeader>
-              <ButtonCounter value={repeats} onChange={setRepeats} />
-            </View>
-            <View>
-              <TextHeader color={colors.textSecondary} style={{ textAlign: 'center' }}>
                 Laps
               </TextHeader>
               <ButtonCounter value={laps} minValue={1} onChange={setLaps} />
+            </View>
+            <View>
+              <TextHeader color={colors.textSecondary} style={{ textAlign: 'center' }}>
+                Repeats
+              </TextHeader>
+              <ButtonCounter value={repeats} onChange={setRepeats} />
             </View>
           </FlexSpaceBetween>
         </FlexCenterColumn>

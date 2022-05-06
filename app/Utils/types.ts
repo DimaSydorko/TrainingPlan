@@ -8,9 +8,18 @@ export interface UserDataType {
   friendsUIDs: string[]
 }
 
+export interface StoredFile {
+  fileName: string
+  storageKey: string
+  downloadUrl: string
+}
+
 export interface ApproachType {
   weight: number
   repeats: number
+}
+
+export type SelectedApproachType = ApproachType & {
   currentRepeats?: number
   currentWeight?: number
 }
@@ -23,12 +32,14 @@ export interface ExerciseType {
   repeats: number
   approaches: ApproachType[]
   isVisible: boolean
-  imgURL: string
+  // imgURL?: StoredFile | null
 }
 
-export type SelectedWorkoutType = WorkoutType & {
+export type SelectedWorkoutType = Omit<WorkoutType, 'exercises'> & {
   isPlaying: boolean
+  exercises: SelectedExercisesType[]
 }
+export type SelectedExercisesType = Omit<ExerciseType, 'approaches'> & { approaches: SelectedApproachType[] }
 
 export interface WorkoutType {
   uid: string

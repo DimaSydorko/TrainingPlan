@@ -56,8 +56,7 @@ export const defaultExercise: ExerciseType = {
   repeats: 0,
   approaches: [],
   isVisible: true,
-  breakTimeInSec: 0,
-  imgURL: ''
+  breakTimeInSec: 0
 }
 export const defaultApproach: ApproachType = {
   repeats: 0,

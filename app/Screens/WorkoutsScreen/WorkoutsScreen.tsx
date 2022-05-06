@@ -13,7 +13,7 @@ import { plansActionCreators } from '../../store/PlansReducer/PlansActionCreator
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
 import useWorkoutPlan from '../../Hooks/useWorkoutPlan'
 import { useAppDispatch, useWorkout } from '../../Hooks/redux'
-import { WorkoutType } from '../../Utils/types'
+import { SelectedWorkoutType, WorkoutType } from '../../Utils/types'
 import { ScreenName } from '../../Utils/constants'
 import { AddMoreButton, AppModal, ConfirmButton, GoBackSubmitModal, MySwitch, MyTextInput } from '../../Common'
 import EditPlanWorkout from '../../Components/EditPlanWorkout/EditPlanWorkout'
@@ -63,7 +63,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
     setWorkouts(_workouts)
   }, [_workouts])
 
-  const onSelect = useCallback((workout: WorkoutType) => {
+  const onSelect = useCallback((workout: SelectedWorkoutType) => {
     dispatch(updateSelectedWorkout(workout))
     navigation.navigate(isInPlan ? ScreenName.WorkoutInPlan : ScreenName.Workout)
   }, [])
@@ -142,7 +142,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
           />
         ) : (
           workouts?.map(workout => (
-            <CardPressed key={workout.uid} onPress={() => !isEditMode && onSelect(workout)}>
+            <CardPressed key={workout.uid} onPress={() => !isEditMode && onSelect(workout as SelectedWorkoutType)}>
               <WorkoutCard
                 workout={workout}
                 isInPlan={isInPlan}

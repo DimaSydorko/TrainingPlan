@@ -34,7 +34,7 @@ export const workoutSlice = createSlice({
     errorWorkoutClear(state) {
       state.error = ''
     },
-    updateSelectedWorkout(state, { payload }: PayloadAction<WorkoutType>) {
+    updateSelectedWorkout(state, { payload }: PayloadAction<SelectedWorkoutType>) {
       state.selectedWorkout = { ...payload, isPlaying: state.selectedWorkout.isPlaying }
     },
     togglePlaying(state, { payload }: PayloadAction<boolean>) {

@@ -22,8 +22,9 @@ export const workoutActionCreators = {
     }
   ),
   addWorkout: createAsyncThunk('workout/addWorkout', async (props: WorkoutType, thunkAPI) => {
+    const { uid, ...newWorkout } = props
     try {
-      const doc = await FB_Collection_Workouts.add(props)
+      const doc = await FB_Collection_Workouts.add(newWorkout)
       props.uid = doc.id
       const planUid = props.plansUid[0]
       if (planUid)
@@ -40,7 +41,15 @@ export const workoutActionCreators = {
     }
   }),
   updateWorkout: createAsyncThunk('workout/updateWorkout', async (props: WorkoutType, thunkAPI) => {
-    const { uid, ...workout } = props
+    const { uid, plansUid, ownerUid, labels, name, exercises } = props
+    const workout: Omit<WorkoutType, 'uid'> = {
+      plansUid,
+      ownerUid,
+      labels,
+      name,
+      exercises
+    }
+    console.log('approaches', exercises[0].approaches)
     try {
       await FB_Collection_Workouts.doc(uid).update(workout)
       return props
