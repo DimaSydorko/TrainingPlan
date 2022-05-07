@@ -148,14 +148,8 @@ export default function usePlaying() {
 
   const onTimerComplete = useCallback(() => {
     settings.isVibration && Vibration.vibrate(100)
-    console.log('isTheLastOne', isTheLastOne)
-    if (!exercise.repeats && !isTheLastOne) {
-      onNext()
-      console.log('1')
-    } else {
-      console.log('2')
-      setIsWaitForSubmit(true)
-    }
+    if (!exercise.repeats && !isTheLastOne) onNext()
+    else setIsWaitForSubmit(true)
   }, [exercise.repeats, onNext, isTheLastOne])
 
   const onTogglePlay = useCallback(() => {
