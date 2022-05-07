@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native'
-import { colors } from '../../Theme/colors'
+import { useSettings } from '../../Hooks/redux'
 import styles from './styles'
+import { colorsFixed } from '../../Theme/colors'
 
 interface ConfirmButtonType {
   header: string
@@ -16,16 +17,18 @@ export default function ConfirmButton({
   onPress,
   header,
   headerStyle,
-  color = colors.primary,
+  color,
   style,
   disabled = false
 }: ConfirmButtonType) {
+  const { colors } = useSettings()
+  const newColor = color || colors.primary
   return (
     <TouchableOpacity
       style={[
         styles.button,
         {
-          backgroundColor: disabled ? colors.disabled : color,
+          backgroundColor: disabled ? colors.disabled : newColor,
           opacity: disabled ? 0.8 : 1
         },
         style
@@ -34,7 +37,7 @@ export default function ConfirmButton({
       activeOpacity={0.5}
       disabled={disabled}
     >
-      <Text style={[styles.buttonTitle, headerStyle]}>{header}</Text>
+      <Text style={[styles.buttonTitle, { color: colorsFixed.buttonText }, headerStyle]}>{header}</Text>
     </TouchableOpacity>
   )
 }

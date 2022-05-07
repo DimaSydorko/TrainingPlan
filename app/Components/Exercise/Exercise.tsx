@@ -5,8 +5,8 @@ import { FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents
 import { IconButton } from '../../Common'
 import { ExerciseType } from '../../Utils/types'
 import Approach from './Approach'
-import { colors } from '../../Theme/colors'
 import { icon } from '../../Theme/icons'
+import { useSettings } from '../../Hooks/redux'
 
 interface IExerciseEdit {
   exercise: ExerciseType
@@ -16,6 +16,7 @@ interface IExerciseEdit {
 
 export default memo(function ExerciseEdit({ exercise, isEdit = false, onVisibilityToggle }: IExerciseEdit) {
   const [isVisible, setIsVisible] = useState(exercise.isVisible)
+  const { colors } = useSettings()
 
   useEffect(() => {
     setIsVisible(prev => (prev === exercise.isVisible ? prev : exercise.isVisible))

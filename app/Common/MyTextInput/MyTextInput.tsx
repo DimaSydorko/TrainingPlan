@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { TextInput, TextStyle } from 'react-native'
+import { useSettings } from '../../Hooks/redux'
 import styles from './styles'
 
 interface MyTextInputType {
@@ -21,15 +22,25 @@ export default function MyTextInput({
   secureTextEntry = false,
   type = 'ordinary'
 }: MyTextInputType) {
+  const { colors } = useSettings()
   return (
     <TextInput
       style={[
-        type === 'ordinary' && styles.ordinary,
-        type === 'underline' && styles.underline,
-        type === 'secondary' && styles.secondary,
+        type === 'ordinary' && {
+          ...styles.ordinary,
+          color: colors.text,
+          backgroundColor: colors.white
+        },
+        type === 'underline' && { ...styles.underline, borderBottomColor: colors.black },
+        type === 'secondary' && {
+          ...styles.secondary,
+          borderBottomColor: colors.textSecondary,
+          color: colors.textSecondary
+        },
         style
       ]}
       autoFocus={autoFocus}
+      placeholderTextColor={`${colors.text}80`}
       secureTextEntry={secureTextEntry}
       placeholder={placeholder}
       onChangeText={onChangeText}

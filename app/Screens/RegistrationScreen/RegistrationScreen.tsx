@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useState } from 'react'
 import { Text } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { useAppDispatch, useUser } from '../../Hooks/redux'
+import { useAppDispatch, useSettings, useUser } from '../../Hooks/redux'
 import { userActionCreators } from '../../store/UserReducer/UserActionCreators'
 import { useNavigation } from '@react-navigation/native'
 import { ScreenName } from '../../Utils/constants'
@@ -12,6 +12,7 @@ import { theme } from '../../Theme/theme'
 
 export default function RegistrationScreen() {
   const dispatch = useAppDispatch()
+  const { colors } = useSettings()
   const { error, isLoading } = useUser()
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
   const [inputData, setInputData] = useState({ fullName: '', email: '', password: '', confirmPassword: '' })
@@ -22,21 +23,21 @@ export default function RegistrationScreen() {
 
   const onRegister = async () => {
     if (inputData.password !== inputData.confirmPassword) {
-      alert('Passwords don\'t match.')
+      alert("Passwords don't match.")
       return
     }
-    dispatch(userActionCreators.signUp({
-      email: inputData.email,
-      password: inputData.password,
-      displayName: inputData.password,
-    }))
+    dispatch(
+      userActionCreators.signUp({
+        email: inputData.email,
+        password: inputData.password,
+        displayName: inputData.password
+      })
+    )
   }
 
   return (
-    <Page style={theme.view.background}>
-      <KeyboardAwareScrollView
-        style={{ flex: 1, width: '100%' }}
-        keyboardShouldPersistTaps='always'>
+    <Page style={{ backgroundColor: colors.background }}>
+      <KeyboardAwareScrollView style={{ flex: 1, width: '100%' }} keyboardShouldPersistTaps='always'>
         <TextHeader>{error}</TextHeader>
         <MyTextInput
           value={inputData.fullName}
@@ -62,7 +63,12 @@ export default function RegistrationScreen() {
         />
         <ConfirmButton disabled={isLoading} onPress={onRegister} header='Create account' />
         <Page style={theme.margin.top20}>
-          <TextOrdinary>Already got an account? <Text onPress={onFooterLinkPress} style={theme.text.link}>Log in</Text></TextOrdinary>
+          <TextOrdinary>
+            Already got an account?{' '}
+            <Text onPress={onFooterLinkPress} style={[theme.text.link, { color: colors.primary }]}>
+              Log in
+            </Text>
+          </TextOrdinary>
         </Page>
       </KeyboardAwareScrollView>
     </Page>

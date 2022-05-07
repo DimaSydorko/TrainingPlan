@@ -7,7 +7,7 @@ import {
   RenderItemParams,
   ScaleDecorator
 } from 'react-native-draggable-flatlist'
-import { useAppDispatch, useUser, useWorkout } from '../../Hooks/redux'
+import { useAppDispatch, useSettings, useUser, useWorkout } from '../../Hooks/redux'
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
 import { togglePlaying } from '../../store/WorkoutReducer/WorkoutSlice'
 import { Card, FlexCenterColumn, FlexSpaceBetween, FlexStart, Page, TextSecondary } from '../../Theme/Parents'
@@ -26,11 +26,11 @@ import { FUTURE_FLAG } from '../../Utils/constants'
 import { deepCompare } from '../../Utils'
 import { ExerciseType, WorkoutType } from '../../Utils/types'
 import { theme } from '../../Theme/theme'
-import { colors } from '../../Theme/colors'
 
 export default function WorkoutScreen() {
   const dispatch = useAppDispatch()
   const { selectedWorkout } = useWorkout()
+  const { colors } = useSettings()
   const { user } = useUser()
   const [isEditMode, setIsEditMode] = useState(false)
   const [isNewExercise, setIsNewExercise] = useState(false)
@@ -120,82 +120,86 @@ export default function WorkoutScreen() {
     )
   }
 
-  return selectedWorkout ? (
-    <NestableScrollContainer>
-      <FlexSpaceBetween style={theme.containers.secondHeader}>
-        <WorkoutDuration exercises={selectedWorkout?.exercises} />
-        <FlexStart>
-          <TextSecondary style={{ width: 80 }}>Edit Mode:</TextSecondary>
-          <MySwitch value={isEditMode} onValueChange={onToggleEditMode} />
-        </FlexStart>
-      </FlexSpaceBetween>
-      <FlexCenterColumn style={{ paddingHorizontal: 8 }}>
-        {isEditMode ? (
-          <>
-            <MyTextInput
-              placeholder={'Workout Name'}
-              onChangeText={workoutName => setWorkoutNameInput(workoutName)}
-              value={workoutNameInput}
-              type={'underline'}
-            />
-            {FUTURE_FLAG.LABELS && (
-              <MyTextInput
-                placeholder={'Labels:  #...'}
-                onChangeText={value => setWorkoutLabels([value])}
-                value={workoutLabels[0]}
-                type={'secondary'}
+  return (
+    <Page>
+      {selectedWorkout ? (
+        <NestableScrollContainer>
+          <FlexSpaceBetween style={theme.containers.secondHeader}>
+            <WorkoutDuration exercises={selectedWorkout?.exercises} />
+            <FlexStart>
+              <TextSecondary style={{ width: 80 }}>Edit Mode:</TextSecondary>
+              <MySwitch value={isEditMode} onValueChange={onToggleEditMode} />
+            </FlexStart>
+          </FlexSpaceBetween>
+          <FlexCenterColumn style={{ paddingHorizontal: 8 }}>
+            {isEditMode ? (
+              <>
+                <MyTextInput
+                  placeholder={'Workout Name'}
+                  onChangeText={workoutName => setWorkoutNameInput(workoutName)}
+                  value={workoutNameInput}
+                  type={'underline'}
+                />
+                {FUTURE_FLAG.LABELS && (
+                  <MyTextInput
+                    placeholder={'Labels:  #...'}
+                    onChangeText={value => setWorkoutLabels([value])}
+                    value={workoutLabels[0]}
+                    type={'secondary'}
+                  />
+                )}
+              </>
+            ) : (
+              <ConfirmButton
+                disabled={isEmpty}
+                header={'Start Workout'}
+                onPress={onStartPlaying}
+                style={{ marginBottom: 15, width: '100%', marginHorizontal: 100 }}
               />
             )}
-          </>
-        ) : (
-          <ConfirmButton
-            disabled={isEmpty}
-            header={'Start Workout'}
-            onPress={onStartPlaying}
-            style={{ marginBottom: 15, width: '100%', marginHorizontal: 100 }}
+            {isEditMode ? (
+              <NestableDraggableFlatList
+                data={workoutExercises}
+                renderItem={renderItem}
+                keyExtractor={item => item.uid}
+                onDragEnd={({ data }) => setWorkoutExercises(data)}
+              />
+            ) : (
+              workoutExercises
+                ?.filter(ex => ex.isVisible)
+                ?.map(exercise => (
+                  <Card key={exercise.uid} borderLeftColor={colors.secondPrimary}>
+                    <Exercise exercise={exercise} />
+                  </Card>
+                ))
+            )}
+          </FlexCenterColumn>
+          {isEditMode && <AddMoreButton onPress={() => setIsNewExercise(true)} header={'Exercise'} />}
+          {isEditMode && <ConfirmButton disabled={!isChanged} onPress={onSaveWorkout} header={'Save workout'} />}
+          {isChanged && <GoBackSubmitModal text={`Changes in '${workoutNameInput}' workout aren\`t saved!`} />}
+          <AppModal
+            isOpen={isSaveChangesModal}
+            header={'Save changes?'}
+            confirmText={'Yes'}
+            text={`Want to save your changes in '${workoutNameInput}' workout?`}
+            onConfirm={onSaveWorkout}
+            onRefuse={onSaveRefuse}
+            onClose={() => setIsSaveChangesModal(false)}
           />
-        )}
-        {isEditMode ? (
-          <NestableDraggableFlatList
-            data={workoutExercises}
-            renderItem={renderItem}
-            keyExtractor={item => item.uid}
-            onDragEnd={({ data }) => setWorkoutExercises(data)}
-          />
-        ) : (
-          workoutExercises
-            ?.filter(ex => ex.isVisible)
-            ?.map(exercise => (
-              <Card key={exercise.uid} borderLeftColor={colors.secondPrimary}>
-                <Exercise exercise={exercise} />
-              </Card>
-            ))
-        )}
-      </FlexCenterColumn>
-      {isEditMode && <AddMoreButton onPress={() => setIsNewExercise(true)} header={'Exercise'} />}
-      {isEditMode && <ConfirmButton disabled={!isChanged} onPress={onSaveWorkout} header={'Save workout'} />}
-      {isChanged && <GoBackSubmitModal text={`Changes in '${workoutNameInput}' workout aren\`t saved!`} />}
-      <AppModal
-        isOpen={isSaveChangesModal}
-        header={'Save changes?'}
-        confirmText={'Yes'}
-        text={`Want to save your changes in '${workoutNameInput}' workout?`}
-        onConfirm={onSaveWorkout}
-        onRefuse={onSaveRefuse}
-        onClose={() => setIsSaveChangesModal(false)}
-      />
-      {(isNewExercise || !!changeExercise) && (
-        <EditExerciseModal
-          exercise={changeExercise}
-          onClose={() => (isNewExercise ? setIsNewExercise(false) : setChangeExercise(null))}
-          onSave={onSaveExercise}
-          onDelete={() => onDeleteExercise(changeExercise)}
-        />
+          {(isNewExercise || !!changeExercise) && (
+            <EditExerciseModal
+              exercise={changeExercise}
+              onClose={() => (isNewExercise ? setIsNewExercise(false) : setChangeExercise(null))}
+              onSave={onSaveExercise}
+              onDelete={() => onDeleteExercise(changeExercise)}
+            />
+          )}
+        </NestableScrollContainer>
+      ) : (
+        <Page>
+          <TextSecondary>Error try reload page</TextSecondary>
+        </Page>
       )}
-    </NestableScrollContainer>
-  ) : (
-    <Page>
-      <TextSecondary>Error try reload page</TextSecondary>
     </Page>
   )
 }

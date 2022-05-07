@@ -2,10 +2,10 @@ import * as React from 'react'
 import { memo, useState } from 'react'
 import { View } from 'react-native'
 import { AppModal, IconButton } from '../../Common'
+import { useSettings } from '../../Hooks/redux'
 import { CardPressed, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { PlanType } from '../../Utils/types'
 import { icon } from '../../Theme/icons'
-import { colors } from '../../Theme/colors'
 
 interface IPlanCard {
   plan: PlanType
@@ -16,6 +16,8 @@ interface IPlanCard {
 
 export default memo(function PlanCard({ plan, isEditMode, onDelete, onSelect }: IPlanCard) {
   const [isDeleteModal, setIsDeleteModal] = useState(false)
+  const { colors } = useSettings()
+
   return (
     <>
       <CardPressed onPress={onSelect}>

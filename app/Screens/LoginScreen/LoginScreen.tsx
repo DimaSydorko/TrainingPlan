@@ -3,11 +3,11 @@ import { useState } from 'react'
 import { Text } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { useAppDispatch, useUser } from '../../Hooks/redux'
+import { useAppDispatch, useSettings, useUser } from '../../Hooks/redux'
 import { userActionCreators } from '../../store/UserReducer/UserActionCreators'
 import { ScreenName } from '../../Utils/constants'
 import { ConfirmButton, MyTextInput } from '../../Common'
-import { FlexCenterColumn, Page, TextOrdinary } from '../../Theme/Parents'
+import { FlexCenterColumn, Page, TextOrdinary, TextSecondary } from '../../Theme/Parents'
 import { theme } from '../../Theme/theme'
 
 export default function LoginScreen() {
@@ -15,6 +15,7 @@ export default function LoginScreen() {
   const { error, isLoading } = useUser()
   const [inputData, setInputData] = useState({ email: '', password: '' })
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
+  const { colors } = useSettings()
 
   const onFooterLinkPress = () => {
     navigation.navigate(ScreenName.Registration)
@@ -25,8 +26,8 @@ export default function LoginScreen() {
   }
 
   return (
-    <Page style={theme.view.background}>
-      <Text>{error}</Text>
+    <Page style={{ backgroundColor: colors.background }}>
+      <TextSecondary color={colors.error}>{error}</TextSecondary>
       <KeyboardAwareScrollView keyboardShouldPersistTaps='always'>
         <FlexCenterColumn>
           <MyTextInput
@@ -45,7 +46,7 @@ export default function LoginScreen() {
         <Page style={theme.margin.top20}>
           <TextOrdinary>
             Don't have an account?{' '}
-            <Text onPress={onFooterLinkPress} style={theme.text.link}>
+            <Text onPress={onFooterLinkPress} style={[theme.text.link, { color: colors.primary }]}>
               Sign up
             </Text>
           </TextOrdinary>

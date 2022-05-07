@@ -3,7 +3,7 @@ import { memo } from 'react'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { FlexStart, TextSecondary } from '../../Theme/Parents'
 import { ExerciseType } from '../../Utils/types'
-import { colors } from '../../Theme/colors'
+import { useSettings } from '../../Hooks/redux'
 
 interface WorkoutDurationType {
   exercises: ExerciseType[]
@@ -29,12 +29,13 @@ export const secondsToMinSec = (time: number, isWords = true) => {
 }
 
 export default memo(function WorkoutDuration({ exercises }: WorkoutDurationType) {
+  const { colors } = useSettings()
   let time = 0
   exercises.forEach(exercise => (time += exercise.laps * exercise.breakTimeInSec))
 
   return (
     <FlexStart>
-      <Icon name='timer-outline' size={18} color={`${colors.text}80`} />
+      <Icon name='timer-outline' size={18} color={`${colors.textSecondary}80`} />
       <TextSecondary>{secondsToMinSec(time)}</TextSecondary>
     </FlexStart>
   )

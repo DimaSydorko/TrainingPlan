@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native'
-import { colors } from '../../Theme/colors'
 import { screen } from '../../Utils/constants'
 
 export default StyleSheet.create({
@@ -8,7 +7,6 @@ export default StyleSheet.create({
     width: screen.vw,
     position: 'absolute',
     zIndex: 10,
-    backgroundColor: colors.background,
     top: 0,
     left: 0
   },
@@ -26,8 +24,6 @@ export default StyleSheet.create({
     height: 55,
     width: '100%',
     zIndex: 10,
-    backgroundColor: colors.menu,
-    shadowColor: colors.black,
     shadowOpacity: 0.1,
     shadowRadius: 5,
     shadowOffset: {

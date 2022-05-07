@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { memo, ReactNode } from 'react'
+import { useSettings } from '../../Hooks/redux'
 import { FlexSpaceBetween, TextHeader } from '../../Theme/Parents'
 import { IconButton } from '../index'
-import { colors } from '../../Theme/colors'
 import { screen } from '../../Utils/constants'
 import { StyleSheet } from 'react-native'
 
@@ -27,6 +27,7 @@ export default memo(function ButtonCounter({
   extraWidth = 0,
   children
 }: ButtonCounterType) {
+  const { colors } = useSettings()
   return (
     <FlexSpaceBetween style={[styles.container, { width: (screen.vw - 120) / 2 + extraWidth }]}>
       <IconButton

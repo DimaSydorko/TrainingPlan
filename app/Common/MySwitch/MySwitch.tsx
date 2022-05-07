@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { SwitchLib } from './SwitchLib'
-import { colors } from '../../Theme/colors'
+import { useSettings } from '../../Hooks/redux'
 
 interface MySwitchType {
   value: boolean
@@ -9,7 +9,10 @@ interface MySwitchType {
   color?: string
 }
 
-export default function MySwitch({ value, disabled, onValueChange, color = colors.secondPrimary }: MySwitchType) {
+export default function MySwitch({ value, disabled, onValueChange, color }: MySwitchType) {
+  const { colors } = useSettings()
+  const newColor = color || colors.secondPrimary
+
   return (
     <SwitchLib
       value={!value}
@@ -17,9 +20,10 @@ export default function MySwitch({ value, disabled, onValueChange, color = color
       disabled={disabled}
       circleSize={25}
       circleBorderWidth={0}
+      circleActiveColor={colors.white}
       backgroundActive={`${colors.black}50`}
-      backgroundInactive={`${color}50`}
-      circleInActiveColor={color}
+      backgroundInactive={`${newColor}50`}
+      circleInActiveColor={newColor}
       renderActiveText={false}
       renderInActiveText={false}
     />

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { TouchableOpacity, Vibration, ViewStyle } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { colors } from '../../Theme/colors'
+import { useSettings } from '../../Hooks/redux'
 import { settings } from '../../Utils/constants'
 
 interface IconButtonType {
@@ -20,9 +20,11 @@ export default function IconButton({
   size = 24,
   disabled = false,
   disableVibration = false,
-  color = colors.textSecondary,
+  color,
   style
 }: IconButtonType) {
+  const { colors } = useSettings()
+  const newColor = color || colors.textSecondary
   const onSubmit = () => {
     settings.isVibration && !disableVibration && Vibration.vibrate(25)
     onPress()
@@ -40,7 +42,7 @@ export default function IconButton({
         style
       ]}
     >
-      <Icon name={iconName} color={color} size={size} />
+      <Icon name={iconName} color={newColor} size={size} />
     </TouchableOpacity>
   )
 }

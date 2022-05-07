@@ -57,3 +57,20 @@ export interface PlanType {
   workoutUids: string[]
   labels?: string[]
 }
+
+export interface ColorsType {
+  primary: string
+  second: string
+  secondPrimary: string
+
+  error: string
+  disabled: string
+
+  black: string
+  white: string
+
+  background: string
+  text: string
+  textSecondary: string
+  menu: string
+}

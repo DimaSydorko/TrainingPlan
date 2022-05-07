@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { memo, useState } from 'react'
 import { View } from 'react-native'
+import { useSettings } from '../../Hooks/redux'
 import { AppModal, IconButton, WorkoutDuration } from '../../Common'
 import { FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { WorkoutType } from '../../Utils/types'
 import { icon } from '../../Theme/icons'
-import { colors } from '../../Theme/colors'
 
 interface IWorkoutCard {
   workout: WorkoutType
@@ -15,7 +15,9 @@ interface IWorkoutCard {
 }
 
 export default memo(function WorkoutCard({ workout, isInPlan, isEditMode, onDelete }: IWorkoutCard) {
+  const { colors } = useSettings()
   const [isDeleteModal, setIsDeleteModal] = useState(false)
+
   return (
     <>
       <FlexSpaceBetween>

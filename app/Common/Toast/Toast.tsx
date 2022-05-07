@@ -3,9 +3,10 @@ import { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 import { IconButton } from '../index'
 import { FlexSpaceBetween, TextOrdinary } from '../../Theme/Parents'
+import { useSettings } from '../../Hooks/redux'
 import { icon } from '../../Theme/icons'
 import { theme } from '../../Theme/theme'
-import { colors } from '../../Theme/colors'
+import { colorsFixed } from '../../Theme/colors'
 
 const styles = StyleSheet.create({
   container: {
@@ -20,10 +21,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderStyle: 'solid',
     borderWidth: 1.5
-  },
-  err: {
-    backgroundColor: colors.error,
-    borderColor: 'rgba(76,76,76,0.84)'
   }
 })
 
@@ -35,6 +32,8 @@ interface ToastType {
 }
 
 export default React.memo(function Toast({ message, variant = 'error', onPress, pressAfterTime }: ToastType) {
+  const { colors } = useSettings()
+
   useEffect(() => {
     if (pressAfterTime) {
       setTimeout(onPress, pressAfterTime)
@@ -42,7 +41,21 @@ export default React.memo(function Toast({ message, variant = 'error', onPress, 
   }, [pressAfterTime])
 
   return (
-    <FlexSpaceBetween style={[styles.container, variant === 'error' ? styles.err : {}, theme.view.shadow]}>
+    <FlexSpaceBetween
+      style={[
+        styles.container,
+        variant === 'error'
+          ? {
+              backgroundColor: colors.error,
+              borderColor: colors.black
+            }
+          : {},
+        {
+          shadowColor: colorsFixed.shadow
+        },
+        theme.view.shadow
+      ]}
+    >
       <TextOrdinary>
         {variant === 'error' && 'Error:'} {message}
       </TextOrdinary>

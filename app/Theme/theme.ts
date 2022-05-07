@@ -1,12 +1,9 @@
 import { TextStyle, ViewStyle } from 'react-native'
 import { StackNavigationOptions } from '@react-navigation/stack'
-import { colors } from './colors'
 import { screen } from '../Utils/constants'
 
 const headerStyle: TextStyle = {
-  backgroundColor: colors.menu,
   height: 55,
-  shadowColor: colors.black,
   shadowOpacity: 0.1,
   shadowRadius: 5,
   shadowOffset: {
@@ -23,35 +20,27 @@ export const theme = {
       fontWeight: '700'
     } as TextStyle,
     ordinary: {
-      color: colors.text,
       fontSize: 18,
       fontWeight: '500'
     } as TextStyle,
     secondary: {
-      color: `${colors.text}80`,
       fontSize: 14,
       fontWeight: '600'
     } as TextStyle,
     link: {
-      color: colors.primary,
       fontWeight: 'bold',
       fontSize: 16
     } as TextStyle
   },
 
   view: {
-    background: {
-      background: colors.background
-    } as ViewStyle,
     card: {
-      backgroundColor: colors.white,
       padding: 14,
       borderRadius: 10,
       margin: 6,
       width: screen.vw - 30
     } as ViewStyle,
     shadow: {
-      shadowColor: colors.black,
       shadowOpacity: 0.1,
       shadowRadius: 5,
       shadowOffset: {
@@ -108,9 +97,7 @@ export const theme = {
     } as ViewStyle
   },
   screenOptions: {
-    headerStyle,
     headerTitleAlign: 'center',
-    headerTintColor: colors.text,
     headerTitleStyle: {
       fontWeight: 'bold'
     } as ViewStyle

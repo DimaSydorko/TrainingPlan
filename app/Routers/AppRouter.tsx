@@ -1,15 +1,12 @@
 import * as React from 'react'
-import { useEffect } from 'react'
 import { Text } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { togglePlaying } from '../store/WorkoutReducer/WorkoutSlice'
-import { useAppDispatch, useWorkout } from '../Hooks/redux'
+import { useSettings, useWorkout } from '../Hooks/redux'
 import NotificationHandler from '../Components/NotificationHandler/NotificationHandler'
 import WorkoutsRouter from './WorkoutsRouter'
 import PlanRouter from './PlanRouter'
 import { EmptyScreen, PlayingScreen } from '../Screens'
-import { colors } from '../Theme/colors'
 
 type TabType = {
   name: string
@@ -56,6 +53,7 @@ const tabs = [
 export default function AppRouter() {
   const Tab = createBottomTabNavigator()
   const { selectedWorkout } = useWorkout()
+  const { colors } = useSettings()
   return (
     <>
       <NotificationHandler />
@@ -65,9 +63,9 @@ export default function AppRouter() {
           backgroundColor: colors.background
         }}
       >
-        {tabs.map(({ name, icon, buttonLabel, component }, idx) => (
+        {tabs.map(({ name, icon, buttonLabel, component }) => (
           <Tab.Screen
-            key={`${name}_${idx}`}
+            key={name}
             name={name}
             component={component}
             options={{

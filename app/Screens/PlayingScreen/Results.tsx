@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { FlexSpaceBetween, TextHeader } from '../../Theme/Parents'
 import { ButtonCounter } from '../../Common'
-import { colors } from '../../Theme/colors'
+import { useSettings } from '../../Hooks/redux'
 
 interface ResultsI {
   type: 'repeats' | 'weight'
@@ -11,7 +11,9 @@ interface ResultsI {
   step?: number
   repeats?: number
 }
+
 export default function Results({ onChange, type, value, diff, step, repeats }: ResultsI) {
+  const { colors } = useSettings()
   return (
     <FlexSpaceBetween>
       <TextHeader color={colors.text}>{type === 'repeats' ? 'Repeats' : 'Weight'}</TextHeader>

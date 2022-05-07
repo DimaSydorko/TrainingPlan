@@ -7,8 +7,8 @@ import { nanoid } from '../../Utils'
 import { ExerciseType } from '../../Utils/types'
 import { FlexCenter, FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { icon } from '../../Theme/icons'
-import { colors } from '../../Theme/colors'
 import styles from './styles'
+import { useSettings } from '../../Hooks/redux'
 
 interface IEditExerciseModal {
   exercise?: ExerciseType
@@ -18,6 +18,7 @@ interface IEditExerciseModal {
 }
 
 export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onClose }: IEditExerciseModal) {
+  const { colors } = useSettings()
   const isNewExercise = useMemo(() => !exercise, [exercise])
   const initialEx = useMemo(() => {
     return isNewExercise ? { ...defaultExercise, uid: nanoid() } : exercise

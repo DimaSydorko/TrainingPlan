@@ -2,8 +2,8 @@ import * as React from 'react'
 import { ReactNode } from 'react'
 import { Modal, TouchableOpacity, View, ViewStyle } from 'react-native'
 import { ConfirmButton } from '../index'
+import { useSettings } from '../../Hooks/redux'
 import { FlexCenter, FlexEnd, TextHeader, TextSecondary } from '../../Theme/Parents'
-import { colors } from '../../Theme/colors'
 import styles from './styles'
 
 interface AppModalType {
@@ -35,11 +35,12 @@ export default function AppModal({
   disableAutoClose = false,
   confirmText = 'Confirm'
 }: AppModalType) {
+  const { colors } = useSettings()
   const buttonStyle: ViewStyle = !onRefuse ? { width: '40%' } : { marginHorizontal: 6, width: '30%' }
   return (
     <Modal animationType='fade' transparent={true} visible={isOpen} onTouchStart={onClose} onRequestClose={onClose}>
       <FlexCenter style={styles.modal}>
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: colors.white }]}>
           <FlexCenter>
             <TextHeader>{header}</TextHeader>
             {!!extraPlace && <FlexEnd style={styles.extraPlace}>{extraPlace}</FlexEnd>}
@@ -73,7 +74,7 @@ export default function AppModal({
             />
           </FlexCenter>
         </View>
-        <TouchableOpacity onPress={onClose} style={styles.emptySpace} />
+        <TouchableOpacity onPress={onClose} style={[styles.emptySpace, { backgroundColor: `${colors.black}40` }]} />
       </FlexCenter>
     </Modal>
   )

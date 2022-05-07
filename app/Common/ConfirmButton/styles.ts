@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native'
-import { colors } from '../../Theme/colors'
 
 export default StyleSheet.create({
   button: {
@@ -9,11 +8,10 @@ export default StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 12,
+    padding: 12
   },
   buttonTitle: {
-    color: colors.white,
     fontSize: 16,
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold'
+  }
 })

@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { ReactNode } from 'react'
 import { SafeAreaView, ScrollView, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native'
+import { useSettings } from '../Hooks/redux'
 import { theme } from './theme'
-import { colors } from './colors'
+import { colorsFixed } from './colors'
 
 interface ParentProps {
   children?: ReactNode
@@ -26,26 +27,24 @@ interface IPage {
 }
 
 export const Page = ({ children, style, scrollEnabled = true }: ParentProps & IPage) => {
+  const { colors } = useSettings()
   return (
-    <SafeAreaView style={[theme.containers.centerColumn, style]}>
+    <SafeAreaView style={[theme.containers.centerColumn, { backgroundColor: colors.background }, style]}>
       <ScrollView scrollEnabled={scrollEnabled}>{children}</ScrollView>
     </SafeAreaView>
   )
 }
 
-export const TextSecondary = ({
-  children,
-  color = colors.textSecondary,
-  center = false,
-  style
-}: ParentProps & IText) => {
+export const TextSecondary = ({ children, color, center = false, style }: ParentProps & IText) => {
+  const { colors } = useSettings()
+  const newColors = color || colors.textSecondary
   return (
     <Text
       style={[
         {
           ...theme.text.secondary,
           textAlign: center ? 'center' : 'left',
-          color
+          color: newColors
         },
         style
       ]}
@@ -55,13 +54,41 @@ export const TextSecondary = ({
   )
 }
 
-export const TextHeader = ({ children, color = colors.text, center = false, style }: ParentProps & IText) => {
-  return <Text style={[{ ...theme.text.header, textAlign: center ? 'center' : 'left', color }, style]}>{children}</Text>
+export const TextHeader = ({ children, color, center = false, style }: ParentProps & IText) => {
+  const { colors } = useSettings()
+  const newColors = color || colors.text
+  return (
+    <Text
+      style={[
+        {
+          ...theme.text.header,
+          textAlign: center ? 'center' : 'left',
+          color: newColors
+        },
+        style
+      ]}
+    >
+      {children}
+    </Text>
+  )
 }
 
-export const TextOrdinary = ({ children, color = colors.text, center = false, style }: ParentProps & IText) => {
+export const TextOrdinary = ({ children, color, center = false, style }: ParentProps & IText) => {
+  const { colors } = useSettings()
+  const newColors = color || colors.text
   return (
-    <Text style={[{ ...theme.text.ordinary, textAlign: center ? 'center' : 'left', color }, style]}>{children}</Text>
+    <Text
+      style={[
+        {
+          ...theme.text.ordinary,
+          textAlign: center ? 'center' : 'left',
+          color: newColors
+        },
+        style
+      ]}
+    >
+      {children}
+    </Text>
   )
 }
 
@@ -89,23 +116,30 @@ export const FlexStart = ({ children, style }: ParentProps) => {
   return <View style={[theme.containers.alignCenter, style]}>{children}</View>
 }
 
-export const Card = ({ children, style, borderLeftColor }: ParentProps & { borderLeftColor?: string }) => (
-  <View
-    style={[
-      theme.view.card,
-      theme.view.shadow,
-      !!borderLeftColor
-        ? {
-            borderLeftColor,
-            borderLeftWidth: 12
-          }
-        : {},
-      style
-    ]}
-  >
-    {children}
-  </View>
-)
+export const Card = ({ children, style, borderLeftColor }: ParentProps & { borderLeftColor?: string }) => {
+  const { colors } = useSettings()
+  return (
+    <View
+      style={[
+        {
+          backgroundColor: colors.white,
+          shadowColor: colorsFixed.shadow
+        },
+        theme.view.card,
+        theme.view.shadow,
+        !!borderLeftColor
+          ? {
+              borderLeftColor,
+              borderLeftWidth: 12
+            }
+          : {},
+        style
+      ]}
+    >
+      {children}
+    </View>
+  )
+}
 
 export const CardPressed = ({
   children,
@@ -114,23 +148,30 @@ export const CardPressed = ({
   onPressIn,
   style,
   borderLeftColor
-}: ParentProps & OnPressType) => (
-  <TouchableOpacity
-    style={[
-      theme.view.card,
-      theme.view.shadow,
-      borderLeftColor
-        ? {
-            borderLeftColor,
-            borderLeftWidth: 12
-          }
-        : {},
-      style
-    ]}
-    onPress={onPress}
-    onPressOut={onPressOut}
-    onPressIn={onPressIn}
-  >
-    {children}
-  </TouchableOpacity>
-)
+}: ParentProps & OnPressType) => {
+  const { colors } = useSettings()
+  return (
+    <TouchableOpacity
+      style={[
+        {
+          backgroundColor: colors.white,
+          shadowColor: colorsFixed.shadow
+        },
+        theme.view.card,
+        theme.view.shadow,
+        borderLeftColor
+          ? {
+              borderLeftColor,
+              borderLeftWidth: 12
+            }
+          : {},
+        style
+      ]}
+      onPress={onPress}
+      onPressOut={onPressOut}
+      onPressIn={onPressIn}
+    >
+      {children}
+    </TouchableOpacity>
+  )
+}

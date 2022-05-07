@@ -4,18 +4,19 @@ import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import usePlaying from '../../Hooks/usePlaying'
 import { screen } from '../../Utils/constants'
+import { useAppDispatch, useSettings } from '../../Hooks/redux'
+import { togglePlaying } from '../../store/WorkoutReducer/WorkoutSlice'
 import { ConfirmButton, GoBackSubmitModal, IconButton } from '../../Common'
 import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
 import { FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
 import Results from './Results'
 import { theme } from '../../Theme/theme'
-import { colors } from '../../Theme/colors'
 import { icon } from '../../Theme/icons'
 import styles from './styles'
-import { useAppDispatch } from '../../Hooks/redux'
-import { togglePlaying } from '../../store/WorkoutReducer/WorkoutSlice'
+import { colorsFixed } from '../../Theme/colors'
 
 export default memo(function PlayingScreen() {
+  const { colors } = useSettings()
   const {
     isPlaying,
     isWaitForSubmit,
@@ -38,7 +39,7 @@ export default memo(function PlayingScreen() {
   const weightDiff = current?.weight - approach?.weight || 0
   const isTheLastOneComplete = isWaitForSubmit && isTheLastOne
   return (
-    <SafeAreaView style={[theme.containers.centerColumn, styles.page]}>
+    <SafeAreaView style={[theme.containers.centerColumn, styles.page, { backgroundColor: colors.background }]}>
       <View style={[theme.containers.headerStyle, styles.header]}>
         <FlexSpaceBetween>
           <Text />
@@ -75,6 +76,8 @@ export default memo(function PlayingScreen() {
             duration={isTheLastOneComplete ? 0 : exercise.breakTimeInSec}
             colors={[colors.primary, colors.primary, colors.secondPrimary] as any}
             colorsTime={[11, 10, 0]}
+            strokeWidth={14}
+            trailColor={colors.menu as any}
             onComplete={onTimerComplete}
             size={screen.vw - 120}
           >
@@ -114,7 +117,15 @@ export default memo(function PlayingScreen() {
         )}
       </FlexCenterColumn>
 
-      <FlexSpaceBetween style={styles.footer}>
+      <FlexSpaceBetween
+        style={[
+          styles.footer,
+          {
+            backgroundColor: colors.menu,
+            shadowColor: colorsFixed.shadow
+          }
+        ]}
+      >
         <IconButton onPress={() => {}} iconName={icon.back} color={`${colors.error}00`} size={35} />
         <FlexSpaceBetween style={{ width: '50%' }}>
           <IconButton

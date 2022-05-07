@@ -1,6 +1,6 @@
 import * as React from 'react'
 import ScrollPicker from 'react-native-scroll-picker-wheel'
-import { colors } from '../../Theme/colors'
+import { useSettings } from '../../Hooks/redux'
 
 interface SwipeSelectorType {
   onChange: (number: number) => void
@@ -10,6 +10,7 @@ interface SwipeSelectorType {
 }
 
 export default function SwipeSelector({ onChange, value = 0, step = 1, maxValue = 60 }: SwipeSelectorType) {
+  const { colors } = useSettings()
   let list: string[] = []
 
   for (let i = 0; i < maxValue; i += step) {
@@ -25,10 +26,10 @@ export default function SwipeSelector({ onChange, value = 0, step = 1, maxValue 
       wrapperWidth={50}
       wrapperHeight={150}
       highlightBorderWidth={1}
-      wrapperBackground={colors.menu}
-      highlightColor={colors.background}
+      wrapperBackground={colors.white}
+      highlightColor={colors.white}
       activeItemColor={colors.secondPrimary}
-      itemColor={'#B4B4B4'}
+      itemColor={colors.menu}
     />
   )
 }

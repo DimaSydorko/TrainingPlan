@@ -7,3 +7,4 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 export const useUser = () => useAppSelector(state => state.userReducer)
 export const usePlans = () => useAppSelector(state => state.plansReducer)
 export const useWorkout = () => useAppSelector(state => state.workoutReducer)
+export const useSettings = () => useAppSelector(state => state.settingsReducer)
