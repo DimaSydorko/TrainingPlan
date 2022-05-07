@@ -10,5 +10,6 @@ export const icon = {
   pause: 'pause-circle',
   playlist: 'playlist-check',
   back: 'arrow-left',
-  checkCircle: 'check-circle'
+  checkCircle: 'check-circle',
+  restart: 'restart'
 }

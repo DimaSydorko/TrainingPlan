@@ -49,7 +49,6 @@ export const workoutActionCreators = {
       name,
       exercises
     }
-    console.log('approaches', exercises[0].approaches)
     try {
       await FB_Collection_Workouts.doc(uid).update(workout)
       return props

@@ -7,12 +7,14 @@ interface IGoBackSubmitModal {
   title?: string
   text: string
   confirmText?: string
+  onConfirm?: () => void
 }
 
 export default memo(function GoBackSubmitModal({
   title = 'Are you sure you want to go back?',
   text,
-  confirmText = 'YES'
+  confirmText = 'YES',
+  onConfirm
 }: IGoBackSubmitModal) {
   const navigation = useNavigation()
 
@@ -24,7 +26,7 @@ export default memo(function GoBackSubmitModal({
           onPress: () => null,
           style: 'cancel'
         },
-        { text: confirmText, onPress: () => BackHandler.exitApp() }
+        { text: confirmText, onPress: () => (onConfirm ? onConfirm() : BackHandler.exitApp()) }
       ])
       return true
     }
@@ -41,7 +43,7 @@ export default memo(function GoBackSubmitModal({
           {
             text: 'YES',
             style: 'destructive',
-            onPress: () => navigation.dispatch(e.data.action)
+            onPress: () => (onConfirm ? onConfirm() : navigation.dispatch(e.data.action))
           }
         ])
       }),

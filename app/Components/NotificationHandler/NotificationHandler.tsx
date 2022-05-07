@@ -1,10 +1,11 @@
 import * as React from 'react'
+import { memo } from 'react'
 import { useAppDispatch, usePlans, useWorkout } from '../../Hooks/redux'
 import { errorPlansClear } from '../../store/PlansReducer/PlansSlice'
 import { errorWorkoutClear } from '../../store/WorkoutReducer/WorkoutSlice'
 import { Toast, Toaster } from '../../Common'
 
-export default React.memo(function NotificationHandler() {
+export default memo(function NotificationHandler() {
   const dispatch = useAppDispatch()
   const plans = usePlans()
   const workout = useWorkout()

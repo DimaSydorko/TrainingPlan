@@ -13,6 +13,7 @@ interface AppModalType {
   isWarning?: boolean
   isOpen: boolean
   disableAutoClose?: boolean
+  disabled?: boolean
   header: string
   text?: string
   confirmText?: string
@@ -30,6 +31,7 @@ export default function AppModal({
   children,
   onRefuse,
   extraPlace,
+  disabled,
   disableAutoClose = false,
   confirmText = 'Confirm'
 }: AppModalType) {
@@ -63,6 +65,7 @@ export default function AppModal({
               header={confirmText}
               color={isWarning ? colors.error : colors.primary}
               style={buttonStyle}
+              disabled={disabled}
               onPress={() => {
                 onConfirm()
                 !disableAutoClose && onClose()

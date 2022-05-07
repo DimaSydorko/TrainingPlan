@@ -90,11 +90,11 @@ export default function WorkoutScreen() {
   )
 
   const onSaveRefuse = useCallback(() => {
-    setWorkoutLabels(prev => (deepCompare(selectedWorkout.labels, prev) ? prev : selectedWorkout.labels))
+    setWorkoutLabels(prev => (deepCompare(selectedWorkout?.labels, prev) ? prev : selectedWorkout?.labels))
     setWorkoutNameInput(prev => (deepCompare(selectedWorkout.name, prev) ? prev : selectedWorkout.name))
     setWorkoutExercises(prev => (deepCompare(selectedWorkout.exercises, prev) ? prev : selectedWorkout.exercises))
     setIsEditMode(false)
-  }, [selectedWorkout.labels, selectedWorkout.name, selectedWorkout.exercises])
+  }, [selectedWorkout?.labels, selectedWorkout.name, selectedWorkout.exercises])
 
   const onSaveExercise = useCallback(
     (newExercise: ExerciseType) => {

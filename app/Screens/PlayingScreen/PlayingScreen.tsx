@@ -4,7 +4,7 @@ import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import usePlaying from '../../Hooks/usePlaying'
 import { screen } from '../../Utils/constants'
-import { ConfirmButton, IconButton } from '../../Common'
+import { ConfirmButton, GoBackSubmitModal, IconButton } from '../../Common'
 import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
 import { FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
 import Results from './Results'
@@ -12,10 +12,14 @@ import { theme } from '../../Theme/theme'
 import { colors } from '../../Theme/colors'
 import { icon } from '../../Theme/icons'
 import styles from './styles'
+import { useAppDispatch } from '../../Hooks/redux'
+import { togglePlaying } from '../../store/WorkoutReducer/WorkoutSlice'
 
 export default memo(function PlayingScreen() {
   const {
     isPlaying,
+    isWaitForSubmit,
+    isTheLastOne,
     playing,
     exercise,
     current,
@@ -24,13 +28,12 @@ export default memo(function PlayingScreen() {
     onTimerComplete,
     onTogglePlay,
     onNext,
-    onBack,
+    onSaveResult,
     onPrevious,
     setCurrent,
-    onSaveResult,
-    isWaitForSubmit,
-    isTheLastOne
+    onReload
   } = usePlaying()
+  const dispatch = useAppDispatch()
   const repeatsDiff = current?.repeats - approach?.repeats || 0
   const weightDiff = current?.weight - approach?.weight || 0
   const isTheLastOneComplete = isWaitForSubmit && isTheLastOne
@@ -38,11 +41,11 @@ export default memo(function PlayingScreen() {
     <SafeAreaView style={[theme.containers.centerColumn, styles.page]}>
       <View style={[theme.containers.headerStyle, styles.header]}>
         <FlexSpaceBetween>
-          <Text>1</Text>
-          <Text>
+          <Text />
+          <TextHeader>
             Laps {playing.lap}/{exercise.laps}
-          </Text>
-          <Text>3</Text>
+          </TextHeader>
+          <Text />
         </FlexSpaceBetween>
       </View>
 
@@ -112,11 +115,18 @@ export default memo(function PlayingScreen() {
       </FlexCenterColumn>
 
       <FlexSpaceBetween style={styles.footer}>
-        <IconButton onPress={onBack} iconName={icon.back} color={colors.textSecondary} size={35} />
+        <IconButton onPress={() => {}} iconName={icon.back} color={`${colors.error}00`} size={35} />
         <FlexSpaceBetween style={{ width: '50%' }}>
-          <IconButton onPress={onPrevious} iconName={icon.skipPrevious} color={colors.black} size={35} />
+          <IconButton
+            onPress={onPrevious}
+            disabled={playing.idx <= 0 && playing.lap <= 1}
+            iconName={icon.skipPrevious}
+            color={colors.black}
+            size={35}
+          />
           <IconButton
             onPress={onTogglePlay}
+            disabled={isTheLastOneComplete}
             iconName={isPlaying ? icon.pause : icon.play}
             color={colors.primary}
             size={45}
@@ -129,8 +139,9 @@ export default memo(function PlayingScreen() {
             size={35}
           />
         </FlexSpaceBetween>
-        <IconButton onPress={() => {}} iconName={icon.playlist} color={colors.black} size={35} />
+        <IconButton onPress={onReload} iconName={icon.restart} color={colors.black} size={35} />
       </FlexSpaceBetween>
+      <GoBackSubmitModal text={'Current results will be lost!'} onConfirm={() => dispatch(togglePlaying(false))} />
     </SafeAreaView>
   )
 })

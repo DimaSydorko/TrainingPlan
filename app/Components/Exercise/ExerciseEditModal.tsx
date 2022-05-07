@@ -78,6 +78,7 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
           isNewExercise && onDelete()
           onClose()
         }}
+        disabled={selectSeconds + selectMinutes <= 0}
         header={`${isNewExercise ? 'Create' : 'Edit'} Exercise`}
         confirmText={'Save'}
         extraPlace={

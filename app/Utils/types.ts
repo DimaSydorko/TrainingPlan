@@ -37,9 +37,9 @@ export interface ExerciseType {
 
 export type SelectedWorkoutType = Omit<WorkoutType, 'exercises'> & {
   isPlaying: boolean
-  exercises: SelectedExercisesType[]
+  exercises: SelectedExerciseType[]
 }
-export type SelectedExercisesType = Omit<ExerciseType, 'approaches'> & { approaches: SelectedApproachType[] }
+export type SelectedExerciseType = Omit<ExerciseType, 'approaches'> & { approaches: SelectedApproachType[] }
 
 export interface WorkoutType {
   uid: string
