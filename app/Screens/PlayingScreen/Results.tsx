@@ -9,10 +9,11 @@ interface ResultsI {
   value: number
   diff: number
   step?: number
+  color?: string
   repeats?: number
 }
 
-export default function Results({ onChange, type, value, diff, step, repeats }: ResultsI) {
+export default function Results({ onChange, type, value, color, diff, step, repeats }: ResultsI) {
   const { colors } = useSettings()
   return (
     <FlexSpaceBetween>
@@ -20,6 +21,7 @@ export default function Results({ onChange, type, value, diff, step, repeats }: 
       <ButtonCounter
         value={value}
         step={step}
+        color={color}
         dataType={type === 'repeats' ? ` / ${repeats}` : ' kg'}
         extraWidth={25}
         onChange={onChange}

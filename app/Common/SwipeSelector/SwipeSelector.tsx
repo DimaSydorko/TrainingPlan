@@ -26,7 +26,7 @@ export default function SwipeSelector({ onChange, value = 0, step = 1, maxValue 
       wrapperWidth={50}
       wrapperHeight={150}
       highlightBorderWidth={1}
-      wrapperBackground={colors.white}
+      wrapperBackground={colors.background}
       highlightColor={colors.white}
       activeItemColor={colors.secondPrimary}
       itemColor={colors.menu}

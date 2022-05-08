@@ -3,7 +3,7 @@ import { ReactNode } from 'react'
 import { Modal, TouchableOpacity, View, ViewStyle } from 'react-native'
 import { ConfirmButton } from '../index'
 import { useSettings } from '../../Hooks/redux'
-import { FlexCenter, FlexEnd, TextHeader, TextSecondary } from '../../Theme/Parents'
+import { FlexCenter, FlexEnd, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
 import styles from './styles'
 
 interface AppModalType {
@@ -17,7 +17,8 @@ interface AppModalType {
   header: string
   text?: string
   confirmText?: string
-  extraPlace?: ReactNode
+  extraPlaceRight?: ReactNode
+  extraPlaceLeft?: ReactNode
   children?: ReactNode
 }
 
@@ -30,7 +31,8 @@ export default function AppModal({
   isWarning,
   children,
   onRefuse,
-  extraPlace,
+  extraPlaceRight,
+  extraPlaceLeft,
   disabled,
   disableAutoClose = false,
   confirmText = 'Confirm'
@@ -40,10 +42,11 @@ export default function AppModal({
   return (
     <Modal animationType='fade' transparent={true} visible={isOpen} onTouchStart={onClose} onRequestClose={onClose}>
       <FlexCenter style={styles.modal}>
-        <View style={[styles.container, { backgroundColor: colors.white }]}>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
           <FlexCenter>
+            {!!extraPlaceRight && <FlexStart style={styles.extraPlaceLeft}>{extraPlaceLeft}</FlexStart>}
             <TextHeader>{header}</TextHeader>
-            {!!extraPlace && <FlexEnd style={styles.extraPlace}>{extraPlace}</FlexEnd>}
+            {!!extraPlaceRight && <FlexEnd style={styles.extraPlaceRight}>{extraPlaceRight}</FlexEnd>}
           </FlexCenter>
           <FlexCenter style={styles.content}>
             {text && <TextSecondary style={styles.text}>{text}</TextSecondary>}

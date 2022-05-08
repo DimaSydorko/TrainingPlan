@@ -24,7 +24,7 @@ export default function usePlaying() {
   const dispatch = useAppDispatch()
   const { selectedWorkout } = useWorkout()
   const [playing, setPlaying] = useState<PlayingType>(initialPlaying)
-  const [isPlaying, setIsPlaying] = useState(true)
+  const [isPlaying, setIsPlaying] = useState(false)
   const [isWaitForSubmit, setIsWaitForSubmit] = useState(false)
   const [current, setCurrent] = useState<CurrentType>(initialCurrent)
   const [playingWorkout, setPlayingWorkout] = useState<SelectedWorkoutType>({

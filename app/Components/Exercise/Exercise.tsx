@@ -1,22 +1,33 @@
 import * as React from 'react'
 import { memo, useEffect, useState } from 'react'
+import { nanoid } from '../../Utils'
+import { useSettings } from '../../Hooks/redux'
 import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
-import { FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
-import { IconButton } from '../../Common'
+import { AppModal, IconButton } from '../../Common'
+import { FlexEnd, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { ExerciseType } from '../../Utils/types'
 import Approach from './Approach'
 import { icon } from '../../Theme/icons'
-import { useSettings } from '../../Hooks/redux'
 
 interface IExerciseEdit {
   exercise: ExerciseType
   isEdit?: boolean
+  onDelete?: (exercise: ExerciseType) => void
+  onCopy?: (exercise: ExerciseType, isNew: true) => void
   onVisibilityToggle?: (exercise: ExerciseType) => void
 }
 
-export default memo(function ExerciseEdit({ exercise, isEdit = false, onVisibilityToggle }: IExerciseEdit) {
+export default memo(function ExerciseEdit({
+  exercise,
+  isEdit = false,
+  onCopy,
+  onDelete,
+  onVisibilityToggle
+}: IExerciseEdit) {
   const [isVisible, setIsVisible] = useState(exercise.isVisible)
+  const [isDeleteModal, setIsDeleteModal] = useState(false)
   const { colors } = useSettings()
+  const color = exercise.color || colors.primary
 
   useEffect(() => {
     setIsVisible(prev => (prev === exercise.isVisible ? prev : exercise.isVisible))
@@ -27,13 +38,19 @@ export default memo(function ExerciseEdit({ exercise, isEdit = false, onVisibili
       {isEdit ? (
         <>
           <FlexSpaceBetween>
-            <TextHeader color={isVisible ? colors.secondPrimary : colors.textSecondary}>{exercise.name}</TextHeader>
-            {onVisibilityToggle && (
-              <IconButton
-                iconName={isVisible ? icon.visibilityOn : icon.visibilityOff}
-                onPress={() => onVisibilityToggle({ ...exercise, isVisible: !isVisible })}
-              />
-            )}
+            <TextHeader color={isVisible ? color : `${color}80`}>{exercise.name}</TextHeader>
+            <FlexEnd style={{ width: 100 }}>
+              {onDelete && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}
+              {onCopy && (
+                <IconButton iconName={icon.copy} onPress={() => onCopy({ ...exercise, uid: nanoid() }, true)} />
+              )}
+              {onVisibilityToggle && (
+                <IconButton
+                  iconName={isVisible ? icon.visibilityOn : icon.visibilityOff}
+                  onPress={() => onVisibilityToggle({ ...exercise, isVisible: !isVisible })}
+                />
+              )}
+            </FlexEnd>
           </FlexSpaceBetween>
           <FlexSpaceBetween>
             <TextSecondary>
@@ -53,7 +70,7 @@ export default memo(function ExerciseEdit({ exercise, isEdit = false, onVisibili
       ) : (
         <>
           <FlexSpaceBetween>
-            <TextHeader color={colors.secondPrimary}>{exercise.name}</TextHeader>
+            <TextHeader color={color}>{exercise.name}</TextHeader>
             {!!exercise.breakTimeInSec && (
               <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
             )}
@@ -63,6 +80,15 @@ export default memo(function ExerciseEdit({ exercise, isEdit = false, onVisibili
           ))}
         </>
       )}
+      <AppModal
+        isWarning
+        isOpen={isDeleteModal}
+        header={'Delete exercise'}
+        confirmText={'Yes, delete'}
+        text={`Are you sure you want to delete '${exercise.name}' exercise?`}
+        onConfirm={() => onDelete(exercise)}
+        onClose={() => setIsDeleteModal(false)}
+      />
     </>
   )
 })

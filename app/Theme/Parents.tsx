@@ -23,14 +23,14 @@ interface OnPressType {
 }
 
 interface IPage {
-  scrollEnabled?: boolean
+  scrollDisabled?: boolean
 }
 
-export const Page = ({ children, style, scrollEnabled = true }: ParentProps & IPage) => {
+export const Page = ({ children, style, scrollDisabled = false }: ParentProps & IPage) => {
   const { colors } = useSettings()
   return (
     <SafeAreaView style={[theme.containers.centerColumn, { backgroundColor: colors.background }, style]}>
-      <ScrollView scrollEnabled={scrollEnabled}>{children}</ScrollView>
+      <ScrollView scrollEnabled={!scrollDisabled}>{children}</ScrollView>
     </SafeAreaView>
   )
 }

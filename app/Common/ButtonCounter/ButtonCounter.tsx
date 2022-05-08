@@ -10,6 +10,7 @@ interface ButtonCounterType {
   value: number
   onChange: (value: number) => void
   dataType?: string
+  color?: string
   step?: number
   minValue?: number
   maxValue?: number
@@ -21,6 +22,7 @@ export default memo(function ButtonCounter({
   value,
   step = 1,
   onChange,
+  color,
   dataType = '',
   minValue = 0,
   maxValue,
@@ -37,7 +39,7 @@ export default memo(function ButtonCounter({
         disabled={value <= minValue}
         onPress={() => onChange(value - step)}
       />
-      <TextHeader color={colors.secondPrimary}>
+      <TextHeader color={color || colors.secondPrimary}>
         {value}
         {dataType}
         {children}

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import 'react-native-gesture-handler'
 import { Provider } from 'react-redux'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
 import { decode, encode } from 'base-64'
@@ -17,7 +18,9 @@ function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistedStore}>
-        <AuthRouter />
+        <GestureHandlerRootView style={{ flex: 1, backgroundColor: 'seashell' }}>
+          <AuthRouter />
+        </GestureHandlerRootView>
       </PersistGate>
     </Provider>
   )

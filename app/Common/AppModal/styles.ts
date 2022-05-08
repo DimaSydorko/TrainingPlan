@@ -31,9 +31,14 @@ export default StyleSheet.create({
   text: {
     textAlign: 'center'
   },
-  extraPlace: {
+  extraPlaceRight: {
     position: 'absolute',
     top: 0,
     right: 0
+  },
+  extraPlaceLeft: {
+    position: 'absolute',
+    top: 0,
+    left: 0
   }
 })

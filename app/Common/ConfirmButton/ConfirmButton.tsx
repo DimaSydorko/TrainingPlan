@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native'
 import { useSettings } from '../../Hooks/redux'
-import styles from './styles'
 import { colorsFixed } from '../../Theme/colors'
+import styles from './styles'
 
 interface ConfirmButtonType {
   header: string

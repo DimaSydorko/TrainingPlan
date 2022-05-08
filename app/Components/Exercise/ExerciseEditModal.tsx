@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { Keyboard, View } from 'react-native'
-import { AppModal, ButtonCounter, IconButton, MyTextInput, SwipeSelector } from '../../Common'
+import { AppColorPicker, AppModal, ButtonCounter, IconButton, MyTextInput, SwipeSelector } from '../../Common'
 import { defaultApproach, defaultExercise } from '../../Utils/constants'
 import { nanoid } from '../../Utils'
 import { ExerciseType } from '../../Utils/types'
@@ -32,6 +32,7 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
   const [laps, setLaps] = useState(initialEx.laps)
   const [isDeleteModal, setIsDeleteModal] = useState(false)
   const [isKeyboardVisible, setKeyboardVisible] = useState(false)
+  const [color, setColor] = useState(colors.primary)
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -63,11 +64,12 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
       repeats,
       isVisible,
       approaches,
+      color,
       breakTimeInSec: selectMinutes * 60 + selectSeconds
     }
     onSave(newExercise)
     onClose()
-  }, [name, laps, repeats, isVisible, selectMinutes, selectSeconds, initialEx])
+  }, [name, color, laps, repeats, isVisible, selectMinutes, selectSeconds, initialEx])
 
   return (
     <>
@@ -82,7 +84,8 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
         disabled={selectSeconds + selectMinutes <= 0}
         header={`${isNewExercise ? 'Create' : 'Edit'} Exercise`}
         confirmText={'Save'}
-        extraPlace={
+        extraPlaceLeft={<AppColorPicker value={color} onChange={setColor} />}
+        extraPlaceRight={
           <>
             {!isNewExercise && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}
             <IconButton

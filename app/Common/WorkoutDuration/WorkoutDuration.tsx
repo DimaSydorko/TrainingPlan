@@ -35,7 +35,7 @@ export default memo(function WorkoutDuration({ exercises }: WorkoutDurationType)
 
   return (
     <FlexStart>
-      <Icon name='timer-outline' size={18} color={`${colors.textSecondary}80`} />
+      <Icon name='timer-outline' size={18} color={colors.textSecondary} />
       <TextSecondary>{secondsToMinSec(time)}</TextSecondary>
     </FlexStart>
   )

@@ -17,7 +17,7 @@ export default function AddMoreButton({ onPress, color, header = '' }: AddMoreBu
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
       <FlexCenter>
-        <View style={styles.icon}>
+        <View style={[styles.icon, { borderColor: newColor }]}>
           <Icon name={'plus'} size={24} color={newColor} />
         </View>
         <TextHeader color={newColor} style={styles.header}>

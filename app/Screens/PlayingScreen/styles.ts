@@ -3,8 +3,8 @@ import { screen } from '../../Utils/constants'
 
 export default StyleSheet.create({
   page: {
-    height: screen.vh,
-    width: screen.vw,
+    height: '100%',
+    width: '100%',
     position: 'absolute',
     zIndex: 10,
     top: 0,

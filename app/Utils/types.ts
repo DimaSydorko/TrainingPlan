@@ -32,6 +32,7 @@ export interface ExerciseType {
   repeats: number
   approaches: ApproachType[]
   isVisible: boolean
+  color: string
   // imgURL?: StoredFile | null
 }
 

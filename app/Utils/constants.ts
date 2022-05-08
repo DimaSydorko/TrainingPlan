@@ -37,26 +37,27 @@ export const screen = {
 export const defaultPlan: PlanType = {
   uid: '',
   ownerUid: '',
-  name: 'New Plan',
+  name: 'New_Plan',
   workoutUids: [],
   labels: []
 }
 export const defaultWorkout: WorkoutType = {
   uid: '',
   plansUid: [],
-  name: 'New workout',
+  name: 'New_Workout',
   ownerUid: '',
   labels: [],
   exercises: []
 }
 export const defaultExercise: ExerciseType = {
   uid: '',
-  name: 'New exercise',
+  name: 'New_Exercise',
   laps: 1,
   repeats: 0,
   approaches: [],
   isVisible: true,
-  breakTimeInSec: 0
+  breakTimeInSec: 0,
+  color: ''
 }
 export const defaultApproach: ApproachType = {
   repeats: 0,

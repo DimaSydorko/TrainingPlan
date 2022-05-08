@@ -1,6 +1,6 @@
 export { default as LoginScreen } from './LoginScreen/LoginScreen'
 export { default as EmptyScreen } from './EmptyScreen/EmptyScreen'
-export { default as RegistrationScreen } from './RegistrationScreen/RegistrationScreen'
+export { default as RegistrationScreen } from './LoginScreen/RegistrationScreen'
 export { default as MyPlansScreen } from './MyPlansScreen/MyPlansScreen'
 export { default as MyWorkoutsScreen } from './MyWorkoutsScreen/MyWorkoutsScreen'
 export { default as WorkoutsScreen } from './WorkoutsScreen/WorkoutsScreen'

@@ -11,5 +11,6 @@ export const icon = {
   playlist: 'playlist-check',
   back: 'arrow-left',
   checkCircle: 'check-circle',
-  restart: 'restart'
+  restart: 'restart',
+  copy: 'content-copy'
 }

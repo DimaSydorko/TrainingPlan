@@ -35,7 +35,7 @@ export default function EmptyScreen() {
       <ConfirmButton header={'Clear storage'} color={colors.secondPrimary} onPress={clearAll} />
 
       <FlexCenter style={{ marginVertical: 10 }}>
-        <TextHeader>Theme</TextHeader>
+        <TextHeader style={{ marginRight: 10 }}>Theme: {isDarkTheme ? 'Dark' : 'Light'}</TextHeader>
         <MySwitch value={isDarkTheme} onValueChange={onThemeToggle} />
       </FlexCenter>
     </View>

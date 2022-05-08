@@ -1,5 +1,5 @@
 export const colorsFixed = {
-  buttonText: '#e5e5e5',
+  buttonText: '#ffffff',
   shadow: '#00000030'
 }
 
@@ -23,7 +23,7 @@ export const colorsLight = {
 export const colorsDark = {
   primary: '#3c8739',
   second: '',
-  secondPrimary: '#b8132f',
+  secondPrimary: '#c71b37',
 
   error: '#d73838',
   disabled: '#767676',
@@ -33,6 +33,6 @@ export const colorsDark = {
 
   background: '#1f1f1f',
   text: '#c2c2c2',
-  textSecondary: 'rgba(255,131,131,0.5)',
+  textSecondary: 'rgba(189,189,189,0.5)',
   menu: '#2f2f2f'
 }

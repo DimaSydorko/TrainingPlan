@@ -22,7 +22,7 @@ import {
 } from '../../Common'
 import Exercise from '../../Components/Exercise/Exercise'
 import EditExerciseModal from '../../Components/Exercise/ExerciseEditModal'
-import { FUTURE_FLAG } from '../../Utils/constants'
+import { FUTURE_FLAG, screen } from '../../Utils/constants'
 import { deepCompare } from '../../Utils'
 import { ExerciseType, WorkoutType } from '../../Utils/types'
 import { theme } from '../../Theme/theme'
@@ -97,8 +97,8 @@ export default function WorkoutScreen() {
   }, [selectedWorkout?.labels, selectedWorkout.name, selectedWorkout.exercises])
 
   const onSaveExercise = useCallback(
-    (newExercise: ExerciseType) => {
-      if (isNewExercise) setWorkoutExercises(prev => [...(prev || []), newExercise])
+    (newExercise: ExerciseType, isNew = false) => {
+      if (isNewExercise || isNew) setWorkoutExercises(prev => [...(prev || []), newExercise])
       else setWorkoutExercises(prev => prev?.map(ex => (ex.uid === newExercise.uid ? newExercise : ex)) || [])
     },
     [isNewExercise]
@@ -108,22 +108,32 @@ export default function WorkoutScreen() {
     dispatch(togglePlaying(true))
   }, [])
 
-  const renderItem = ({ item, drag, isActive }: RenderItemParams<ExerciseType>) => {
-    return (
-      <ScaleDecorator>
-        <Card borderLeftColor={item.isVisible ? `${colors.secondPrimary}` : `${colors.secondPrimary}80`}>
-          <TouchableOpacity onLongPress={drag} onPress={() => setChangeExercise(item)} disabled={isActive}>
-            <Exercise exercise={item} isEdit={isEditMode} onVisibilityToggle={onVisibilityToggle} />
-          </TouchableOpacity>
-        </Card>
-      </ScaleDecorator>
-    )
-  }
+  const renderItem = useCallback(
+    ({ item, drag, isActive }: RenderItemParams<ExerciseType>) => {
+      const color = item.color || colors.primary
+      return (
+        <ScaleDecorator>
+          <Card borderLeftColor={item.isVisible ? `${color}` : `${color}80`}>
+            <TouchableOpacity onLongPress={drag} onPress={() => setChangeExercise(item)} disabled={isActive}>
+              <Exercise
+                exercise={item}
+                isEdit={isEditMode}
+                onCopy={onSaveExercise}
+                onVisibilityToggle={onVisibilityToggle}
+                onDelete={onDeleteExercise}
+              />
+            </TouchableOpacity>
+          </Card>
+        </ScaleDecorator>
+      )
+    },
+    [isEditMode, onVisibilityToggle, onSaveExercise]
+  )
 
   return (
-    <Page>
+    <Page scrollDisabled>
       {selectedWorkout ? (
-        <NestableScrollContainer>
+        <>
           <FlexSpaceBetween style={theme.containers.secondHeader}>
             <WorkoutDuration exercises={selectedWorkout?.exercises} />
             <FlexStart>
@@ -157,26 +167,41 @@ export default function WorkoutScreen() {
                 style={{ marginBottom: 15, width: '100%', marginHorizontal: 100 }}
               />
             )}
-            {isEditMode ? (
-              <NestableDraggableFlatList
-                data={workoutExercises}
-                renderItem={renderItem}
-                keyExtractor={item => item.uid}
-                onDragEnd={({ data }) => setWorkoutExercises(data)}
-              />
-            ) : (
-              workoutExercises
-                ?.filter(ex => ex.isVisible)
-                ?.map(exercise => (
-                  <Card key={exercise.uid} borderLeftColor={colors.secondPrimary}>
-                    <Exercise exercise={exercise} />
-                  </Card>
-                ))
-            )}
+            <NestableScrollContainer
+              style={{ height: screen.vh - (isEditMode ? 420 : 330), marginBottom: isEditMode ? 0 : 50 }}
+            >
+              {isEditMode ? (
+                <NestableDraggableFlatList
+                  renderItem={renderItem}
+                  data={workoutExercises}
+                  dragItemOverflow
+                  autoscrollSpeed={20}
+                  keyExtractor={item => item.uid}
+                  onDragEnd={({ data }) => setWorkoutExercises(data)}
+                />
+              ) : (
+                workoutExercises
+                  ?.filter(ex => ex.isVisible)
+                  ?.map(exercise => (
+                    <Card key={exercise.uid} borderLeftColor={exercise.color || colors.primary}>
+                      <Exercise exercise={exercise} />
+                    </Card>
+                  ))
+              )}
+            </NestableScrollContainer>
           </FlexCenterColumn>
-          {isEditMode && <AddMoreButton onPress={() => setIsNewExercise(true)} header={'Exercise'} />}
-          {isEditMode && <ConfirmButton disabled={!isChanged} onPress={onSaveWorkout} header={'Save workout'} />}
-          {isChanged && <GoBackSubmitModal text={`Changes in '${workoutNameInput}' workout aren\`t saved!`} />}
+          <FlexCenterColumn style={{ marginTop: 60 }}>
+            {isEditMode && <AddMoreButton onPress={() => setIsNewExercise(true)} header={'Exercise'} />}
+            {isEditMode && (
+              <ConfirmButton
+                disabled={!isChanged}
+                onPress={onSaveWorkout}
+                header={'Save workout'}
+                style={{ marginTop: 0, width: '80%' }}
+              />
+            )}
+            {isChanged && <GoBackSubmitModal text={`Changes in '${workoutNameInput}' workout aren\`t saved!`} />}
+          </FlexCenterColumn>
           <AppModal
             isOpen={isSaveChangesModal}
             header={'Save changes?'}
@@ -194,7 +219,7 @@ export default function WorkoutScreen() {
               onDelete={() => onDeleteExercise(changeExercise)}
             />
           )}
-        </NestableScrollContainer>
+        </>
       ) : (
         <Page>
           <TextSecondary>Error try reload page</TextSecondary>
