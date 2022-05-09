@@ -1,6 +1,17 @@
 import * as React from 'react'
 import { ReactNode } from 'react'
-import { SafeAreaView, ScrollView, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native'
+import {
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TextBase,
+  TextComponent,
+  TextProps,
+  TextStyle,
+  TouchableOpacity,
+  View,
+  ViewStyle
+} from 'react-native'
 import { useSettings } from '../Hooks/redux'
 import { theme } from './theme'
 import { colorsFixed } from './colors'
@@ -10,7 +21,7 @@ interface ParentProps {
   style?: ViewStyle | TextStyle | ViewStyle[] | TextStyle[]
 }
 
-interface IText {
+type IText = TextProps & {
   color?: string
   center?: boolean
 }
@@ -54,7 +65,7 @@ export const TextSecondary = ({ children, color, center = false, style }: Parent
   )
 }
 
-export const TextHeader = ({ children, color, center = false, style }: ParentProps & IText) => {
+export const TextHeader = ({ children, color, center = false, style, ...props }: ParentProps & IText) => {
   const { colors } = useSettings()
   const newColors = color || colors.text
   return (
@@ -67,6 +78,7 @@ export const TextHeader = ({ children, color, center = false, style }: ParentPro
         },
         style
       ]}
+      {...props}
     >
       {children}
     </Text>

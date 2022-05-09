@@ -32,7 +32,7 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
   const [laps, setLaps] = useState(initialEx.laps)
   const [isDeleteModal, setIsDeleteModal] = useState(false)
   const [isKeyboardVisible, setKeyboardVisible] = useState(false)
-  const [color, setColor] = useState(colors.primary)
+  const [color, setColor] = useState(exercise.color || colors.primary)
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {

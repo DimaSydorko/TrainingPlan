@@ -2,7 +2,8 @@ import { Dimensions } from 'react-native'
 import { ApproachType, ExerciseType, PlanType, WorkoutType } from './types'
 
 export const FUTURE_FLAG = {
-  LABELS: false
+  LABELS: false,
+  IS_DEV: true
 }
 
 export enum FirebaseDBCollection {
@@ -21,12 +22,6 @@ export enum ScreenName {
   Plan = 'Plan',
   Home = 'Home',
   App = 'App'
-}
-
-export enum AsyncStorageKey {
-  User = 'User',
-  Plans = 'Plans',
-  Workouts = 'workouts'
 }
 
 export const screen = {
@@ -68,4 +63,9 @@ export const QUERY_LIMIT = 30
 
 export const settings = {
   isVibration: true
+}
+
+export const VIBRATION = {
+  END_EXERCISE: [100, 200],
+  END_WORKOUT: [100, 400, 200, 100]
 }

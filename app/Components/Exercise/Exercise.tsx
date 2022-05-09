@@ -6,8 +6,10 @@ import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
 import { AppModal, IconButton } from '../../Common'
 import { FlexEnd, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { ExerciseType } from '../../Utils/types'
+import { screen } from '../../Utils/constants'
 import Approach from './Approach'
 import { icon } from '../../Theme/icons'
+import styles from './styles'
 
 interface IExerciseEdit {
   exercise: ExerciseType
@@ -38,16 +40,23 @@ export default memo(function ExerciseEdit({
       {isEdit ? (
         <>
           <FlexSpaceBetween>
-            <TextHeader color={isVisible ? color : `${color}80`}>{exercise.name}</TextHeader>
+            <TextHeader color={isVisible ? color : `${color}80`} numberOfLines={1} style={{ width: screen.vw - 170 }}>
+              {exercise.name}
+            </TextHeader>
             <FlexEnd style={{ width: 100 }}>
               {onDelete && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}
               {onCopy && (
-                <IconButton iconName={icon.copy} onPress={() => onCopy({ ...exercise, uid: nanoid() }, true)} />
+                <IconButton
+                  iconName={icon.copy}
+                  onPress={() => onCopy({ ...exercise, uid: nanoid() }, true)}
+                  style={styles.iconButton}
+                />
               )}
               {onVisibilityToggle && (
                 <IconButton
                   iconName={isVisible ? icon.visibilityOn : icon.visibilityOff}
                   onPress={() => onVisibilityToggle({ ...exercise, isVisible: !isVisible })}
+                  style={styles.iconButton}
                 />
               )}
             </FlexEnd>
@@ -70,7 +79,9 @@ export default memo(function ExerciseEdit({
       ) : (
         <>
           <FlexSpaceBetween>
-            <TextHeader color={color}>{exercise.name}</TextHeader>
+            <TextHeader color={color} numberOfLines={1} style={{ width: screen.vw - 200 }}>
+              {exercise.name}
+            </TextHeader>
             {!!exercise.breakTimeInSec && (
               <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
             )}

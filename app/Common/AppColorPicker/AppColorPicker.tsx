@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useState } from 'react'
-import { TriangleColorPicker } from 'react-native-color-picker'
+import { ColorPicker } from 'react-native-color-picker'
 import { TouchableOpacity, View } from 'react-native'
 import { AppModal } from '../index'
 import { screen } from '../../Utils/constants'
@@ -39,7 +39,7 @@ export default function AppColorPicker({ value, onChange }: IAppColorPicker) {
             {!!color && <TextHeader style={{ marginLeft: 10 }}>Selected</TextHeader>}
           </View>
           {/*@ts-ignore*/}
-          <TriangleColorPicker
+          <ColorPicker
             hideSliders
             oldColor={value}
             color={position}

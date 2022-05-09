@@ -4,7 +4,7 @@ import { useAppDispatch, useWorkout } from './redux'
 import { togglePlaying } from '../store/WorkoutReducer/WorkoutSlice'
 import { workoutActionCreators } from '../store/WorkoutReducer/WorkoutActionCreators'
 import { SelectedExerciseType, SelectedWorkoutType, WorkoutType } from '../Utils/types'
-import { settings } from '../Utils/constants'
+import { settings, VIBRATION } from '../Utils/constants'
 import { deepCompare } from '../Utils'
 
 const initialPlaying = {
@@ -70,6 +70,7 @@ export default function usePlaying() {
       const newWorkout: WorkoutType = {
         ...workout,
         exercises: selectedWorkout.exercises
+          .map(ex => (ex.isVisible ? playingWorkout.exercises.find(pEx => pEx.uid === ex.uid) : ex))
           .map(ex => (ex.uid === newExercise.uid ? newExercise : ex))
           .map(ex => ({
             ...ex,
@@ -82,7 +83,7 @@ export default function usePlaying() {
       dispatch(workoutActionCreators.updateWorkout(newWorkout))
       onBack()
     },
-    [selectedWorkout]
+    [selectedWorkout, playingWorkout]
   )
 
   const onApproachUpdate = useCallback(
@@ -123,7 +124,10 @@ export default function usePlaying() {
       setPlaying(p => ({ ...p, lap: p.lap + 1, updated: Date.now() }))
     } else {
       if (playingWorkout.exercises.length <= playing.idx + 1 && playing.lap <= exercise.laps) {
-        settings.isVibration && Vibration.vibrate(1000)
+        if (settings.isVibration) {
+          Vibration.vibrate(VIBRATION.END_WORKOUT, true)
+          setTimeout(() => Vibration.cancel(), 3000)
+        }
         setIsWaitForSubmit(true)
       } else {
         setPlaying(p => ({ idx: p.idx + 1, lap: 1, updated: Date.now() }))
@@ -147,7 +151,10 @@ export default function usePlaying() {
   }, [playing, onChangeTimer, playingWorkout.exercises])
 
   const onTimerComplete = useCallback(() => {
-    settings.isVibration && Vibration.vibrate(100)
+    if (settings.isVibration) {
+      Vibration.vibrate(VIBRATION.END_EXERCISE, true)
+      setTimeout(() => Vibration.cancel(), 1900)
+    }
     if (!exercise.repeats && !isTheLastOne) onNext()
     else setIsWaitForSubmit(true)
   }, [exercise.repeats, onNext, isTheLastOne])

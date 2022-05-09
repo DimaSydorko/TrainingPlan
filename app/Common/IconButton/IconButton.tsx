@@ -37,8 +37,7 @@ export default function IconButton({
       style={[
         {
           opacity: disabled ? 0.5 : 1,
-          borderRadius: 50,
-          marginLeft: 10
+          borderRadius: 50
         },
         style
       ]}

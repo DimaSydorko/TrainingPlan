@@ -29,8 +29,8 @@ export default function Approach({ weight, repeats, isPrevious = true }: Exercis
   return (
     <View style={styles.container}>
       <TextOrdinary style={styles.textCurrPrev}>{`\u2022  ${isPrevious ? 'previous' : 'current'}`}</TextOrdinary>
-      {!!weight && <TextOrdinary style={styles.textRepWeight}>{weight} kg</TextOrdinary>}
       <TextOrdinary style={styles.textRepWeight}>{repeats}</TextOrdinary>
+      {!!weight && <TextOrdinary style={styles.textRepWeight}>{weight} kg</TextOrdinary>}
     </View>
   )
 }

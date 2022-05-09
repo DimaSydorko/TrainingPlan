@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { memo } from 'react'
+import { memo, useEffect } from 'react'
 import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
+import KeepAwake from 'react-native-keep-awake'
 import usePlaying from '../../Hooks/usePlaying'
 import { screen } from '../../Utils/constants'
 import { useAppDispatch, useSettings } from '../../Hooks/redux'
@@ -39,6 +40,11 @@ export default memo(function PlayingScreen() {
   const weightDiff = current?.weight - approach?.weight || 0
   const isTheLastOneComplete = isWaitForSubmit && isTheLastOne
   const color = exercise.color || colors.primary
+
+  useEffect(() => {
+    KeepAwake.activate()
+    return () => KeepAwake.deactivate()
+  }, [])
 
   return (
     <SafeAreaView style={[theme.containers.centerColumn, styles.page, { backgroundColor: colors.background }]}>
