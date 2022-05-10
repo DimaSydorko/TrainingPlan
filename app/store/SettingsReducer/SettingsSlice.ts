@@ -4,10 +4,12 @@ import { colorsLight } from '../../Theme/colors'
 
 interface SettingsType {
   colors: ColorsType
+  isVibration: boolean
 }
 
 const initialState: SettingsType = {
-  colors: colorsLight
+  colors: colorsLight,
+  isVibration: true
 }
 
 export const settingsSlice = createSlice({
@@ -16,8 +18,11 @@ export const settingsSlice = createSlice({
   reducers: {
     onThemeChange: (state, { payload }: PayloadAction<ColorsType>) => {
       state.colors = payload
+    },
+    onVibrationToggle: state => {
+      state.isVibration = !state.isVibration
     }
   }
 })
-export const { onThemeChange } = settingsSlice.actions
+export const { onThemeChange, onVibrationToggle } = settingsSlice.actions
 export default settingsSlice.reducer

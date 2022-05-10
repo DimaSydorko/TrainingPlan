@@ -52,7 +52,7 @@ export const defaultExercise: ExerciseType = {
   approaches: [],
   isVisible: true,
   breakTimeInSec: 0,
-  color: ''
+  color: '#8cd47f'
 }
 export const defaultApproach: ApproachType = {
   repeats: 0,
@@ -66,6 +66,8 @@ export const settings = {
 }
 
 export const VIBRATION = {
+  TIMER: 50,
+  BUTTON: 25,
   END_EXERCISE: [100, 200],
   END_WORKOUT: [100, 400, 200, 100]
 }

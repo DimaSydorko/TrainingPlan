@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Vibration } from 'react-native'
-import { useAppDispatch, useWorkout } from './redux'
+import { useAppDispatch, useSettings, useWorkout } from './redux'
 import { togglePlaying } from '../store/WorkoutReducer/WorkoutSlice'
 import { workoutActionCreators } from '../store/WorkoutReducer/WorkoutActionCreators'
 import { SelectedExerciseType, SelectedWorkoutType, WorkoutType } from '../Utils/types'
-import { settings, VIBRATION } from '../Utils/constants'
+import { VIBRATION } from '../Utils/constants'
 import { deepCompare } from '../Utils'
 
 const initialPlaying = {
@@ -23,6 +23,7 @@ type CurrentType = typeof initialCurrent
 export default function usePlaying() {
   const dispatch = useAppDispatch()
   const { selectedWorkout } = useWorkout()
+  const { isVibration } = useSettings()
   const [playing, setPlaying] = useState<PlayingType>(initialPlaying)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isWaitForSubmit, setIsWaitForSubmit] = useState(false)
@@ -38,7 +39,6 @@ export default function usePlaying() {
     () => playingWorkout.exercises.length === playing.idx + 1 && exercise.laps === playing.lap,
     [exercise.laps, playing, playingWorkout.exercises.length]
   )
-
   //Change Workout when current exercise changed
   useEffect(() => {
     setPlayingWorkout(p => ({
@@ -114,9 +114,11 @@ export default function usePlaying() {
 
   const onChangeTimer = useCallback(() => {
     onApproachUpdate()
+    if (exercise.repeats || (playing.lap >= exercise.laps && exerciseNext?.repeats)) {
+      setIsPlaying(p => (p ? false : p))
+    }
     setIsWaitForSubmit(p => (p ? false : p))
-    setIsPlaying(p => (!p ? true : p))
-  }, [onApproachUpdate])
+  }, [onApproachUpdate, exercise, exerciseNext?.repeats, playing.lap])
 
   const onNext = useCallback(() => {
     onChangeTimer()
@@ -124,7 +126,7 @@ export default function usePlaying() {
       setPlaying(p => ({ ...p, lap: p.lap + 1, updated: Date.now() }))
     } else {
       if (playingWorkout.exercises.length <= playing.idx + 1 && playing.lap <= exercise.laps) {
-        if (settings.isVibration) {
+        if (isVibration) {
           Vibration.vibrate(VIBRATION.END_WORKOUT, true)
           setTimeout(() => Vibration.cancel(), 3000)
         }
@@ -151,15 +153,16 @@ export default function usePlaying() {
   }, [playing, onChangeTimer, playingWorkout.exercises])
 
   const onTimerComplete = useCallback(() => {
-    if (settings.isVibration) {
+    if (isVibration) {
       Vibration.vibrate(VIBRATION.END_EXERCISE, true)
       setTimeout(() => Vibration.cancel(), 1900)
     }
-    if (!exercise.repeats && !isTheLastOne) onNext()
+    if (!isTheLastOne) onNext()
     else setIsWaitForSubmit(true)
   }, [exercise.repeats, onNext, isTheLastOne])
 
   const onTogglePlay = useCallback(() => {
+    if (isVibration) Vibration.vibrate(VIBRATION.TIMER)
     if (!isWaitForSubmit) setIsPlaying(p => !p)
     else if (isTheLastOne && isWaitForSubmit) return
     else {

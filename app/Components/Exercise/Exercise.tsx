@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { memo, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { nanoid } from '../../Utils'
 import { useSettings } from '../../Hooks/redux'
 import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
@@ -35,6 +35,20 @@ export default memo(function ExerciseEdit({
     setIsVisible(prev => (prev === exercise.isVisible ? prev : exercise.isVisible))
   }, [exercise.isVisible])
 
+  const copy = useCallback(() => {
+    onCopy(
+      {
+        ...exercise,
+        uid: nanoid(),
+        approaches: exercise.approaches.map(() => ({
+          repeats: 0,
+          weight: 0
+        }))
+      },
+      true
+    )
+  }, [exercise])
+
   return (
     <>
       {isEdit ? (
@@ -45,13 +59,7 @@ export default memo(function ExerciseEdit({
             </TextHeader>
             <FlexEnd style={{ width: 100 }}>
               {onDelete && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}
-              {onCopy && (
-                <IconButton
-                  iconName={icon.copy}
-                  onPress={() => onCopy({ ...exercise, uid: nanoid() }, true)}
-                  style={styles.iconButton}
-                />
-              )}
+              {onCopy && <IconButton iconName={icon.copy} onPress={copy} style={styles.iconButton} />}
               {onVisibilityToggle && (
                 <IconButton
                   iconName={isVisible ? icon.visibilityOn : icon.visibilityOff}

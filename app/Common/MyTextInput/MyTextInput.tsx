@@ -31,7 +31,7 @@ export default function MyTextInput({
           color: colors.text,
           backgroundColor: colors.white
         },
-        type === 'underline' && { ...styles.underline, borderBottomColor: colors.black },
+        type === 'underline' && { ...styles.underline, color: colors.text, borderBottomColor: colors.black },
         type === 'secondary' && {
           ...styles.secondary,
           borderBottomColor: colors.textSecondary,
