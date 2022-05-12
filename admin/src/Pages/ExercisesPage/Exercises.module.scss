@@ -1,0 +1,24 @@
+.exercise {
+  &Image {
+    height: 100px;
+    width: 100px;
+  }
+  &Container {
+    height: 130px;
+    width: 110px;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  &sContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  @extend .exerciseImage;
+  overflow: hidden;
+  border-radius: 100%;
+}
