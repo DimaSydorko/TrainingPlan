@@ -1,8 +1,10 @@
 import * as React from 'react'
+import { useEffect } from 'react'
 import { Text } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { useSettings, useWorkout } from '../Hooks/redux'
+import { useAppDispatch, useSettings, useWorkout } from '../Hooks/redux'
+import { workoutActionCreators } from '../store/WorkoutReducer/WorkoutActionCreators'
 import NotificationHandler from '../Components/NotificationHandler/NotificationHandler'
 import WorkoutsRouter from './WorkoutsRouter'
 import PlanRouter from './PlanRouter'
@@ -53,7 +55,13 @@ const tabs = [
 export default function AppRouter() {
   const Tab = createBottomTabNavigator()
   const { selectedWorkout } = useWorkout()
+  const dispatch = useAppDispatch()
   const { colors } = useSettings()
+
+  useEffect(() => {
+    dispatch(workoutActionCreators.getExerciseImages())
+  }, [])
+
   return (
     <>
       <NotificationHandler />

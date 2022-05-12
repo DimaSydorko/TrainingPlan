@@ -12,5 +12,6 @@ export const icon = {
   back: 'arrow-left',
   checkCircle: 'check-circle',
   restart: 'restart',
-  copy: 'content-copy'
+  copy: 'content-copy',
+  empty: 'cancel'
 }

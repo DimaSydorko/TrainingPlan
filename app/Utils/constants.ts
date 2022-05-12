@@ -12,6 +12,10 @@ export enum FirebaseDBCollection {
   Workouts = 'workouts'
 }
 
+export enum FirebaseDatabase {
+  ExerciseImages = '/ExerciseImages'
+}
+
 export enum ScreenName {
   Registration = 'Registration',
   Login = 'Login',
@@ -52,7 +56,8 @@ export const defaultExercise: ExerciseType = {
   approaches: [],
   isVisible: true,
   breakTimeInSec: 0,
-  color: '#8cd47f'
+  color: '#8cd47f',
+  imageUrl: ''
 }
 export const defaultApproach: ApproachType = {
   repeats: 0,

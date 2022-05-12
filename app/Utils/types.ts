@@ -14,6 +14,8 @@ export interface StoredFile {
   downloadUrl: string
 }
 
+export type StoredExerciseImage = StoredFile & { filter: 'home' | 'gym' | 'street' }
+
 export interface ApproachType {
   weight: number
   repeats: number
@@ -33,7 +35,7 @@ export interface ExerciseType {
   approaches: ApproachType[]
   isVisible: boolean
   color: string
-  // imgURL?: StoredFile | null
+  imageUrl: string
 }
 
 export type SelectedWorkoutType = Omit<WorkoutType, 'exercises'> & {

@@ -46,7 +46,7 @@ export const Page = ({ children, style, scrollDisabled = false }: ParentProps & 
   )
 }
 
-export const TextSecondary = ({ children, color, center = false, style }: ParentProps & IText) => {
+export const TextSecondary = ({ children, color, center = false, style, ...props }: ParentProps & IText) => {
   const { colors } = useSettings()
   const newColors = color || colors.textSecondary
   return (
@@ -59,6 +59,7 @@ export const TextSecondary = ({ children, color, center = false, style }: Parent
         },
         style
       ]}
+      {...props}
     >
       {children}
     </Text>

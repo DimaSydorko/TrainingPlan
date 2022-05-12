@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { plansActionCreators } from '../PlansReducer/PlansActionCreators'
-import { FB_Collection_Workouts } from '../../Utils/firebase'
-import { QUERY_LIMIT } from '../../Utils/constants'
-import { WorkoutType } from '../../Utils/types'
+import { FB_Collection_Workouts, FB_Database } from '../../Utils/firebase'
+import { FirebaseDatabase, QUERY_LIMIT } from '../../Utils/constants'
+import { StoredExerciseImage, WorkoutType } from '../../Utils/types'
 
 export const workoutActionCreators = {
   getWorkouts: createAsyncThunk(
@@ -63,6 +63,15 @@ export const workoutActionCreators = {
       })
       await FB_Collection_Workouts.doc(workout.uid).delete()
       return workout.uid
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.message)
+    }
+  }),
+  getExerciseImages: createAsyncThunk('workout/getExerciseImages', async (_, thunkAPI) => {
+    try {
+      const exerciseImages = await FB_Database.child(FirebaseDatabase.ExerciseImages).get()
+      console.log('exerciseImages', exerciseImages)
+      return []
     } catch (e) {
       return thunkAPI.rejectWithValue(e.message)
     }

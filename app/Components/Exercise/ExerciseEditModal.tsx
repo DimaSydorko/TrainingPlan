@@ -1,14 +1,15 @@
 import * as React from 'react'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { Keyboard, View } from 'react-native'
+import { useSettings } from '../../Hooks/redux'
 import { AppColorPicker, AppModal, ButtonCounter, IconButton, MyTextInput, SwipeSelector } from '../../Common'
+import ImageSelector from '../../Common/ImageSelector/ImageSelector'
 import { defaultApproach, defaultExercise } from '../../Utils/constants'
 import { nanoid } from '../../Utils'
 import { ExerciseType } from '../../Utils/types'
 import { FlexCenter, FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { icon } from '../../Theme/icons'
 import styles from './styles'
-import { useSettings } from '../../Hooks/redux'
 
 interface IEditExerciseModal {
   exercise?: ExerciseType
@@ -24,15 +25,16 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
     return isNewExercise ? { ...defaultExercise, uid: nanoid() } : exercise
   }, [isNewExercise])
 
-  const [isVisible, setIsVisible] = useState(initialEx.isVisible)
-  const [name, setName] = useState(initialEx.name)
-  const [selectSeconds, setSelectSeconds] = useState(initialEx.breakTimeInSec % 60)
-  const [selectMinutes, setSelectMinutes] = useState(Math.floor(initialEx.breakTimeInSec / 60))
-  const [repeats, setRepeats] = useState(initialEx.repeats)
-  const [laps, setLaps] = useState(initialEx.laps)
-  const [isDeleteModal, setIsDeleteModal] = useState(false)
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false)
-  const [color, setColor] = useState(exercise?.color || colors.primary)
+  const [isVisible, setIsVisible] = useState<boolean>(initialEx.isVisible)
+  const [name, setName] = useState<string>(initialEx.name)
+  const [selectSeconds, setSelectSeconds] = useState<number>(initialEx.breakTimeInSec % 60)
+  const [selectMinutes, setSelectMinutes] = useState<number>(Math.floor(initialEx.breakTimeInSec / 60))
+  const [repeats, setRepeats] = useState<number>(initialEx.repeats)
+  const [laps, setLaps] = useState<number>(initialEx.laps)
+  const [imageUrl, setImageUrl] = useState<string>(initialEx.imageUrl)
+  const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false)
+  const [isKeyboardVisible, setKeyboardVisible] = useState<boolean>(false)
+  const [color, setColor] = useState<string>(exercise?.color || colors.primary)
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -65,11 +67,12 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
       isVisible,
       approaches,
       color,
+      imageUrl,
       breakTimeInSec: selectMinutes * 60 + selectSeconds
     }
     onSave(newExercise)
     onClose()
-  }, [name, color, laps, repeats, isVisible, selectMinutes, selectSeconds, initialEx])
+  }, [name, color, laps, repeats, isVisible, selectMinutes, selectSeconds, initialEx, imageUrl])
 
   return (
     <>
@@ -84,7 +87,12 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
         disabled={selectSeconds + selectMinutes <= 0}
         header={`${isNewExercise ? 'Create' : 'Edit'} Exercise`}
         confirmText={'Save'}
-        extraPlaceLeft={<AppColorPicker value={color} onChange={setColor} />}
+        extraPlaceLeft={
+          <>
+            <AppColorPicker value={color} onChange={setColor} />
+            <ImageSelector value={imageUrl} onSubmit={setImageUrl} />
+          </>
+        }
         extraPlaceRight={
           <>
             {!isNewExercise && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}

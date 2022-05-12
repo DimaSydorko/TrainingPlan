@@ -3,6 +3,7 @@ import firebase from 'firebase/app'
 // Add the Firebase products that you want to use
 import 'firebase/auth'
 import 'firebase/firestore'
+import 'firebase/database'
 import 'firebase/storage'
 import 'firebase/functions'
 import { FirebaseDBCollection } from './constants'
@@ -15,7 +16,7 @@ const firebaseConfig = {
   projectId: firebaseSDK.PROJECT_ID,
   storageBucket: firebaseSDK.STORAGE_BUCKET,
   messagingSenderId: firebaseSDK.MESSAGING_SENDER_ID,
-  appId: firebaseSDK.APP_ID,
+  appId: firebaseSDK.APP_ID
 }
 
 // Initialize Firebase
@@ -24,7 +25,9 @@ if (!firebase.apps.length) {
   firebase.firestore().settings({ experimentalForceLongPolling: true })
 }
 
-export const FB_auth = firebase.auth()
+export const FB_Auth = firebase.auth()
+export const FB_Store = firebase.storage()
+export const FB_Database = firebase.database().ref()
 export const FB_FieldValue = firebase.firestore.FieldValue
 export const FB_Collection_UsersData = firebase.firestore().collection(FirebaseDBCollection.UsersData)
 export const FB_Collection_Workouts = firebase.firestore().collection(FirebaseDBCollection.Workouts)

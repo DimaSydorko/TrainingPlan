@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { workoutActionCreators } from './WorkoutActionCreators'
-import { SelectedWorkoutType, WorkoutType } from '../../Utils/types'
+import { SelectedWorkoutType, StoredExerciseImage, WorkoutType } from '../../Utils/types'
 
 interface WorkoutSlice {
   workouts: WorkoutType[]
   workoutsInPlan: WorkoutType[]
   selectedWorkout: SelectedWorkoutType | null
+  exerciseImages: StoredExerciseImage[]
   isLoading: boolean
   error: string
 }
@@ -13,6 +14,7 @@ interface WorkoutSlice {
 const initialState: WorkoutSlice = {
   workouts: [],
   workoutsInPlan: [],
+  exerciseImages: [],
   selectedWorkout: null,
   isLoading: false,
   error: ''
@@ -79,13 +81,18 @@ export const workoutSlice = createSlice({
       state.isLoading = false
       state.error = ''
     },
+    [workoutActionCreators.addWorkout.fulfilled.type]: (state, { payload }: PayloadAction<StoredExerciseImage[]>) => {
+      state.exerciseImages = payload
+      state.error = ''
+    },
     [workoutActionCreators.getWorkouts.pending.type]: onLoading,
     [workoutActionCreators.addWorkout.pending.type]: onLoading,
 
     [workoutActionCreators.getWorkouts.rejected.type]: onError,
     [workoutActionCreators.addWorkout.rejected.type]: onError,
     [workoutActionCreators.updateWorkout.rejected.type]: onError,
-    [workoutActionCreators.deleteWorkout.rejected.type]: onError
+    [workoutActionCreators.deleteWorkout.rejected.type]: onError,
+    [workoutActionCreators.getExerciseImages.rejected.type]: onError
   }
 })
 export const { errorWorkoutClear, clearWorkoutResults, togglePlaying, updateSelectedWorkout } = workoutSlice.actions

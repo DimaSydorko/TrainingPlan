@@ -26,7 +26,7 @@ export default memo(function WorkoutCard({ workout, isInPlan, isEditMode, onDele
           <FlexStart>
             <TextSecondary>{workout.exercises.length} Exercises</TextSecondary>
             <WorkoutDuration exercises={workout.exercises} />
-            {!!workout.plansUid.length && !isInPlan && <TextSecondary>(In Plane)</TextSecondary>}
+            {!!workout.plansUid.length && !isInPlan && <TextSecondary>(In Plan)</TextSecondary>}
           </FlexStart>
         </View>
         {isEditMode && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}
