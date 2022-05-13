@@ -24,6 +24,7 @@ export const themeStyle = (mode: PaletteMode) =>
       ...(mode === 'light'
         ? {
             primary: blue,
+            secondary: grey,
             divider: blue[200],
             text: {
               primary: blue[500],

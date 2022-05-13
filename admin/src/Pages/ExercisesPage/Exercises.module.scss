@@ -1,15 +1,21 @@
 .exercise {
+  @extend .exerciseImage;
+  overflow: hidden;
+  border-radius: 100%;
+  pointer-events: none;
   &Image {
     height: 100px;
     width: 100px;
   }
   &Container {
+    position: relative;
     height: 130px;
     width: 110px;
     text-align: center;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    padding: 0 5px;
   }
   &sContainer {
     display: flex;
@@ -18,7 +24,48 @@
     flex-wrap: wrap;
     gap: 10px;
   }
-  @extend .exerciseImage;
-  overflow: hidden;
-  border-radius: 100%;
+}
+
+.uploadSpace {
+  margin: 40px;
+  height: 200px;
+  border-radius: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  transition: all linear 150ms;
+  border: rgb(88, 88, 88) 2px dashed;
+  color: rgb(88, 88, 88);
+  &:hover {
+    border: rgb(33, 150, 243) 2px dashed;
+    color: rgb(33, 150, 243);
+  };
+}
+
+.header {
+  background: #636363;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto 40px;
+  padding: 8px 20px;
+}
+
+.confirmButton {
+  width: 200px;
+}
+
+.textHeader {
+  text-align: center;
+  font-size: 28px;
+  margin: 20px;
+}
+
+.deleteButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: red;
 }
