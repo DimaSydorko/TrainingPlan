@@ -20,7 +20,7 @@ export const secondsToMinSec = (time: number, isWords = true) => {
 
   if (isWords) {
     if (!seconds) minSec = str_pad_left(minutes, '', 2) + 'min'
-    else if (!minutes) minSec = str_pad_left(seconds, '0', 2) + 'sec'
+    else if (!minutes) minSec = str_pad_left(seconds, '', 2) + 'sec'
     else minSec = str_pad_left(minutes, '', 2) + 'min ' + str_pad_left(seconds, '0', 2) + 'sec'
   } else {
     minSec = str_pad_left(minutes, '0', 2) + ':' + str_pad_left(seconds, '0', 2)

@@ -1,12 +1,19 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Button, IconButton, Tab, Tabs } from '@mui/material'
-import { FB_Database, FB_Store } from 'Utils/firebase'
+import firebase, { FB_Database, FB_Store } from 'Utils/firebase'
 import { filters, FirebaseDatabase, FirebaseStorage } from 'Utils/constants'
 import { StoredExerciseImage } from 'Utils/types'
-import firebase from 'Utils/firebase'
-import { getSafeFileName } from 'Utils'
+import { getFileName, getSafeFileName } from 'Utils'
 import Loading from 'Common/Loading'
 import styles from './Exercises.module.scss'
+
+const iconButtonStyle = {
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  height: '25px',
+  width: '25px'
+}
 
 const ExercisesPage = () => {
   const [storedExerciseImages, setStoredExerciseImages] = useState<StoredExerciseImage[]>([])
@@ -18,7 +25,8 @@ const ExercisesPage = () => {
 
   const getData = useCallback(async () => {
     const snapshot = await FB_Database.ref(FirebaseDatabase.ExerciseImages).get()
-    setStoredExerciseImages(snapshot.val() as StoredExerciseImage[])
+    const newStoredExerciseImages = Array.isArray(snapshot.val()) ? snapshot.val() : []
+    setStoredExerciseImages(newStoredExerciseImages as StoredExerciseImage[])
   }, [])
 
   useEffect(() => {
@@ -41,7 +49,7 @@ const ExercisesPage = () => {
 
     uploadedFiles.forEach(file => {
       const safeFileName = getSafeFileName(file.name)
-      const name = file.name.slice(0, file.name.indexOf('.'))
+      const name = getFileName(file.name)
       const currentUploadTask = FB_Store.ref().child(`${FirebaseStorage.Exercises}/${safeFileName}`).put(file)
       uploadTask.current = currentUploadTask
 
@@ -86,7 +94,13 @@ const ExercisesPage = () => {
   const onFileUpload = (files: FileList | null) => {
     setUploadedFiles(p => {
       const newUploadedFiles: File[] = [...Object.values(files ? files : {})]
-      const newFiles: File[] = newUploadedFiles?.filter(file => !p.find(f => file.name === f.name))
+      const newFiles: File[] = newUploadedFiles
+        ?.filter(file => !p.find(f => file.name === f.name))
+        .filter(file =>
+          !storedExerciseImages.find(f => f.fileName === getFileName(file.name))
+            ? file
+            : console.log(`File with Name: '${file.name} already exist`)
+        )
       return [...p, ...newFiles]
     })
   }
@@ -100,11 +114,11 @@ const ExercisesPage = () => {
         .catch(err => console.error(err)),
       FB_Database.ref()
         .child(FirebaseDatabase.ExerciseImages)
-        .update(newExerciseImages)
+        .set(newExerciseImages)
         .catch(err => console.error(err))
     ])
+    await getData()
     setIsLoading(false)
-    getData()
   }
 
   return (
@@ -124,6 +138,9 @@ const ExercisesPage = () => {
           onChange={handleChange}
           scrollButtons={false}
           aria-label='scrollable prevent tabs example'
+          style={{
+            background: '#636363'
+          }}
         >
           {filters.map(filter => (
             <Tab key={filter} label={filter} />
@@ -154,14 +171,12 @@ const ExercisesPage = () => {
           <div className={styles.textHeader}>Uploaded</div>
           <div className={styles.exercisesContainer}>
             {uploadedFiles.map(img => {
-              const dotPoss = img.name.indexOf('.')
-              const imgName = img.name.slice(0, dotPoss)
               return (
                 <div key={img.lastModified} className={styles.exerciseContainer}>
                   <div className={styles.exercise}>
                     <img src={URL.createObjectURL(img)} alt='' className={styles.exerciseImage} />
                   </div>
-                  {imgName}
+                  {getFileName(img.name)}
                 </div>
               )
             })}
@@ -175,14 +190,21 @@ const ExercisesPage = () => {
             {storedExerciseImages
               ?.filter(f => f.filter === filters[filterTab])
               .map(img => (
-                <div className={styles.exerciseContainer}>
-                  <div key={img.storageKey} className={styles.exercise}>
+                <div key={img.storageKey} className={styles.exerciseContainer}>
+                  <IconButton
+                    onClick={() => onDeleteImage(img.storageKey)}
+                    style={{
+                      ...(iconButtonStyle as any),
+                      color: 'red',
+                      background: 'rgba(255,0,0,0.15)'
+                    }}
+                  >
+                    x
+                  </IconButton>
+                  <div className={styles.exercise}>
                     <img src={img.downloadUrl} alt='' className={styles.exerciseImage} />
                   </div>
                   {img.fileName}
-                  <IconButton onClick={() => onDeleteImage(img.storageKey)} className={styles.deleteButton}>
-                    x
-                  </IconButton>
                 </div>
               ))}
           </div>

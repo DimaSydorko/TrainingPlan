@@ -81,7 +81,10 @@ export const workoutSlice = createSlice({
       state.isLoading = false
       state.error = ''
     },
-    [workoutActionCreators.addWorkout.fulfilled.type]: (state, { payload }: PayloadAction<StoredExerciseImage[]>) => {
+    [workoutActionCreators.getExerciseImages.fulfilled.type]: (
+      state,
+      { payload }: PayloadAction<StoredExerciseImage[]>
+    ) => {
       state.exerciseImages = payload
       state.error = ''
     },

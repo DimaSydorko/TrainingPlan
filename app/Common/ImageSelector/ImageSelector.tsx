@@ -4,7 +4,8 @@ import { Image, ScrollView, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useSettings, useWorkout } from '../../Hooks/redux'
 import { screen } from '../../Utils/constants'
-import { AppModal } from '../index'
+import { AppImage, AppModal, TapBar } from '../index'
+import { ExerciseImageFilterType } from '../../Utils/types'
 import { FlexCenterColumn, TextSecondary } from '../../Theme/Parents'
 import { icon } from '../../Theme/icons'
 import styles from './styles'
@@ -14,11 +15,14 @@ interface IImageSelector {
   onSubmit: (imageUrl: string) => void
 }
 
+const tabBarValues: ExerciseImageFilterType[] = ['home', 'street', 'gym']
+
 export default function ImageSelector({ onSubmit, value = '' }: IImageSelector) {
   const { colors } = useSettings()
   const { exerciseImages } = useWorkout()
   const [isModal, setIsModal] = useState(false)
   const [selected, setSelected] = useState<string>(value)
+  const [filter, setFilter] = useState<ExerciseImageFilterType>('home')
 
   return (
     <>
@@ -45,20 +49,25 @@ export default function ImageSelector({ onSubmit, value = '' }: IImageSelector) 
           ) : (
             <Icon name={icon.empty} size={60} />
           )}
+          <TapBar
+            values={tabBarValues}
+            currentValue={filter}
+            onChange={value => setFilter(value as ExerciseImageFilterType)}
+          />
           <ScrollView style={{ height: screen.vh - 400 }}>
             <View style={styles.listContainer}>
-              {exerciseImages?.map(image => (
-                <TouchableOpacity
-                  key={image.storageKey}
-                  onPress={() => setSelected(image.downloadUrl)}
-                  style={styles.imageCard}
-                >
-                  <View style={[styles.image, styles.imageC]}>
-                    <Image source={{ uri: image.downloadUrl }} style={styles.image} />
-                  </View>
-                  <TextSecondary numberOfLines={1}>{image.fileName}</TextSecondary>
-                </TouchableOpacity>
-              ))}
+              {exerciseImages
+                ?.filter(img => img.filter === filter)
+                ?.map(image => (
+                  <TouchableOpacity
+                    key={image.storageKey}
+                    onPress={() => setSelected(image.downloadUrl)}
+                    style={styles.imageCard}
+                  >
+                    <AppImage src={image.downloadUrl} size={60} />
+                    <TextSecondary numberOfLines={1}>{image.fileName}</TextSecondary>
+                  </TouchableOpacity>
+                ))}
             </View>
           </ScrollView>
         </FlexCenterColumn>

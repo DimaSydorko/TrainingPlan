@@ -7,7 +7,7 @@ import usePlaying from '../../Hooks/usePlaying'
 import { screen } from '../../Utils/constants'
 import { useAppDispatch, useSettings } from '../../Hooks/redux'
 import { togglePlaying } from '../../store/WorkoutReducer/WorkoutSlice'
-import { ConfirmButton, GoBackSubmitModal, IconButton } from '../../Common'
+import { AppImage, ConfirmButton, GoBackSubmitModal, IconButton } from '../../Common'
 import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
 import { FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
 import Results from './Results'
@@ -91,6 +91,7 @@ export default memo(function PlayingScreen() {
           >
             {({ remainingTime }) => (
               <FlexCenterColumn style={styles.timerContent}>
+                {!!exercise.imageUrl && <AppImage size={100} src={exercise.imageUrl} />}
                 <TextHeader center color={color} style={{ fontSize: 24 }}>
                   {exercise.name}
                 </TextHeader>

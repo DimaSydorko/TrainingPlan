@@ -69,9 +69,8 @@ export const workoutActionCreators = {
   }),
   getExerciseImages: createAsyncThunk('workout/getExerciseImages', async (_, thunkAPI) => {
     try {
-      const exerciseImages = await FB_Database.child(FirebaseDatabase.ExerciseImages).get()
-      console.log('exerciseImages', exerciseImages)
-      return []
+      const snapshot = await FB_Database.ref(FirebaseDatabase.ExerciseImages).get()
+      return Array.isArray(snapshot.val()) ? snapshot.val() : ([] as StoredExerciseImage[])
     } catch (e) {
       return thunkAPI.rejectWithValue(e.message)
     }

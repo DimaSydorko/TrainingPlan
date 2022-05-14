@@ -30,7 +30,7 @@ export default function usePlaying() {
   const [current, setCurrent] = useState<CurrentType>(initialCurrent)
   const [playingWorkout, setPlayingWorkout] = useState<SelectedWorkoutType>({
     ...selectedWorkout,
-    exercises: selectedWorkout.exercises.filter(ex => ex.isVisible)
+    exercises: selectedWorkout?.exercises?.filter(ex => ex.isVisible)
   })
   const [exercise, setExercise] = useState<SelectedExerciseType>(playingWorkout.exercises[playing.idx])
   const exerciseNext = useMemo(() => playingWorkout.exercises[playing.idx + 1], [playing.idx, playingWorkout.exercises])
@@ -69,7 +69,7 @@ export default function usePlaying() {
       const { isPlaying, ...workout } = selectedWorkout
       const newWorkout: WorkoutType = {
         ...workout,
-        exercises: selectedWorkout.exercises
+        exercises: selectedWorkout?.exercises
           .map(ex => (ex.isVisible ? playingWorkout.exercises.find(pEx => pEx.uid === ex.uid) : ex))
           .map(ex => (ex.uid === newExercise.uid ? newExercise : ex))
           .map(ex => ({

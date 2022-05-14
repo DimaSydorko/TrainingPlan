@@ -15,5 +15,10 @@ export default StyleSheet.create({
   },
   iconButton: {
     marginLeft: 7
+  },
+  imageContainer: {
+    position: 'absolute',
+    marginLeft: -10,
+    marginTop: 0
   }
 })

@@ -14,7 +14,8 @@ export interface StoredFile {
   downloadUrl: string
 }
 
-export type StoredExerciseImage = StoredFile & { filter: 'home' | 'gym' | 'street' }
+export type ExerciseImageFilterType = 'home' | 'gym' | 'street'
+export type StoredExerciseImage = StoredFile & { filter: ExerciseImageFilterType }
 
 export interface ApproachType {
   weight: number

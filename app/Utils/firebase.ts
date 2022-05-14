@@ -27,7 +27,7 @@ if (!firebase.apps.length) {
 
 export const FB_Auth = firebase.auth()
 export const FB_Store = firebase.storage()
-export const FB_Database = firebase.database().ref()
+export const FB_Database = firebase.database()
 export const FB_FieldValue = firebase.firestore.FieldValue
 export const FB_Collection_UsersData = firebase.firestore().collection(FirebaseDBCollection.UsersData)
 export const FB_Collection_Workouts = firebase.firestore().collection(FirebaseDBCollection.Workouts)
