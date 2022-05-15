@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useState } from 'react'
 import { ColorPicker } from 'react-native-color-picker'
 import { TouchableOpacity, View } from 'react-native'
-import { AppModal } from '../index'
+import { AppModal } from '../../Common'
 import { screen } from '../../Utils/constants'
 import { TextHeader } from '../../Theme/Parents'
 

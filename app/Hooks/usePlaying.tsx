@@ -135,7 +135,7 @@ export default function usePlaying() {
         setPlaying(p => ({ idx: p.idx + 1, lap: 1, updated: Date.now() }))
       }
     }
-  }, [exercise.laps, playing, playingWorkout, onChangeTimer])
+  }, [exercise.laps, playing, playingWorkout.exercises.length, onChangeTimer])
 
   const onPrevious = useCallback(() => {
     onChangeTimer()

@@ -1,14 +1,15 @@
 import * as React from 'react'
-import { memo, useEffect } from 'react'
+import { memo, useCallback, useEffect } from 'react'
 import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import KeepAwake from 'react-native-keep-awake'
 import usePlaying from '../../Hooks/usePlaying'
 import { screen } from '../../Utils/constants'
+import useTTS from '../../Hooks/useTTS'
 import { useAppDispatch, useSettings } from '../../Hooks/redux'
 import { togglePlaying } from '../../store/WorkoutReducer/WorkoutSlice'
 import { AppImage, ConfirmButton, GoBackSubmitModal, IconButton } from '../../Common'
-import { secondsToMinSec } from '../../Common/WorkoutDuration/WorkoutDuration'
+import { secondsToMinSec } from '../../Components/WorkoutDuration/WorkoutDuration'
 import { FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
 import Results from './Results'
 import { colorsFixed } from '../../Theme/colors'
@@ -19,6 +20,7 @@ import styles from './styles'
 export default memo(function PlayingScreen() {
   const dispatch = useAppDispatch()
   const { colors } = useSettings()
+  const onSay = useTTS()
   const {
     isPlaying,
     isWaitForSubmit,
@@ -45,6 +47,28 @@ export default memo(function PlayingScreen() {
     KeepAwake.activate()
     return () => KeepAwake.deactivate()
   }, [])
+
+  useEffect(() => {
+    onSay(exercise.name)
+  }, [playing.lap, exercise.name])
+
+  const onTimeSay = useCallback(
+    (time: number, remainingTime: number) => {
+      if (exercise.breakTimeInSec > time && remainingTime === time) onSay(`${time}`)
+    },
+    [exercise.breakTimeInSec]
+  )
+
+  const onTimerUpdate = useCallback(
+    (remainingTime: number) => {
+      onTimeSay(10, remainingTime)
+      onTimeSay(5, remainingTime)
+      onTimeSay(3, remainingTime)
+      onTimeSay(2, remainingTime)
+      onTimeSay(1, remainingTime)
+    },
+    [onTimeSay]
+  )
 
   return (
     <SafeAreaView style={[theme.containers.centerColumn, styles.page, { backgroundColor: colors.background }]}>
@@ -87,6 +111,7 @@ export default memo(function PlayingScreen() {
             strokeWidth={14}
             trailColor={colors.menu as any}
             onComplete={onTimerComplete}
+            onUpdate={onTimerUpdate}
             size={screen.vw - 120}
           >
             {({ remainingTime }) => (

@@ -1,7 +1,7 @@
 import { FilterType } from './types'
 
 export const FUTURE_FLAG = {
-  IS_DEV: true
+  IS_DEV: false
 }
 
 export enum FirebaseDatabase {
