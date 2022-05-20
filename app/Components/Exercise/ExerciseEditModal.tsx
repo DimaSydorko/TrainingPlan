@@ -31,7 +31,7 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
   const [selectMinutes, setSelectMinutes] = useState<number>(Math.floor(initialEx.breakTimeInSec / 60))
   const [repeats, setRepeats] = useState<number>(initialEx.repeats)
   const [laps, setLaps] = useState<number>(initialEx.laps)
-  const [imageUrl, setImageUrl] = useState<string>(initialEx.imageUrl)
+  const [imageUrl, setImageUrl] = useState<string>(initialEx.imageUrl || '')
   const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false)
   const [isKeyboardVisible, setKeyboardVisible] = useState<boolean>(false)
   const [color, setColor] = useState<string>(exercise?.color || colors.primary)

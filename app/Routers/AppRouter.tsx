@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { Text } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { useAppDispatch, useSettings, useWorkout } from '../Hooks/redux'
+import { useAppDispatch, useSettings } from '../Hooks/redux'
+import { PlayContext } from '../Hooks/PlayProvider'
 import { workoutActionCreators } from '../store/WorkoutReducer/WorkoutActionCreators'
 import NotificationHandler from '../Components/NotificationHandler/NotificationHandler'
 import WorkoutsRouter from './WorkoutsRouter'
@@ -54,7 +55,7 @@ const tabs = [
 
 export default function AppRouter() {
   const Tab = createBottomTabNavigator()
-  const { selectedWorkout } = useWorkout()
+  const { isPlaying } = useContext(PlayContext)
   const dispatch = useAppDispatch()
   const { colors } = useSettings()
 
@@ -65,7 +66,7 @@ export default function AppRouter() {
   return (
     <>
       <NotificationHandler />
-      {selectedWorkout?.isPlaying && <PlayingScreen />}
+      {isPlaying && <PlayingScreen />}
       <Tab.Navigator
         sceneContainerStyle={{
           backgroundColor: colors.background

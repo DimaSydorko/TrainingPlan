@@ -31,5 +31,10 @@ export default StyleSheet.create({
     borderBottomWidth: 1,
     fontSize: 14,
     borderRadius: 0
+  },
+  visibilityButton: {
+    position: 'absolute',
+    right: 10,
+    top: 22
   }
 })

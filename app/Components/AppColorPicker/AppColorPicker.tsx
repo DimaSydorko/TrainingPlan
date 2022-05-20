@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useState } from 'react'
-import { ColorPicker } from 'react-native-color-picker'
 import { TouchableOpacity, View } from 'react-native'
+import ColorPicker from 'react-native-wheel-color-picker'
 import { AppModal } from '../../Common'
 import { screen } from '../../Utils/constants'
 import { TextHeader } from '../../Theme/Parents'
@@ -13,8 +13,7 @@ interface IAppColorPicker {
 
 export default function AppColorPicker({ value, onChange }: IAppColorPicker) {
   const [isModal, setIsModal] = useState(false)
-  const [position, setPosition] = useState<string>(value)
-  const [color, setColor] = useState<string>('')
+  const [color, setColor] = useState<string>(value)
 
   return (
     <>
@@ -38,16 +37,7 @@ export default function AppColorPicker({ value, onChange }: IAppColorPicker) {
           >
             {!!color && <TextHeader style={{ marginLeft: 10 }}>Selected</TextHeader>}
           </View>
-          {/*@ts-ignore*/}
-          <ColorPicker
-            hideSliders
-            oldColor={value}
-            color={position}
-            onColorChange={setPosition}
-            onColorSelected={setColor}
-            onOldColorSelected={setColor}
-            style={{ flex: 1 }}
-          />
+          <ColorPicker onColorChangeComplete={setColor} color={color} discreteLength={5} />
         </View>
       </AppModal>
     </>

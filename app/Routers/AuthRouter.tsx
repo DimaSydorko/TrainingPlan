@@ -13,14 +13,8 @@ import { colorsFixed } from '../Theme/colors'
 
 export default function AuthRouter() {
   const Stack = createStackNavigator()
-  const dispatch = useAppDispatch()
-  const { selectedWorkout } = useWorkout()
   const { user } = useUser()
   const { colors } = useSettings()
-
-  useEffect(() => {
-    selectedWorkout?.isPlaying && dispatch(togglePlaying(false))
-  }, [])
 
   const options = {
     ...theme.screenOptions,

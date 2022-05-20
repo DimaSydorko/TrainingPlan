@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 import {
   NestableDraggableFlatList,
@@ -9,7 +9,6 @@ import {
 } from 'react-native-draggable-flatlist'
 import { useAppDispatch, useSettings, useUser, useWorkout } from '../../Hooks/redux'
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
-import { togglePlaying } from '../../store/WorkoutReducer/WorkoutSlice'
 import { Card, FlexCenterColumn, FlexSpaceBetween, FlexStart, Page, TextSecondary } from '../../Theme/Parents'
 import {
   AddMoreButton,
@@ -26,12 +25,14 @@ import { FUTURE_FLAG, screen } from '../../Utils/constants'
 import { deepCompare } from '../../Utils'
 import { ExerciseType, WorkoutType } from '../../Utils/types'
 import { theme } from '../../Theme/theme'
+import { PlayContext } from '../../Hooks/PlayProvider'
 
 export default function WorkoutScreen() {
   const dispatch = useAppDispatch()
   const { selectedWorkout } = useWorkout()
   const { colors } = useSettings()
   const { user } = useUser()
+  const { onTogglePlaying } = useContext(PlayContext)
   const [isEditMode, setIsEditMode] = useState(false)
   const [isNewExercise, setIsNewExercise] = useState(false)
   const [isSaveChangesModal, setIsSaveChangesModal] = useState(false)
@@ -105,7 +106,7 @@ export default function WorkoutScreen() {
   )
 
   const onStartPlaying = useCallback(() => {
-    dispatch(togglePlaying(true))
+    onTogglePlaying()
   }, [])
 
   const renderItem = useCallback(

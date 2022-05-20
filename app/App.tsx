@@ -6,6 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
 import { decode, encode } from 'base-64'
 import { setupStore } from './store'
+import PlayProvider from './Hooks/PlayProvider'
 import AuthRouter from './Routers/AuthRouter'
 
 if (!global.btoa) global.btoa = encode
@@ -19,7 +20,9 @@ function App() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistedStore}>
         <GestureHandlerRootView style={{ flex: 1, backgroundColor: 'seashell' }}>
-          <AuthRouter />
+          <PlayProvider>
+            <AuthRouter />
+          </PlayProvider>
         </GestureHandlerRootView>
       </PersistGate>
     </Provider>

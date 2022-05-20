@@ -37,10 +37,7 @@ export const workoutSlice = createSlice({
       state.error = ''
     },
     updateSelectedWorkout(state, { payload }: PayloadAction<SelectedWorkoutType>) {
-      state.selectedWorkout = { ...payload, isPlaying: state.selectedWorkout?.isPlaying || false }
-    },
-    togglePlaying(state, { payload }: PayloadAction<boolean>) {
-      state.selectedWorkout.isPlaying = payload
+      state.selectedWorkout = payload
     },
     clearWorkoutResults(state) {
       state.error = ''
@@ -98,5 +95,5 @@ export const workoutSlice = createSlice({
     [workoutActionCreators.getExerciseImages.rejected.type]: onError
   }
 })
-export const { errorWorkoutClear, clearWorkoutResults, togglePlaying, updateSelectedWorkout } = workoutSlice.actions
+export const { errorWorkoutClear, clearWorkoutResults, updateSelectedWorkout } = workoutSlice.actions
 export default workoutSlice.reducer

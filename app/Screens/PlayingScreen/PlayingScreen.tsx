@@ -1,16 +1,17 @@
 import * as React from 'react'
-import { memo, useCallback, useEffect } from 'react'
-import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
+import { memo, useCallback, useContext, useEffect, useState } from 'react'
+import { SafeAreaView, TouchableOpacity, View } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import KeepAwake from 'react-native-keep-awake'
 import usePlaying from '../../Hooks/usePlaying'
 import { screen } from '../../Utils/constants'
 import useTTS from '../../Hooks/useTTS'
-import { useAppDispatch, useSettings } from '../../Hooks/redux'
-import { togglePlaying } from '../../store/WorkoutReducer/WorkoutSlice'
-import { AppImage, ConfirmButton, GoBackSubmitModal, IconButton } from '../../Common'
+import { useSettings } from '../../Hooks/redux'
+import { PlayContext } from '../../Hooks/PlayProvider'
+import { AppImage, ConfirmButton, GoBackSubmitModal, IconButton, Timer } from '../../Common'
 import { secondsToMinSec } from '../../Components/WorkoutDuration/WorkoutDuration'
 import { FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
+import { getWorkoutDuration } from '../../Utils'
 import Results from './Results'
 import { colorsFixed } from '../../Theme/colors'
 import { theme } from '../../Theme/theme'
@@ -18,9 +19,9 @@ import { icon } from '../../Theme/icons'
 import styles from './styles'
 
 export default memo(function PlayingScreen() {
-  const dispatch = useAppDispatch()
   const { colors } = useSettings()
   const onSay = useTTS()
+  const { onTogglePlaying } = useContext(PlayContext)
   const {
     isPlaying,
     isWaitForSubmit,
@@ -36,12 +37,26 @@ export default memo(function PlayingScreen() {
     onSaveResult,
     onPrevious,
     setCurrent,
-    onReload
+    onReload,
+    playingWorkout
   } = usePlaying()
   const repeatsDiff = current?.repeats - approach?.repeats || 0
+  const workoutDurationTime = getWorkoutDuration(playingWorkout.exercises.filter((ex, idx) => idx >= playing.idx))
   const weightDiff = current?.weight - approach?.weight || 0
   const isTheLastOneComplete = isWaitForSubmit && isTheLastOne
+  const [isInvisibleTimerCircle, setIsInvisibleTimerCircle] = useState<boolean>(false)
   const color = exercise.color || colors.primary
+
+  useEffect(() => {
+    if (isPlaying) setIsInvisibleTimerCircle(p => (p ? !p : p))
+    const interval = setInterval(() => {
+      if (isPlaying) return
+      setIsInvisibleTimerCircle(p => !p)
+    }, 1000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [isPlaying])
 
   useEffect(() => {
     KeepAwake.activate()
@@ -52,33 +67,26 @@ export default memo(function PlayingScreen() {
     onSay(exercise.name)
   }, [playing.lap, exercise.name])
 
-  const onTimeSay = useCallback(
-    (time: number, remainingTime: number) => {
-      if (exercise.breakTimeInSec > time && remainingTime === time) onSay(`${time}`)
-    },
-    [exercise.breakTimeInSec]
-  )
+  useEffect(() => {
+    isTheLastOneComplete && onSay('Workout complete')
+  }, [isTheLastOneComplete])
 
-  const onTimerUpdate = useCallback(
-    (remainingTime: number) => {
-      onTimeSay(10, remainingTime)
-      onTimeSay(5, remainingTime)
-      onTimeSay(3, remainingTime)
-      onTimeSay(2, remainingTime)
-      onTimeSay(1, remainingTime)
-    },
-    [onTimeSay]
-  )
+  const onTimerUpdate = useCallback((remainingTime: number) => {
+    const onTimeSay = (time: number[]) => {
+      if (time.includes(remainingTime) && exercise.breakTimeInSec > remainingTime) onSay(`${remainingTime}`)
+    }
+    onTimeSay([10, 5, 4, 3, 2, 1])
+  }, [])
 
   return (
     <SafeAreaView style={[theme.containers.centerColumn, styles.page, { backgroundColor: colors.background }]}>
       <View style={[theme.containers.headerStyle, styles.header]}>
         <FlexSpaceBetween>
-          <Text />
+          <Timer />
           <TextHeader>
             Laps {playing.lap}/{exercise.laps}
           </TextHeader>
-          <Text />
+          <Timer isRevers isPaused={!isPlaying} value={workoutDurationTime} />
         </FlexSpaceBetween>
       </View>
 
@@ -106,7 +114,7 @@ export default memo(function PlayingScreen() {
             key={`${playing.lap}_${playing.idx}_${playing.updated}`}
             isPlaying={isPlaying}
             duration={isTheLastOneComplete ? 0 : exercise.breakTimeInSec}
-            colors={[color, color, colors.error] as any}
+            colors={isInvisibleTimerCircle ? new Array(3).fill('#00000000') : ([color, color, colors.error] as any)}
             colorsTime={[exercise.breakTimeInSec, exercise.breakTimeInSec / 2, 0]}
             strokeWidth={14}
             trailColor={colors.menu as any}
@@ -188,7 +196,7 @@ export default memo(function PlayingScreen() {
         </FlexSpaceBetween>
         <IconButton onPress={onReload} iconName={icon.restart} color={colors.black} size={35} />
       </FlexSpaceBetween>
-      <GoBackSubmitModal text={'Current results will be lost!'} onConfirm={() => dispatch(togglePlaying(false))} />
+      <GoBackSubmitModal text={'Current results will be lost!'} onConfirm={onTogglePlaying} />
     </SafeAreaView>
   )
 })

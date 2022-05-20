@@ -1,4 +1,5 @@
 import { customAlphabet } from 'nanoid/non-secure'
+import { ExerciseType } from './types'
 
 export const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz0123456789', 10)
 
@@ -37,4 +38,10 @@ export function deepCompare(source: any, target: any): boolean {
   }
 
   return source === target
+}
+
+export function getWorkoutDuration(exercises: ExerciseType[]) {
+  let time = 0
+  exercises.forEach(exercise => (time += exercise.laps * exercise.breakTimeInSec))
+  return time
 }

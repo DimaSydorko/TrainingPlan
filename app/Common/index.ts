@@ -15,3 +15,4 @@ export { default as AppColorPicker } from '../Components/AppColorPicker/AppColor
 export { default as ImageSelector } from '../Components/ImageSelector/ImageSelector'
 export { default as AppImage } from './AppImage/AppImage'
 export { default as TapBar } from './TapBar/TapBar'
+export { default as Timer } from './Timer/Timer'

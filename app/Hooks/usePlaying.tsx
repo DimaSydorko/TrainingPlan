@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { Vibration } from 'react-native'
 import { useAppDispatch, useSettings, useWorkout } from './redux'
-import { togglePlaying } from '../store/WorkoutReducer/WorkoutSlice'
+import { PlayContext } from './PlayProvider'
 import { workoutActionCreators } from '../store/WorkoutReducer/WorkoutActionCreators'
 import { SelectedExerciseType, SelectedWorkoutType, WorkoutType } from '../Utils/types'
 import { VIBRATION } from '../Utils/constants'
@@ -23,6 +23,7 @@ type CurrentType = typeof initialCurrent
 export default function usePlaying() {
   const dispatch = useAppDispatch()
   const { selectedWorkout } = useWorkout()
+  const { onTogglePlaying } = useContext(PlayContext)
   const { isVibration } = useSettings()
   const [playing, setPlaying] = useState<PlayingType>(initialPlaying)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -61,14 +62,13 @@ export default function usePlaying() {
   }, [approach])
 
   const onBack = useCallback(() => {
-    dispatch(togglePlaying(false))
+    onTogglePlaying()
   }, [])
 
   const onWorkoutSaveResult = useCallback(
     (newExercise: SelectedExerciseType) => {
-      const { isPlaying, ...workout } = selectedWorkout
       const newWorkout: WorkoutType = {
-        ...workout,
+        ...selectedWorkout,
         exercises: selectedWorkout?.exercises
           .map(ex => (ex.isVisible ? playingWorkout.exercises.find(pEx => pEx.uid === ex.uid) : ex))
           .map(ex => (ex.uid === newExercise.uid ? newExercise : ex))

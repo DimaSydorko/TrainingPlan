@@ -25,5 +25,14 @@ export default StyleSheet.create({
   imageButton: {
     height: 30,
     width: 30
+  },
+  selectedContainer: {
+    height: 65
+  },
+  emptySelect: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: 18
   }
 })

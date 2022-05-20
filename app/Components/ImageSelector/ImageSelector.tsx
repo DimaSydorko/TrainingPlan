@@ -42,13 +42,15 @@ export default function ImageSelector({ onSubmit, value = '' }: IImageSelector) 
         header={'Select Image for Exercise'}
       >
         <FlexCenterColumn>
-          {selected ? (
-            <View style={[styles.image, styles.imageC, { borderWidth: 4, borderColor: colors.primary }]}>
-              <Image source={{ uri: selected }} style={styles.image} />
-            </View>
-          ) : (
-            <Icon name={icon.empty} size={60} />
-          )}
+          <View style={styles.selectedContainer}>
+            {selected ? (
+              <View style={[styles.image, styles.imageC, { borderWidth: 4, borderColor: colors.primary }]}>
+                <Image source={{ uri: selected }} style={styles.image} />
+              </View>
+            ) : (
+              <Icon name={icon.empty} size={66} />
+            )}
+          </View>
           <TapBar
             values={tabBarValues}
             currentValue={filter}
@@ -56,6 +58,9 @@ export default function ImageSelector({ onSubmit, value = '' }: IImageSelector) 
           />
           <ScrollView style={{ height: screen.vh - 400 }}>
             <View style={styles.listContainer}>
+              <TouchableOpacity style={[styles.imageCard, styles.emptySelect]} onPress={() => setSelected('')}>
+                <Icon name={icon.empty} size={66} />
+              </TouchableOpacity>
               {exerciseImages
                 ?.filter(img => img.filter === filter)
                 ?.map(image => (
