@@ -44,7 +44,10 @@ export const plansSlice = createSlice({
   },
   extraReducers: {
     [plansActionCreators.getPlans.fulfilled.type]: (state, { payload }: PayloadAction<PlanType[]>) => {
-      state.plans = payload
+      state.plans = payload.map(bd => {
+        const stored = state.plans.find(st => st.uid === bd.uid)
+        return stored.lastUpdated > bd.lastUpdated ? stored : bd
+      })
       state.isLoading = false
       state.error = ''
     },

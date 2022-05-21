@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
 interface ToastType {
   message: string
   onPress: () => void
-  variant?: 'error'
+  variant: 'error' | 'info'
   pressAfterTime?: number
 }
 
@@ -44,13 +44,14 @@ export default React.memo(function Toast({ message, variant = 'error', onPress, 
     <FlexSpaceBetween
       style={[
         styles.container,
-        variant === 'error'
-          ? {
-              backgroundColor: colors.error,
-              borderColor: colors.black
-            }
-          : {},
+        variant === 'error' && {
+          backgroundColor: colors.error
+        },
+        variant === 'info' && {
+          backgroundColor: colors.info
+        },
         {
+          borderColor: colors.black,
           shadowColor: colorsFixed.shadow
         },
         theme.view.shadow

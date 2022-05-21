@@ -51,6 +51,7 @@ export interface WorkoutType {
   name: string
   labels: string[]
   exercises: ExerciseType[]
+  lastUpdated: number
 }
 
 export interface PlanType {
@@ -59,6 +60,7 @@ export interface PlanType {
   name: string
   workoutUids: string[]
   labels?: string[]
+  lastUpdated: number
 }
 
 export interface ColorsType {
@@ -67,6 +69,7 @@ export interface ColorsType {
   secondPrimary: string
 
   error: string
+  info: string
   disabled: string
 
   black: string

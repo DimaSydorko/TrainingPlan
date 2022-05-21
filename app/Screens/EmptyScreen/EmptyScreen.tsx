@@ -1,20 +1,20 @@
 import * as React from 'react'
-import { Text, Vibration, View } from 'react-native'
+import { Vibration, View } from 'react-native'
 import { useAppDispatch, useSettings } from '../../Hooks/redux'
 import { userActionCreators } from '../../store/UserReducer/UserActionCreators'
 import { clearPlaneResults } from '../../store/PlansReducer/PlansSlice'
 import { clearWorkoutResults } from '../../store/WorkoutReducer/WorkoutSlice'
 import { ConfirmButton, MySwitch } from '../../Common'
 import { deepCompare } from '../../Utils'
-import { onThemeChange, onVibrationToggle } from '../../store/SettingsReducer/SettingsSlice'
-import { FlexCenter, TextHeader } from '../../Theme/Parents'
+import { clearSettings, onThemeChange, onVibrationToggle } from '../../store/SettingsReducer/SettingsSlice'
+import { FlexCenter, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { VIBRATION } from '../../Utils/constants'
 import { colorsDark, colorsLight } from '../../Theme/colors'
 import { theme } from '../../Theme/theme'
 
 export default function EmptyScreen() {
   const dispatch = useAppDispatch()
-  const { colors, isVibration } = useSettings()
+  const { colors, isVibration, internet } = useSettings()
   const isDarkTheme = deepCompare(colors, colorsDark)
 
   const signOut = () => dispatch(userActionCreators.signOut())
@@ -27,11 +27,15 @@ export default function EmptyScreen() {
   const clearAll = () => {
     dispatch(clearWorkoutResults())
     dispatch(clearPlaneResults())
+    dispatch(clearSettings())
   }
 
   return (
     <View style={[theme.containers.centerColumn, { backgroundColor: colors.background }]}>
-      <Text>EmptyScreen</Text>
+      <TextHeader>EmptyScreen</TextHeader>
+      <TextSecondary>
+        Is Internet connected: {internet?.isOnline ? 'Yes' : 'No'} {internet?.lastBeOline}
+      </TextSecondary>
       <ConfirmButton header={'Sign out'} onPress={signOut} />
       <ConfirmButton header={'Clear storage'} color={colors.secondPrimary} onPress={clearAll} />
 

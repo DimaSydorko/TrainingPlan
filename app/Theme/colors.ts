@@ -9,6 +9,7 @@ export const colorsLight = {
   secondPrimary: '#FF5858',
 
   error: '#fa6e6e',
+  info: '#1370fc',
   disabled: '#a1a1a1',
 
   black: '#353535',
@@ -26,6 +27,7 @@ export const colorsDark = {
   secondPrimary: '#c71b37',
 
   error: '#d73838',
+  info: '#1370fc',
   disabled: '#767676',
 
   black: '#bbbbbb',

@@ -52,8 +52,18 @@ export const workoutSlice = createSlice({
       state,
       { payload }: PayloadAction<{ workoutsInPlan?: WorkoutType[]; workouts?: WorkoutType[] }>
     ) => {
-      if (payload.workoutsInPlan) state.workoutsInPlan = payload.workoutsInPlan
-      if (payload.workouts) state.workouts = payload.workouts
+      if (payload.workoutsInPlan) {
+        state.workoutsInPlan = payload.workoutsInPlan.map(bd => {
+          const stored = state.workoutsInPlan.find(st => st.uid === bd.uid)
+          return stored.lastUpdated > bd.lastUpdated ? stored : bd
+        })
+      }
+      if (payload.workouts) {
+        state.workouts = payload.workouts.map(bd => {
+          const stored = state.workouts.find(st => st.uid === bd.uid)
+          return stored.lastUpdated > bd.lastUpdated ? stored : bd
+        })
+      }
       state.isLoading = false
       state.error = ''
     },
