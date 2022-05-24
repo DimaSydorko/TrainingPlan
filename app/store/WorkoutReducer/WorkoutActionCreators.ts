@@ -4,32 +4,42 @@ import { plansActionCreators } from '../PlansReducer/PlansActionCreators'
 import { FB_Collection_Workouts, FB_Database } from '../../Utils/firebase'
 import { FirebaseDatabase, QUERY_LIMIT } from '../../Utils/constants'
 import { StoredExerciseImage, WorkoutType } from '../../Utils/types'
+import { nanoid } from '../../Utils'
+
+export type GetWorkoutsActionType = {
+  uid: string
+  findBy: 'ownerUid' | 'planUid'
+}
 
 const lastUpdated = new Date().getTime()
 
 export const workoutActionCreators = {
-  getWorkouts: createAsyncThunk(
-    'workout/getWorkouts',
-    async ({ uid, findBy }: { uid: string; findBy: 'ownerUid' | 'planUid' }, thunkAPI) => {
-      try {
-        const net = await NetInfo.fetch()
+  getWorkouts: createAsyncThunk('workout/getWorkouts', async (props: GetWorkoutsActionType, thunkAPI) => {
+    const { uid, findBy } = props
+    try {
+      const net = await NetInfo.fetch()
+      if (net.isConnected) {
         const workouts: WorkoutType[] = []
-        if (net.isConnected) {
-          const snapshot =
-            findBy === 'ownerUid'
-              ? await FB_Collection_Workouts.where('ownerUid', '==', uid).limit(QUERY_LIMIT).get()
-              : await FB_Collection_Workouts.where('plansUid', 'array-contains', uid).limit(QUERY_LIMIT).get()
-          snapshot.docs.forEach(doc => workouts.push({ ...doc.data(), uid: doc.id } as WorkoutType))
+        const snapshot =
+          findBy === 'ownerUid'
+            ? await FB_Collection_Workouts.where('ownerUid', '==', uid).limit(QUERY_LIMIT).get()
+            : await FB_Collection_Workouts.where('plansUid', 'array-contains', uid).limit(QUERY_LIMIT).get()
+        snapshot.docs.forEach(doc => workouts.push({ ...doc.data(), uid: doc.id } as WorkoutType))
+        return {
+          ...props,
+          workoutsInPlan: findBy === 'planUid' ? workouts : undefined,
+          workouts: findBy === 'ownerUid' ? workouts : undefined
         }
-        return findBy === 'planUid' ? { workoutsInPlan: workouts } : { workouts: workouts }
-      } catch (e) {
-        return thunkAPI.rejectWithValue(e.message)
       }
+      return props
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.message)
     }
-  ),
+  }),
 
   addWorkout: createAsyncThunk('workout/addWorkout', async (props: WorkoutType, thunkAPI) => {
     props.lastUpdated = lastUpdated
+    props.uid = props?.uid || nanoid()
     const { uid, ...newWorkout } = props
     try {
       const net = await NetInfo.fetch()

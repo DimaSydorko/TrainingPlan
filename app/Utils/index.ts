@@ -1,7 +1,7 @@
 import { customAlphabet } from 'nanoid/non-secure'
 import { ExerciseType } from './types'
 
-export const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz0123456789', 10)
+export const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', 16)
 
 const typeOf = (value: unknown | unknown[]): string =>
   //@ts-ignore

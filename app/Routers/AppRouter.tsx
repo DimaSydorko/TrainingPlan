@@ -3,9 +3,10 @@ import { useContext, useEffect } from 'react'
 import { Text } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { useAppDispatch, useSettings } from '../Hooks/redux'
+import { useAppDispatch, useSettings, useUser } from '../Hooks/redux'
 import { PlayContext } from '../Hooks/PlayProvider'
 import { workoutActionCreators } from '../store/WorkoutReducer/WorkoutActionCreators'
+import { plansActionCreators } from '../store/PlansReducer/PlansActionCreators'
 import NotificationHandler from '../Components/NotificationHandler/NotificationHandler'
 import WorkoutsRouter from './WorkoutsRouter'
 import PlanRouter from './PlanRouter'
@@ -57,11 +58,19 @@ export default function AppRouter() {
   const Tab = createBottomTabNavigator()
   const { isPlaying } = useContext(PlayContext)
   const dispatch = useAppDispatch()
-  const { colors } = useSettings()
+  const { colors, internet } = useSettings()
+  const { user } = useUser()
 
   useEffect(() => {
     dispatch(workoutActionCreators.getExerciseImages())
   }, [])
+
+  useEffect(() => {
+    if (internet.isOnline) {
+      dispatch(workoutActionCreators.getWorkouts({ uid: user.uid, findBy: 'ownerUid' }))
+      dispatch(plansActionCreators.getPlans(user.uid))
+    }
+  }, [internet.isOnline])
 
   return (
     <>

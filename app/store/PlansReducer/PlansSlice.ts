@@ -43,11 +43,17 @@ export const plansSlice = createSlice({
     }
   },
   extraReducers: {
-    [plansActionCreators.getPlans.fulfilled.type]: (state, { payload }: PayloadAction<PlanType[]>) => {
-      state.plans = payload.map(bd => {
-        const stored = state.plans.find(st => st.uid === bd.uid)
-        return stored.lastUpdated > bd.lastUpdated ? stored : bd
-      })
+    [plansActionCreators.getPlans.fulfilled.type]: (state, { payload }: PayloadAction<PlanType[] | undefined>) => {
+      if (payload) {
+        const newPlans =
+          payload?.map(bd => {
+            const stored = state?.plans?.find(st => st.uid === bd.uid)
+            if (!stored) return bd
+            return stored?.lastUpdated || 0 > bd?.lastUpdated || 0 ? bd : stored
+          }) || []
+        state.plans.forEach(plan => !newPlans.find(st => st.uid === plan.uid) && newPlans.push(plan))
+        state.plans = newPlans
+      }
       state.isLoading = false
       state.error = ''
     },
@@ -55,6 +61,9 @@ export const plansSlice = createSlice({
       state.plans = state.plans.filter(plan => plan.uid !== payload)
       state.isLoading = false
       state.error = ''
+    },
+    [plansActionCreators.addPlan.fulfilled.type]: (state, { payload }: PayloadAction<PlanType>) => {
+      state.plans.push(payload)
     },
     [plansActionCreators.updatePlan.fulfilled.type]: (state, { payload }: PayloadAction<PlanType>) => {
       state.plans = state.plans.map(plan => (plan.uid === payload.uid ? payload : plan))

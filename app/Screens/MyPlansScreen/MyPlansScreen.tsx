@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { selectPlan } from '../../store/PlansReducer/PlansSlice'
 import { plansActionCreators } from '../../store/PlansReducer/PlansActionCreators'
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
-import { useAppDispatch, usePlans, useUser } from '../../Hooks/redux'
+import { useAppDispatch, usePlans } from '../../Hooks/redux'
 import { FlexSpaceBetween, FlexStart, Page, TextSecondary } from '../../Theme/Parents'
 import { AddMoreButton, MySwitch } from '../../Common'
 import EditPlanWorkout from '../../Components/EditPlanWorkout/EditPlanWorkout'
@@ -18,15 +18,9 @@ export default memo(function MyPlansScreen() {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
   const dispatch = useAppDispatch()
   const { plans } = usePlans()
-  const { user } = useUser()
   const [isEditMode, setIsEditMode] = useState(false)
   const [isNewPlanModal, setIsNewPlanModal] = useState(false)
   const [changePlan, setChangePlan] = useState<PlanType | null>(null)
-
-  useEffect(() => {
-    if (!user) return
-    dispatch(plansActionCreators.getPlans(user.uid))
-  }, [user])
 
   const onAddPlan = useCallback(
     (newPlan: PlanType) => {

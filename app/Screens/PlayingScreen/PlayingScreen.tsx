@@ -75,7 +75,7 @@ export default memo(function PlayingScreen() {
     const onTimeSay = (time: number[]) => {
       if (time.includes(remainingTime) && exercise.breakTimeInSec > remainingTime) onSay(`${remainingTime}`)
     }
-    onTimeSay([10, 5, 4, 3, 2, 1])
+    onTimeSay([10, 3, 2, 1])
   }, [])
 
   return (

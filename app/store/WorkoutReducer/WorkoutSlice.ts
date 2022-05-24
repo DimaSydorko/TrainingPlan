@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { workoutActionCreators } from './WorkoutActionCreators'
+import { GetWorkoutsActionType, workoutActionCreators } from './WorkoutActionCreators'
 import { SelectedWorkoutType, StoredExerciseImage, WorkoutType } from '../../Utils/types'
 
 interface WorkoutSlice {
@@ -18,6 +18,11 @@ const initialState: WorkoutSlice = {
   selectedWorkout: null,
   isLoading: false,
   error: ''
+}
+
+type GetWorkoutsType = GetWorkoutsActionType & {
+  workoutsInPlan?: WorkoutType[]
+  workouts?: WorkoutType[]
 }
 
 const onError = (state: WorkoutSlice, { payload }: PayloadAction<string>) => {
@@ -48,21 +53,31 @@ export const workoutSlice = createSlice({
     }
   },
   extraReducers: {
-    [workoutActionCreators.getWorkouts.fulfilled.type]: (
-      state,
-      { payload }: PayloadAction<{ workoutsInPlan?: WorkoutType[]; workouts?: WorkoutType[] }>
-    ) => {
+    [workoutActionCreators.getWorkouts.fulfilled.type]: (state, { payload }: PayloadAction<GetWorkoutsType>) => {
       if (payload.workoutsInPlan) {
-        state.workoutsInPlan = payload.workoutsInPlan.map(bd => {
+        const newWorkoutsInPlan = payload.workoutsInPlan.map(bd => {
           const stored = state.workoutsInPlan.find(st => st.uid === bd.uid)
-          return stored.lastUpdated > bd.lastUpdated ? stored : bd
+          return stored?.lastUpdated || 0 > bd?.lastUpdated || 0 ? stored : bd
         })
+        state.workoutsInPlan.forEach(
+          workout => !newWorkoutsInPlan.find(st => st.uid === workout.uid) && newWorkoutsInPlan.push(workout)
+        )
+        state.workoutsInPlan = newWorkoutsInPlan
       }
+
       if (payload.workouts) {
-        state.workouts = payload.workouts.map(bd => {
+        const newWorkouts = payload.workouts.map(bd => {
           const stored = state.workouts.find(st => st.uid === bd.uid)
-          return stored.lastUpdated > bd.lastUpdated ? stored : bd
+          return stored?.lastUpdated || 0 > bd?.lastUpdated || 0 ? stored : bd
         })
+        state.workouts.forEach(workout => !newWorkouts.find(st => st.uid === workout.uid) && newWorkouts.push(workout))
+        state.workouts = newWorkouts
+      }
+
+      if (!payload.workouts && !payload.workoutsInPlan) {
+        if (payload.findBy === 'planUid') {
+          state.workoutsInPlan = state?.workouts?.filter(workout => workout.plansUid.includes(payload.uid)) || []
+        }
       }
       state.isLoading = false
       state.error = ''
@@ -88,11 +103,8 @@ export const workoutSlice = createSlice({
       state.isLoading = false
       state.error = ''
     },
-    [workoutActionCreators.getExerciseImages.fulfilled.type]: (
-      state,
-      { payload }: PayloadAction<StoredExerciseImage[]>
-    ) => {
-      state.exerciseImages = payload
+    [workoutActionCreators.getExerciseImages.fulfilled.type]: (state, action: PayloadAction<StoredExerciseImage[]>) => {
+      state.exerciseImages = action.payload
       state.error = ''
     },
     [workoutActionCreators.getWorkouts.pending.type]: onLoading,
