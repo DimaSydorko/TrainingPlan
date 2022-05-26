@@ -1,15 +1,18 @@
 import * as React from 'react'
 import { memo } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
+import { usePlans, useSettings, useUser, useWorkout } from '../Hooks/redux'
+import { MyWorkoutsScreen, WorkoutScreen } from '../Screens'
+import { Loading } from '../Common'
 import { ScreenName } from '../Utils/constants'
 import { theme } from '../Theme/theme'
-import { MyWorkoutsScreen, WorkoutScreen } from '../Screens'
-import { useSettings, useWorkout } from '../Hooks/redux'
 
 export default memo(function WorkoutsRouter() {
   const Stack = createStackNavigator()
-  const { selectedWorkout } = useWorkout()
+  const { selectedWorkout, isLoading } = useWorkout()
   const { colors } = useSettings()
+  const plans = usePlans()
+  const user = useUser()
 
   const options = {
     ...theme.screenOptions,
@@ -22,6 +25,7 @@ export default memo(function WorkoutsRouter() {
   }
   return (
     <>
+      {(isLoading || plans.isLoading || user.isLoading) && <Loading />}
       <Stack.Navigator>
         <Stack.Screen name={ScreenName.SavedWorkouts} options={{ ...options, title: 'All saved Workouts' }}>
           {() => <MyWorkoutsScreen />}

@@ -44,8 +44,8 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
     () =>
       isInPlan
         ? workout.workoutsInPlan
-            .slice()
-            .sort((a, b) => selectedPlan.workoutUids.indexOf(a.uid) - selectedPlan.workoutUids.indexOf(b.uid))
+            ?.slice()
+            ?.sort((a, b) => selectedPlan.workoutUids.indexOf(a.uid) - selectedPlan.workoutUids.indexOf(b.uid))
         : workout.workouts,
     [isInPlan, workout.workoutsInPlan, workout.workouts]
   )
@@ -142,7 +142,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
           />
         ) : (
           workouts?.map(workout => (
-            <CardPressed key={workout.uid} onPress={() => !isEditMode && onSelect(workout as SelectedWorkoutType)}>
+            <CardPressed key={workout.uid} onPress={() => (isEditMode ? setChangeWorkout(workout) : onSelect(workout))}>
               <WorkoutCard
                 workout={workout}
                 isInPlan={isInPlan}

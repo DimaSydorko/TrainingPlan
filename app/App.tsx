@@ -3,17 +3,13 @@ import 'react-native-gesture-handler'
 import { Provider } from 'react-redux'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { PersistGate } from 'redux-persist/integration/react'
-import { persistStore } from 'redux-persist'
 import { decode, encode } from 'base-64'
-import { setupStore } from './store'
+import { persistedStore, store } from './store'
 import PlayProvider from './Hooks/PlayProvider'
 import AuthRouter from './Routers/AuthRouter'
 
 if (!global.btoa) global.btoa = encode
 if (!global.atob) global.atob = decode
-
-const store = setupStore()
-let persistedStore = persistStore(store)
 
 function App() {
   return (

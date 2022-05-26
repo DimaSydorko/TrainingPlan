@@ -48,12 +48,12 @@ export default memo(function MyPlansScreen() {
     <Page>
       <FlexSpaceBetween style={theme.containers.secondHeader}>
         <View />
-        {plans?.length ? (
+        {plans?.length > 0 && (
           <FlexStart>
             <TextSecondary style={{ width: 80 }}>Edit Mode:</TextSecondary>
             <MySwitch value={isEditMode} onValueChange={() => setIsEditMode(b => !b)} />
           </FlexStart>
-        ) : null}
+        )}
       </FlexSpaceBetween>
       {plans?.map(plan => (
         <PlanCard

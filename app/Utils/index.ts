@@ -3,6 +3,10 @@ import { ExerciseType } from './types'
 
 export const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', 16)
 
+export const getCurrentTime = () => {
+  return new Date().getTime()
+}
+
 const typeOf = (value: unknown | unknown[]): string =>
   //@ts-ignore
   ({}.toString

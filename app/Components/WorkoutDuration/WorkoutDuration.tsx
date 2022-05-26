@@ -12,8 +12,8 @@ interface WorkoutDurationType {
 
 export const secondsToMinSec = (time: number, isWords = true, isHours = false) => {
   let minSec: string
-  const minutes = Math.floor(time / 60)
-  const seconds = time - minutes * 60
+  const seconds = Math.floor((time % 3600) % 60)
+  const minutes = Math.floor((time % 3600) / 60)
   const hours = Math.floor(time / 3600)
 
   function str_pad_left(string: number, pad: string, length: number) {

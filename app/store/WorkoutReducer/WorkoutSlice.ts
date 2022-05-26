@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { GetWorkoutsActionType, workoutActionCreators } from './WorkoutActionCreators'
+import { DeleteWorkoutReducerType, GetWorkoutsReducerType, workoutActionCreators } from './WorkoutActionCreators'
 import { SelectedWorkoutType, StoredExerciseImage, WorkoutType } from '../../Utils/types'
 
 interface WorkoutSlice {
@@ -7,6 +7,7 @@ interface WorkoutSlice {
   workoutsInPlan: WorkoutType[]
   selectedWorkout: SelectedWorkoutType | null
   exerciseImages: StoredExerciseImage[]
+  deletedWorkoutUids: string[]
   isLoading: boolean
   error: string
 }
@@ -15,14 +16,10 @@ const initialState: WorkoutSlice = {
   workouts: [],
   workoutsInPlan: [],
   exerciseImages: [],
+  deletedWorkoutUids: [],
   selectedWorkout: null,
   isLoading: false,
   error: ''
-}
-
-type GetWorkoutsType = GetWorkoutsActionType & {
-  workoutsInPlan?: WorkoutType[]
-  workouts?: WorkoutType[]
 }
 
 const onError = (state: WorkoutSlice, { payload }: PayloadAction<string>) => {
@@ -50,35 +47,15 @@ export const workoutSlice = createSlice({
       state.selectedWorkout = initialState.selectedWorkout
       state.workouts = initialState.workouts
       state.workoutsInPlan = initialState.workoutsInPlan
+      state.deletedWorkoutUids = initialState.deletedWorkoutUids
     }
   },
   extraReducers: {
-    [workoutActionCreators.getWorkouts.fulfilled.type]: (state, { payload }: PayloadAction<GetWorkoutsType>) => {
-      if (payload.workoutsInPlan) {
-        const newWorkoutsInPlan = payload.workoutsInPlan.map(bd => {
-          const stored = state.workoutsInPlan.find(st => st.uid === bd.uid)
-          return stored?.lastUpdated || 0 > bd?.lastUpdated || 0 ? stored : bd
-        })
-        state.workoutsInPlan.forEach(
-          workout => !newWorkoutsInPlan.find(st => st.uid === workout.uid) && newWorkoutsInPlan.push(workout)
-        )
-        state.workoutsInPlan = newWorkoutsInPlan
-      }
-
-      if (payload.workouts) {
-        const newWorkouts = payload.workouts.map(bd => {
-          const stored = state.workouts.find(st => st.uid === bd.uid)
-          return stored?.lastUpdated || 0 > bd?.lastUpdated || 0 ? stored : bd
-        })
-        state.workouts.forEach(workout => !newWorkouts.find(st => st.uid === workout.uid) && newWorkouts.push(workout))
-        state.workouts = newWorkouts
-      }
-
-      if (!payload.workouts && !payload.workoutsInPlan) {
-        if (payload.findBy === 'planUid') {
-          state.workoutsInPlan = state?.workouts?.filter(workout => workout.plansUid.includes(payload.uid)) || []
-        }
-      }
+    [workoutActionCreators.getWorkouts.fulfilled.type]: (state, { payload }: PayloadAction<GetWorkoutsReducerType>) => {
+      const isForPlan = payload.findBy === 'planUid'
+      if (isForPlan) state.workoutsInPlan = payload.workouts
+      else state.workouts = payload.workouts
+      if (!payload.isInternet) state.deletedWorkoutUids = []
       state.isLoading = false
       state.error = ''
     },
@@ -91,9 +68,13 @@ export const workoutSlice = createSlice({
       state.isLoading = false
       state.error = ''
     },
-    [workoutActionCreators.deleteWorkout.fulfilled.type]: (state, { payload }: PayloadAction<string>) => {
-      state.workouts = state.workouts.filter(workout => workout.uid !== payload)
-      state.workoutsInPlan = state.workoutsInPlan.filter(workout => workout.uid !== payload)
+    [workoutActionCreators.deleteWorkout.fulfilled.type]: (
+      state,
+      { payload }: PayloadAction<DeleteWorkoutReducerType>
+    ) => {
+      state.workouts = state.workouts.filter(workout => workout.uid !== payload.workoutUid)
+      state.workoutsInPlan = state.workoutsInPlan.filter(workout => workout.uid !== payload.workoutUid)
+      if (!payload.isInternet) state.deletedWorkoutUids.push(payload.workoutUid)
       state.isLoading = false
       state.error = ''
     },

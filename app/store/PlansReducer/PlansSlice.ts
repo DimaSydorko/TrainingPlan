@@ -1,10 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ChangeWorkoutsCountType, plansActionCreators } from './PlansActionCreators'
+import {
+  ChangeWorkoutsCountType,
+  DeletePlanReducerType,
+  GetPlanReducerType,
+  plansActionCreators
+} from './PlansActionCreators'
 import { PlanType } from '../../Utils/types'
+import { getCurrentTime } from '../../Utils'
 
-interface PlansSlice {
+export interface PlansSlice {
   plans: PlanType[]
   selectedPlan: PlanType | null
+  deletedPlanUids: string[]
   isLoading: boolean
   error: string
 }
@@ -12,6 +19,7 @@ interface PlansSlice {
 const initialState: PlansSlice = {
   plans: [],
   selectedPlan: null,
+  deletedPlanUids: [],
   isLoading: false,
   error: ''
 }
@@ -40,25 +48,21 @@ export const plansSlice = createSlice({
       state.isLoading = false
       state.plans = initialState.plans
       state.selectedPlan = initialState.selectedPlan
+      state.deletedPlanUids = initialState.deletedPlanUids
     }
   },
   extraReducers: {
-    [plansActionCreators.getPlans.fulfilled.type]: (state, { payload }: PayloadAction<PlanType[] | undefined>) => {
-      if (payload) {
-        const newPlans =
-          payload?.map(bd => {
-            const stored = state?.plans?.find(st => st.uid === bd.uid)
-            if (!stored) return bd
-            return stored?.lastUpdated || 0 > bd?.lastUpdated || 0 ? bd : stored
-          }) || []
-        state.plans.forEach(plan => !newPlans.find(st => st.uid === plan.uid) && newPlans.push(plan))
-        state.plans = newPlans
+    [plansActionCreators.getPlans.fulfilled.type]: (state, { payload }: PayloadAction<GetPlanReducerType>) => {
+      if (payload.isInternet) {
+        state.plans = payload.plans
+        state.deletedPlanUids = []
       }
       state.isLoading = false
       state.error = ''
     },
-    [plansActionCreators.deletePlan.fulfilled.type]: (state, { payload }: PayloadAction<string>) => {
-      state.plans = state.plans.filter(plan => plan.uid !== payload)
+    [plansActionCreators.deletePlan.fulfilled.type]: (state, { payload }: PayloadAction<DeletePlanReducerType>) => {
+      state.plans = state.plans.filter(plan => plan.uid !== payload.planUid)
+      if (!payload.isInternet) state.deletedPlanUids.push(payload.planUid)
       state.isLoading = false
       state.error = ''
     },
@@ -81,10 +85,17 @@ export const plansSlice = createSlice({
           : plan.workoutUids.filter(uid => uid !== payload.workoutUid)
       }
       state.plans = state.plans.map(plan =>
-        plan.uid === payload.planUid ? { ...plan, workoutUids: changeWorkoutUids(plan) } : plan
+        plan.uid === payload.planUid
+          ? {
+              ...plan,
+              workoutUids: changeWorkoutUids(plan),
+              lastUpdated: getCurrentTime()
+            }
+          : plan
       )
       if (state?.selectedPlan?.uid === payload.planUid) {
         state.selectedPlan.workoutUids = changeWorkoutUids(state.selectedPlan)
+        state.selectedPlan.lastUpdated = getCurrentTime()
       }
       state.error = ''
     },
