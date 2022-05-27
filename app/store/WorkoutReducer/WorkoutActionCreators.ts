@@ -25,7 +25,7 @@ export type DeleteWorkoutReducerType = {
 export const workoutActionCreators = {
   getWorkouts: createAsyncThunk('workout/getWorkouts', async (props: GetWorkoutsActionType, thunkAPI) => {
     const { uid, findBy } = props
-    const { workoutReducer }: RootState = thunkAPI.getState()
+    const { workoutReducer } = thunkAPI.getState() as RootState
     let workouts: WorkoutType[] = []
     try {
       const net = await NetInfo.fetch()
@@ -49,7 +49,7 @@ export const workoutActionCreators = {
         snapshot.docs.forEach(doc => workouts.push({ ...doc.data(), uid: doc.id } as WorkoutType))
 
         //Synchronize data local Storage & Database
-        const newWorkouts = workouts
+        const newWorkouts: WorkoutType[] = workouts
           ?.filter(st => !workoutReducer.deletedWorkoutUids?.includes(st.uid))
           ?.map(bd => {
             const stored = workoutReducer[objectKey]?.find(st => st.uid === bd.uid)

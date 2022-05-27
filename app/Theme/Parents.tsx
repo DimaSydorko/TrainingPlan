@@ -1,19 +1,8 @@
 import * as React from 'react'
 import { ReactNode } from 'react'
-import {
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TextBase,
-  TextComponent,
-  TextProps,
-  TextStyle,
-  TouchableOpacity,
-  View,
-  ViewStyle
-} from 'react-native'
+import { SafeAreaView, ScrollView, Text, TextProps, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native'
 import { useSettings } from '../Hooks/redux'
-import { theme } from './theme'
+import { headerHeight, theme } from './theme'
 import { colorsFixed } from './colors'
 
 interface ParentProps {
@@ -186,5 +175,32 @@ export const CardPressed = ({
     >
       {children}
     </TouchableOpacity>
+  )
+}
+
+export const AppHeader = ({ children, style }: ParentProps) => {
+  const { colors } = useSettings()
+  return (
+    <View
+      style={[
+        theme.containers.headerStyle,
+        {
+          backgroundColor: colors.menu,
+          position: 'absolute',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          top: -headerHeight,
+          left: 0,
+          paddingVertical: 8,
+          paddingHorizontal: 30,
+          zIndex: 100
+        },
+        style
+      ]}
+    >
+      {children}
+    </View>
   )
 }

@@ -2,13 +2,14 @@ import * as React from 'react'
 import { TouchableOpacity, Vibration, ViewStyle } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useSettings } from '../../Hooks/redux'
-import { settings, VIBRATION } from '../../Utils/constants'
+import { VIBRATION } from '../../Utils/constants'
 
 interface IconButtonType {
   iconName: string
   onPress: () => void
   color?: string
   size?: number
+  margin?: number
   disabled?: boolean
   disableVibration?: boolean
   style?: ViewStyle | ViewStyle[]
@@ -21,6 +22,7 @@ export default function IconButton({
   disabled = false,
   disableVibration = false,
   color,
+  margin = 0,
   style
 }: IconButtonType) {
   const { colors, isVibration } = useSettings()
@@ -37,7 +39,8 @@ export default function IconButton({
       style={[
         {
           opacity: disabled ? 0.5 : 1,
-          borderRadius: 50
+          borderRadius: 50,
+          marginHorizontal: margin
         },
         style
       ]}

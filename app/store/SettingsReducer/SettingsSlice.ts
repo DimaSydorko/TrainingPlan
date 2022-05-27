@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ColorsType } from '../../Utils/types'
 import { colorsLight } from '../../Theme/colors'
 
-interface SettingsType {
+export interface SettingsSliceType {
   colors: ColorsType
   isVibration: boolean
   internet: {
@@ -11,7 +11,7 @@ interface SettingsType {
   }
 }
 
-const initialState: SettingsType = {
+const initialState: SettingsSliceType = {
   colors: colorsLight,
   isVibration: true,
   internet: {

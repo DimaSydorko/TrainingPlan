@@ -2,40 +2,40 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { UserDataType, UserType } from '../../Utils/types'
 import { userActionCreators } from './UserActionCreators'
 
-interface UserSlice {
+export interface UserSliceType {
   user: UserType | null
-  data: UserDataType | null;
+  data: UserDataType | null
   isLoading: boolean
   error: string
 }
 
 export const initialUserData: UserDataType = {
-  friendsUIDs: [],
+  friendsUIDs: []
 }
 
-const initialState: UserSlice = {
+const initialState: UserSliceType = {
   user: null,
   data: null,
   isLoading: false,
-  error: '',
+  error: ''
 }
 
-const onError = (state: UserSlice, { payload }: PayloadAction<string>) => {
+const onError = (state: UserSliceType, { payload }: PayloadAction<string>) => {
   state.isLoading = false
   state.error = payload
 }
 
-const onLoading = (state: UserSlice) => {
+const onLoading = (state: UserSliceType) => {
   state.isLoading = true
 }
 
-const onDataUpdate = (state: UserSlice, { payload }: PayloadAction<UserDataType>) => {
+const onDataUpdate = (state: UserSliceType, { payload }: PayloadAction<UserDataType>) => {
   state.data = payload
   state.isLoading = false
   state.error = ''
 }
 
-const onLogin = (state: UserSlice, { payload }: PayloadAction<UserType>) => {
+const onLogin = (state: UserSliceType, { payload }: PayloadAction<UserType>) => {
   state.user = payload
   state.isLoading = false
   state.error = ''
@@ -47,10 +47,10 @@ export const userSlice = createSlice({
   reducers: {
     errorUserClear(state) {
       state.error = ''
-    },
+    }
   },
   extraReducers: {
-    [userActionCreators.signOut.fulfilled.type]: (state) => {
+    [userActionCreators.signOut.fulfilled.type]: state => {
       state.user = null
       state.data = null
       state.isLoading = false
@@ -71,9 +71,8 @@ export const userSlice = createSlice({
     [userActionCreators.signIn.rejected.type]: onError,
     [userActionCreators.signOut.rejected.type]: onError,
     [userActionCreators.dataUpdate.rejected.type]: onError,
-    [userActionCreators.dataRequest.rejected.type]: onError,
-
-  },
+    [userActionCreators.dataRequest.rejected.type]: onError
+  }
 })
 export const { errorUserClear } = userSlice.actions
 export default userSlice.reducer

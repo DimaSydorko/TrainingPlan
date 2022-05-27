@@ -118,12 +118,12 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
       <NestableScrollContainer>
         <FlexSpaceBetween style={theme.containers.secondHeader}>
           <View />
-          {workouts?.length ? (
+          {workouts?.length > 0 && (
             <FlexStart>
               <TextSecondary style={{ width: 80 }}>Edit Mode:</TextSecondary>
               <MySwitch value={isEditMode} onValueChange={onToggleEditMode} />
             </FlexStart>
-          ) : null}
+          )}
         </FlexSpaceBetween>
         {isPlanEdit && (
           <MyTextInput

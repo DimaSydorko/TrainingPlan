@@ -2,8 +2,10 @@ import { TextStyle, ViewStyle } from 'react-native'
 import { StackNavigationOptions } from '@react-navigation/stack'
 import { screen } from '../Utils/constants'
 
+export const headerHeight = 55
 const headerStyle: TextStyle = {
-  height: 55,
+  width: '100%',
+  height: headerHeight,
   shadowOpacity: 0.1,
   shadowRadius: 5,
   shadowOffset: {

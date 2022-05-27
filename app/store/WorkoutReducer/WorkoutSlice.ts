@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { DeleteWorkoutReducerType, GetWorkoutsReducerType, workoutActionCreators } from './WorkoutActionCreators'
 import { SelectedWorkoutType, StoredExerciseImage, WorkoutType } from '../../Utils/types'
 
-interface WorkoutSlice {
+export interface WorkoutSliceType {
   workouts: WorkoutType[]
   workoutsInPlan: WorkoutType[]
   selectedWorkout: SelectedWorkoutType | null
@@ -12,7 +12,7 @@ interface WorkoutSlice {
   error: string
 }
 
-const initialState: WorkoutSlice = {
+const initialState: WorkoutSliceType = {
   workouts: [],
   workoutsInPlan: [],
   exerciseImages: [],
@@ -22,12 +22,12 @@ const initialState: WorkoutSlice = {
   error: ''
 }
 
-const onError = (state: WorkoutSlice, { payload }: PayloadAction<string>) => {
+const onError = (state: WorkoutSliceType, { payload }: PayloadAction<string>) => {
   state.isLoading = false
   state.error = `Workout ${payload}`
 }
 
-const onLoading = (state: WorkoutSlice) => {
+const onLoading = (state: WorkoutSliceType) => {
   state.isLoading = true
 }
 

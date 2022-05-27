@@ -8,28 +8,30 @@ import {
 import { PlanType } from '../../Utils/types'
 import { getCurrentTime } from '../../Utils'
 
-export interface PlansSlice {
+export interface PlansSliceType {
   plans: PlanType[]
   selectedPlan: PlanType | null
   deletedPlanUids: string[]
+  sortedPlanUids: string[]
   isLoading: boolean
   error: string
 }
 
-const initialState: PlansSlice = {
+const initialState: PlansSliceType = {
   plans: [],
   selectedPlan: null,
   deletedPlanUids: [],
+  sortedPlanUids: [],
   isLoading: false,
   error: ''
 }
 
-const onError = (state: PlansSlice, { payload }: PayloadAction<string>) => {
+const onError = (state: PlansSliceType, { payload }: PayloadAction<string>) => {
   state.isLoading = false
   state.error = `Plan ${payload}`
 }
 
-const onLoading = (state: PlansSlice) => {
+const onLoading = (state: PlansSliceType) => {
   state.isLoading = true
 }
 
@@ -43,12 +45,16 @@ export const plansSlice = createSlice({
     selectPlan(state, action: PayloadAction<PlanType>) {
       state.selectedPlan = action.payload
     },
+    changePlansPosition(state, { payload }: PayloadAction<string[]>) {
+      state.sortedPlanUids = payload
+    },
     clearPlaneResults(state) {
       state.error = ''
       state.isLoading = false
       state.plans = initialState.plans
       state.selectedPlan = initialState.selectedPlan
       state.deletedPlanUids = initialState.deletedPlanUids
+      state.sortedPlanUids = initialState.sortedPlanUids
     }
   },
   extraReducers: {
@@ -109,5 +115,5 @@ export const plansSlice = createSlice({
     [plansActionCreators.changeWorkoutsCount.rejected.type]: onError
   }
 })
-export const { errorPlansClear, selectPlan, clearPlaneResults } = plansSlice.actions
+export const { errorPlansClear, selectPlan, clearPlaneResults, changePlansPosition } = plansSlice.actions
 export default plansSlice.reducer

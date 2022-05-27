@@ -1,26 +1,38 @@
 import * as React from 'react'
 import { memo, useCallback, useState } from 'react'
-import { View } from 'react-native'
+import { TouchableOpacity, Vibration, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { selectPlan } from '../../store/PlansReducer/PlansSlice'
+import {
+  NestableDraggableFlatList,
+  NestableScrollContainer,
+  RenderItemParams,
+  ScaleDecorator
+} from 'react-native-draggable-flatlist'
+import { changePlansPosition, selectPlan } from '../../store/PlansReducer/PlansSlice'
 import { plansActionCreators } from '../../store/PlansReducer/PlansActionCreators'
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
 import { useAppDispatch, usePlans } from '../../Hooks/redux'
-import { FlexSpaceBetween, FlexStart, Page, TextSecondary } from '../../Theme/Parents'
-import { AddMoreButton, MySwitch } from '../../Common'
+import { AppHeader, Card, FlexEnd, FlexSpaceBetween, FlexStart, Page, TextHeader } from '../../Theme/Parents'
+import { AddMoreButton, AppModal, IconButton } from '../../Common'
 import EditPlanWorkout from '../../Components/EditPlanWorkout/EditPlanWorkout'
 import PlanCard from './PlanCard'
-import { ScreenName } from '../../Utils/constants'
+import { ScreenName, VIBRATION } from '../../Utils/constants'
 import { PlanType } from '../../Utils/types'
+import { icon } from '../../Theme/icons'
 import { theme } from '../../Theme/theme'
 
 export default memo(function MyPlansScreen() {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
   const dispatch = useAppDispatch()
-  const { plans } = usePlans()
-  const [isEditMode, setIsEditMode] = useState(false)
+  const statePlans = usePlans()
+  const [selectedPlanUids, setSelectedPlanUids] = useState<string[]>([])
   const [isNewPlanModal, setIsNewPlanModal] = useState(false)
+  const [isDeleteModal, setIsDeleteModal] = useState(false)
   const [changePlan, setChangePlan] = useState<PlanType | null>(null)
+  const isEditMode = !!selectedPlanUids.length
+  const plans = statePlans.plans
+    ?.slice()
+    ?.sort((a, b) => (statePlans.sortedPlanUids.indexOf(a.uid) || 0) - statePlans.sortedPlanUids.indexOf(b.uid) || 0)
 
   const onAddPlan = useCallback(
     (newPlan: PlanType) => {
@@ -32,7 +44,7 @@ export default memo(function MyPlansScreen() {
 
   const onPlanPress = (plan: PlanType) => {
     if (isEditMode) {
-      setChangePlan(plan)
+      setSelectedPlanUids(p => (p.includes(plan.uid) ? p.filter(p => p !== plan.uid) : [...p, plan.uid]))
     } else {
       dispatch(selectPlan(plan))
       dispatch(workoutActionCreators.getWorkouts({ uid: plan.uid, findBy: 'planUid' }))
@@ -40,40 +52,84 @@ export default memo(function MyPlansScreen() {
     }
   }
 
-  const onDelete = (planUid: string) => {
-    dispatch(plansActionCreators.deletePlan(planUid))
+  const onDelete = () => {
+    setSelectedPlanUids([])
+    selectedPlanUids.forEach(uid => dispatch(plansActionCreators.deletePlan(uid)))
   }
 
+  const renderItem = ({ item, drag, isActive }: RenderItemParams<PlanType>) => (
+    <ScaleDecorator>
+      <Card>
+        <TouchableOpacity
+          onLongPress={() => {
+            Vibration.vibrate(VIBRATION.BUTTON)
+            !!selectedPlanUids.length ? drag() : setSelectedPlanUids([item.uid])
+          }}
+          onPress={() => onPlanPress(item)}
+          disabled={isActive}
+        >
+          <PlanCard plan={item} isSelected={selectedPlanUids.includes(item.uid)} />
+        </TouchableOpacity>
+      </Card>
+    </ScaleDecorator>
+  )
+
   return (
-    <Page>
-      <FlexSpaceBetween style={theme.containers.secondHeader}>
-        <View />
-        {plans?.length > 0 && (
+    <>
+      {!!selectedPlanUids.length && (
+        <AppHeader>
           <FlexStart>
-            <TextSecondary style={{ width: 80 }}>Edit Mode:</TextSecondary>
-            <MySwitch value={isEditMode} onValueChange={() => setIsEditMode(b => !b)} />
+            <IconButton iconName={icon.close} onPress={() => setSelectedPlanUids([])} />
+            <TextHeader>{selectedPlanUids.length}</TextHeader>
           </FlexStart>
-        )}
-      </FlexSpaceBetween>
-      {plans?.map(plan => (
-        <PlanCard
-          key={plan.uid}
-          plan={plan}
-          isEditMode={isEditMode}
-          onSelect={() => onPlanPress(plan)}
-          onDelete={() => onDelete(plan.uid)}
-        />
-      ))}
-      {(isEditMode || !plans?.length) && <AddMoreButton onPress={() => setIsNewPlanModal(true)} header={'Plan'} />}
-      {(isNewPlanModal || !!changePlan) && (
-        <EditPlanWorkout
-          isModal
-          type={'Plan'}
-          initialValue={changePlan}
-          onSubmit={onAddPlan}
-          onClose={() => (isNewPlanModal ? setIsNewPlanModal(false) : setChangePlan(null))}
-        />
+          <FlexEnd>
+            {selectedPlanUids.length === 1 && (
+              <IconButton
+                margin={10}
+                iconName={icon.edit}
+                onPress={() => setChangePlan(plans.find(plan => plan.uid === selectedPlanUids[0]))}
+              />
+            )}
+            <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />
+          </FlexEnd>
+        </AppHeader>
       )}
-    </Page>
+      <Page>
+        <FlexSpaceBetween style={theme.containers.secondHeader}>
+          <View />
+        </FlexSpaceBetween>
+        <NestableScrollContainer>
+          <NestableDraggableFlatList
+            data={plans}
+            renderItem={renderItem}
+            keyExtractor={item => item.uid}
+            onDragEnd={({ data }) => dispatch(changePlansPosition(data.map(plan => plan.uid)))}
+          />
+          {(isEditMode || !plans?.length) && <AddMoreButton onPress={() => setIsNewPlanModal(true)} header={'Plan'} />}
+          {(isNewPlanModal || !!changePlan) && (
+            <EditPlanWorkout
+              isModal
+              type={'Plan'}
+              initialValue={changePlan}
+              onSubmit={onAddPlan}
+              onClose={() => (isNewPlanModal ? setIsNewPlanModal(false) : setChangePlan(null))}
+            />
+          )}
+        </NestableScrollContainer>
+      </Page>
+      <AppModal
+        isWarning
+        header={`Delete plan${selectedPlanUids.length === 1 ? '' : 's'}`}
+        text={`Are you sure you want to delete ${
+          selectedPlanUids.length === 1
+            ? `'${plans.find(plan => plan.uid === selectedPlanUids[0]).name}'`
+            : selectedPlanUids.length
+        } plan${selectedPlanUids.length === 1 ? '' : 's'}?`}
+        confirmText='Yes, delete'
+        isOpen={isDeleteModal}
+        onClose={() => setIsDeleteModal(false)}
+        onConfirm={() => onDelete()}
+      />
+    </>
   )
 })

@@ -1,34 +1,39 @@
 import * as React from 'react'
 import { memo, useState } from 'react'
 import { View } from 'react-native'
-import { AppModal, IconButton } from '../../Common'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { AppModal } from '../../Common'
 import { useSettings } from '../../Hooks/redux'
-import { CardPressed, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
+import { FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { PlanType } from '../../Utils/types'
 import { icon } from '../../Theme/icons'
 
 interface IPlanCard {
   plan: PlanType
-  isEditMode: boolean
-  onSelect: () => void
-  onDelete: () => void
+  isSelected: boolean
+  onDelete?: () => void
 }
 
-export default memo(function PlanCard({ plan, isEditMode, onDelete, onSelect }: IPlanCard) {
+export default memo(function PlanCard({ plan, isSelected, onDelete }: IPlanCard) {
   const [isDeleteModal, setIsDeleteModal] = useState(false)
   const { colors } = useSettings()
 
   return (
     <>
-      <CardPressed onPress={onSelect}>
-        <FlexSpaceBetween>
-          <View>
-            <TextHeader color={colors.secondPrimary}>{plan.name}</TextHeader>
-            <TextSecondary>{plan.workoutUids.length} Workouts</TextSecondary>
-          </View>
-          {isEditMode && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}
-        </FlexSpaceBetween>
-      </CardPressed>
+      {isSelected && (
+        <Icon
+          name={icon.checkCircle}
+          color={colors.primary}
+          size={16}
+          style={{ position: 'absolute', left: -12, top: -12 }}
+        />
+      )}
+      <FlexSpaceBetween>
+        <View>
+          <TextHeader color={colors.secondPrimary}>{plan.name}</TextHeader>
+          <TextSecondary>{plan.workoutUids.length} Workouts</TextSecondary>
+        </View>
+      </FlexSpaceBetween>
       <AppModal
         isWarning
         header='Delete plan'
