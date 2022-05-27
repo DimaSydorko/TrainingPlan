@@ -113,14 +113,15 @@ export const workoutActionCreators = {
   }),
 
   updateWorkout: createAsyncThunk('workout/updateWorkout', async (props: WorkoutType, thunkAPI) => {
-    const { uid, plansUid, ownerUid, labels, name, exercises } = props
+    props.lastUpdated = getCurrentTime()
+    const { uid, plansUid, ownerUid, labels, name, exercises, lastUpdated } = props
     const workout: Omit<WorkoutType, 'uid'> = {
       plansUid,
       ownerUid,
       labels,
       name,
       exercises,
-      lastUpdated: getCurrentTime()
+      lastUpdated
     }
     try {
       const net = await NetInfo.fetch()

@@ -63,6 +63,7 @@ export default function AppRouter() {
 
   useEffect(() => {
     if (internet.isOnline) {
+      console.log('Effect')
       dispatch(workoutActionCreators.getWorkouts({ uid: user.uid, findBy: 'ownerUid' }))
       dispatch(plansActionCreators.getPlans(user.uid))
       dispatch(workoutActionCreators.getExerciseImages())

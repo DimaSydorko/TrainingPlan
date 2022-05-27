@@ -33,9 +33,7 @@ export default function EmptyScreen() {
   return (
     <View style={[theme.containers.centerColumn, { backgroundColor: colors.background }]}>
       <TextHeader>EmptyScreen</TextHeader>
-      <TextSecondary>
-        Is Internet connected: {internet?.isOnline ? 'Yes' : 'No'} {internet?.lastBeOline}
-      </TextSecondary>
+      <TextSecondary>Is Internet connected: {internet?.isOnline ? 'Yes' : 'No'}</TextSecondary>
       <ConfirmButton header={'Sign out'} onPress={signOut} />
       <ConfirmButton header={'Clear storage'} color={colors.secondPrimary} onPress={clearAll} />
 
