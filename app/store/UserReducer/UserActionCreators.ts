@@ -2,6 +2,9 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { FB_Auth, FB_Collection_UsersData } from '../../Utils/firebase'
 import { UserDataType, UserType } from '../../Utils/types'
 import { initialUserData } from './UserSlice'
+import { clearWorkoutResults } from '../WorkoutReducer/WorkoutSlice'
+import { clearPlaneResults } from '../PlansReducer/PlansSlice'
+import NetInfo from '@react-native-community/netinfo'
 
 export const userActionCreators = {
   signUp: createAsyncThunk(
@@ -36,7 +39,13 @@ export const userActionCreators = {
   }),
   signOut: createAsyncThunk('user/signOut', async (_, thunkAPI) => {
     try {
-      await FB_Auth.signOut()
+      const net = await NetInfo.fetch()
+      if (net.isConnected) {
+        await FB_Auth.signOut()
+      }
+      thunkAPI.dispatch(clearWorkoutResults())
+      thunkAPI.dispatch(clearPlaneResults())
+      return
     } catch (e) {
       return thunkAPI.rejectWithValue(e.message)
     }

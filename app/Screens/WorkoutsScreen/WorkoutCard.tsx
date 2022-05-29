@@ -2,24 +2,32 @@ import * as React from 'react'
 import { memo, useState } from 'react'
 import { View } from 'react-native'
 import { useSettings } from '../../Hooks/redux'
-import { AppModal, IconButton, WorkoutDuration } from '../../Common'
+import { AppModal, WorkoutDuration } from '../../Common'
 import { FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { WorkoutType } from '../../Utils/types'
 import { icon } from '../../Theme/icons'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 interface IWorkoutCard {
   workout: WorkoutType
-  isEditMode: boolean
+  isSelected: boolean
   isInPlan: boolean
-  onDelete: () => void
 }
 
-export default memo(function WorkoutCard({ workout, isInPlan, isEditMode, onDelete }: IWorkoutCard) {
+export default memo(function WorkoutCard({ workout, isInPlan, isSelected }: IWorkoutCard) {
   const { colors } = useSettings()
   const [isDeleteModal, setIsDeleteModal] = useState(false)
 
   return (
     <>
+      {isSelected && (
+        <Icon
+          name={icon.checkCircle}
+          color={colors.primary}
+          size={16}
+          style={{ position: 'absolute', left: -12, top: -12 }}
+        />
+      )}
       <FlexSpaceBetween>
         <View>
           <TextHeader color={colors.secondPrimary}>{workout.name}</TextHeader>
@@ -29,7 +37,6 @@ export default memo(function WorkoutCard({ workout, isInPlan, isEditMode, onDele
             {!!workout.plansUid.length && !isInPlan && <TextSecondary>(In Plan)</TextSecondary>}
           </FlexStart>
         </View>
-        {isEditMode && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}
       </FlexSpaceBetween>
       <AppModal
         isWarning
@@ -46,7 +53,7 @@ export default memo(function WorkoutCard({ workout, isInPlan, isEditMode, onDele
         confirmText='Yes, delete'
         isOpen={isDeleteModal}
         onClose={() => setIsDeleteModal(false)}
-        onConfirm={() => onDelete()}
+        onConfirm={() => {}}
       />
     </>
   )

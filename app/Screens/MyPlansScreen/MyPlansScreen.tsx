@@ -76,7 +76,7 @@ export default memo(function MyPlansScreen() {
 
   return (
     <>
-      {!!selectedPlanUids.length && (
+      {isEditMode && (
         <AppHeader>
           <FlexStart>
             <IconButton iconName={icon.close} onPress={() => setSelectedPlanUids([])} />

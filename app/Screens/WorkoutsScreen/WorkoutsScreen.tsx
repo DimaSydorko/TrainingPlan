@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, Vibration } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import {
   NestableDraggableFlatList,
@@ -13,14 +13,14 @@ import { plansActionCreators } from '../../store/PlansReducer/PlansActionCreator
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
 import useWorkoutPlan from '../../Hooks/useWorkoutPlan'
 import { useAppDispatch, useWorkout } from '../../Hooks/redux'
-import { SelectedWorkoutType, WorkoutType } from '../../Utils/types'
-import { ScreenName } from '../../Utils/constants'
-import { AddMoreButton, AppModal, ConfirmButton, GoBackSubmitModal, MySwitch, MyTextInput } from '../../Common'
+import { deepCompare } from '../../Utils'
+import { ScreenName, VIBRATION } from '../../Utils/constants'
+import { WorkoutType } from '../../Utils/types'
+import { AddMoreButton, AppModal, ConfirmButton, GoBackSubmitModal, IconButton, MyTextInput } from '../../Common'
 import EditPlanWorkout from '../../Components/EditPlanWorkout/EditPlanWorkout'
 import WorkoutCard from './WorkoutCard'
-import { Card, CardPressed, FlexSpaceBetween, FlexStart, Page, TextSecondary } from '../../Theme/Parents'
-import { theme } from '../../Theme/theme'
-import { deepCompare } from '../../Utils'
+import { AppHeader, Card, FlexEnd, FlexStart, Page, TextHeader } from '../../Theme/Parents'
+import { icon } from '../../Theme/icons'
 
 interface IPlanScreen {
   isInPlan?: boolean
@@ -32,12 +32,14 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
   const { selectedPlan, addWorkout, deleteWorkout, addWorkoutInPlane, deleteWorkoutInPlane } = useWorkoutPlan()
   const workout = useWorkout()
   const [workouts, setWorkouts] = useState<WorkoutType[]>()
-  const [isEditMode, setIsEditMode] = useState(false)
+  const [selectedWorkoutsUids, setSelectedWorkoutsUids] = useState<string[]>([])
   const [isSaveChangesModal, setIsSaveChangesModal] = useState(false)
   const [isNewWorkoutModal, setIsNewWorkoutModal] = useState(false)
   const [changeWorkout, setChangeWorkout] = useState<WorkoutType | null>(null)
   const [planNameInput, setPlanNameInput] = useState<string>(selectedPlan?.name || '')
+  const [isDeleteModal, setIsDeleteModal] = useState(false)
 
+  const isEditMode = !!selectedWorkoutsUids.length
   const workoutUids = isInPlan ? workouts?.map(w => w.uid) : []
   const isPlanEdit = isEditMode && isInPlan
   const _workouts = useMemo(
@@ -63,29 +65,15 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
     setWorkouts(_workouts)
   }, [_workouts])
 
-  const onSelect = useCallback((workout: SelectedWorkoutType) => {
-    dispatch(updateSelectedWorkout(workout))
-    navigation.navigate(isInPlan ? ScreenName.WorkoutInPlan : ScreenName.Workout)
-  }, [])
-
-  const onToggleEditMode = useCallback(() => {
-    if (isEditMode) {
-      if (isChanged && isInPlan) setIsSaveChangesModal(true)
-      else setIsEditMode(!isEditMode)
-    } else {
-      setIsEditMode(!isEditMode)
-    }
-  }, [isEditMode, isChanged])
-
   const onSavePlan = useCallback(() => {
     dispatch(plansActionCreators.updatePlan({ ...selectedPlan, name: planNameInput, workoutUids }))
-    setIsEditMode(false)
+    setSelectedWorkoutsUids([])
   }, [selectedPlan, planNameInput, workoutUids])
 
   const onSaveRefuse = useCallback(() => {
     setPlanNameInput(prev => (prev === selectedPlan?.name ? prev : selectedPlan.name))
     setWorkouts(_workouts)
-    setIsEditMode(false)
+    setSelectedWorkoutsUids([])
   }, [selectedPlan, _workouts])
 
   const onAddWorkout = useCallback(
@@ -96,77 +84,100 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
     [isNewWorkoutModal]
   )
 
-  const onDelete = useCallback(
-    (workout: WorkoutType) => {
+  const onDelete = useCallback(() => {
+    selectedWorkoutsUids.forEach(uid => {
+      const workout = workouts.find(workout => workout.uid === uid)
       isInPlan ? deleteWorkoutInPlane(workout) : deleteWorkout(workout)
-    },
-    [deleteWorkoutInPlane, deleteWorkout]
-  )
+    })
+    setSelectedWorkoutsUids([])
+  }, [deleteWorkoutInPlane, deleteWorkout, workouts, selectedWorkoutsUids])
+
+  const onWorkoutPress = (workout: WorkoutType) => {
+    if (isEditMode) {
+      setSelectedWorkoutsUids(p => (p.includes(workout.uid) ? p.filter(p => p !== workout.uid) : [...p, workout.uid]))
+    } else {
+      dispatch(updateSelectedWorkout(workout))
+      navigation.navigate(isInPlan ? ScreenName.WorkoutInPlan : ScreenName.Workout)
+    }
+  }
+  const onWorkoutLongPress = (workoutUid: string, drag: () => void) => {
+    if (isEditMode) {
+      if (isInPlan) {
+        Vibration.vibrate(VIBRATION.BUTTON)
+        drag()
+      }
+    } else {
+      Vibration.vibrate(VIBRATION.BUTTON)
+      setSelectedWorkoutsUids([workoutUid])
+    }
+  }
 
   const renderItem = ({ item, drag, isActive }: RenderItemParams<WorkoutType>) => (
     <ScaleDecorator>
       <Card>
-        <TouchableOpacity onLongPress={drag} onPress={() => setChangeWorkout(item)} disabled={isActive}>
-          <WorkoutCard workout={item} isInPlan={isInPlan} isEditMode={isEditMode} onDelete={() => onDelete(item)} />
+        <TouchableOpacity
+          onLongPress={() => onWorkoutLongPress(item.uid, drag)}
+          onPress={() => onWorkoutPress(item)}
+          disabled={isActive}
+        >
+          <WorkoutCard workout={item} isInPlan={isInPlan} isSelected={selectedWorkoutsUids.includes(item.uid)} />
         </TouchableOpacity>
       </Card>
     </ScaleDecorator>
   )
 
   return (
-    <Page>
-      <NestableScrollContainer>
-        <FlexSpaceBetween style={theme.containers.secondHeader}>
-          <View />
-          {workouts?.length > 0 && (
-            <FlexStart>
-              <TextSecondary style={{ width: 80 }}>Edit Mode:</TextSecondary>
-              <MySwitch value={isEditMode} onValueChange={onToggleEditMode} />
-            </FlexStart>
+    <>
+      {isEditMode && (
+        <AppHeader>
+          <FlexStart>
+            <IconButton iconName={icon.close} onPress={() => setSelectedWorkoutsUids([])} />
+            <TextHeader>{selectedWorkoutsUids.length}</TextHeader>
+          </FlexStart>
+          <FlexEnd>
+            {selectedWorkoutsUids.length === 1 && (
+              <IconButton
+                margin={10}
+                iconName={icon.edit}
+                onPress={() => setChangeWorkout(workouts.find(workout => workout.uid === selectedWorkoutsUids[0]))}
+              />
+            )}
+            <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />
+          </FlexEnd>
+        </AppHeader>
+      )}
+      <Page>
+        <NestableScrollContainer>
+          {isPlanEdit && (
+            <MyTextInput
+              placeholder={'Plan name'}
+              onChangeText={setPlanNameInput}
+              value={planNameInput}
+              type={'underline'}
+            />
           )}
-        </FlexSpaceBetween>
-        {isPlanEdit && (
-          <MyTextInput
-            placeholder={'Plan name'}
-            onChangeText={setPlanNameInput}
-            value={planNameInput}
-            type={'underline'}
-          />
-        )}
-        {isPlanEdit ? (
           <NestableDraggableFlatList
-            data={workouts}
+            data={workouts || []}
             renderItem={renderItem}
             keyExtractor={item => item.uid}
             onDragEnd={({ data }) => setWorkouts(data)}
           />
-        ) : (
-          workouts?.map(workout => (
-            <CardPressed key={workout.uid} onPress={() => (isEditMode ? setChangeWorkout(workout) : onSelect(workout))}>
-              <WorkoutCard
-                workout={workout}
-                isInPlan={isInPlan}
-                isEditMode={isEditMode}
-                onDelete={() => onDelete(workout)}
-              />
-            </CardPressed>
-          ))
+        </NestableScrollContainer>
+        {(isEditMode || !workouts?.length) && (
+          <AddMoreButton onPress={() => setIsNewWorkoutModal(true)} header={'Workout'} />
         )}
-      </NestableScrollContainer>
-      {(isEditMode || !workouts?.length) && (
-        <AddMoreButton onPress={() => setIsNewWorkoutModal(true)} header={'Workout'} />
-      )}
-      {isEditMode && isInPlan && <ConfirmButton header={'Save Plan'} disabled={!isChanged} onPress={onSavePlan} />}
-      {isChanged && isInPlan && <GoBackSubmitModal text={`Changes in '${selectedPlan?.name}' plan aren\`t saved!`} />}
-      {(isNewWorkoutModal || !!changeWorkout) && (
-        <EditPlanWorkout
-          isModal
-          type={'Workout'}
-          initialValue={changeWorkout}
-          onSubmit={onAddWorkout}
-          onClose={() => (isNewWorkoutModal ? setIsNewWorkoutModal(false) : setChangeWorkout(null))}
-        />
-      )}
+        {isPlanEdit && <ConfirmButton header={'Save Plan'} disabled={!isChanged} onPress={onSavePlan} />}
+        {isChanged && isInPlan && <GoBackSubmitModal text={`Changes in '${selectedPlan?.name}' plan aren\`t saved!`} />}
+        {(isNewWorkoutModal || !!changeWorkout) && (
+          <EditPlanWorkout
+            isModal
+            type={'Workout'}
+            initialValue={changeWorkout}
+            onSubmit={onAddWorkout}
+            onClose={() => (isNewWorkoutModal ? setIsNewWorkoutModal(false) : setChangeWorkout(null))}
+          />
+        )}
+      </Page>
       <AppModal
         isOpen={isSaveChangesModal}
         header={'Save changes?'}
@@ -176,6 +187,19 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
         onRefuse={onSaveRefuse}
         onClose={() => setIsSaveChangesModal(false)}
       />
-    </Page>
+      <AppModal
+        isWarning
+        header={`Delete plan${selectedWorkoutsUids.length === 1 ? '' : 's'}`}
+        text={`Are you sure you want to delete ${
+          selectedWorkoutsUids.length === 1
+            ? `'${workouts.find(plan => plan.uid === selectedWorkoutsUids[0]).name}'`
+            : selectedWorkoutsUids.length
+        } workout${selectedWorkoutsUids.length === 1 ? '' : 's'}?`}
+        confirmText='Yes, delete'
+        isOpen={isDeleteModal}
+        onClose={() => setIsDeleteModal(false)}
+        onConfirm={() => onDelete()}
+      />
+    </>
   )
 })
