@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { Vibration } from 'react-native'
 import { useAppDispatch, useSettings, useWorkout } from './redux'
-import { PlayContext } from './PlayProvider'
+import { AppHelperContext } from './AppHelperProvider'
 import { workoutActionCreators } from '../store/WorkoutReducer/WorkoutActionCreators'
 import { SelectedExerciseType, SelectedWorkoutType, WorkoutType } from '../Utils/types'
 import { VIBRATION } from '../Utils/constants'
@@ -10,20 +10,20 @@ import { deepCompare } from '../Utils'
 const initialPlaying = {
   idx: 0,
   lap: 1,
-  updated: Date.now()
+  updated: Date.now(),
 }
 type PlayingType = typeof initialPlaying
 
 const initialCurrent = {
   weight: 0,
-  repeats: 0
+  repeats: 0,
 }
 type CurrentType = typeof initialCurrent
 
 export default function usePlaying() {
   const dispatch = useAppDispatch()
   const { selectedWorkout } = useWorkout()
-  const { onTogglePlaying } = useContext(PlayContext)
+  const { onTogglePlaying } = useContext(AppHelperContext)
   const { isVibration } = useSettings()
   const [playing, setPlaying] = useState<PlayingType>(initialPlaying)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -31,7 +31,7 @@ export default function usePlaying() {
   const [current, setCurrent] = useState<CurrentType>(initialCurrent)
   const [playingWorkout, setPlayingWorkout] = useState<SelectedWorkoutType>({
     ...selectedWorkout,
-    exercises: selectedWorkout?.exercises?.filter(ex => ex.isVisible)
+    exercises: selectedWorkout?.exercises?.filter(ex => ex.isVisible),
   })
   const [exercise, setExercise] = useState<SelectedExerciseType>(playingWorkout.exercises[playing.idx])
   const exerciseNext = useMemo(() => playingWorkout.exercises[playing.idx + 1], [playing.idx, playingWorkout.exercises])
@@ -44,7 +44,7 @@ export default function usePlaying() {
   useEffect(() => {
     setPlayingWorkout(p => ({
       ...p,
-      exercises: p.exercises.map(ex => (ex.uid === exercise.uid ? exercise : ex))
+      exercises: p.exercises.map(ex => (ex.uid === exercise.uid ? exercise : ex)),
     }))
   }, [exercise])
 
@@ -56,7 +56,7 @@ export default function usePlaying() {
   useEffect(() => {
     const newCurrent = {
       repeats: approach?.currentRepeats === undefined ? approach?.repeats : approach.currentRepeats,
-      weight: approach?.currentWeight === undefined ? approach?.weight : approach.currentWeight
+      weight: approach?.currentWeight === undefined ? approach?.weight : approach.currentWeight,
     }
     setCurrent(p => (deepCompare(newCurrent, p) ? p : newCurrent))
   }, [approach])
@@ -76,9 +76,9 @@ export default function usePlaying() {
             ...ex,
             approaches: ex.approaches.map(ap => ({
               weight: ap.currentWeight === undefined ? ap.weight : ap.currentWeight,
-              repeats: ap.currentRepeats === undefined ? ap.repeats : ap.currentRepeats
-            }))
-          }))
+              repeats: ap.currentRepeats === undefined ? ap.repeats : ap.currentRepeats,
+            })),
+          })),
       }
       dispatch(workoutActionCreators.updateWorkout(newWorkout))
       onBack()
@@ -96,10 +96,10 @@ export default function usePlaying() {
               ? {
                   ...ap,
                   currentRepeats: current.repeats,
-                  currentWeight: current.weight
+                  currentWeight: current.weight,
                 }
               : ap
-          )
+          ),
         }
         if (isSaveData) onWorkoutSaveResult(newExercise)
         return newExercise
@@ -146,7 +146,7 @@ export default function usePlaying() {
         setPlaying(p => ({
           idx: p.idx - 1,
           lap: playingWorkout.exercises[playing.idx - 1].laps,
-          updated: Date.now()
+          updated: Date.now(),
         }))
       }
     }
@@ -195,6 +195,6 @@ export default function usePlaying() {
     onTimerComplete,
     onSaveResult,
     onReload,
-    setCurrent
+    setCurrent,
   }
 }

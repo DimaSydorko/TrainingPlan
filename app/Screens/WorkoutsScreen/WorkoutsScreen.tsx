@@ -6,7 +6,7 @@ import {
   NestableDraggableFlatList,
   NestableScrollContainer,
   RenderItemParams,
-  ScaleDecorator
+  ScaleDecorator,
 } from 'react-native-draggable-flatlist'
 import { updateSelectedWorkout } from '../../store/WorkoutReducer/WorkoutSlice'
 import { plansActionCreators } from '../../store/PlansReducer/PlansActionCreators'
@@ -56,7 +56,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
       !deepCompare(selectedPlan, {
         ...selectedPlan,
         name: planNameInput,
-        workoutUids
+        workoutUids,
       }),
     [selectedPlan, planNameInput, workoutUids]
   )
@@ -163,9 +163,6 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
             onDragEnd={({ data }) => setWorkouts(data)}
           />
         </NestableScrollContainer>
-        {(isEditMode || !workouts?.length) && (
-          <AddMoreButton onPress={() => setIsNewWorkoutModal(true)} header={'Workout'} />
-        )}
         {isPlanEdit && <ConfirmButton header={'Save Plan'} disabled={!isChanged} onPress={onSavePlan} />}
         {isChanged && isInPlan && <GoBackSubmitModal text={`Changes in '${selectedPlan?.name}' plan aren\`t saved!`} />}
         {(isNewWorkoutModal || !!changeWorkout) && (
@@ -178,6 +175,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
           />
         )}
       </Page>
+      <AddMoreButton onPress={() => setIsNewWorkoutModal(true)} />
       <AppModal
         isOpen={isSaveChangesModal}
         header={'Save changes?'}

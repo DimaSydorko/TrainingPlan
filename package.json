@@ -8,7 +8,7 @@
     "start": "react-native start",
     "test": "jest",
     "bandle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/",
-    "clean:android": "cd ./android && gradlew clean",
+    "clean:android": "cd ./android && ./gradlew clean",
     "clean:yarn": "rmdir /s node_modules && yarn cache clean --force && yarn install"
   },
   "dependencies": {

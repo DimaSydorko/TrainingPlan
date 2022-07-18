@@ -1,7 +1,7 @@
 module.exports = {
   arrowParens: 'avoid',
   singleQuote: true,
-  trailingComma: 'none',
+  trailingComma: 'es5',
   bracketSameLine: false,
   bracketSpacing: true,
   embeddedLanguageFormatting: 'auto',
@@ -15,5 +15,5 @@ module.exports = {
   semi: false,
   tabWidth: 2,
   useTabs: false,
-  vueIndentScriptAndStyle: false
+  vueIndentScriptAndStyle: false,
 }

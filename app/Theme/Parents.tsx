@@ -44,9 +44,9 @@ export const TextSecondary = ({ children, color, center = false, style, ...props
         {
           ...theme.text.secondary,
           textAlign: center ? 'center' : 'left',
-          color: newColors
+          color: newColors,
         },
-        style
+        style,
       ]}
       {...props}
     >
@@ -64,9 +64,9 @@ export const TextHeader = ({ children, color, center = false, style, ...props }:
         {
           ...theme.text.header,
           textAlign: center ? 'center' : 'left',
-          color: newColors
+          color: newColors,
         },
-        style
+        style,
       ]}
       {...props}
     >
@@ -84,9 +84,9 @@ export const TextOrdinary = ({ children, color, center = false, style }: ParentP
         {
           ...theme.text.ordinary,
           textAlign: center ? 'center' : 'left',
-          color: newColors
+          color: newColors,
         },
-        style
+        style,
       ]}
     >
       {children}
@@ -125,17 +125,17 @@ export const Card = ({ children, style, borderLeftColor }: ParentProps & { borde
       style={[
         {
           backgroundColor: colors.white,
-          shadowColor: colorsFixed.shadow
+          shadowColor: colorsFixed.shadow,
         },
         theme.view.card,
         theme.view.shadow,
         !!borderLeftColor
           ? {
               borderLeftColor,
-              borderLeftWidth: 12
+              borderLeftWidth: 12,
             }
           : {},
-        style
+        style,
       ]}
     >
       {children}
@@ -149,7 +149,7 @@ export const CardPressed = ({
   onPressOut,
   onPressIn,
   style,
-  borderLeftColor
+  borderLeftColor,
 }: ParentProps & OnPressType) => {
   const { colors } = useSettings()
   return (
@@ -157,17 +157,17 @@ export const CardPressed = ({
       style={[
         {
           backgroundColor: colors.white,
-          shadowColor: colorsFixed.shadow
+          shadowColor: colorsFixed.shadow,
         },
         theme.view.card,
         theme.view.shadow,
         borderLeftColor
           ? {
               borderLeftColor,
-              borderLeftWidth: 12
+              borderLeftWidth: 12,
             }
           : {},
-        style
+        style,
       ]}
       onPress={onPress}
       onPressOut={onPressOut}
@@ -195,9 +195,36 @@ export const AppHeader = ({ children, style }: ParentProps) => {
           left: 0,
           paddingVertical: 8,
           paddingHorizontal: 30,
-          zIndex: 100
+          zIndex: 10,
         },
-        style
+        style,
+      ]}
+    >
+      {children}
+    </View>
+  )
+}
+
+export const AppFooter = ({ children, style }: ParentProps) => {
+  const { colors } = useSettings()
+  return (
+    <View
+      style={[
+        theme.containers.headerStyle,
+        {
+          backgroundColor: colors.menu,
+          position: 'absolute',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          bottom: 0,
+          left: 0,
+          paddingVertical: 8,
+          paddingHorizontal: 30,
+          zIndex: 100,
+        },
+        style,
       ]}
     >
       {children}

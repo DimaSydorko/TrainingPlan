@@ -1,29 +1,24 @@
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, ViewStyle } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { FlexCenter, TextHeader } from '../../Theme/Parents'
 import { useSettings } from '../../Hooks/redux'
 import styles from './styles'
 
 interface AddMoreButtonType {
   onPress: () => void
   color?: string
-  header?: string
+  iconColor?: string
+  icon?: string
+  style?: ViewStyle
 }
 
-export default function AddMoreButton({ onPress, color, header = '' }: AddMoreButtonType) {
+export default function AddMoreButton({ onPress, icon, iconColor, color, style }: AddMoreButtonType) {
   const { colors } = useSettings()
-  const newColor = color || colors.textSecondary
+  const newIconColor = iconColor || colors.background
+  const newColor = color || colors.primary
   return (
-    <TouchableOpacity onPress={onPress} style={styles.container}>
-      <FlexCenter>
-        <View style={[styles.icon, { borderColor: newColor }]}>
-          <Icon name={'plus'} size={24} color={newColor} />
-        </View>
-        <TextHeader color={newColor} style={styles.header}>
-          Add {header}
-        </TextHeader>
-      </FlexCenter>
+    <TouchableOpacity onPress={onPress} style={[styles.container, { backgroundColor: newColor }, style]}>
+      <Icon name={icon || 'plus'} size={24} color={newIconColor} />
     </TouchableOpacity>
   )
 }

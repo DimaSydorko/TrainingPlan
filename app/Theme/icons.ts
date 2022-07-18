@@ -13,5 +13,6 @@ export const icon = {
   checkCircle: 'check-circle',
   restart: 'restart',
   copy: 'content-copy',
-  empty: 'cancel'
+  empty: 'cancel',
+  plus: 'plus',
 }

@@ -5,7 +5,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { PersistGate } from 'redux-persist/integration/react'
 import { decode, encode } from 'base-64'
 import { persistedStore, store } from './store'
-import PlayProvider from './Hooks/PlayProvider'
+import AppHelperProvider from './Hooks/AppHelperProvider'
 import AuthRouter from './Routers/AuthRouter'
 
 if (!global.btoa) global.btoa = encode
@@ -16,9 +16,9 @@ function App() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistedStore}>
         <GestureHandlerRootView style={{ flex: 1, backgroundColor: 'seashell' }}>
-          <PlayProvider>
+          <AppHelperProvider>
             <AuthRouter />
-          </PlayProvider>
+          </AppHelperProvider>
         </GestureHandlerRootView>
       </PersistGate>
     </Provider>

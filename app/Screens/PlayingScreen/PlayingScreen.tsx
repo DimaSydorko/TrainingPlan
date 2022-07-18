@@ -7,7 +7,7 @@ import usePlaying from '../../Hooks/usePlaying'
 import { screen } from '../../Utils/constants'
 import useTTS from '../../Hooks/useTTS'
 import { useSettings } from '../../Hooks/redux'
-import { PlayContext } from '../../Hooks/PlayProvider'
+import { AppHelperContext } from '../../Hooks/AppHelperProvider'
 import { AppImage, ConfirmButton, GoBackSubmitModal, IconButton, Timer } from '../../Common'
 import { secondsToMinSec } from '../../Components/WorkoutDuration/WorkoutDuration'
 import { FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
@@ -21,7 +21,7 @@ import styles from './styles'
 export default memo(function PlayingScreen() {
   const { colors } = useSettings()
   const onSay = useTTS()
-  const { onTogglePlaying } = useContext(PlayContext)
+  const { onTogglePlaying } = useContext(AppHelperContext)
   const {
     isPlaying,
     isWaitForSubmit,
@@ -38,7 +38,7 @@ export default memo(function PlayingScreen() {
     onPrevious,
     setCurrent,
     onReload,
-    playingWorkout
+    playingWorkout,
   } = usePlaying()
   const repeatsDiff = current?.repeats - approach?.repeats || 0
   const workoutDurationTime = getWorkoutDuration(playingWorkout.exercises.filter((ex, idx) => idx >= playing.idx))
@@ -166,8 +166,8 @@ export default memo(function PlayingScreen() {
           styles.footer,
           {
             backgroundColor: colors.menu,
-            shadowColor: colorsFixed.shadow
-          }
+            shadowColor: colorsFixed.shadow,
+          },
         ]}
       >
         <IconButton onPress={() => {}} iconName={icon.back} color={`${colors.error}00`} size={35} />

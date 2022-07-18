@@ -6,7 +6,7 @@ import {
   NestableDraggableFlatList,
   NestableScrollContainer,
   RenderItemParams,
-  ScaleDecorator
+  ScaleDecorator,
 } from 'react-native-draggable-flatlist'
 import { changePlansPosition, selectPlan } from '../../store/PlansReducer/PlansSlice'
 import { plansActionCreators } from '../../store/PlansReducer/PlansActionCreators'
@@ -105,7 +105,6 @@ export default memo(function MyPlansScreen() {
             keyExtractor={item => item.uid}
             onDragEnd={({ data }) => dispatch(changePlansPosition(data.map(plan => plan.uid)))}
           />
-          {(isEditMode || !plans?.length) && <AddMoreButton onPress={() => setIsNewPlanModal(true)} header={'Plan'} />}
           {(isNewPlanModal || !!changePlan) && (
             <EditPlanWorkout
               isModal
@@ -117,6 +116,7 @@ export default memo(function MyPlansScreen() {
           )}
         </NestableScrollContainer>
       </Page>
+      <AddMoreButton onPress={() => setIsNewPlanModal(true)} />
       <AppModal
         isWarning
         header={`Delete plan${selectedPlanUids.length === 1 ? '' : 's'}`}
