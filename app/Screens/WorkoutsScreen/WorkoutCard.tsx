@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { memo, useState } from 'react'
 import { View } from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useSettings } from '../../Hooks/redux'
 import { AppModal, WorkoutDuration } from '../../Common'
 import { FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { WorkoutType } from '../../Utils/types'
 import { icon } from '../../Theme/icons'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 interface IWorkoutCard {
   workout: WorkoutType

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { memo, useCallback, useState } from 'react'
-import { TouchableOpacity, Vibration, View } from 'react-native'
+import { TouchableOpacity, Vibration } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import {
   NestableDraggableFlatList,
@@ -12,14 +12,13 @@ import { changePlansPosition, selectPlan } from '../../store/PlansReducer/PlansS
 import { plansActionCreators } from '../../store/PlansReducer/PlansActionCreators'
 import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
 import { useAppDispatch, usePlans } from '../../Hooks/redux'
-import { AppHeader, Card, FlexEnd, FlexSpaceBetween, FlexStart, Page, TextHeader } from '../../Theme/Parents'
+import { AppHeader, Card, FlexEnd, FlexStart, Page, TextHeader } from '../../Theme/Parents'
 import { AddMoreButton, AppModal, IconButton } from '../../Common'
 import EditPlanWorkout from '../../Components/EditPlanWorkout/EditPlanWorkout'
 import PlanCard from './PlanCard'
 import { ScreenName, VIBRATION } from '../../Utils/constants'
 import { PlanType } from '../../Utils/types'
 import { icon } from '../../Theme/icons'
-import { theme } from '../../Theme/theme'
 
 export default memo(function MyPlansScreen() {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
@@ -95,9 +94,6 @@ export default memo(function MyPlansScreen() {
         </AppHeader>
       )}
       <Page>
-        <FlexSpaceBetween style={theme.containers.secondHeader}>
-          <View />
-        </FlexSpaceBetween>
         <NestableScrollContainer>
           <NestableDraggableFlatList
             data={plans}
@@ -105,18 +101,18 @@ export default memo(function MyPlansScreen() {
             keyExtractor={item => item.uid}
             onDragEnd={({ data }) => dispatch(changePlansPosition(data.map(plan => plan.uid)))}
           />
-          {(isNewPlanModal || !!changePlan) && (
-            <EditPlanWorkout
-              isModal
-              type={'Plan'}
-              initialValue={changePlan}
-              onSubmit={onAddPlan}
-              onClose={() => (isNewPlanModal ? setIsNewPlanModal(false) : setChangePlan(null))}
-            />
-          )}
         </NestableScrollContainer>
       </Page>
       <AddMoreButton onPress={() => setIsNewPlanModal(true)} />
+      {(isNewPlanModal || !!changePlan) && (
+        <EditPlanWorkout
+          isModal
+          type={'Plan'}
+          initialValue={changePlan}
+          onSubmit={onAddPlan}
+          onClose={() => (isNewPlanModal ? setIsNewPlanModal(false) : setChangePlan(null))}
+        />
+      )}
       <AppModal
         isWarning
         header={`Delete plan${selectedPlanUids.length === 1 ? '' : 's'}`}

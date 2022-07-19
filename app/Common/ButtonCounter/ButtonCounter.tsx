@@ -27,13 +27,13 @@ export default memo(function ButtonCounter({
   minValue = 0,
   maxValue,
   extraWidth = 0,
-  children
+  children,
 }: ButtonCounterType) {
   const { colors } = useSettings()
   return (
     <FlexSpaceBetween style={[styles.container, { width: (screen.vw - 120) / 2 + extraWidth }]}>
       <IconButton
-        size={32}
+        size={42}
         disableVibration
         iconName={'minus-circle-outline'}
         disabled={value <= minValue}
@@ -45,7 +45,7 @@ export default memo(function ButtonCounter({
         {children}
       </TextHeader>
       <IconButton
-        size={32}
+        size={42}
         disableVibration
         iconName={'plus-circle-outline'}
         disabled={!!maxValue ? value <= maxValue : undefined}
@@ -57,6 +57,6 @@ export default memo(function ButtonCounter({
 
 const styles = StyleSheet.create({
   container: {
-    margin: 10
-  }
+    margin: 10,
+  },
 })

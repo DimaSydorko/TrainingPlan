@@ -17,7 +17,7 @@ interface IEditPlanWorkout {
 export default memo(function EditPlanWorkout({ onSubmit, type, isModal, onClose, initialValue }: IEditPlanWorkout) {
   const { user } = useUser()
   const isNew = !initialValue
-  const initialName = useMemo(() => (isNew ? `New ${type}` : initialValue.name), [])
+  const initialName = useMemo(() => (isNew ? `New_${type}` : initialValue.name), [])
   const [name, setName] = useState<string>(initialName)
 
   const onConfirm = useCallback(() => {

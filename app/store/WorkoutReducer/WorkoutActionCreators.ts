@@ -22,6 +22,11 @@ export type DeleteWorkoutReducerType = {
   isInternet: boolean
 }
 
+export type RemoveFromPlansType = {
+  workoutUid: string
+  planUid: string
+}
+
 export const workoutActionCreators = {
   getWorkouts: createAsyncThunk('workout/getWorkouts', async (props: GetWorkoutsActionType, thunkAPI) => {
     const { uid, findBy } = props
@@ -102,8 +107,8 @@ export const workoutActionCreators = {
         thunkAPI.dispatch(
           plansActionCreators.changeWorkoutsCount({
             planUid,
-            workoutUid: props.uid,
-            type: 'add'
+            workoutUids: [props.uid],
+            type: 'add',
           })
         )
       return props
@@ -121,7 +126,7 @@ export const workoutActionCreators = {
       labels,
       name,
       exercises,
-      lastUpdated
+      lastUpdated,
     }
     try {
       const net = await NetInfo.fetch()
@@ -134,11 +139,42 @@ export const workoutActionCreators = {
     }
   }),
 
-  deleteWorkout: createAsyncThunk('workout/deleteWorkout', async (workout: WorkoutType, thunkAPI) => {
+  removeFromPlan: createAsyncThunk('workout/removeWorkoutFromPlan', async (props: RemoveFromPlansType, thunkAPI) => {
+    const {
+      workoutReducer: { workouts },
+    } = thunkAPI.getState() as RootState
+    const workout: WorkoutType = workouts.find(w => w.uid === props.workoutUid)
+
+    const { uid, ...newWorkout }: WorkoutType = {
+      ...workout,
+      plansUid: workout.plansUid.filter(id => props.planUid !== id),
+      lastUpdated: getCurrentTime(),
+    }
     try {
-      workout.plansUid.forEach(planUid => {
-        thunkAPI.dispatch(plansActionCreators.changeWorkoutsCount({ planUid, workoutUid: workout.uid, type: 'delete' }))
-      })
+      const net = await NetInfo.fetch()
+      const isInternet = net.isConnected
+      if (isInternet) {
+        await FB_Collection_Workouts.doc(uid).update(newWorkout)
+      }
+      return { uid, ...newWorkout }
+    } catch (e) {
+      return thunkAPI.rejectWithValue(e.message)
+    }
+  }),
+
+  deleteWorkout: createAsyncThunk('workout/deleteWorkout', async (workoutUid: string, thunkAPI) => {
+    const {
+      workoutReducer: { workouts },
+    } = thunkAPI.getState() as RootState
+    const workout: WorkoutType = workouts.find(w => w.uid === workoutUid)
+
+    workout.plansUid.forEach(planUid => {
+      thunkAPI.dispatch(
+        plansActionCreators.changeWorkoutsCount({ planUid, workoutUids: [workout.uid], type: 'delete' })
+      )
+    })
+
+    try {
       const net = await NetInfo.fetch()
       const isInternet = net.isConnected
       if (isInternet) {
@@ -162,5 +198,5 @@ export const workoutActionCreators = {
     } catch (e) {
       return thunkAPI.rejectWithValue(e.message)
     }
-  })
+  }),
 }

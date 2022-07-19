@@ -129,7 +129,7 @@ export default memo(function PlayingScreen() {
                   {exercise.name}
                 </TextHeader>
                 <TextHeader color={colors.text} style={{ fontSize: 22 }}>
-                  {secondsToMinSec(remainingTime, false)}
+                  {secondsToMinSec(remainingTime < 0 ? 0 : remainingTime, false)}
                 </TextHeader>
               </FlexCenterColumn>
             )}

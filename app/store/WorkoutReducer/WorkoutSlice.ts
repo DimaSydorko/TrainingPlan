@@ -19,7 +19,7 @@ const initialState: WorkoutSliceType = {
   deletedWorkoutUids: [],
   selectedWorkout: null,
   isLoading: false,
-  error: ''
+  error: '',
 }
 
 const onError = (state: WorkoutSliceType, { payload }: PayloadAction<string>) => {
@@ -29,6 +29,16 @@ const onError = (state: WorkoutSliceType, { payload }: PayloadAction<string>) =>
 
 const onLoading = (state: WorkoutSliceType) => {
   state.isLoading = true
+}
+
+const updateWorkout = (state, { payload }: PayloadAction<WorkoutType>) => {
+  state.workouts = state.workouts.map(workout => (workout.uid === payload.uid ? payload : workout))
+  state.workoutsInPlan = state.workoutsInPlan.map(workout => (workout.uid === payload.uid ? payload : workout))
+  if (state.selectedWorkout.uid === payload.uid) {
+    state.selectedWorkout = { ...state.selectedWorkout, ...payload }
+  }
+  state.isLoading = false
+  state.error = ''
 }
 
 export const workoutSlice = createSlice({
@@ -48,7 +58,7 @@ export const workoutSlice = createSlice({
       state.workouts = initialState.workouts
       state.workoutsInPlan = initialState.workoutsInPlan
       state.deletedWorkoutUids = initialState.deletedWorkoutUids
-    }
+    },
   },
   extraReducers: {
     [workoutActionCreators.getWorkouts.fulfilled.type]: (state, { payload }: PayloadAction<GetWorkoutsReducerType>) => {
@@ -56,15 +66,6 @@ export const workoutSlice = createSlice({
       if (isForPlan) state.workoutsInPlan = payload.workouts
       else state.workouts = payload.workouts
       if (!payload.isInternet) state.deletedWorkoutUids = []
-      state.isLoading = false
-      state.error = ''
-    },
-    [workoutActionCreators.updateWorkout.fulfilled.type]: (state, { payload }: PayloadAction<WorkoutType>) => {
-      state.workouts = state.workouts.map(workout => (workout.uid === payload.uid ? payload : workout))
-      state.workoutsInPlan = state.workoutsInPlan.map(workout => (workout.uid === payload.uid ? payload : workout))
-      if (state.selectedWorkout.uid === payload.uid) {
-        state.selectedWorkout = { ...state.selectedWorkout, ...payload }
-      }
       state.isLoading = false
       state.error = ''
     },
@@ -86,17 +87,23 @@ export const workoutSlice = createSlice({
     },
     [workoutActionCreators.getExerciseImages.fulfilled.type]: (state, action: PayloadAction<StoredExerciseImage[]>) => {
       state.exerciseImages = action.payload
+      state.isLoading = false
       state.error = ''
     },
+    [workoutActionCreators.updateWorkout.fulfilled.type]: updateWorkout,
+    [workoutActionCreators.removeFromPlan.fulfilled.type]: updateWorkout,
+
     [workoutActionCreators.getWorkouts.pending.type]: onLoading,
     [workoutActionCreators.addWorkout.pending.type]: onLoading,
+    [workoutActionCreators.deleteWorkout.pending.type]: onLoading,
+    [workoutActionCreators.removeFromPlan.pending.type]: onLoading,
 
     [workoutActionCreators.getWorkouts.rejected.type]: onError,
     [workoutActionCreators.addWorkout.rejected.type]: onError,
     [workoutActionCreators.updateWorkout.rejected.type]: onError,
     [workoutActionCreators.deleteWorkout.rejected.type]: onError,
-    [workoutActionCreators.getExerciseImages.rejected.type]: onError
-  }
+    [workoutActionCreators.getExerciseImages.rejected.type]: onError,
+  },
 })
 export const { errorWorkoutClear, clearWorkoutResults, updateSelectedWorkout } = workoutSlice.actions
 export default workoutSlice.reducer

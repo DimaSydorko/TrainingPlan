@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import NetInfo from '@react-native-community/netinfo'
-import { FB_Collection_Plans, FB_FieldValue } from '../../Utils/firebase'
+import { FB_Collection_Plans } from '../../Utils/firebase'
 import { QUERY_LIMIT } from '../../Utils/constants'
 import { PlanType } from '../../Utils/types'
 import { getCurrentTime, nanoid } from '../../Utils'
@@ -8,7 +8,7 @@ import { RootState } from '../index'
 
 export interface ChangeWorkoutsCountType {
   planUid: string
-  workoutUid: string
+  workoutUids: string[]
   type: 'add' | 'delete'
 }
 
@@ -99,18 +99,25 @@ export const plansActionCreators = {
   changeWorkoutsCount: createAsyncThunk(
     'plans/changeWorkoutsCount',
     async (props: ChangeWorkoutsCountType, thunkAPI) => {
+      const { plansReducer } = thunkAPI.getState() as RootState
+      const { uid, ...plan }: PlanType = plansReducer.plans.find(plan => plan.uid === props.planUid)
+      const workoutUids =
+        props.type === 'add'
+          ? [...plan.workoutUids, ...props.workoutUids]
+          : plan.workoutUids.filter(uid => !props.workoutUids.includes(uid))
+
+      const newPlan = {
+        ...plan,
+        workoutUids,
+        lastUpdated: getCurrentTime(),
+      }
+
       try {
         const net = await NetInfo.fetch()
         if (net.isConnected) {
-          await FB_Collection_Plans.doc(props.planUid).update({
-            workoutUids:
-              props.type === 'add'
-                ? FB_FieldValue.arrayUnion(props.workoutUid)
-                : FB_FieldValue.arrayRemove(props.workoutUid),
-            lastUpdated: getCurrentTime()
-          })
+          await FB_Collection_Plans.doc(uid).update(newPlan)
         }
-        return props
+        return { ...newPlan, uid }
       } catch (e) {
         return thunkAPI.rejectWithValue(e.message)
       }
@@ -128,5 +135,5 @@ export const plansActionCreators = {
     } catch (e) {
       return thunkAPI.rejectWithValue(e.message)
     }
-  })
+  }),
 }

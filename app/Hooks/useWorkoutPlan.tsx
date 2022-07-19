@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useAppDispatch, usePlans } from './redux'
-import { WorkoutType } from '../Utils/types'
+import { PlanType, WorkoutType } from '../Utils/types'
 import { workoutActionCreators } from '../store/WorkoutReducer/WorkoutActionCreators'
 import { plansActionCreators } from '../store/PlansReducer/PlansActionCreators'
 
@@ -8,30 +8,36 @@ export default function useWorkoutPlan() {
   const dispatch = useAppDispatch()
   const { selectedPlan } = usePlans()
 
-  const addWorkoutInPlane = useCallback(
-    (workout: WorkoutType) => {
-      if (!selectedPlan) return
-      dispatch(workoutActionCreators.addWorkout({ ...workout, plansUid: [selectedPlan.uid] }))
+  const addWorkout = useCallback(
+    (workout: WorkoutType, isInPlan: boolean) => {
+      if (selectedPlan.uid && isInPlan) {
+        dispatch(workoutActionCreators.addWorkout({ ...workout, plansUid: [selectedPlan.uid] }))
+      } else {
+        dispatch(workoutActionCreators.addWorkout(workout))
+      }
     },
-    [selectedPlan]
+    [selectedPlan.uid]
   )
 
-  const addWorkout = useCallback((workout: WorkoutType) => {
-    dispatch(workoutActionCreators.addWorkout(workout))
-  }, [])
-
-  const deleteWorkoutInPlane = useCallback(
-    (workout: WorkoutType) => {
-      if (!selectedPlan) return
-      const plansUid = workout.plansUid.filter(uid => uid !== selectedPlan.uid)
-      dispatch(workoutActionCreators.updateWorkout({ ...workout, plansUid }))
+  const deleteWorkouts = useCallback(
+    (workoutUids: string[], isInPlan: boolean) => {
+      if (selectedPlan.uid && isInPlan) {
+        dispatch(
+          plansActionCreators.changeWorkoutsCount({
+            planUid: selectedPlan.uid,
+            workoutUids,
+            type: 'delete',
+          })
+        )
+        workoutUids.forEach(workoutUid => {
+          dispatch(workoutActionCreators.removeFromPlan({ workoutUid, planUid: selectedPlan.uid }))
+        })
+      } else {
+        dispatch(workoutActionCreators.deleteWorkout(workoutUids[0]))
+      }
     },
-    [selectedPlan]
+    [selectedPlan.uid]
   )
-
-  const deleteWorkout = useCallback((workout: WorkoutType) => {
-    dispatch(workoutActionCreators.deleteWorkout(workout))
-  }, [])
 
   const moveWorkout = useCallback(
     (workouts: WorkoutType[]) => {
@@ -41,12 +47,30 @@ export default function useWorkoutPlan() {
     [selectedPlan]
   )
 
+  const copyWorkouts = useCallback((workouts: WorkoutType[], plans: PlanType[]) => {
+    workouts.forEach(workout =>
+      dispatch(
+        workoutActionCreators.updateWorkout({
+          ...workout,
+          plansUid: [...workout.plansUid, ...plans.map(p => p.uid)],
+        })
+      )
+    )
+    plans.forEach(plan =>
+      dispatch(
+        plansActionCreators.updatePlan({
+          ...plan,
+          workoutUids: [...plan.workoutUids, ...workouts.map(w => w.uid)],
+        })
+      )
+    )
+  }, [])
+
   return {
-    deleteWorkoutInPlane,
-    addWorkoutInPlane,
-    deleteWorkout,
+    deleteWorkouts,
     addWorkout,
     moveWorkout,
-    selectedPlan
+    selectedPlan,
+    copyWorkouts,
   }
 }

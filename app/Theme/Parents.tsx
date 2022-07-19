@@ -185,6 +185,7 @@ export const AppHeader = ({ children, style }: ParentProps) => {
       style={[
         theme.containers.headerStyle,
         {
+          width: '100%',
           backgroundColor: colors.menu,
           position: 'absolute',
           display: 'flex',
@@ -212,6 +213,7 @@ export const AppFooter = ({ children, style }: ParentProps) => {
       style={[
         theme.containers.headerStyle,
         {
+          width: '100%',
           backgroundColor: colors.menu,
           position: 'absolute',
           display: 'flex',

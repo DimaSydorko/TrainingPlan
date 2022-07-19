@@ -15,4 +15,5 @@ export const icon = {
   copy: 'content-copy',
   empty: 'cancel',
   plus: 'plus',
+  share: 'share-variant',
 }

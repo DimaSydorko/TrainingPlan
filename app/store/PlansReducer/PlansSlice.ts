@@ -3,7 +3,7 @@ import {
   ChangeWorkoutsCountType,
   DeletePlanReducerType,
   GetPlanReducerType,
-  plansActionCreators
+  plansActionCreators,
 } from './PlansActionCreators'
 import { PlanType } from '../../Utils/types'
 import { getCurrentTime } from '../../Utils'
@@ -23,7 +23,7 @@ const initialState: PlansSliceType = {
   deletedPlanUids: [],
   sortedPlanUids: [],
   isLoading: false,
-  error: ''
+  error: '',
 }
 
 const onError = (state: PlansSliceType, { payload }: PayloadAction<string>) => {
@@ -33,6 +33,13 @@ const onError = (state: PlansSliceType, { payload }: PayloadAction<string>) => {
 
 const onLoading = (state: PlansSliceType) => {
   state.isLoading = true
+}
+
+const updatePlan = (state, { payload }: PayloadAction<PlanType>) => {
+  state.plans = state.plans.map(plan => (plan.uid === payload.uid ? payload : plan))
+  if (state.selectedPlan.uid === payload.uid) state.selectedPlan = payload
+  state.isLoading = false
+  state.error = ''
 }
 
 export const plansSlice = createSlice({
@@ -55,7 +62,7 @@ export const plansSlice = createSlice({
       state.selectedPlan = initialState.selectedPlan
       state.deletedPlanUids = initialState.deletedPlanUids
       state.sortedPlanUids = initialState.sortedPlanUids
-    }
+    },
   },
   extraReducers: {
     [plansActionCreators.getPlans.fulfilled.type]: (state, { payload }: PayloadAction<GetPlanReducerType>) => {
@@ -74,37 +81,13 @@ export const plansSlice = createSlice({
     },
     [plansActionCreators.addPlan.fulfilled.type]: (state, { payload }: PayloadAction<PlanType>) => {
       state.plans.push(payload)
-    },
-    [plansActionCreators.updatePlan.fulfilled.type]: (state, { payload }: PayloadAction<PlanType>) => {
-      state.plans = state.plans.map(plan => (plan.uid === payload.uid ? payload : plan))
-      if (state.selectedPlan.uid === payload.uid) state.selectedPlan = payload
-      state.error = ''
       state.isLoading = false
-    },
-    [plansActionCreators.changeWorkoutsCount.fulfilled.type]: (
-      state,
-      { payload }: PayloadAction<ChangeWorkoutsCountType>
-    ) => {
-      const changeWorkoutUids = (plan: PlanType) => {
-        return payload.type === 'add'
-          ? [...plan.workoutUids, payload.workoutUid]
-          : plan.workoutUids.filter(uid => uid !== payload.workoutUid)
-      }
-      state.plans = state.plans.map(plan =>
-        plan.uid === payload.planUid
-          ? {
-              ...plan,
-              workoutUids: changeWorkoutUids(plan),
-              lastUpdated: getCurrentTime()
-            }
-          : plan
-      )
-      if (state?.selectedPlan?.uid === payload.planUid) {
-        state.selectedPlan.workoutUids = changeWorkoutUids(state.selectedPlan)
-        state.selectedPlan.lastUpdated = getCurrentTime()
-      }
       state.error = ''
     },
+    [plansActionCreators.updatePlan.fulfilled.type]: updatePlan,
+    [plansActionCreators.changeWorkoutsCount.fulfilled.type]: updatePlan,
+
+    [plansActionCreators.changeWorkoutsCount.pending.type]: onLoading,
     [plansActionCreators.getPlans.pending.type]: onLoading,
     [plansActionCreators.addPlan.pending.type]: onLoading,
 
@@ -112,8 +95,8 @@ export const plansSlice = createSlice({
     [plansActionCreators.addPlan.rejected.type]: onError,
     [plansActionCreators.deletePlan.rejected.type]: onError,
     [plansActionCreators.updatePlan.rejected.type]: onError,
-    [plansActionCreators.changeWorkoutsCount.rejected.type]: onError
-  }
+    [plansActionCreators.changeWorkoutsCount.rejected.type]: onError,
+  },
 })
 export const { errorPlansClear, selectPlan, clearPlaneResults, changePlansPosition } = plansSlice.actions
 export default plansSlice.reducer

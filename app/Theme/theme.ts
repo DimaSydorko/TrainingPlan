@@ -4,7 +4,6 @@ import { screen } from '../Utils/constants'
 
 export const headerHeight = 55
 const headerStyle: TextStyle = {
-  width: '100%',
   height: headerHeight,
   shadowOpacity: 0.1,
   shadowRadius: 5,
@@ -39,7 +38,7 @@ export const theme = {
     card: {
       padding: 14,
       borderRadius: 10,
-      margin: 6,
+      margin: 3,
       width: screen.vw - 30,
     } as ViewStyle,
     shadow: {

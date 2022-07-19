@@ -3,17 +3,18 @@ import { ApproachType, ExerciseType, PlanType, WorkoutType } from './types'
 
 export const FUTURE_FLAG = {
   LABELS: false,
-  IS_DEV: true
+  FRIENDS: false,
+  IS_DEV: true,
 }
 
 export enum FirebaseDBCollection {
   UsersData = 'usersData',
   Plans = 'plans',
-  Workouts = 'workouts'
+  Workouts = 'workouts',
 }
 
 export enum FirebaseDatabase {
-  ExerciseImages = '/ExerciseImages'
+  ExerciseImages = '/ExerciseImages',
 }
 
 export enum ScreenName {
@@ -25,12 +26,12 @@ export enum ScreenName {
   Workout = 'Workout',
   Plan = 'Plan',
   Home = 'Home',
-  App = 'App'
+  App = 'App',
 }
 
 export const screen = {
   vw: Dimensions.get('window').width,
-  vh: Dimensions.get('window').height
+  vh: Dimensions.get('window').height,
 }
 
 export const defaultPlan: PlanType = {
@@ -39,7 +40,7 @@ export const defaultPlan: PlanType = {
   name: 'New_Plan',
   workoutUids: [],
   labels: [],
-  lastUpdated: 0
+  lastUpdated: 0,
 }
 export const defaultWorkout: WorkoutType = {
   uid: '',
@@ -48,7 +49,7 @@ export const defaultWorkout: WorkoutType = {
   ownerUid: '',
   labels: [],
   exercises: [],
-  lastUpdated: 0
+  lastUpdated: 0,
 }
 export const defaultExercise: ExerciseType = {
   uid: '',
@@ -59,22 +60,22 @@ export const defaultExercise: ExerciseType = {
   isVisible: true,
   breakTimeInSec: 0,
   color: '#8cd47f',
-  imageUrl: ''
+  imageUrl: '',
 }
 export const defaultApproach: ApproachType = {
   repeats: 0,
-  weight: 0
+  weight: 0,
 }
 
 export const QUERY_LIMIT = 30
 
 export const settings = {
-  isVibration: true
+  isVibration: true,
 }
 
 export const VIBRATION = {
   TIMER: 50,
   BUTTON: 25,
   END_EXERCISE: [100, 200],
-  END_WORKOUT: [100, 400, 200, 100]
+  END_WORKOUT: [100, 400, 200, 100],
 }
