@@ -80,3 +80,5 @@ export interface ColorsType {
   textSecondary: string
   menu: string
 }
+
+export type SetStateType<S> = (arg: S | ((prevState: S) => S)) => void

@@ -3,19 +3,22 @@ import { memo, useCallback, useContext, useEffect, useState } from 'react'
 import { SafeAreaView, TouchableOpacity, View } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import KeepAwake from 'react-native-keep-awake'
+
 import usePlaying from '../../Hooks/usePlaying'
 import { screen } from '../../Utils/constants'
 import useTTS from '../../Hooks/useTTS'
 import { useSettings } from '../../Hooks/redux'
 import { AppHelperContext } from '../../Hooks/AppHelperProvider'
+import { getWorkoutDuration } from '../../Utils'
 import { AppImage, ConfirmButton, GoBackSubmitModal, IconButton, Timer } from '../../Common'
 import { secondsToMinSec } from '../../Components/WorkoutDuration/WorkoutDuration'
 import { FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
-import { getWorkoutDuration } from '../../Utils'
-import Results from './Results'
 import { colorsFixed } from '../../Theme/colors'
 import { theme } from '../../Theme/theme'
 import { icon } from '../../Theme/icons'
+
+import Results from './Results'
+import BackgroundAction from './BackgroundAction'
 import styles from './styles'
 
 export default memo(function PlayingScreen() {
@@ -196,7 +199,13 @@ export default memo(function PlayingScreen() {
         </FlexSpaceBetween>
         <IconButton onPress={onReload} iconName={icon.restart} color={colors.black} size={35} />
       </FlexSpaceBetween>
+
       <GoBackSubmitModal text={'Current results will be lost!'} onConfirm={onTogglePlaying} />
+      <BackgroundAction
+        taskName={'Workout playing'}
+        taskTitle={playingWorkout.name}
+        taskDesc={`${exercise.name}:  ${playing.lap}/${exercise.laps}`}
+      />
     </SafeAreaView>
   )
 })
