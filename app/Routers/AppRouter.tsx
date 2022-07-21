@@ -11,6 +11,7 @@ import NotificationHandler from '../Components/NotificationHandler/NotificationH
 import WorkoutsRouter from './WorkoutsRouter'
 import PlanRouter from './PlanRouter'
 import { EmptyScreen, PlayingScreen } from '../Screens'
+import { PlayTimerProvider } from '../Screens/PlayingScreen/components/PlayTimerProvider'
 
 type TabType = {
   name: string
@@ -72,7 +73,11 @@ export default function AppRouter() {
   return (
     <>
       <NotificationHandler />
-      {isPlaying && <PlayingScreen />}
+      {isPlaying && (
+        <PlayTimerProvider>
+          <PlayingScreen />
+        </PlayTimerProvider>
+      )}
       <Tab.Navigator
         sceneContainerStyle={{
           backgroundColor: colors.background,

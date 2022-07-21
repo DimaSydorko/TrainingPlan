@@ -1,13 +1,8 @@
 import * as React from 'react'
 import { useEffect, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
 import { useSettings } from '../../Hooks/redux'
 import { TextSecondary } from '../../Theme/Parents'
 import { secondsToMinSec } from '../../Components/WorkoutDuration/WorkoutDuration'
-
-const styles = StyleSheet.create({
-  container: {}
-})
 
 interface ITimer {
   isRevers?: boolean
@@ -33,9 +28,5 @@ export default function Timer({ value = 0, isPaused, isRevers = false }: ITimer)
     }
   }, [isPaused])
 
-  return (
-    <View style={styles.container}>
-      <TextSecondary color={colors.text}>{secondsToMinSec(secondsCountDown, false, true)}</TextSecondary>
-    </View>
-  )
+  return <TextSecondary color={colors.text}>{secondsToMinSec(secondsCountDown, false, true)}</TextSecondary>
 }

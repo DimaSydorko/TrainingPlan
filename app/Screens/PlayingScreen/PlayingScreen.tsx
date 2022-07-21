@@ -10,15 +10,17 @@ import useTTS from '../../Hooks/useTTS'
 import { useSettings } from '../../Hooks/redux'
 import { AppHelperContext } from '../../Hooks/AppHelperProvider'
 import { getWorkoutDuration } from '../../Utils'
-import { AppImage, ConfirmButton, GoBackSubmitModal, IconButton, Timer } from '../../Common'
+import { AppImage, ConfirmButton, GoBackSubmitModal, IconButton } from '../../Common'
 import { secondsToMinSec } from '../../Components/WorkoutDuration/WorkoutDuration'
 import { FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { colorsFixed } from '../../Theme/colors'
 import { theme } from '../../Theme/theme'
 import { icon } from '../../Theme/icons'
 
-import Results from './Results'
-import BackgroundAction from './BackgroundAction'
+import Results from './components/Results'
+import BackgroundAction from './components/BackgroundAction'
+import TimeObserver from './components/TimeObserver'
+import PlayHeader from './components/PlayHeader'
 import styles from './styles'
 
 export default memo(function PlayingScreen() {
@@ -44,9 +46,11 @@ export default memo(function PlayingScreen() {
     playingWorkout,
   } = usePlaying()
   const repeatsDiff = current?.repeats - approach?.repeats || 0
-  const workoutDurationTime = getWorkoutDuration(playingWorkout.exercises.filter((ex, idx) => idx >= playing.idx))
-  const weightDiff = current?.weight - approach?.weight || 0
   const isTheLastOneComplete = isWaitForSubmit && isTheLastOne
+  const duration = isTheLastOneComplete ? 0 : exercise.breakTimeInSec
+  const workoutDurationTime =
+    getWorkoutDuration(playingWorkout.exercises.filter((ex, idx) => idx >= playing.idx)) - duration
+  const weightDiff = current?.weight - approach?.weight || 0
   const [isInvisibleTimerCircle, setIsInvisibleTimerCircle] = useState<boolean>(false)
   const color = exercise.color || colors.primary
 
@@ -83,15 +87,12 @@ export default memo(function PlayingScreen() {
 
   return (
     <SafeAreaView style={[theme.containers.centerColumn, styles.page, { backgroundColor: colors.background }]}>
-      <View style={[theme.containers.headerStyle, styles.header]}>
-        <FlexSpaceBetween>
-          <Timer />
-          <TextHeader>
-            Laps {playing.lap}/{exercise.laps}
-          </TextHeader>
-          <Timer isRevers isPaused={!isPlaying} value={workoutDurationTime} />
-        </FlexSpaceBetween>
-      </View>
+      <PlayHeader
+        isPlaying={isPlaying}
+        playingLap={playing.lap}
+        exerciseLaps={exercise.laps}
+        workoutDurationTime={workoutDurationTime}
+      />
 
       <FlexCenterColumn>
         <View style={styles.nextExercise}>
@@ -112,11 +113,12 @@ export default memo(function PlayingScreen() {
             </TextSecondary>
           )}
         </View>
+
         <TouchableOpacity style={styles.timerContainer} onPress={onTogglePlay}>
           <CountdownCircleTimer
             key={`${playing.lap}_${playing.idx}_${playing.updated}`}
             isPlaying={isPlaying}
-            duration={isTheLastOneComplete ? 0 : exercise.breakTimeInSec}
+            duration={duration}
             colors={isInvisibleTimerCircle ? new Array(3).fill('#00000000') : ([color, color, colors.error] as any)}
             colorsTime={[exercise.breakTimeInSec, exercise.breakTimeInSec / 2, 0]}
             strokeWidth={14}
@@ -134,6 +136,7 @@ export default memo(function PlayingScreen() {
                 <TextHeader color={colors.text} style={{ fontSize: 22 }}>
                   {secondsToMinSec(remainingTime < 0 ? 0 : remainingTime, false)}
                 </TextHeader>
+                <TimeObserver time={remainingTime} />
               </FlexCenterColumn>
             )}
           </CountdownCircleTimer>
@@ -202,7 +205,8 @@ export default memo(function PlayingScreen() {
 
       <GoBackSubmitModal text={'Current results will be lost!'} onConfirm={onTogglePlaying} />
       <BackgroundAction
-        taskName={'Workout playing'}
+        duration={duration}
+        taskName={playingWorkout.name}
         taskTitle={playingWorkout.name}
         taskDesc={`${exercise.name}:  ${playing.lap}/${exercise.laps}`}
       />
