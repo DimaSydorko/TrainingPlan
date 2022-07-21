@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { FlexSpaceBetween, TextHeader } from '../../Theme/Parents'
-import { ButtonCounter } from '../../Common'
-import { useSettings } from '../../Hooks/redux'
+import { FlexSpaceBetween, TextHeader } from '../../../Theme/Parents'
+import { ButtonCounter } from '../../../Common'
+import { useSettings } from '../../../Hooks/redux'
 
 interface ResultsI {
   type: 'repeats' | 'weight'
