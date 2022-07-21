@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 import { TextOrdinary } from '../../Theme/Parents'
+import { colors } from 'react-native-svg/lib/typescript/lib/extract/extractColor'
+import { useSettings } from '../../Hooks/redux'
 
 interface ExerciseResultsType {
   weight: number
@@ -14,23 +16,33 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    flexDirection: 'row'
+    flexDirection: 'row',
   } as ViewStyle,
   textRepWeight: {
     width: '35%',
-    textAlign: 'center'
+    textAlign: 'center',
   } as ViewStyle,
   textCurrPrev: {
-    width: '30%'
-  }
+    width: '30%',
+  },
 })
 
 export default function Approach({ weight, repeats, isPrevious = true }: ExerciseResultsType) {
+  const { colors } = useSettings()
+  const color = isPrevious ? colors.text : colors.primary
   return (
     <View style={styles.container}>
-      <TextOrdinary style={styles.textCurrPrev}>{`\u2022  ${isPrevious ? 'previous' : 'current'}`}</TextOrdinary>
-      <TextOrdinary style={styles.textRepWeight}>{repeats}</TextOrdinary>
-      {!!weight && <TextOrdinary style={styles.textRepWeight}>{weight} kg</TextOrdinary>}
+      <TextOrdinary color={color} style={styles.textCurrPrev}>{`\u2022  ${
+        isPrevious ? 'previous' : 'current'
+      }`}</TextOrdinary>
+      <TextOrdinary color={color} style={styles.textRepWeight}>
+        {repeats}
+      </TextOrdinary>
+      {!!weight && (
+        <TextOrdinary color={color} style={styles.textRepWeight}>
+          {weight} kg
+        </TextOrdinary>
+      )}
     </View>
   )
 }

@@ -17,6 +17,7 @@ import { colorsFixed } from '../../Theme/colors'
 import { theme } from '../../Theme/theme'
 import { icon } from '../../Theme/icons'
 
+import PlayingReview from './PlayingReview/PlayingReview'
 import Results from './components/Results'
 import BackgroundAction from './components/BackgroundAction'
 import TimeObserver from './components/TimeObserver'
@@ -27,6 +28,7 @@ export default memo(function PlayingScreen() {
   const { colors } = useSettings()
   const onSay = useTTS()
   const { onTogglePlaying } = useContext(AppHelperContext)
+  const [isWorkoutReview, setIsWorkoutReview] = useState<boolean>(false)
   const {
     isPlaying,
     isWaitForSubmit,
@@ -75,6 +77,7 @@ export default memo(function PlayingScreen() {
   }, [playing.lap, exercise.name])
 
   useEffect(() => {
+    setIsWorkoutReview(p => (p ? false : p))
     isTheLastOneComplete && onSay('Workout complete')
   }, [isTheLastOneComplete])
 
@@ -176,7 +179,12 @@ export default memo(function PlayingScreen() {
           },
         ]}
       >
-        <IconButton onPress={() => {}} iconName={icon.back} color={`${colors.error}00`} size={35} />
+        <IconButton
+          onPress={() => setIsWorkoutReview(p => !p)}
+          iconName={isWorkoutReview ? icon.timer : icon.list}
+          color={colors.black}
+          size={35}
+        />
         <FlexSpaceBetween style={{ width: '50%' }}>
           <IconButton
             onPress={onPrevious}
@@ -202,7 +210,7 @@ export default memo(function PlayingScreen() {
         </FlexSpaceBetween>
         <IconButton onPress={onReload} iconName={icon.restart} color={colors.black} size={35} />
       </FlexSpaceBetween>
-
+      {isWorkoutReview && <PlayingReview playingWorkout={playingWorkout} playingExerciseIdx={playing.idx} />}
       <GoBackSubmitModal text={'Current results will be lost!'} onConfirm={onTogglePlaying} />
       <BackgroundAction
         duration={duration}

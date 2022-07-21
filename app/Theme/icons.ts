@@ -16,4 +16,6 @@ export const icon = {
   empty: 'cancel',
   plus: 'plus',
   share: 'share-variant',
+  list: 'format-list-bulleted',
+  timer: 'timer-outline',
 }

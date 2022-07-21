@@ -5,6 +5,7 @@ import { FlexStart, TextSecondary } from '../../Theme/Parents'
 import { ExerciseType } from '../../Utils/types'
 import { useSettings } from '../../Hooks/redux'
 import { getWorkoutDuration } from '../../Utils'
+import { icon } from '../../Theme/icons'
 
 interface WorkoutDurationType {
   exercises: ExerciseType[]
@@ -39,7 +40,7 @@ export default memo(function WorkoutDuration({ exercises }: WorkoutDurationType)
   const time = getWorkoutDuration(exercises)
   return (
     <FlexStart>
-      <Icon name='timer-outline' size={18} color={colors.textSecondary} />
+      <Icon name={icon.timer} size={18} color={colors.textSecondary} />
       <TextSecondary>{secondsToMinSec(time)}</TextSecondary>
     </FlexStart>
   )

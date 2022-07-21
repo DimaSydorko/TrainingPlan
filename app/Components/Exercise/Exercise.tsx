@@ -6,7 +6,7 @@ import { useSettings } from '../../Hooks/redux'
 import { AppImage, AppModal, IconButton } from '../../Common'
 import { secondsToMinSec } from '../WorkoutDuration/WorkoutDuration'
 import { FlexEnd, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
-import { ExerciseType } from '../../Utils/types'
+import { ExerciseType, SelectedExerciseType } from '../../Utils/types'
 import { screen } from '../../Utils/constants'
 import Approach from './Approach'
 import { icon } from '../../Theme/icons'
@@ -15,7 +15,7 @@ import styles from './styles'
 const IMG_SIZE = 45
 
 interface IExerciseEdit {
-  exercise: ExerciseType
+  exercise: ExerciseType | SelectedExerciseType
   isEdit?: boolean
   onDelete?: (exercise: ExerciseType) => void
   onCopy?: (exercise: ExerciseType, isNew: true) => void
@@ -27,7 +27,7 @@ export default memo(function ExerciseEdit({
   isEdit = false,
   onCopy,
   onDelete,
-  onVisibilityToggle
+  onVisibilityToggle,
 }: IExerciseEdit) {
   const [isVisible, setIsVisible] = useState(exercise.isVisible)
   const [isDeleteModal, setIsDeleteModal] = useState(false)
@@ -47,8 +47,8 @@ export default memo(function ExerciseEdit({
         uid: nanoid(),
         approaches: exercise.approaches.map(() => ({
           repeats: 0,
-          weight: 0
-        }))
+          weight: 0,
+        })),
       },
       true
     )
@@ -105,9 +105,17 @@ export default memo(function ExerciseEdit({
               <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
             )}
           </FlexSpaceBetween>
-          {exercise.approaches?.map((approach, idx) => (
-            <Approach key={idx} isPrevious weight={approach.weight} repeats={approach.repeats} />
-          ))}
+          {exercise.approaches?.map((approach, idx) => {
+            const isPrevious = approach.currentWeight === undefined && approach.currentRepeats === undefined
+            return (
+              <Approach
+                key={idx}
+                isPrevious={isPrevious}
+                weight={isPrevious ? approach.weight : approach.currentWeight}
+                repeats={isPrevious ? approach.repeats : approach.currentRepeats}
+              />
+            )
+          })}
         </>
       )}
       <AppModal
