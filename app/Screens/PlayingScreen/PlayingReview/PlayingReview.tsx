@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { memo } from 'react'
-import { SafeAreaView } from 'react-native'
+import { SafeAreaView, ScrollView } from 'react-native'
 
 import { useSettings } from '../../../Hooks/redux'
 import { SelectedWorkoutType } from '../../../Utils/types'
@@ -17,14 +17,16 @@ export default memo(function PlayingReview({ playingWorkout, playingExerciseIdx 
   const { colors } = useSettings()
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      {playingWorkout.exercises.map((exercise, idx) => (
-        <Card
-          key={exercise.uid}
-          style={[{ borderColor: playingExerciseIdx >= idx ? colors.primary : colors.menu, borderWidth: 2 }]}
-        >
-          <Exercise key={exercise.uid} exercise={exercise} />
-        </Card>
-      ))}
+      <ScrollView>
+        {playingWorkout.exercises.map((exercise, idx) => (
+          <Card
+            key={exercise.uid}
+            style={[{ borderColor: playingExerciseIdx >= idx ? colors.primary : colors.menu, borderWidth: 2 }]}
+          >
+            <Exercise key={exercise.uid} exercise={exercise} />
+          </Card>
+        ))}
+      </ScrollView>
     </SafeAreaView>
   )
 })

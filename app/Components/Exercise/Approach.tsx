@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 import { TextOrdinary } from '../../Theme/Parents'
-import { colors } from 'react-native-svg/lib/typescript/lib/extract/extractColor'
 import { useSettings } from '../../Hooks/redux'
 
 interface ExerciseResultsType {
