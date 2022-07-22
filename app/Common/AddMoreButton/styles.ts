@@ -8,7 +8,7 @@ export default StyleSheet.create({
     borderRadius: 24,
     position: 'absolute',
     zIndex: 101,
-    top: screen.vh - headerHeight * 2 - StatusBar.currentHeight - 40,
+    top: screen.vh + (StatusBar.currentHeight || 0) - headerHeight * 2 - 100,
     right: 20,
   },
 })

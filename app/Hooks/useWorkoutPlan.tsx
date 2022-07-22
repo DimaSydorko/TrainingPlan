@@ -10,18 +10,18 @@ export default function useWorkoutPlan() {
 
   const addWorkout = useCallback(
     (workout: WorkoutType, isInPlan: boolean) => {
-      if (selectedPlan.uid && isInPlan) {
+      if (selectedPlan?.uid && isInPlan) {
         dispatch(workoutActionCreators.addWorkout({ ...workout, plansUid: [selectedPlan.uid] }))
       } else {
         dispatch(workoutActionCreators.addWorkout(workout))
       }
     },
-    [selectedPlan.uid]
+    [selectedPlan?.uid]
   )
 
   const deleteWorkouts = useCallback(
     (workoutUids: string[], isInPlan: boolean) => {
-      if (selectedPlan.uid && isInPlan) {
+      if (selectedPlan?.uid && isInPlan) {
         dispatch(
           plansActionCreators.changeWorkoutsCount({
             planUid: selectedPlan.uid,
@@ -36,7 +36,7 @@ export default function useWorkoutPlan() {
         dispatch(workoutActionCreators.deleteWorkout(workoutUids[0]))
       }
     },
-    [selectedPlan.uid]
+    [selectedPlan?.uid]
   )
 
   const moveWorkout = useCallback(

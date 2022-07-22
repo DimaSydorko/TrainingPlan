@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { memo } from 'react'
 import { View } from 'react-native'
+import { useSettings } from '../../../Hooks/redux'
 import { Timer } from '../../../Common'
+import { usePlayTimerContext } from './PlayTimerProvider'
+import { secondsToMinSec } from '../../../Components/WorkoutDuration/WorkoutDuration'
 import { theme } from '../../../Theme/theme'
 import { FlexSpaceBetween, TextHeader, TextSecondary } from '../../../Theme/Parents'
-import { usePlayTimerContext } from './PlayTimerProvider'
 import styles from '../styles'
-import { secondsToMinSec } from '../../../Components/WorkoutDuration/WorkoutDuration'
-import { useSettings } from '../../../Hooks/redux'
 
 interface IProps {
   playingLap: number

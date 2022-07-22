@@ -51,7 +51,8 @@ export default memo(function PlayingScreen() {
   const isTheLastOneComplete = isWaitForSubmit && isTheLastOne
   const duration = isTheLastOneComplete ? 0 : exercise.breakTimeInSec
   const workoutDurationTime =
-    getWorkoutDuration(playingWorkout.exercises.filter((ex, idx) => idx >= playing.idx)) - duration
+    getWorkoutDuration(playingWorkout.exercises.filter((ex, idx) => idx > playing.idx)) +
+    (exercise.laps - playing.lap) * duration
   const weightDiff = current?.weight - approach?.weight || 0
   const [isInvisibleTimerCircle, setIsInvisibleTimerCircle] = useState<boolean>(false)
   const color = exercise.color || colors.primary
@@ -77,8 +78,10 @@ export default memo(function PlayingScreen() {
   }, [playing.lap, exercise.name])
 
   useEffect(() => {
-    setIsWorkoutReview(p => (p ? false : p))
-    isTheLastOneComplete && onSay('Workout complete')
+    if (isTheLastOneComplete) {
+      setIsWorkoutReview(p => (p ? p : true))
+      onSay('Workout complete')
+    }
   }, [isTheLastOneComplete])
 
   const onTimerUpdate = useCallback((remainingTime: number) => {
@@ -99,21 +102,25 @@ export default memo(function PlayingScreen() {
 
       <FlexCenterColumn>
         <View style={styles.nextExercise}>
-          <TextSecondary center>Next up</TextSecondary>
-          {!!exerciseNext ? (
+          {!isTheLastOneComplete && (
             <>
-              <TextSecondary center color={exerciseNext.color || colors.primary}>
-                {exerciseNext.name}
-              </TextSecondary>
-              <TextSecondary center>
-                Laps {exerciseNext.laps}
-                {!!exerciseNext.approaches[0]?.weight && `    Weight ${exerciseNext.approaches[0]?.weight} kg`}
-              </TextSecondary>
+              <TextSecondary center>Next up</TextSecondary>
+              {!!exerciseNext ? (
+                <>
+                  <TextSecondary center color={exerciseNext.color || colors.primary}>
+                    {exerciseNext.name}
+                  </TextSecondary>
+                  <TextSecondary center>
+                    Laps {exerciseNext.laps}
+                    {!!exerciseNext.approaches[0]?.weight && `    Weight ${exerciseNext.approaches[0]?.weight} kg`}
+                  </TextSecondary>
+                </>
+              ) : (
+                <TextSecondary center color={colors.secondPrimary}>
+                  Finish
+                </TextSecondary>
+              )}
             </>
-          ) : (
-            <TextSecondary center color={colors.secondPrimary}>
-              Finish
-            </TextSecondary>
           )}
         </View>
 
@@ -133,7 +140,7 @@ export default memo(function PlayingScreen() {
             {({ remainingTime }) => (
               <FlexCenterColumn style={styles.timerContent}>
                 {!!exercise.imageUrl && <AppImage size={100} src={exercise.imageUrl} />}
-                <TextHeader center color={color} style={{ fontSize: 24 }}>
+                <TextHeader center color={color} style={{ fontSize: 24 }} ellipsizeMode='tail' numberOfLines={2}>
                   {exercise.name}
                 </TextHeader>
                 <TextHeader color={colors.text} style={{ fontSize: 22 }}>
@@ -210,9 +217,18 @@ export default memo(function PlayingScreen() {
         </FlexSpaceBetween>
         <IconButton onPress={onReload} iconName={icon.restart} color={colors.black} size={35} />
       </FlexSpaceBetween>
-      {isWorkoutReview && <PlayingReview playingWorkout={playingWorkout} playingExerciseIdx={playing.idx} />}
+      {isWorkoutReview && (
+        <PlayingReview
+          playingWorkout={playingWorkout}
+          playingExerciseIdx={playing.idx}
+          playingExerciseLap={playing.lap}
+          isTheLastOneComplete={isTheLastOneComplete}
+          onSaveResult={onSaveResult}
+        />
+      )}
       <GoBackSubmitModal text={'Current results will be lost!'} onConfirm={onTogglePlaying} />
       <BackgroundAction
+        color={color}
         duration={duration}
         taskName={playingWorkout.name}
         taskTitle={playingWorkout.name}

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { memo, useEffect, useMemo } from 'react'
+import { memo, useEffect } from 'react'
 import BackgroundService from 'react-native-background-actions'
 import { usePlayTimerContext } from './PlayTimerProvider'
 import { useSettings } from '../../../Hooks/redux'
@@ -8,12 +8,15 @@ interface IProps {
   taskName: string
   taskTitle: string
   taskDesc: string
+  color?: string
   duration?: number
 }
 
-export default memo(function BackgroundAction({ taskTitle, taskDesc, taskName, duration }: IProps) {
+export default memo(function BackgroundAction({ taskTitle, taskDesc, taskName, duration, color }: IProps) {
   const { playTimer } = usePlayTimerContext()
   const { colors } = useSettings()
+
+  const newColor = color || colors.secondPrimary
 
   const veryIntensiveTask = async taskDataArguments => {
     const { delay } = taskDataArguments
@@ -25,32 +28,29 @@ export default memo(function BackgroundAction({ taskTitle, taskDesc, taskName, d
     })
   }
 
-  const options = useMemo(
-    () => ({
-      taskName,
-      taskTitle,
-      taskDesc,
-      taskIcon: {
-        name: 'ic_launcher',
-        type: 'mipmap',
-      },
-      parameters: {
-        delay: 1000,
-      },
-      // linkingURI: 'yourSchemeHere://chat/jane',
-      color: colors.secondPrimary,
-      ...(duration !== undefined
-        ? {
-            progressBar: {
-              value: 100,
-              max: 100,
-              indeterminate: false,
-            },
-          }
-        : {}),
-    }),
-    [taskName, taskTitle, taskDesc]
-  )
+  const options = {
+    taskName,
+    taskTitle,
+    taskDesc,
+    taskIcon: {
+      name: 'ic_launcher',
+      type: 'mipmap',
+    },
+    parameters: {
+      delay: 1000,
+    },
+    linkingURI: 'trainingPlanTogether://chat/jane',
+    color: newColor,
+    ...(duration !== undefined
+      ? {
+          progressBar: {
+            value: 100,
+            max: 100,
+            indeterminate: false,
+          },
+        }
+      : {}),
+  }
 
   useEffect(() => {
     BackgroundService.start(veryIntensiveTask, options).then()
@@ -61,8 +61,15 @@ export default memo(function BackgroundAction({ taskTitle, taskDesc, taskName, d
 
   useEffect(() => {
     BackgroundService.updateNotification({ taskDesc }).then()
+  }, [taskDesc])
+
+  useEffect(() => {
     BackgroundService.updateNotification({ taskTitle }).then()
-  }, [taskDesc, taskTitle])
+  }, [taskTitle])
+
+  useEffect(() => {
+    BackgroundService.updateNotification({ color: newColor }).then()
+  }, [newColor])
 
   useEffect(() => {
     duration !== undefined &&

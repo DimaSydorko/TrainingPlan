@@ -18,4 +18,5 @@ export const icon = {
   share: 'share-variant',
   list: 'format-list-bulleted',
   timer: 'timer-outline',
+  image: 'image-outline',
 }

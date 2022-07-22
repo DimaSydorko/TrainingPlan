@@ -34,7 +34,7 @@ export default memo(function ButtonCounter({
   return (
     <FlexSpaceBetween style={[styles.container, { width: (screen.vw - 120) / 2 + extraWidth }]}>
       <IconButton
-        size={36}
+        size={28}
         disableVibration
         iconName='minus'
         color={buttonColor}
@@ -48,7 +48,7 @@ export default memo(function ButtonCounter({
         {children}
       </TextHeader>
       <IconButton
-        size={36}
+        size={28}
         disableVibration
         iconName='plus'
         color={buttonColor}

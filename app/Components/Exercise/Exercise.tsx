@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { memo, useCallback, useEffect, useState } from 'react'
-import { ViewStyle } from 'react-native'
+import { View, ViewStyle } from 'react-native'
 import { nanoid } from '../../Utils'
 import { useSettings } from '../../Hooks/redux'
 import { AppImage, AppModal, IconButton } from '../../Common'
 import { secondsToMinSec } from '../WorkoutDuration/WorkoutDuration'
-import { FlexEnd, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
+import { FlexEnd, FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { ExerciseType, SelectedExerciseType } from '../../Utils/types'
 import { screen } from '../../Utils/constants'
 import Approach from './Approach'
@@ -17,6 +17,7 @@ const IMG_SIZE = 45
 interface IExerciseEdit {
   exercise: ExerciseType | SelectedExerciseType
   isEdit?: boolean
+  playingExerciseLap?: number
   onDelete?: (exercise: ExerciseType) => void
   onCopy?: (exercise: ExerciseType, isNew: true) => void
   onVisibilityToggle?: (exercise: ExerciseType) => void
@@ -28,6 +29,7 @@ export default memo(function ExerciseEdit({
   onCopy,
   onDelete,
   onVisibilityToggle,
+  playingExerciseLap,
 }: IExerciseEdit) {
   const [isVisible, setIsVisible] = useState(exercise.isVisible)
   const [isDeleteModal, setIsDeleteModal] = useState(false)
@@ -63,7 +65,7 @@ export default memo(function ExerciseEdit({
             <TextHeader
               color={isVisible ? color : `${color}80`}
               numberOfLines={1}
-              style={{ width: screen.vw - (isImage ? 230 : 170) }}
+              style={{ width: screen.vw - (isImage ? 215 : 170) }}
             >
               {exercise.name}
             </TextHeader>
@@ -96,26 +98,41 @@ export default memo(function ExerciseEdit({
         </>
       ) : (
         <>
-          <FlexSpaceBetween>
+          <FlexStart>
             {isImage && <AppImage src={exercise.imageUrl} size={IMG_SIZE} style={{ marginLeft: -10 }} />}
-            <TextHeader color={color} numberOfLines={1} style={{ width: screen.vw - 200 }}>
-              {exercise.name}
-            </TextHeader>
-            {!!exercise.breakTimeInSec && (
-              <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
-            )}
-          </FlexSpaceBetween>
-          {exercise.approaches?.map((approach, idx) => {
-            const isPrevious = approach.currentWeight === undefined && approach.currentRepeats === undefined
-            return (
-              <Approach
-                key={idx}
-                isPrevious={isPrevious}
-                weight={isPrevious ? approach.weight : approach.currentWeight}
-                repeats={isPrevious ? approach.repeats : approach.currentRepeats}
-              />
-            )
-          })}
+            <View>
+              <TextHeader color={color} numberOfLines={1} style={{ width: screen.vw - (isImage ? 110 : 70) }}>
+                {exercise.name}
+              </TextHeader>
+              {!!exercise.breakTimeInSec && (
+                <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
+              )}
+            </View>
+          </FlexStart>
+          <View style={styles.approaches}>
+            {exercise.approaches?.map((approach, idx) => {
+              const isPrevious = approach.currentWeight === undefined && approach.currentRepeats === undefined
+              return (
+                <View key={idx}>
+                  {playingExerciseLap === idx + 1 && (
+                    <View
+                      style={{
+                        width: '100%',
+                        borderBottomColor: colors.secondPrimary,
+                        borderStyle: 'dashed',
+                        borderBottomWidth: 2,
+                      }}
+                    />
+                  )}
+                  <Approach
+                    isPrevious={isPrevious}
+                    weight={isPrevious ? approach.weight : approach.currentWeight}
+                    repeats={isPrevious ? approach.repeats : approach.currentRepeats}
+                  />
+                </View>
+              )
+            })}
+          </View>
         </>
       )}
       <AppModal

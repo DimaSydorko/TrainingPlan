@@ -30,6 +30,8 @@ export enum ScreenName {
 export const screen = {
   vw: Dimensions.get('window').width,
   vh: Dimensions.get('window').height,
+  sw: Dimensions.get('screen').width,
+  sh: Dimensions.get('screen').height,
 }
 
 export const defaultPlan: PlanType = {

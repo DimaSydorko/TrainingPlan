@@ -52,9 +52,9 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
         ? workout.workoutsInPlan
             ?.slice()
             ?.filter(w => w.plansUid.includes(selectedPlan.uid))
-            ?.sort((a, b) => selectedPlan.workoutUids.indexOf(a.uid) - selectedPlan.workoutUids.indexOf(b.uid))
+            ?.sort((a, b) => selectedPlan?.workoutUids?.indexOf(a.uid) - selectedPlan?.workoutUids?.indexOf(b.uid))
         : workout.workouts,
-    [isInPlan, workout.workoutsInPlan, workout.workouts, selectedPlan.workoutUids, selectedPlan.uid]
+    [isInPlan, workout.workoutsInPlan, workout.workouts, selectedPlan?.workoutUids, selectedPlan?.uid]
   )
   const isChanged = useMemo(
     () =>

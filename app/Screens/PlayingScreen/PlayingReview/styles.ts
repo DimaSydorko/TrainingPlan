@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { screen } from '../../../Utils/constants'
 
 export default StyleSheet.create({
   container: {
@@ -14,5 +15,8 @@ export default StyleSheet.create({
     left: 0,
     zIndex: 10,
   },
-  exercises: {},
+  confirmButton: {
+    width: screen.vw - 80,
+    marginBottom: 20,
+  },
 })
