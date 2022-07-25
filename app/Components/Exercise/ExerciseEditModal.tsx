@@ -34,7 +34,7 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
   const [imageUrl, setImageUrl] = useState<string>(initialEx.imageUrl || '')
   const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false)
   const [isKeyboardVisible, setKeyboardVisible] = useState<boolean>(false)
-  const [color, setColor] = useState<string>(exercise?.color || colors.primary)
+  const [colorIdx, setColorIdx] = useState<number>(exercise?.colorIdx || 0)
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -66,13 +66,13 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
       repeats,
       isVisible,
       approaches,
-      color,
+      colorIdx,
       imageUrl,
-      breakTimeInSec: selectMinutes * 60 + selectSeconds
+      breakTimeInSec: selectMinutes * 60 + selectSeconds,
     }
     onSave(newExercise)
     onClose()
-  }, [name, color, laps, repeats, isVisible, selectMinutes, selectSeconds, initialEx, imageUrl])
+  }, [name, colorIdx, laps, repeats, isVisible, selectMinutes, selectSeconds, initialEx, imageUrl])
 
   return (
     <>
@@ -89,7 +89,7 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
         confirmText={'Save'}
         extraPlaceLeft={
           <>
-            <AppColorPicker value={color} onChange={setColor} />
+            <AppColorPicker value={colorIdx} onChange={setColorIdx} />
             <ImageSelector value={imageUrl} onSubmit={setImageUrl} />
           </>
         }

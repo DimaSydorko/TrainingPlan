@@ -13,7 +13,7 @@ import { getWorkoutDuration } from '../../Utils'
 import { AppImage, ConfirmButton, GoBackSubmitModal, IconButton } from '../../Common'
 import { secondsToMinSec } from '../../Components/WorkoutDuration/WorkoutDuration'
 import { FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
-import { colorsFixed } from '../../Theme/colors'
+import { COLORS_EXERCISE, colorsDark, colorsFixed } from '../../Theme/colors'
 import { theme } from '../../Theme/theme'
 import { icon } from '../../Theme/icons'
 
@@ -28,7 +28,6 @@ export default memo(function PlayingScreen() {
   const { colors } = useSettings()
   const onSay = useTTS()
   const { onTogglePlaying } = useContext(AppHelperContext)
-  const [isWorkoutReview, setIsWorkoutReview] = useState<boolean>(false)
   const {
     isPlaying,
     isWaitForSubmit,
@@ -47,15 +46,20 @@ export default memo(function PlayingScreen() {
     onReload,
     playingWorkout,
   } = usePlaying()
-  const repeatsDiff = current?.repeats - approach?.repeats || 0
+  const [isWorkoutReview, setIsWorkoutReview] = useState<boolean>(false)
+  const [isInvisibleTimerCircle, setIsInvisibleTimerCircle] = useState<boolean>(false)
+
+  const isDarkTheme = colors.primary === colorsDark.primary
+  const color = COLORS_EXERCISE[exercise?.colorIdx || 0][+isDarkTheme]
   const isTheLastOneComplete = isWaitForSubmit && isTheLastOne
+
+  const weightDiff = current?.weight - approach?.weight || 0
+  const repeatsDiff = current?.repeats - approach?.repeats || 0
+
   const duration = isTheLastOneComplete ? 0 : exercise.breakTimeInSec
   const workoutDurationTime =
     getWorkoutDuration(playingWorkout.exercises.filter((ex, idx) => idx > playing.idx)) +
     (exercise.laps - playing.lap) * duration
-  const weightDiff = current?.weight - approach?.weight || 0
-  const [isInvisibleTimerCircle, setIsInvisibleTimerCircle] = useState<boolean>(false)
-  const color = exercise.color || colors.primary
 
   useEffect(() => {
     if (isPlaying) setIsInvisibleTimerCircle(p => (p ? !p : p))
@@ -107,7 +111,7 @@ export default memo(function PlayingScreen() {
               <TextSecondary center>Next up</TextSecondary>
               {!!exerciseNext ? (
                 <>
-                  <TextSecondary center color={exerciseNext.color || colors.primary}>
+                  <TextSecondary center color={COLORS_EXERCISE[exerciseNext?.colorIdx || 0][+isDarkTheme]}>
                     {exerciseNext.name}
                   </TextSecondary>
                   <TextSecondary center>

@@ -6,6 +6,7 @@ import { useSettings } from '../../../Hooks/redux'
 import { SelectedWorkoutType } from '../../../Utils/types'
 import Exercise from '../../../Components/Exercise/Exercise'
 import { ConfirmButton } from '../../../Common'
+import { COLORS_EXERCISE, colorsDark } from '../../../Theme/colors'
 import { Card } from '../../../Theme/Parents'
 import styles from './styles'
 
@@ -26,6 +27,7 @@ export default memo(function PlayingReview({
 }: IProps) {
   const { colors } = useSettings()
   const scrollRef = useRef<ScrollView>(null)
+  const isDarkTheme = colors.primary === colorsDark.primary
 
   useEffect(() => {
     if (isTheLastOneComplete) {
@@ -48,6 +50,7 @@ export default memo(function PlayingReview({
               ]}
             >
               <Exercise
+                color={COLORS_EXERCISE[exercise?.colorIdx || 0][+isDarkTheme]}
                 key={exercise.uid}
                 exercise={exercise}
                 playingExerciseLap={

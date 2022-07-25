@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ReactNode } from 'react'
-import { Modal, TouchableOpacity, View, ViewStyle } from 'react-native'
+import { Modal, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native'
 import { ConfirmButton } from '../index'
 import { useSettings } from '../../Hooks/redux'
 import { FlexCenter, FlexEnd, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
@@ -20,6 +20,8 @@ interface AppModalType {
   extraPlaceRight?: ReactNode
   extraPlaceLeft?: ReactNode
   children?: ReactNode
+  style?: ViewStyle
+  headerStyle?: TextStyle
 }
 
 export default function AppModal({
@@ -35,17 +37,19 @@ export default function AppModal({
   extraPlaceLeft,
   disabled,
   disableAutoClose = false,
-  confirmText = 'Confirm'
+  confirmText = 'Confirm',
+  style,
+  headerStyle,
 }: AppModalType) {
   const { colors } = useSettings()
   const buttonStyle: ViewStyle = !onRefuse ? { width: '40%' } : { marginHorizontal: 6, width: '30%' }
   return (
     <Modal animationType='fade' transparent={true} visible={isOpen} onTouchStart={onClose} onRequestClose={onClose}>
       <FlexCenter style={styles.modal}>
-        <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <View style={[styles.container, { backgroundColor: colors.background }, style]}>
           <FlexCenter>
             {!!extraPlaceRight && <FlexStart style={styles.extraPlaceLeft}>{extraPlaceLeft}</FlexStart>}
-            <TextHeader>{header}</TextHeader>
+            <TextHeader style={headerStyle}>{header}</TextHeader>
             {!!extraPlaceRight && <FlexEnd style={styles.extraPlaceRight}>{extraPlaceRight}</FlexEnd>}
           </FlexCenter>
           <FlexCenter style={styles.content}>

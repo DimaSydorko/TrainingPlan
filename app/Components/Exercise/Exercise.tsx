@@ -2,39 +2,38 @@ import * as React from 'react'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { View, ViewStyle } from 'react-native'
 import { nanoid } from '../../Utils'
-import { useSettings } from '../../Hooks/redux'
 import { AppImage, AppModal, IconButton } from '../../Common'
 import { secondsToMinSec } from '../WorkoutDuration/WorkoutDuration'
-import { FlexEnd, FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
+import { Divider, FlexEnd, FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { ExerciseType, SelectedExerciseType } from '../../Utils/types'
 import { screen } from '../../Utils/constants'
-import Approach from './Approach'
 import { icon } from '../../Theme/icons'
+import Approach from './Approach'
 import styles from './styles'
 
 const IMG_SIZE = 45
 
-interface IExerciseEdit {
+interface IExercise {
   exercise: ExerciseType | SelectedExerciseType
   isEdit?: boolean
   playingExerciseLap?: number
   onDelete?: (exercise: ExerciseType) => void
   onCopy?: (exercise: ExerciseType, isNew: true) => void
   onVisibilityToggle?: (exercise: ExerciseType) => void
+  color: string
 }
 
-export default memo(function ExerciseEdit({
+export default memo(function Exercise({
   exercise,
   isEdit = false,
   onCopy,
   onDelete,
   onVisibilityToggle,
   playingExerciseLap,
-}: IExerciseEdit) {
+  color,
+}: IExercise) {
   const [isVisible, setIsVisible] = useState(exercise.isVisible)
   const [isDeleteModal, setIsDeleteModal] = useState(false)
-  const { colors } = useSettings()
-  const color = exercise.color || colors.primary
   const isImage = !!exercise.imageUrl
   const containerStyle: ViewStyle = isImage ? { marginLeft: IMG_SIZE, width: '86.5%' } : {}
 
@@ -114,16 +113,7 @@ export default memo(function ExerciseEdit({
               const isPrevious = approach.currentWeight === undefined && approach.currentRepeats === undefined
               return (
                 <View key={idx}>
-                  {playingExerciseLap === idx + 1 && (
-                    <View
-                      style={{
-                        width: '100%',
-                        borderBottomColor: colors.secondPrimary,
-                        borderStyle: 'dashed',
-                        borderBottomWidth: 2,
-                      }}
-                    />
-                  )}
+                  {playingExerciseLap === idx + 1 && <Divider isDashed />}
                   <Approach
                     isPrevious={isPrevious}
                     weight={isPrevious ? approach.weight : approach.currentWeight}

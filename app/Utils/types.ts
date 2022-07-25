@@ -35,7 +35,7 @@ export interface ExerciseType {
   repeats: number
   approaches: ApproachType[]
   isVisible: boolean
-  color: string
+  colorIdx: number
   imageUrl: string
 }
 

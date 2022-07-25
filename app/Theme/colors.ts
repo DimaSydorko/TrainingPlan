@@ -1,6 +1,6 @@
 export const colorsFixed = {
   buttonText: '#ffffff',
-  shadow: '#00000030'
+  shadow: '#00000030',
 }
 
 export const colorsLight = {
@@ -18,7 +18,7 @@ export const colorsLight = {
   background: '#f1f1f1',
   text: '#3e3e3e',
   textSecondary: '#35353580',
-  menu: '#FFFFFF'
+  menu: '#FFFFFF',
 }
 
 export const colorsDark = {
@@ -36,5 +36,20 @@ export const colorsDark = {
   background: '#1f1f1f',
   text: '#c2c2c2',
   textSecondary: 'rgba(189,189,189,0.5)',
-  menu: '#2f2f2f'
+  menu: '#2f2f2f',
 }
+
+export const COLORS_EXERCISE = [
+  ['#0e9000', '#18b502'],
+  ['#8cd47f', '#66a757'],
+  ['#00c87f', '#00c87f'],
+  ['#ff2929', '#fb4545'],
+  ['#FF5858', '#d34545'],
+  ['#ff7b22', '#ef8941'],
+  ['#f1bf00', '#ffd347'],
+  ['#00adff', '#00adff'],
+  ['#0217ff', '#5965fa'],
+  ['#a401ff', '#cb64ff'],
+  ['#ff00cc', '#d735b4'],
+  ['#ff60f3', '#fb9ef5'],
+]

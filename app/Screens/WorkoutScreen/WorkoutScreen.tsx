@@ -27,6 +27,7 @@ import { deepCompare } from '../../Utils'
 import { ExerciseType, WorkoutType } from '../../Utils/types'
 import { headerHeight, theme } from '../../Theme/theme'
 import { icon } from '../../Theme/icons'
+import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
 
 export default function WorkoutScreen() {
   const dispatch = useAppDispatch()
@@ -42,6 +43,7 @@ export default function WorkoutScreen() {
   const [workoutExercises, setWorkoutExercises] = useState<ExerciseType[] | null>(null)
   const [changeExercise, setChangeExercise] = useState<ExerciseType | null>(null)
   const isEmpty = !workoutExercises?.filter(ex => ex.isVisible)?.length
+  const isDarkTheme = colors.primary === colorsDark.primary
 
   const changedWorkout: WorkoutType = useMemo(
     () => ({
@@ -110,7 +112,7 @@ export default function WorkoutScreen() {
 
   const renderItem = useCallback(
     ({ item, drag, isActive }: RenderItemParams<ExerciseType>) => {
-      const color = item.color || colors.primary
+      const color = COLORS_EXERCISE[item?.colorIdx || 0][+isDarkTheme]
       return (
         <ScaleDecorator>
           <Card borderLeftColor={item.isVisible ? `${color}` : `${color}80`}>
@@ -118,6 +120,7 @@ export default function WorkoutScreen() {
               <Exercise
                 exercise={item}
                 isEdit={isEditMode}
+                color={color}
                 onCopy={onSaveExercise}
                 onVisibilityToggle={onVisibilityToggle}
                 onDelete={onDeleteExercise}
@@ -127,7 +130,7 @@ export default function WorkoutScreen() {
         </ScaleDecorator>
       )
     },
-    [isEditMode, onVisibilityToggle, onSaveExercise]
+    [isEditMode, onVisibilityToggle, onSaveExercise, isDarkTheme, onDeleteExercise]
   )
 
   return (
@@ -181,11 +184,14 @@ export default function WorkoutScreen() {
                     </FlexSpaceBetween>
                     {workoutExercises
                       ?.filter(ex => ex.isVisible)
-                      ?.map(exercise => (
-                        <Card key={exercise.uid} borderLeftColor={exercise.color || colors.primary}>
-                          <Exercise exercise={exercise} />
-                        </Card>
-                      ))}
+                      ?.map(exercise => {
+                        const color = COLORS_EXERCISE[exercise?.colorIdx || 0][+isDarkTheme]
+                        return (
+                          <Card key={exercise.uid} borderLeftColor={color}>
+                            <Exercise exercise={exercise} color={color} />
+                          </Card>
+                        )
+                      })}
                   </>
                 )}
               </NestableScrollContainer>

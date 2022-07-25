@@ -16,8 +16,8 @@ const initialState: SettingsSliceType = {
   isVibration: true,
   internet: {
     isOnline: false,
-    lastBeOline: 0
-  }
+    lastBeOline: 0,
+  },
 }
 
 export const settingsSlice = createSlice({
@@ -38,8 +38,8 @@ export const settingsSlice = createSlice({
     onInternetConnectionChange: (state, { payload }: PayloadAction<boolean>) => {
       state.internet.isOnline = payload
       if (payload) state.internet.lastBeOline = new Date().getTime()
-    }
-  }
+    },
+  },
 })
 export const { onThemeChange, onVibrationToggle, onInternetConnectionChange, clearSettings } = settingsSlice.actions
 export default settingsSlice.reducer

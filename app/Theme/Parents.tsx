@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ReactNode } from 'react'
-import { SafeAreaView, ScrollView, Text, TextProps, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native'
+import { SafeAreaView, ScrollView, Text, TextProps, TextStyle, View, ViewStyle } from 'react-native'
 import { useSettings } from '../Hooks/redux'
 import { headerHeight, theme } from './theme'
 import { colorsFixed } from './colors'
@@ -13,13 +13,6 @@ interface ParentProps {
 type IText = TextProps & {
   color?: string
   center?: boolean
-}
-
-interface OnPressType {
-  onPress: () => void
-  onPressOut?: () => void
-  onPressIn?: () => void
-  borderLeftColor?: string
 }
 
 interface IPage {
@@ -106,16 +99,34 @@ export const FlexCenter = ({ children, style }: ParentProps) => {
   return <View style={[theme.containers.center, style]}>{children}</View>
 }
 
-export const FlexAlignCenter = ({ children, style }: ParentProps) => {
-  return <View style={[theme.containers.alignCenter, style]}>{children}</View>
-}
-
 export const FlexEnd = ({ children, style }: ParentProps) => {
   return <View style={[theme.containers.end, style]}>{children}</View>
 }
 
 export const FlexStart = ({ children, style }: ParentProps) => {
   return <View style={[theme.containers.alignCenter, style]}>{children}</View>
+}
+
+export const Divider = ({
+  style,
+  isDashed = false,
+  color = '',
+  width = 2,
+}: ParentProps & { color?: string; isDashed?: boolean; width?: number }) => {
+  const { colors } = useSettings()
+  return (
+    <View
+      style={[
+        {
+          width: '100%',
+          borderBottomColor: color || colors.secondPrimary,
+          borderStyle: isDashed ? 'dashed' : 'solid',
+          borderBottomWidth: width,
+        },
+        style,
+      ]}
+    />
+  )
 }
 
 export const Card = ({ children, style, borderLeftColor }: ParentProps & { borderLeftColor?: string }) => {
@@ -140,41 +151,6 @@ export const Card = ({ children, style, borderLeftColor }: ParentProps & { borde
     >
       {children}
     </View>
-  )
-}
-
-export const CardPressed = ({
-  children,
-  onPress,
-  onPressOut,
-  onPressIn,
-  style,
-  borderLeftColor,
-}: ParentProps & OnPressType) => {
-  const { colors } = useSettings()
-  return (
-    <TouchableOpacity
-      style={[
-        {
-          backgroundColor: colors.white,
-          shadowColor: colorsFixed.shadow,
-        },
-        theme.view.card,
-        theme.view.shadow,
-        borderLeftColor
-          ? {
-              borderLeftColor,
-              borderLeftWidth: 12,
-            }
-          : {},
-        style,
-      ]}
-      onPress={onPress}
-      onPressOut={onPressOut}
-      onPressIn={onPressIn}
-    >
-      {children}
-    </TouchableOpacity>
   )
 }
 

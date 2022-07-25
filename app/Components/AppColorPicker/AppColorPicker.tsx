@@ -1,45 +1,56 @@
 import * as React from 'react'
-import { useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import ColorPicker from 'react-native-wheel-color-picker'
 import { AppModal } from '../../Common'
-import { screen } from '../../Utils/constants'
-import { TextHeader } from '../../Theme/Parents'
+import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
+import { useSettings } from '../../Hooks/redux'
+import styles from './styles'
 
 interface IAppColorPicker {
-  value: string
-  onChange: (value: string) => void
+  value: number
+  onChange: (value: number) => void
 }
 
-export default function AppColorPicker({ value, onChange }: IAppColorPicker) {
+export default memo(function AppColorPicker({ value, onChange }: IAppColorPicker) {
+  const { colors } = useSettings()
   const [isModal, setIsModal] = useState(false)
-  const [color, setColor] = useState<string>(value)
+  const [colorIdx, setColorIdx] = useState<number>()
+  const isDarkTheme = colors.primary === colorsDark.primary
+  const color = COLORS_EXERCISE[colorIdx === undefined ? value : colorIdx][+isDarkTheme]
+
+  const onSubmit = useCallback(() => {
+    if (colorIdx !== undefined) onChange(colorIdx)
+  }, [colorIdx, onChange])
+
+  const onClose = useCallback(() => {
+    setColorIdx(undefined)
+    setIsModal(false)
+  }, [colorIdx, value])
 
   return (
     <>
       <TouchableOpacity
-        style={{ borderRadius: 100, backgroundColor: value, height: 30, width: 30 }}
+        style={{ borderRadius: 100, backgroundColor: color, height: 30, width: 30 }}
         onPress={() => setIsModal(true)}
       />
       <AppModal
-        onConfirm={() => onChange(color)}
-        onClose={() => {
-          setColor(value)
-          setIsModal(false)
-        }}
-        disabled={!color}
+        onConfirm={onSubmit}
+        onClose={onClose}
         isOpen={isModal}
-        header={'ChoseColor'}
+        header='Chose Color'
+        headerStyle={{ color }}
+        style={{ borderWidth: 10, borderColor: color }}
       >
-        <View style={{ flex: 1, height: screen.vh - 400 }}>
-          <View
-            style={{ display: 'flex', justifyContent: 'center', backgroundColor: color, height: 35, width: '100%' }}
-          >
-            {!!color && <TextHeader style={{ marginLeft: 10 }}>Selected</TextHeader>}
-          </View>
-          <ColorPicker onColorChangeComplete={setColor} color={color} discreteLength={5} />
+        <View style={styles.colorsContainer}>
+          {COLORS_EXERCISE.map((colors, idx) => (
+            <TouchableOpacity
+              key={idx}
+              style={[styles.colorSelect, { backgroundColor: colors[+isDarkTheme] }]}
+              onPress={() => setColorIdx(idx)}
+            />
+          ))}
         </View>
       </AppModal>
     </>
   )
-}
+})
