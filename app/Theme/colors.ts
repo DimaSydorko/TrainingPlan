@@ -4,7 +4,7 @@ export const colorsFixed = {
 }
 
 export const colorsLight = {
-  primary: '#8cd47f',
+  primary: '#70b763',
   second: '',
   secondPrimary: '#FF5858',
 
@@ -24,7 +24,7 @@ export const colorsLight = {
 export const colorsDark = {
   primary: '#3c8739',
   second: '',
-  secondPrimary: '#c71b37',
+  secondPrimary: '#f82349',
 
   error: '#d73838',
   info: '#1370fc',
@@ -41,7 +41,7 @@ export const colorsDark = {
 
 export const COLORS_EXERCISE = [
   ['#0e9000', '#18b502'],
-  ['#8cd47f', '#66a757'],
+  ['#70b763', '#66a757'],
   ['#00c87f', '#00c87f'],
   ['#ff2929', '#fb4545'],
   ['#FF5858', '#d34545'],

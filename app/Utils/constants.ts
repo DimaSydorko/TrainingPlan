@@ -59,7 +59,7 @@ export const defaultExercise: ExerciseType = {
   approaches: [],
   isVisible: true,
   breakTimeInSec: 0,
-  color: '#8cd47f',
+  colorIdx: 0,
   imageUrl: '',
 }
 export const defaultApproach: ApproachType = {
