@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { memo } from 'react'
+import { memo, useEffect, useRef } from 'react'
 import { SafeAreaView, ScrollView, View } from 'react-native'
 
 import { useSettings } from '../../../Hooks/redux'
@@ -25,9 +25,17 @@ export default memo(function PlayingReview({
   onSaveResult,
 }: IProps) {
   const { colors } = useSettings()
+  const scrollRef = useRef<ScrollView>(null)
+
+  useEffect(() => {
+    if (isTheLastOneComplete) {
+      scrollRef.current.scrollToEnd({ animated: false })
+    }
+  }, [isTheLastOneComplete])
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <ScrollView>
+      <ScrollView ref={scrollRef}>
         {playingWorkout.exercises.map((exercise, idx) => (
           <View key={exercise.uid}>
             <Card

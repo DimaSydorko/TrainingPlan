@@ -39,7 +39,7 @@ export default memo(function BackgroundAction({ taskTitle, taskDesc, taskName, d
     parameters: {
       delay: 1000,
     },
-    linkingURI: 'trainingPlanTogether://chat/jane',
+    linkingURI: 'yourSchemeHere://chat/jane',
     color: newColor,
     ...(duration !== undefined
       ? {
