@@ -5,14 +5,15 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useAppDispatch, useSettings, useUser } from '../../Hooks/redux'
 import { userActionCreators } from '../../store/UserReducer/UserActionCreators'
 import { useNavigation } from '@react-navigation/native'
-import { ScreenName } from '../../Utils/constants'
+import { FUTURE_FLAG, ScreenName } from '../../Utils/constants'
 import { ConfirmButton, MyTextInput } from '../../Common'
 import { Page, TextHeader, TextOrdinary } from '../../Theme/Parents'
 import { theme } from '../../Theme/theme'
+import AppGoogleSignInButton from './AppGoogleSignInButton'
 
 export default function RegistrationScreen() {
   const dispatch = useAppDispatch()
-  const { colors } = useSettings()
+  const { colors, internet } = useSettings()
   const { error, isLoading } = useUser()
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
   const [inputData, setInputData] = useState({ fullName: '', email: '', password: '', confirmPassword: '' })
@@ -30,7 +31,7 @@ export default function RegistrationScreen() {
       userActionCreators.signUp({
         email: inputData.email,
         password: inputData.password,
-        displayName: inputData.password
+        displayName: inputData.password,
       })
     )
   }
@@ -61,7 +62,8 @@ export default function RegistrationScreen() {
           onChangeText={confirmPassword => setInputData({ ...inputData, confirmPassword })}
           placeholder='Confirm Password'
         />
-        <ConfirmButton disabled={isLoading} onPress={onRegister} header='Create account' />
+        <ConfirmButton disabled={isLoading || !internet.isOnline} onPress={onRegister} header='Create account' />
+        {!FUTURE_FLAG.IS_DEV && <AppGoogleSignInButton disabled={!internet.isOnline} />}
         <Page style={theme.margin.top20}>
           <TextOrdinary>
             Already got an account?{' '}

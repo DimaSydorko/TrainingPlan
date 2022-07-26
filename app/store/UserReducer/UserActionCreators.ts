@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { FB_Auth, FB_Collection_UsersData } from '../../Utils/firebase'
+import { GoogleSignin } from '@react-native-google-signin/google-signin'
+import firebase, { FB_Auth, FB_Collection_UsersData } from '../../Utils/firebase'
 import { UserDataType, UserType } from '../../Utils/types'
 import { initialUserData } from './UserSlice'
 import { clearWorkoutResults } from '../WorkoutReducer/WorkoutSlice'
@@ -17,7 +18,7 @@ export const userActionCreators = {
         return {
           uid: response.user?.uid,
           displayName: response.user?.displayName || '',
-          photoURL: response.user?.photoURL
+          photoURL: response.user?.photoURL,
         } as UserType
       } catch (e) {
         return thunkAPI.rejectWithValue(e.message)
@@ -31,9 +32,27 @@ export const userActionCreators = {
       return {
         uid: response.user?.uid,
         displayName: response.user?.displayName || '',
-        photoURL: response.user?.photoURL
+        photoURL: response.user?.photoURL,
       } as UserType
     } catch (e) {
+      return thunkAPI.rejectWithValue(e.message)
+    }
+  }),
+  signInWithGoogle: createAsyncThunk('user/signInWithGoogle', async (props, thunkAPI) => {
+    try {
+      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true })
+      const { idToken } = await GoogleSignin.signIn()
+      const credential = firebase.auth.GoogleAuthProvider.credential(idToken)
+      const response = await FB_Auth.signInWithCredential(credential)
+      thunkAPI.dispatch(userActionCreators.dataRequest(response.user?.uid || ''))
+
+      return {
+        uid: response.user?.uid,
+        displayName: response.user?.displayName || '',
+        photoURL: response.user?.photoURL,
+      } as UserType
+    } catch (e) {
+      console.log('error', e.message)
       return thunkAPI.rejectWithValue(e.message)
     }
   }),
@@ -41,6 +60,8 @@ export const userActionCreators = {
     try {
       const net = await NetInfo.fetch()
       if (net.isConnected) {
+        await GoogleSignin.revokeAccess()
+        await GoogleSignin.signOut()
         await FB_Auth.signOut()
       }
       thunkAPI.dispatch(clearWorkoutResults())
@@ -65,5 +86,5 @@ export const userActionCreators = {
     } catch (e) {
       return thunkAPI.rejectWithValue(e.message)
     }
-  })
+  }),
 }

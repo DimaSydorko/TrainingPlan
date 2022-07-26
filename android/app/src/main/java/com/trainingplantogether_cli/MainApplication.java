@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.reactnativegooglesignin.RNGoogleSigninPackage;
 import com.reactnativecommunity.netinfo.NetInfoPackage;
 import net.no_mad.tts.TextToSpeechPackage;
 import com.corbt.keepawake.KCKeepAwakePackage;

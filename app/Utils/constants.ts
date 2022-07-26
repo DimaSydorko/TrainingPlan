@@ -4,7 +4,7 @@ import { ApproachType, ExerciseType, PlanType, WorkoutType } from './types'
 export const FUTURE_FLAG = {
   LABELS: false,
   FRIENDS: false,
-  IS_DEV: true,
+  IS_DEV: false,
 }
 
 export enum FirebaseDBCollection {

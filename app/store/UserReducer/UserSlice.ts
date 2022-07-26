@@ -10,14 +10,14 @@ export interface UserSliceType {
 }
 
 export const initialUserData: UserDataType = {
-  friendsUIDs: []
+  friendsUIDs: [],
 }
 
 const initialState: UserSliceType = {
   user: null,
   data: null,
   isLoading: false,
-  error: ''
+  error: '',
 }
 
 const onError = (state: UserSliceType, { payload }: PayloadAction<string>) => {
@@ -47,7 +47,7 @@ export const userSlice = createSlice({
   reducers: {
     errorUserClear(state) {
       state.error = ''
-    }
+    },
   },
   extraReducers: {
     [userActionCreators.signOut.fulfilled.type]: state => {
@@ -58,6 +58,7 @@ export const userSlice = createSlice({
     },
     [userActionCreators.signIn.fulfilled.type]: onLogin,
     [userActionCreators.signUp.fulfilled.type]: onLogin,
+    [userActionCreators.signInWithGoogle.fulfilled.type]: onLogin,
     [userActionCreators.dataRequest.fulfilled.type]: onDataUpdate,
     [userActionCreators.dataUpdate.fulfilled.type]: onDataUpdate,
 
@@ -68,11 +69,12 @@ export const userSlice = createSlice({
     [userActionCreators.signOut.pending.type]: onLoading,
 
     [userActionCreators.signUp.rejected.type]: onError,
+    [userActionCreators.signInWithGoogle.rejected.type]: onError,
     [userActionCreators.signIn.rejected.type]: onError,
     [userActionCreators.signOut.rejected.type]: onError,
     [userActionCreators.dataUpdate.rejected.type]: onError,
-    [userActionCreators.dataRequest.rejected.type]: onError
-  }
+    [userActionCreators.dataRequest.rejected.type]: onError,
+  },
 })
 export const { errorUserClear } = userSlice.actions
 export default userSlice.reducer

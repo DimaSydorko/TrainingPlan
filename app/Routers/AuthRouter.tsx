@@ -33,8 +33,8 @@ export default function AuthRouter() {
     headerStyle: {
       ...theme.containers.headerStyle,
       backgroundColor: colors.menu,
-      shadowColor: colorsFixed.shadow
-    }
+      shadowColor: colorsFixed.shadow,
+    },
   }
 
   return (

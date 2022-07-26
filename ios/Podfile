@@ -31,6 +31,8 @@ target 'TrainingPlanTogether_CLI' do
 
   pod 'react-native-netinfo', :path => '../node_modules/@react-native-community/netinfo'
 
+  pod 'RNGoogleSignin', :path => '../node_modules/@react-native-google-signin/google-signin'
+
   target 'TrainingPlanTogether_CLITests' do
     inherit! :complete
     # Pods for testing

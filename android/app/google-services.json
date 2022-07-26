@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "89004228746",
+    "firebase_url": "https://trainingplan-b342a-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "trainingplan-b342a",
+    "storage_bucket": "trainingplan-b342a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:89004228746:android:97d856f1254a5d6399ad73",
+        "android_client_info": {
+          "package_name": "com.trainingplantogether_cli"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "89004228746-q82fcf0ija5i1trv37vk8s66hk8oko3n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.trainingplantogether_cli",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "89004228746-acm7desh30sr73pm3ci2dc8ulocd48i8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqo0VtYDFzO-AEDM215RZP3NNeGf5Dh3U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "89004228746-acm7desh30sr73pm3ci2dc8ulocd48i8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

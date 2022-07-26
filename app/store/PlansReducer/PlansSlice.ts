@@ -1,12 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import {
-  ChangeWorkoutsCountType,
-  DeletePlanReducerType,
-  GetPlanReducerType,
-  plansActionCreators,
-} from './PlansActionCreators'
+import { DeletePlanReducerType, GetPlanReducerType, plansActionCreators } from './PlansActionCreators'
 import { PlanType } from '../../Utils/types'
-import { getCurrentTime } from '../../Utils'
 
 export interface PlansSliceType {
   plans: PlanType[]

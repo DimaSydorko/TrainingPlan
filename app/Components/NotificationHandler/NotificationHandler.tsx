@@ -44,7 +44,7 @@ export default memo(function NotificationHandler() {
             onPress={() => setIsInternetInfo(false)}
             pressAfterTime={8000}
           />
-        )
+        ),
       ]}
     />
   )
