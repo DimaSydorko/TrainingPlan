@@ -12,6 +12,8 @@ import WorkoutsRouter from './WorkoutsRouter'
 import PlanRouter from './PlanRouter'
 import { EmptyScreen, PlayingScreen } from '../Screens'
 import { PlayTimerProvider } from '../Screens/PlayingScreen/components/PlayTimerProvider'
+import { icon } from '../Theme/icons'
+import ProfileRouter from './ProfileRouter'
 
 type TabType = {
   name: string
@@ -25,33 +27,25 @@ const tabs = [
     name: 'All saved Plans',
     component: PlanRouter,
     buttonLabel: 'My Plans',
-    icon: color => {
-      return <Icon name='clipboard-list-outline' size={28} color={color} />
-    },
+    icon: color => <Icon name='clipboard-list-outline' size={28} color={color} />,
   },
   {
     name: 'All saved Workouts',
     component: WorkoutsRouter,
     buttonLabel: 'My Workouts',
-    icon: color => {
-      return <Icon name='clock-fast' size={28} color={color} />
-    },
+    icon: color => <Icon name='clock-fast' size={28} color={color} />,
   },
   {
     name: 'My Suggestion',
     component: EmptyScreen,
     buttonLabel: 'Suggestion',
-    icon: color => {
-      return <Icon name='tooltip-text-outline' size={28} color={color} />
-    },
+    icon: color => <Icon name='tooltip-text-outline' size={28} color={color} />,
   },
   {
-    name: 'More',
-    component: EmptyScreen,
-    buttonLabel: 'More',
-    icon: color => {
-      return <Icon name='dots-horizontal' size={28} color={color} />
-    },
+    name: 'Profile',
+    component: ProfileRouter,
+    buttonLabel: 'Profile',
+    icon: color => <Icon name={icon.account} size={28} color={color} />,
   },
 ] as TabType[]
 

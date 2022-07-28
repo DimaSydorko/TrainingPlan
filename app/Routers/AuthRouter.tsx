@@ -5,37 +5,24 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import NetInfo from '@react-native-community/netinfo'
 import { onInternetConnectionChange } from '../store/SettingsReducer/SettingsSlice'
-import { useAppDispatch, useSettings, useUser } from '../Hooks/redux'
+import { useAppDispatch, useUser } from '../Hooks/redux'
 import AppRouter from './AppRouter'
 import { LoginScreen, RegistrationScreen } from '../Screens'
+import { useScreenOptions } from '../Theme/Parents'
 import { ScreenName } from '../Utils/constants'
-import { theme } from '../Theme/theme'
-import { colorsFixed } from '../Theme/colors'
 
 export default function AuthRouter() {
   const Stack = createStackNavigator()
+  const options = useScreenOptions()
   const dispatch = useAppDispatch()
   const { user } = useUser()
-  const { colors } = useSettings()
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       dispatch(onInternetConnectionChange(state.isConnected))
     })
-    return () => {
-      unsubscribe()
-    }
+    return () => unsubscribe()
   }, [])
-
-  const options = {
-    ...theme.screenOptions,
-    headerTintColor: colors.text,
-    headerStyle: {
-      ...theme.containers.headerStyle,
-      backgroundColor: colors.menu,
-      shadowColor: colorsFixed.shadow,
-    },
-  }
 
   return (
     <NavigationContainer>

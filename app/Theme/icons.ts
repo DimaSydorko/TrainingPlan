@@ -19,4 +19,6 @@ export const icon = {
   list: 'format-list-bulleted',
   timer: 'timer-outline',
   image: 'image-outline',
+  account: 'account-outline',
+  settings: 'cog-outline',
 }

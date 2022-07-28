@@ -19,6 +19,7 @@ export const userActionCreators = {
           uid: response.user?.uid,
           displayName: response.user?.displayName || '',
           photoURL: response.user?.photoURL,
+          email: response.user?.email,
         } as UserType
       } catch (e) {
         return thunkAPI.rejectWithValue(e.message)
@@ -33,6 +34,7 @@ export const userActionCreators = {
         uid: response.user?.uid,
         displayName: response.user?.displayName || '',
         photoURL: response.user?.photoURL,
+        email: response.user?.email,
       } as UserType
     } catch (e) {
       return thunkAPI.rejectWithValue(e.message)
@@ -50,6 +52,7 @@ export const userActionCreators = {
         uid: response.user?.uid,
         displayName: response.user?.displayName || '',
         photoURL: response.user?.photoURL,
+        email: response.user?.email,
       } as UserType
     } catch (e) {
       console.log('error', e.message)

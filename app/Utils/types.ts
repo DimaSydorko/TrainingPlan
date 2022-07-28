@@ -2,6 +2,7 @@ export interface UserType {
   uid: string
   displayName: string
   photoURL: string | null
+  email: string
 }
 
 export interface UserDataType {

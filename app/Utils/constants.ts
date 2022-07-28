@@ -25,6 +25,8 @@ export enum ScreenName {
   Workout = 'Workout',
   Plan = 'Plan',
   App = 'App',
+  Profile = 'Profile',
+  Settings = 'Settings',
 }
 
 export const screen = {

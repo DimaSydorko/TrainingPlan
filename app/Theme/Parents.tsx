@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ReactNode } from 'react'
+import { memo, ReactNode } from 'react'
 import { SafeAreaView, ScrollView, Text, TextProps, TextStyle, View, ViewStyle } from 'react-native'
 import { useSettings } from '../Hooks/redux'
 import { headerHeight, theme } from './theme'
@@ -208,4 +208,17 @@ export const AppFooter = ({ children, style }: ParentProps) => {
       {children}
     </View>
   )
+}
+
+export const useScreenOptions = () => {
+  const { colors } = useSettings()
+  return {
+    ...theme.screenOptions,
+    headerTintColor: colors.text,
+    headerStyle: {
+      ...theme.containers.headerStyle,
+      backgroundColor: colors.menu,
+      shadowColor: colorsFixed.shadow,
+    },
+  }
 }

@@ -1,29 +1,20 @@
 import * as React from 'react'
 import { memo } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import { usePlans, useSettings, useUser, useWorkout } from '../Hooks/redux'
+import { usePlans, useUser, useWorkout } from '../Hooks/redux'
 import { MyPlansScreen, WorkoutScreen, WorkoutsScreen } from '../Screens'
+import { useScreenOptions } from '../Theme/Parents'
 import { Loading } from '../Common'
 import { ScreenName } from '../Utils/constants'
-import { theme } from '../Theme/theme'
-import { colorsFixed } from '../Theme/colors'
 
 export default memo(function PlanRouter() {
   const Stack = createStackNavigator()
-  const { colors } = useSettings()
+  const options = useScreenOptions()
   const user = useUser()
 
   const workout = useWorkout()
   const plans = usePlans()
-  const options = {
-    ...theme.screenOptions,
-    headerTintColor: colors.text,
-    headerStyle: {
-      ...theme.containers.headerStyle,
-      backgroundColor: colors.menu,
-      shadowColor: colorsFixed.shadow
-    }
-  }
+
   return (
     <>
       {(workout.isLoading || plans.isLoading || user.isLoading) && <Loading />}

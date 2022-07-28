@@ -5,8 +5,8 @@ import { useSettings } from '../../Hooks/redux'
 import { AppColorPicker, AppModal, ButtonCounter, IconButton, MyTextInput, SwipeSelector } from '../../Common'
 import ImageSelector from '../ImageSelector/ImageSelector'
 import { defaultApproach, defaultExercise } from '../../Utils/constants'
-import { nanoid } from '../../Utils'
 import { ExerciseType } from '../../Utils/types'
+import { nanoid } from '../../Utils'
 import { FlexCenter, FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { icon } from '../../Theme/icons'
 import styles from './styles'
@@ -104,13 +104,7 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
         }
       >
         <FlexCenterColumn>
-          <MyTextInput
-            autoFocus={!!isNewExercise}
-            placeholder={'Exercise name'}
-            onChangeText={setName}
-            value={name}
-            type={'underline'}
-          />
+          <MyTextInput placeholder={'Exercise name'} onChangeText={setName} value={name} type={'underline'} />
           <FlexCenter>
             <TextHeader color={colors.textSecondary}>Break: </TextHeader>
             {isKeyboardVisible && (
