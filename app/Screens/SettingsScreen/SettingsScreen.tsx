@@ -1,50 +1,88 @@
 import * as React from 'react'
-import { memo } from 'react'
-import { Vibration, View } from 'react-native'
+import { memo, useCallback } from 'react'
+import { TouchableOpacity } from 'react-native'
 import { useAppDispatch, useSettings } from '../../Hooks/redux'
-import { theme } from '../../Theme/theme'
-import { FlexCenter, TextHeader, TextSecondary } from '../../Theme/Parents'
-import { ConfirmButton, MySwitch } from '../../Common'
-import { deepCompare } from '../../Utils'
-import { colorsDark, colorsLight } from '../../Theme/colors'
-import { userActionCreators } from '../../store/UserReducer/UserActionCreators'
-import { clearSettings, onThemeChange, onVibrationToggle } from '../../store/SettingsReducer/SettingsSlice'
-import { VIBRATION } from '../../Utils/constants'
+import {
+  clearSettings,
+  onThemeChange,
+  onTtsDuckingToggle,
+  onTtsPitchChange,
+  onTtsRateChange,
+  onTtsVolumeChange,
+  onVibrationToggle,
+} from '../../store/SettingsReducer/SettingsSlice'
 import { clearWorkoutResults } from '../../store/WorkoutReducer/WorkoutSlice'
 import { clearPlaneResults } from '../../store/PlansReducer/PlansSlice'
+import useTTS from '../../Hooks/useTTS'
+import { ConfirmButton } from '../../Common'
+import { FlexCenter, Page, TextHeader } from '../../Theme/Parents'
+import { colorsDark, colorsLight } from '../../Theme/colors'
+import SettingsItem from './SettingsItem'
+import SettingsHeader from './SettingsHeader'
 
 export default memo(function SettingsScreen() {
   const dispatch = useAppDispatch()
-  const { colors, isVibration, internet } = useSettings()
-  const isDarkTheme = deepCompare(colors, colorsDark)
+  const onSay = useTTS()
+  const { colors, isVibration, tts } = useSettings()
+  const isDarkTheme = colors.primary === colorsDark.primary
 
-  const signOut = () => dispatch(userActionCreators.signOut())
-  const onThemeToggle = () => dispatch(onThemeChange(isDarkTheme ? colorsLight : colorsDark))
-  const onVibration = () => {
-    if (!isVibration) Vibration.vibrate(VIBRATION.TIMER)
-    dispatch(onVibrationToggle())
-  }
+  const onThemeToggle = useCallback(
+    () => dispatch(onThemeChange(isDarkTheme ? colorsLight : colorsDark)),
+    [isDarkTheme]
+  )
+  const onVibration = useCallback(() => dispatch(onVibrationToggle()), [])
+  const onDuckingToggle = useCallback(() => dispatch(onTtsDuckingToggle()), [])
+  const onTtsVolume = useCallback(value => dispatch(onTtsVolumeChange(value)), [])
+  const onTtsPitch = useCallback(value => dispatch(onTtsPitchChange(value)), [])
+  const onTtsRate = useCallback(value => dispatch(onTtsRateChange(value)), [])
 
-  const clearAll = () => {
+  const clearAll = useCallback(() => {
     dispatch(clearWorkoutResults())
     dispatch(clearPlaneResults())
     dispatch(clearSettings())
-  }
+  }, [])
 
   return (
-    <View style={[theme.containers.centerColumn, { backgroundColor: colors.background }]}>
-      <TextSecondary>Is Internet connected: {internet?.isOnline ? 'Yes' : 'No'}</TextSecondary>
-      <ConfirmButton header={'Sign out'} onPress={signOut} />
-      <ConfirmButton header={'Clear storage'} color={colors.secondPrimary} onPress={clearAll} />
-
-      <FlexCenter style={{ marginVertical: 10 }}>
-        <TextHeader style={{ marginRight: 10 }}>Theme: {isDarkTheme ? 'Dark' : 'Light'}</TextHeader>
-        <MySwitch value={isDarkTheme} onValueChange={onThemeToggle} />
-      </FlexCenter>
-      <FlexCenter style={{ marginVertical: 10 }}>
-        <TextHeader style={{ marginRight: 10 }}>Vibration: {isVibration ? 'ON' : 'OFF'}</TextHeader>
-        <MySwitch value={isVibration} disableVibration onValueChange={onVibration} />
-      </FlexCenter>
-    </View>
+    <Page>
+      <SettingsHeader label={'Colors'} />
+      <SettingsItem label={'Dark Theme'} valueSwitch={isDarkTheme} onToggleSwitch={onThemeToggle} />
+      <SettingsHeader label={'Sound \\ Notifications'} />
+      <SettingsItem label={'Vibration'} valueSwitch={isVibration} onToggleSwitch={onVibration} />
+      <SettingsHeader label={'Speaking'}>
+        <FlexCenter>
+          <TouchableOpacity onPress={() => onSay('Test speech')}>
+            <TextHeader color={colors.secondPrimary}>Press for test speech</TextHeader>
+          </TouchableOpacity>
+        </FlexCenter>
+      </SettingsHeader>
+      <SettingsItem
+        label={'Lowering other apps output level'}
+        valueSwitch={tts.isDucking}
+        onToggleSwitch={onDuckingToggle}
+      />
+      <SettingsItem label={'Volume'} valueSlider={tts.volume} sliderStep={0.1} onSliderChange={onTtsVolume} />
+      <SettingsItem
+        label={'Pitch'}
+        valueSlider={tts.pitch}
+        sliderMinValue={0.5}
+        sliderMaxValue={2}
+        sliderStep={0.1}
+        onSliderChange={onTtsPitch}
+      />
+      <SettingsItem
+        label={'Speed'}
+        valueSlider={tts.rate}
+        sliderStep={0.05}
+        sliderMinValue={0.1}
+        sliderMaxValue={0.9}
+        onSliderChange={onTtsRate}
+      />
+      <ConfirmButton
+        header={'Clear local storage'}
+        style={{ marginTop: 250, marginBottom: 20 }}
+        color={colors.secondPrimary}
+        onPress={clearAll}
+      />
+    </Page>
   )
 })

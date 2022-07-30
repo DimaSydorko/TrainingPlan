@@ -5,7 +5,6 @@ export const colorsFixed = {
 
 export const colorsLight = {
   primary: '#70b763',
-  second: '',
   secondPrimary: '#FF5858',
 
   error: '#fa6e6e',
@@ -23,7 +22,6 @@ export const colorsLight = {
 
 export const colorsDark = {
   primary: '#3c8739',
-  second: '',
   secondPrimary: '#f82349',
 
   error: '#d73838',

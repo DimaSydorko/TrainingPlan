@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { memo } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { useSettings, useUser } from '../../Hooks/redux'
+import { useAppDispatch, useSettings, useUser } from '../../Hooks/redux'
 import { FlexCenterColumn, FlexEnd, Page, TextHeader, TextSecondary } from '../../Theme/Parents'
+import { userActionCreators } from '../../store/UserReducer/UserActionCreators'
 import UserImage from '../../Components/UserImage/UserImage'
 import { ScreenName } from '../../Utils/constants'
 import { IconButton } from '../../Common'
@@ -11,13 +12,23 @@ import styles from './styles'
 
 export default memo(function ProfileScreen() {
   const navigation = useNavigation<{ navigate: (name: string) => void }>()
-  const { colors } = useSettings()
+  const dispatch = useAppDispatch()
+  const { colors, internet } = useSettings()
   const { user } = useUser()
 
   return (
     <>
       <Page>
         <FlexEnd>
+          {internet.isOnline && (
+            <IconButton
+              iconName={icon.logout}
+              onPress={() => dispatch(userActionCreators.signOut())}
+              color={colors.textSecondary}
+              size={36}
+              style={styles.signOutButton}
+            />
+          )}
           <IconButton
             iconName={icon.settings}
             onPress={() => navigation.navigate(ScreenName.Settings)}

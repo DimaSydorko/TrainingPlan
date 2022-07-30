@@ -167,7 +167,7 @@ export default function WorkoutScreen() {
                   marginBottom: headerHeight,
                 }}
               >
-                {isEditMode ? (
+                {isEditMode && !!workoutExercises.length ? (
                   <NestableDraggableFlatList
                     renderItem={renderItem}
                     data={workoutExercises}

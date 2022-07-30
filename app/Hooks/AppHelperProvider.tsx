@@ -1,9 +1,27 @@
 import * as React from 'react'
-import { createContext, ReactNode, useCallback, useState } from 'react'
+import { createContext, ReactNode, useCallback, useEffect, useState } from 'react'
+import Tts from 'react-native-tts'
+import { useSettings } from './redux'
 
 function useAppHelper() {
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
   const [isTabMenu, setIsTabMenu] = useState<boolean>(true)
+
+  const {
+    tts: { isDucking, pitch, rate },
+  } = useSettings()
+
+  useEffect(() => {
+    Tts.setDefaultRate(rate)
+  }, [rate])
+
+  useEffect(() => {
+    Tts.setDefaultPitch(pitch)
+  }, [pitch])
+
+  useEffect(() => {
+    Tts.setDucking(isDucking)
+  }, [isDucking])
 
   const onTogglePlaying = useCallback(() => {
     setIsPlaying(p => !p)

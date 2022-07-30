@@ -21,4 +21,5 @@ export const icon = {
   image: 'image-outline',
   account: 'account-outline',
   settings: 'cog-outline',
+  logout: 'logout',
 }

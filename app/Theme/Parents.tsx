@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { memo, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { SafeAreaView, ScrollView, Text, TextProps, TextStyle, View, ViewStyle } from 'react-native'
 import { useSettings } from '../Hooks/redux'
 import { headerHeight, theme } from './theme'

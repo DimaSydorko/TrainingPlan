@@ -36,7 +36,10 @@ export default memo(function MyPlansScreen() {
   const onAddPlan = useCallback(
     (newPlan: PlanType) => {
       if (isNewPlanModal) dispatch(plansActionCreators.addPlan(newPlan))
-      else dispatch(plansActionCreators.updatePlan(newPlan))
+      else {
+        setSelectedPlanUids([])
+        dispatch(plansActionCreators.updatePlan(newPlan))
+      }
     },
     [isNewPlanModal]
   )

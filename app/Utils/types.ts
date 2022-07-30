@@ -66,7 +66,6 @@ export interface PlanType {
 
 export interface ColorsType {
   primary: string
-  second: string
   secondPrimary: string
 
   error: string

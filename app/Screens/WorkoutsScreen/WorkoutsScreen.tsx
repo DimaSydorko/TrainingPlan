@@ -77,12 +77,15 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
     }
   }, [isEditMode, isInPlan])
 
-  const onSavePlan = useCallback(() => {
-    if (isChanged) {
-      dispatch(plansActionCreators.updatePlan({ ...selectedPlan, name: planNameInput, workoutUids }))
-    }
-    setSelectedWorkoutsUids([])
-  }, [selectedPlan, planNameInput, workoutUids, isChanged])
+  const onSavePlan = useCallback(
+    (isClearSelected = true) => {
+      if (isChanged) {
+        dispatch(plansActionCreators.updatePlan({ ...selectedPlan, name: planNameInput, workoutUids }))
+      }
+      if (isClearSelected) setSelectedWorkoutsUids([])
+    },
+    [selectedPlan, planNameInput, workoutUids, isChanged]
+  )
 
   const onSaveRefuse = useCallback(() => {
     setPlanNameInput(prev => (prev === selectedPlan?.name ? prev : selectedPlan.name))
@@ -93,7 +96,10 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
   const onAddWorkout = useCallback(
     (newWorkout: WorkoutType) => {
       if (isNewWorkoutModal) addWorkout(newWorkout, isInPlan)
-      else dispatch(workoutActionCreators.updateWorkout(newWorkout))
+      else {
+        setSelectedWorkoutsUids([])
+        dispatch(workoutActionCreators.updateWorkout(newWorkout))
+      }
     },
     [isNewWorkoutModal, isInPlan]
   )
@@ -116,12 +122,13 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
     (workout: WorkoutType) => {
       if (isEditMode) {
         setSelectedWorkoutsUids(p => (p.includes(workout.uid) ? p.filter(p => p !== workout.uid) : [...p, workout.uid]))
+        if (selectedWorkoutsUids.length === 1) onSavePlan(false)
       } else {
         dispatch(updateSelectedWorkout(workout))
         navigation.navigate(isInPlan ? ScreenName.WorkoutInPlan : ScreenName.Workout)
       }
     },
-    [isInPlan, isEditMode]
+    [isInPlan, isEditMode, onSavePlan, selectedWorkoutsUids.length]
   )
 
   const onWorkoutLongPress = useCallback(
