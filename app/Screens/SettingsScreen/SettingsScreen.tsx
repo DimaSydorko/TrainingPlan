@@ -10,6 +10,7 @@ import {
   onTtsRateChange,
   onTtsVolumeChange,
   onVibrationToggle,
+  onWorkoutWeightStepChange,
 } from '../../store/SettingsReducer/SettingsSlice'
 import { clearWorkoutResults } from '../../store/WorkoutReducer/WorkoutSlice'
 import { clearPlaneResults } from '../../store/PlansReducer/PlansSlice'
@@ -23,7 +24,7 @@ import SettingsHeader from './SettingsHeader'
 export default memo(function SettingsScreen() {
   const dispatch = useAppDispatch()
   const onSay = useTTS()
-  const { colors, isVibration, tts } = useSettings()
+  const { colors, isVibration, tts, workout } = useSettings()
   const isDarkTheme = colors.primary === colorsDark.primary
 
   const onThemeToggle = useCallback(
@@ -35,6 +36,7 @@ export default memo(function SettingsScreen() {
   const onTtsVolume = useCallback(value => dispatch(onTtsVolumeChange(value)), [])
   const onTtsPitch = useCallback(value => dispatch(onTtsPitchChange(value)), [])
   const onTtsRate = useCallback(value => dispatch(onTtsRateChange(value)), [])
+  const onWorkoutWeightStep = useCallback(value => dispatch(onWorkoutWeightStepChange(value)), [])
 
   const clearAll = useCallback(() => {
     dispatch(clearWorkoutResults())
@@ -46,6 +48,16 @@ export default memo(function SettingsScreen() {
     <Page>
       <SettingsHeader label={'Colors'} />
       <SettingsItem label={'Dark Theme'} valueSwitch={isDarkTheme} onToggleSwitch={onThemeToggle} />
+      <SettingsHeader label={'Workout'} />
+      <SettingsItem
+        label={'Weight step'}
+        valueSlider={workout.weightStep}
+        sliderMinValue={1}
+        sliderMaxValue={10}
+        sliderStep={1}
+        sliderValueType={' kg'}
+        onSliderChange={onWorkoutWeightStep}
+      />
       <SettingsHeader label={'Sound \\ Notifications'} />
       <SettingsItem label={'Vibration'} valueSwitch={isVibration} onToggleSwitch={onVibration} />
       <SettingsHeader label={'Speaking'}>

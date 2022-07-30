@@ -15,6 +15,7 @@ interface IProps {
   sliderStep?: number
   sliderMaxValue?: number
   sliderMinValue?: number
+  sliderValueType?: string
   onSliderChange?: (v: number) => void
 }
 
@@ -26,6 +27,7 @@ export default memo(function SettingsItem({
   sliderStep = 0.25,
   sliderMaxValue = 1,
   sliderMinValue = 0,
+  sliderValueType = '',
   onSliderChange,
 }: IProps) {
   const { colors } = useSettings()
@@ -40,7 +42,12 @@ export default memo(function SettingsItem({
       <FlexSpaceBetween style={styles.content}>
         <TextOrdinary style={{ width: screen.vw - 100 }}>{label}</TextOrdinary>
         {!!onToggleSwitch && <MySwitch value={valueSwitch} onValueChange={onToggleSwitch} />}
-        {!!onSliderChange && <TextSecondary>{valSlider}</TextSecondary>}
+        {!!onSliderChange && (
+          <TextSecondary>
+            {valSlider}
+            {sliderValueType}
+          </TextSecondary>
+        )}
       </FlexSpaceBetween>
       {!!onSliderChange && (
         <Slider

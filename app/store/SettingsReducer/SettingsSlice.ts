@@ -15,6 +15,9 @@ export interface SettingsSliceType {
     isOnline: boolean
     lastBeOline: number
   }
+  workout: {
+    weightStep: number
+  }
 }
 
 const initialState: SettingsSliceType = {
@@ -30,6 +33,9 @@ const initialState: SettingsSliceType = {
     rate: 0.5,
     volume: 1,
   },
+  workout: {
+    weightStep: 1,
+  },
 }
 
 export const settingsSlice = createSlice({
@@ -41,6 +47,7 @@ export const settingsSlice = createSlice({
     },
     clearSettings: state => {
       state.internet = initialState.internet
+      state.workout = initialState.workout
       state.colors = initialState.colors
       state.tts = initialState.tts
       state.isVibration = true
@@ -60,6 +67,10 @@ export const settingsSlice = createSlice({
     onTtsRateChange: (state, { payload }: PayloadAction<number>) => {
       state.tts.rate = payload
     },
+
+    onWorkoutWeightStepChange: (state, { payload }: PayloadAction<number>) => {
+      state.workout.weightStep = payload
+    },
     onInternetConnectionChange: (state, { payload }: PayloadAction<boolean>) => {
       state.internet.isOnline = payload
       if (payload) state.internet.lastBeOline = new Date().getTime()
@@ -75,5 +86,6 @@ export const {
   onTtsVolumeChange,
   onTtsPitchChange,
   onTtsRateChange,
+  onWorkoutWeightStepChange,
 } = settingsSlice.actions
 export default settingsSlice.reducer

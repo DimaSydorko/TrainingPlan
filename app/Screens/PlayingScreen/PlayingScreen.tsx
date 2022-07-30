@@ -25,7 +25,7 @@ import PlayHeader from './components/PlayHeader'
 import styles from './styles'
 
 export default memo(function PlayingScreen() {
-  const { colors } = useSettings()
+  const { colors, workout } = useSettings()
   const onSay = useTTS()
   const { onTogglePlaying } = useContext(AppHelperContext)
   const {
@@ -160,7 +160,7 @@ export default memo(function PlayingScreen() {
           <View style={{ width: screen.vw - 140 }}>
             <Results
               type={'weight'}
-              step={5}
+              step={workout.weightStep}
               color={color}
               value={current.weight}
               onChange={v => setCurrent(p => ({ ...p, weight: v }))}
