@@ -2,6 +2,7 @@ import * as React from 'react'
 import { memo, useEffect } from 'react'
 import { Alert, BackHandler, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { AppNavigationType } from '../../Utils/types'
 
 interface IGoBackSubmitModal {
   title?: string
@@ -14,9 +15,9 @@ export default memo(function GoBackSubmitModal({
   title = 'Are you sure you want to go back?',
   text,
   confirmText = 'YES',
-  onConfirm
+  onConfirm,
 }: IGoBackSubmitModal) {
-  const navigation = useNavigation()
+  const navigation = useNavigation<AppNavigationType>()
 
   useEffect(() => {
     const backAction = () => {
@@ -24,9 +25,9 @@ export default memo(function GoBackSubmitModal({
         {
           text: 'Cancel',
           onPress: () => null,
-          style: 'cancel'
+          style: 'cancel',
         },
-        { text: confirmText, onPress: () => (onConfirm ? onConfirm() : BackHandler.exitApp()) }
+        { text: confirmText, onPress: () => (onConfirm ? onConfirm() : BackHandler.exitApp()) },
       ])
       return true
     }
@@ -43,8 +44,8 @@ export default memo(function GoBackSubmitModal({
           {
             text: 'YES',
             style: 'destructive',
-            onPress: () => (onConfirm ? onConfirm() : navigation.dispatch(e.data.action))
-          }
+            onPress: () => (onConfirm ? onConfirm() : navigation.dispatch(e.data.action)),
+          },
         ])
       }),
     [navigation]

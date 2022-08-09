@@ -1,14 +1,16 @@
 import * as React from 'react'
 import { memo, useEffect, useState } from 'react'
-import { useAppDispatch, usePlans, useSettings, useWorkout } from '../../Hooks/redux'
+import { useAppDispatch, usePlans, usePublications, useSettings, useWorkout } from '../../Hooks/redux'
 import { errorPlansClear } from '../../store/PlansReducer/PlansSlice'
 import { errorWorkoutClear } from '../../store/WorkoutReducer/WorkoutSlice'
+import { errorPublicationClear } from '../../store/PublicationsReducer/PublicationsSlice'
 import { Toast, Toaster } from '../../Common'
 
 export default memo(function NotificationHandler() {
   const dispatch = useAppDispatch()
   const plans = usePlans()
   const workout = useWorkout()
+  const publications = usePublications()
   const { internet } = useSettings()
   const [isInternetInfo, setIsInternetInfo] = useState<boolean>(false)
 
@@ -34,6 +36,14 @@ export default memo(function NotificationHandler() {
             onPress={() => dispatch(errorWorkoutClear())}
             variant='error'
             message={workout.error}
+            pressAfterTime={16000}
+          />
+        ),
+        !!publications.error && (
+          <Toast
+            onPress={() => dispatch(errorPublicationClear())}
+            variant='error'
+            message={publications.error}
             pressAfterTime={16000}
           />
         ),

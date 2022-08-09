@@ -1,3 +1,7 @@
+import { CompositeNavigationProp } from '@react-navigation/native'
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
+import { StackNavigationProp } from '@react-navigation/stack'
+
 export interface UserType {
   uid: string
   displayName: string
@@ -45,6 +49,15 @@ export type SelectedWorkoutType = Omit<WorkoutType, 'exercises'> & {
 }
 export type SelectedExerciseType = Omit<ExerciseType, 'approaches'> & { approaches: SelectedApproachType[] }
 
+export type PublicType = Omit<WorkoutType, 'plansUid'> &
+  Omit<PlanType, 'workoutUids'> & {
+    workouts?: Omit<WorkoutType, 'plansUid'>[]
+    exercises?: ExerciseType[]
+    ownerName: string
+    likes: string[]
+    downloads: string[]
+  }
+
 export interface WorkoutType {
   uid: string
   ownerUid: string
@@ -82,3 +95,22 @@ export interface ColorsType {
 }
 
 export type SetStateType<S> = (arg: S | ((prevState: S) => S)) => void
+
+export type TabParamList = {
+  App: undefined
+  Workout: undefined
+  WorkoutInPlan: undefined
+  SavedWorkouts: undefined
+  Login: undefined
+  Registration: undefined
+  Plan: undefined
+  Profile: undefined
+  Settings: undefined
+  Publications: undefined
+  PublicationWorkout: { workout: (PublicType | WorkoutType) & { ownerName?: string } } | undefined
+  PublicationPlan: { publication: PublicType } | undefined
+}
+export type AppNavigationType = CompositeNavigationProp<
+  BottomTabNavigationProp<TabParamList, 'Profile'>,
+  StackNavigationProp<TabParamList>
+>

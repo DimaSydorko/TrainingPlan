@@ -6,6 +6,7 @@ import { useSettings } from './redux'
 function useAppHelper() {
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
   const [isTabMenu, setIsTabMenu] = useState<boolean>(true)
+  const [savedUids, setSavedUids] = useState<string[]>([])
 
   const {
     tts: { isDucking, pitch, rate },
@@ -32,19 +33,28 @@ function useAppHelper() {
     else setIsTabMenu(isTabMenu)
   }, [])
 
+  const addSavedUids = useCallback((uid: string) => {
+    console.log('addSavedUids', uid)
+    setSavedUids(p => [...p, uid])
+  }, [])
+
   return {
     isPlaying,
     isTabMenu,
+    savedUids,
     onTogglePlaying,
     onToggleTabMenu,
+    addSavedUids,
   }
 }
 
 export interface IContext {
   isPlaying: boolean
   isTabMenu: boolean
+  savedUids: string[]
   onTogglePlaying: () => void
   onToggleTabMenu: (arg?: boolean) => void
+  addSavedUids: (uid: string) => void
 }
 
 export const AppHelperContext = createContext<IContext>(null!)

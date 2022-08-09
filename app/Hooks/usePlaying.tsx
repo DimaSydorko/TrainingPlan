@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { Vibration } from 'react-native'
 import { useAppDispatch, useSettings, useWorkout } from './redux'
 import { AppHelperContext } from './AppHelperProvider'
-import { workoutActionCreators } from '../store/WorkoutReducer/WorkoutActionCreators'
+import { workoutAC } from '../store/WorkoutReducer/WorkoutActionCreators'
 import { SelectedExerciseType, SelectedWorkoutType, WorkoutType } from '../Utils/types'
 import { VIBRATION } from '../Utils/constants'
 import { deepCompare } from '../Utils'
@@ -80,7 +80,7 @@ export default function usePlaying() {
             })),
           })),
       }
-      dispatch(workoutActionCreators.updateWorkout(newWorkout))
+      dispatch(workoutAC.updateWorkout(newWorkout))
       onBack()
     },
     [selectedWorkout, playingWorkout]

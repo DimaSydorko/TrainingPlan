@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { UserDataType, UserType } from '../../Utils/types'
-import { userActionCreators } from './UserActionCreators'
+import { userAC } from './UserActionCreator'
 
 export interface UserSliceType {
   user: UserType | null
@@ -50,30 +50,30 @@ export const userSlice = createSlice({
     },
   },
   extraReducers: {
-    [userActionCreators.signOut.fulfilled.type]: state => {
+    [userAC.signOut.fulfilled.type]: state => {
       state.user = null
       state.data = null
       state.isLoading = false
       state.error = ''
     },
-    [userActionCreators.signIn.fulfilled.type]: onLogin,
-    [userActionCreators.signUp.fulfilled.type]: onLogin,
-    [userActionCreators.signInWithGoogle.fulfilled.type]: onLogin,
-    [userActionCreators.dataRequest.fulfilled.type]: onDataUpdate,
-    [userActionCreators.dataUpdate.fulfilled.type]: onDataUpdate,
+    [userAC.signIn.fulfilled.type]: onLogin,
+    [userAC.signUp.fulfilled.type]: onLogin,
+    [userAC.signInWithGoogle.fulfilled.type]: onLogin,
+    [userAC.dataRequest.fulfilled.type]: onDataUpdate,
+    [userAC.dataUpdate.fulfilled.type]: onDataUpdate,
 
-    [userActionCreators.dataUpdate.pending.type]: onLoading,
-    [userActionCreators.signIn.pending.type]: onLoading,
-    [userActionCreators.signUp.pending.type]: onLoading,
-    [userActionCreators.dataRequest.pending.type]: onLoading,
-    [userActionCreators.signOut.pending.type]: onLoading,
+    [userAC.dataUpdate.pending.type]: onLoading,
+    [userAC.signIn.pending.type]: onLoading,
+    [userAC.signUp.pending.type]: onLoading,
+    [userAC.dataRequest.pending.type]: onLoading,
+    [userAC.signOut.pending.type]: onLoading,
 
-    [userActionCreators.signUp.rejected.type]: onError,
-    [userActionCreators.signInWithGoogle.rejected.type]: onError,
-    [userActionCreators.signIn.rejected.type]: onError,
-    [userActionCreators.signOut.rejected.type]: onError,
-    [userActionCreators.dataUpdate.rejected.type]: onError,
-    [userActionCreators.dataRequest.rejected.type]: onError,
+    [userAC.signUp.rejected.type]: onError,
+    [userAC.signInWithGoogle.rejected.type]: onError,
+    [userAC.signIn.rejected.type]: onError,
+    [userAC.signOut.rejected.type]: onError,
+    [userAC.dataUpdate.rejected.type]: onError,
+    [userAC.dataRequest.rejected.type]: onError,
   },
 })
 export const { errorUserClear } = userSlice.actions

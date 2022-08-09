@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import NetInfo from '@react-native-community/netinfo'
 import { RootState } from '../index'
-import { plansActionCreators } from '../PlansReducer/PlansActionCreators'
+import { plansAC } from '../PlansReducer/PlansAC'
 import { FB_Collection_Workouts, FB_Database } from '../../Utils/firebase'
 import { FirebaseDatabase, QUERY_LIMIT } from '../../Utils/constants'
 import { StoredExerciseImage, WorkoutType } from '../../Utils/types'
@@ -27,7 +27,7 @@ export type RemoveFromPlansType = {
   planUid: string
 }
 
-export const workoutActionCreators = {
+export const workoutAC = {
   getWorkouts: createAsyncThunk('workout/getWorkouts', async (props: GetWorkoutsActionType, thunkAPI) => {
     const { uid, findBy } = props
     const { workoutReducer } = thunkAPI.getState() as RootState
@@ -93,29 +93,32 @@ export const workoutActionCreators = {
     }
   }),
 
-  addWorkout: createAsyncThunk('workout/addWorkout', async (props: WorkoutType, thunkAPI) => {
-    props.lastUpdated = getCurrentTime()
-    props.uid = props?.uid || nanoid()
-    const { uid, ...newWorkout } = props
-    try {
-      const net = await NetInfo.fetch()
-      if (net.isConnected) {
-        await FB_Collection_Workouts.doc(uid).set(newWorkout)
+  addWorkout: createAsyncThunk(
+    'workout/addWorkout',
+    async ({ workout, isSetInPlan = true }: { workout: WorkoutType; isSetInPlan?: boolean }, thunkAPI) => {
+      workout.lastUpdated = getCurrentTime()
+      workout.uid = workout?.uid || nanoid()
+      const { uid, ...newWorkout } = workout
+      try {
+        const net = await NetInfo.fetch()
+        if (net.isConnected) {
+          await FB_Collection_Workouts.doc(uid).set(newWorkout)
+        }
+        const planUid = workout.plansUid[0]
+        if (planUid && isSetInPlan)
+          thunkAPI.dispatch(
+            plansAC.changeWorkoutsCount({
+              planUid,
+              workoutUids: [workout.uid],
+              type: 'add',
+            })
+          )
+        return workout
+      } catch (e) {
+        return thunkAPI.rejectWithValue(e.message)
       }
-      const planUid = props.plansUid[0]
-      if (planUid)
-        thunkAPI.dispatch(
-          plansActionCreators.changeWorkoutsCount({
-            planUid,
-            workoutUids: [props.uid],
-            type: 'add',
-          })
-        )
-      return props
-    } catch (e) {
-      return thunkAPI.rejectWithValue(e.message)
     }
-  }),
+  ),
 
   updateWorkout: createAsyncThunk('workout/updateWorkout', async (props: WorkoutType, thunkAPI) => {
     props.lastUpdated = getCurrentTime()
@@ -169,9 +172,7 @@ export const workoutActionCreators = {
     const workout: WorkoutType = workouts.find(w => w.uid === workoutUid)
 
     workout.plansUid.forEach(planUid => {
-      thunkAPI.dispatch(
-        plansActionCreators.changeWorkoutsCount({ planUid, workoutUids: [workout.uid], type: 'delete' })
-      )
+      thunkAPI.dispatch(plansAC.changeWorkoutsCount({ planUid, workoutUids: [workout.uid], type: 'delete' }))
     })
 
     try {

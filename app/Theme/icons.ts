@@ -22,4 +22,7 @@ export const icon = {
   account: 'account-outline',
   settings: 'cog-outline',
   logout: 'logout',
+  download: 'arrow-collapse-down',
+  like: 'cards-heart',
+  likeEmpty: 'cards-heart-outline',
 }

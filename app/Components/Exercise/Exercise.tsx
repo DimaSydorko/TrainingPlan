@@ -16,6 +16,7 @@ const IMG_SIZE = 45
 interface IExercise {
   exercise: ExerciseType | SelectedExerciseType
   isEdit?: boolean
+  isPublic?: boolean
   playingExerciseLap?: number
   onDelete?: (exercise: ExerciseType) => void
   onCopy?: (exercise: ExerciseType, isNew: true) => void
@@ -26,6 +27,7 @@ interface IExercise {
 export default memo(function Exercise({
   exercise,
   isEdit = false,
+  isPublic = false,
   onCopy,
   onDelete,
   onVisibilityToggle,
@@ -106,23 +108,26 @@ export default memo(function Exercise({
               {!!exercise.breakTimeInSec && (
                 <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
               )}
+              {isPublic && <TextSecondary style={styles.publicLaps}>Laps: {exercise.laps}</TextSecondary>}
             </View>
           </FlexStart>
-          <View style={styles.approaches}>
-            {exercise.approaches?.map((approach, idx) => {
-              const isPrevious = approach.currentWeight === undefined && approach.currentRepeats === undefined
-              return (
-                <View key={idx}>
-                  {playingExerciseLap === idx + 1 && <Divider isDashed />}
-                  <Approach
-                    isPrevious={isPrevious}
-                    weight={isPrevious ? approach.weight : approach.currentWeight}
-                    repeats={isPrevious ? approach.repeats : approach.currentRepeats}
-                  />
-                </View>
-              )
-            })}
-          </View>
+          {!isPublic && (
+            <View style={styles.approaches}>
+              {exercise.approaches?.map((approach, idx) => {
+                const isPrevious = approach.currentWeight === undefined && approach.currentRepeats === undefined
+                return (
+                  <View key={idx}>
+                    {playingExerciseLap === idx + 1 && <Divider isDashed />}
+                    <Approach
+                      isPrevious={isPrevious}
+                      weight={isPrevious ? approach.weight : approach.currentWeight}
+                      repeats={isPrevious ? approach.repeats : approach.currentRepeats}
+                    />
+                  </View>
+                )
+              })}
+            </View>
+          )}
         </>
       )}
       <AppModal

@@ -11,6 +11,7 @@ export enum FirebaseDBCollection {
   UsersData = 'usersData',
   Plans = 'plans',
   Workouts = 'workouts',
+  Publications = 'publications',
 }
 
 export enum FirebaseDatabase {
@@ -20,11 +21,14 @@ export enum FirebaseDatabase {
 export enum ScreenName {
   Registration = 'Registration',
   Login = 'Login',
-  SavedWorkouts = 'Saved Workouts',
-  WorkoutInPlan = 'Workout In Plan',
+  SavedWorkouts = 'SavedWorkouts',
+  WorkoutInPlan = 'WorkoutInPlan',
   Workout = 'Workout',
   Plan = 'Plan',
   App = 'App',
+  Publications = 'Publications',
+  PublicationWorkout = 'PublicationWorkout',
+  PublicationPlan = 'PublicationPlan',
   Profile = 'Profile',
   Settings = 'Settings',
 }

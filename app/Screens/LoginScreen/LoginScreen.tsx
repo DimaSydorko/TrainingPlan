@@ -4,18 +4,19 @@ import { Text } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useAppDispatch, useSettings, useUser } from '../../Hooks/redux'
-import { userActionCreators } from '../../store/UserReducer/UserActionCreators'
+import { userAC } from '../../store/UserReducer/UserActionCreator'
 import { FUTURE_FLAG, ScreenName } from '../../Utils/constants'
 import { ConfirmButton, MyTextInput } from '../../Common'
 import { FlexCenterColumn, Page, TextOrdinary, TextSecondary } from '../../Theme/Parents'
 import { theme } from '../../Theme/theme'
 import AppGoogleSignInButton from './AppGoogleSignInButton'
+import { AppNavigationType } from '../../Utils/types'
 
 export default function LoginScreen() {
   const dispatch = useAppDispatch()
   const { error, isLoading } = useUser()
   const [inputData, setInputData] = useState({ email: '', password: '' })
-  const navigation = useNavigation<{ navigate: (name: string) => void }>()
+  const navigation = useNavigation<AppNavigationType>()
   const { colors, internet } = useSettings()
 
   const onFooterLinkPress = () => {
@@ -23,7 +24,7 @@ export default function LoginScreen() {
   }
 
   const onLoginPress = async () => {
-    dispatch(userActionCreators.signIn({ email: inputData.email, password: inputData.password }))
+    dispatch(userAC.signIn({ email: inputData.email, password: inputData.password }))
   }
 
   return (

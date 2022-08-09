@@ -7,13 +7,13 @@ import { clearWorkoutResults } from '../WorkoutReducer/WorkoutSlice'
 import { clearPlaneResults } from '../PlansReducer/PlansSlice'
 import NetInfo from '@react-native-community/netinfo'
 
-export const userActionCreators = {
+export const userAC = {
   signUp: createAsyncThunk(
     'user/signUp',
     async (props: { email: string; password: string; displayName: string }, thunkAPI) => {
       try {
         const response = await FB_Auth.createUserWithEmailAndPassword(props.email, props.password)
-        thunkAPI.dispatch(userActionCreators.dataUpdate({ userUid: response.user?.uid || '', data: initialUserData }))
+        thunkAPI.dispatch(userAC.dataUpdate({ userUid: response.user?.uid || '', data: initialUserData }))
         await response.user?.updateProfile({ displayName: props.displayName })
         return {
           uid: response.user?.uid,
@@ -29,7 +29,7 @@ export const userActionCreators = {
   signIn: createAsyncThunk('user/signIn', async (props: { email: string; password: string }, thunkAPI) => {
     try {
       const response = await FB_Auth.signInWithEmailAndPassword(props.email, props.password)
-      thunkAPI.dispatch(userActionCreators.dataRequest(response.user?.uid || ''))
+      thunkAPI.dispatch(userAC.dataRequest(response.user?.uid || ''))
       return {
         uid: response.user?.uid,
         displayName: response.user?.displayName || '',
@@ -46,7 +46,7 @@ export const userActionCreators = {
       const { idToken } = await GoogleSignin.signIn()
       const credential = firebase.auth.GoogleAuthProvider.credential(idToken)
       const response = await FB_Auth.signInWithCredential(credential)
-      thunkAPI.dispatch(userActionCreators.dataRequest(response.user?.uid || ''))
+      thunkAPI.dispatch(userAC.dataRequest(response.user?.uid || ''))
 
       return {
         uid: response.user?.uid,

@@ -10,11 +10,11 @@ import { icon } from '../../Theme/icons'
 
 interface IWorkoutCard {
   workout: WorkoutType
-  isSelected: boolean
+  isSelected?: boolean
   isInPlan: boolean
 }
 
-export default memo(function WorkoutCard({ workout, isInPlan, isSelected }: IWorkoutCard) {
+export default memo(function WorkoutCard({ workout, isInPlan, isSelected = false }: IWorkoutCard) {
   const { colors } = useSettings()
   const [isDeleteModal, setIsDeleteModal] = useState(false)
 

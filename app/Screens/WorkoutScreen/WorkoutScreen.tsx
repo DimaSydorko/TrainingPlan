@@ -8,7 +8,7 @@ import {
   ScaleDecorator,
 } from 'react-native-draggable-flatlist'
 import { useAppDispatch, useSettings, useUser, useWorkout } from '../../Hooks/redux'
-import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
+import { workoutAC } from '../../store/WorkoutReducer/WorkoutActionCreators'
 import { AppHelperContext } from '../../Hooks/AppHelperProvider'
 import {
   AppFooter,
@@ -73,7 +73,7 @@ export default function WorkoutScreen() {
 
   const onSaveWorkout = useCallback(async () => {
     if (!workoutExercises || !user || !selectedWorkout) return
-    if (isChanged) dispatch(workoutActionCreators.updateWorkout(changedWorkout))
+    if (isChanged) dispatch(workoutAC.updateWorkout(changedWorkout))
     setIsEditMode(false)
   }, [workoutExercises, user, selectedWorkout, isChanged, changedWorkout])
 

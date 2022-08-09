@@ -6,12 +6,14 @@ import userReducer from './UserReducer/UserSlice'
 import plansReducer from './PlansReducer/PlansSlice'
 import workoutReducer from './WorkoutReducer/WorkoutSlice'
 import settingsReducer from './SettingsReducer/SettingsSlice'
+import publicationsReducer from './PublicationsReducer/PublicationsSlice'
 
 const rootReducer = combineReducers({
   userReducer,
   plansReducer,
   workoutReducer,
   settingsReducer,
+  publicationsReducer,
 })
 
 const persistConfig = {

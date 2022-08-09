@@ -1,23 +1,24 @@
 import * as React from 'react'
-import { useContext, useEffect } from 'react'
+import { NamedExoticComponent, useContext, useEffect } from 'react'
 import { Text } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useAppDispatch, useSettings, useUser } from '../Hooks/redux'
 import { AppHelperContext } from '../Hooks/AppHelperProvider'
-import { workoutActionCreators } from '../store/WorkoutReducer/WorkoutActionCreators'
-import { plansActionCreators } from '../store/PlansReducer/PlansActionCreators'
+import { workoutAC } from '../store/WorkoutReducer/WorkoutActionCreators'
+import { plansAC } from '../store/PlansReducer/PlansAC'
 import NotificationHandler from '../Components/NotificationHandler/NotificationHandler'
 import WorkoutsRouter from './WorkoutsRouter'
 import PlanRouter from './PlanRouter'
-import { EmptyScreen, PlayingScreen } from '../Screens'
+import { PlayingScreen } from '../Screens'
 import { PlayTimerProvider } from '../Screens/PlayingScreen/components/PlayTimerProvider'
 import { icon } from '../Theme/icons'
 import ProfileRouter from './ProfileRouter'
+import PublicationsRouter from './PublicationsRouter'
 
 type TabType = {
   name: string
-  component: () => JSX.Element
+  component: NamedExoticComponent<object>
   buttonLabel: string
   icon: (color: string) => JSX.Element
 }
@@ -36,9 +37,9 @@ const tabs = [
     icon: color => <Icon name='clock-fast' size={28} color={color} />,
   },
   {
-    name: 'My Suggestion',
-    component: EmptyScreen,
-    buttonLabel: 'Suggestion',
+    name: 'Publications',
+    component: PublicationsRouter,
+    buttonLabel: 'Publications',
     icon: color => <Icon name='tooltip-text-outline' size={28} color={color} />,
   },
   {
@@ -58,9 +59,9 @@ export default function AppRouter() {
 
   useEffect(() => {
     if (internet.isOnline) {
-      dispatch(workoutActionCreators.getWorkouts({ uid: user.uid, findBy: 'ownerUid' }))
-      dispatch(plansActionCreators.getPlans(user.uid))
-      dispatch(workoutActionCreators.getExerciseImages())
+      dispatch(workoutAC.getWorkouts({ uid: user.uid, findBy: 'ownerUid' }))
+      dispatch(plansAC.getPlans(user.uid))
+      dispatch(workoutAC.getExerciseImages())
     }
   }, [internet.isOnline])
 

@@ -9,15 +9,17 @@ import {
   ScaleDecorator,
 } from 'react-native-draggable-flatlist'
 import { updateSelectedWorkout } from '../../store/WorkoutReducer/WorkoutSlice'
-import { plansActionCreators } from '../../store/PlansReducer/PlansActionCreators'
-import { workoutActionCreators } from '../../store/WorkoutReducer/WorkoutActionCreators'
+import { plansAC } from '../../store/PlansReducer/PlansAC'
+import { workoutAC } from '../../store/WorkoutReducer/WorkoutActionCreators'
+import { publicationsAC } from '../../store/PublicationsReducer/PublicationsAC'
 import { AppHelperContext } from '../../Hooks/AppHelperProvider'
 import { useAppDispatch, useWorkout } from '../../Hooks/redux'
 import useWorkoutPlan from '../../Hooks/useWorkoutPlan'
 import { deepCompare } from '../../Utils'
-import { FUTURE_FLAG, ScreenName, VIBRATION } from '../../Utils/constants'
-import { PlanType, WorkoutType } from '../../Utils/types'
+import { ScreenName, VIBRATION } from '../../Utils/constants'
+import { AppNavigationType, PlanType, WorkoutType } from '../../Utils/types'
 import { AddMoreButton, AppModal, ConfirmButton, GoBackSubmitModal, IconButton, MyTextInput } from '../../Common'
+import ShareModal from '../../Components/ShareModal/ShareModal'
 import EditPlanWorkout from '../../Components/EditPlanWorkout/EditPlanWorkout'
 import CopyWorkoutsModal from '../../Components/CopyWorkoutsModal/CopyWorkoutsModal'
 import WorkoutCard from './WorkoutCard'
@@ -29,7 +31,7 @@ interface IPlanScreen {
 }
 
 export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
-  const navigation = useNavigation<{ navigate: (name: string) => void }>()
+  const navigation = useNavigation<AppNavigationType>()
   const dispatch = useAppDispatch()
   const { selectedPlan, addWorkout, deleteWorkouts, copyWorkouts } = useWorkoutPlan()
   const { onToggleTabMenu, isTabMenu } = useContext(AppHelperContext)
@@ -39,6 +41,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
   const [planNameInput, setPlanNameInput] = useState<string>(selectedPlan?.name || '')
   const [changeWorkout, setChangeWorkout] = useState<WorkoutType | null>(null)
   const [isSaveChangesModal, setIsSaveChangesModal] = useState(false)
+  const [isShareModal, setIsShareModal] = useState(false)
   const [isNewWorkoutModal, setIsNewWorkoutModal] = useState(false)
   const [isDeleteModal, setIsDeleteModal] = useState(false)
   const [isCopyModal, setIsCopyModal] = useState(false)
@@ -65,6 +68,10 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
       }),
     [selectedPlan, planNameInput, workoutUids]
   )
+  const selectedFirst = useMemo(
+    () => workouts?.find(workout => workout.uid === selectedWorkoutsUids[0]),
+    [workouts, selectedWorkoutsUids[0]]
+  )
 
   useEffect(() => {
     setWorkouts(p => (deepCompare(_workouts, p) ? p : _workouts))
@@ -80,7 +87,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
   const onSavePlan = useCallback(
     (isClearSelected = true) => {
       if (isChanged) {
-        dispatch(plansActionCreators.updatePlan({ ...selectedPlan, name: planNameInput, workoutUids }))
+        dispatch(plansAC.updatePlan({ ...selectedPlan, name: planNameInput, workoutUids }))
       }
       if (isClearSelected) setSelectedWorkoutsUids([])
     },
@@ -98,7 +105,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
       if (isNewWorkoutModal) addWorkout(newWorkout, isInPlan)
       else {
         setSelectedWorkoutsUids([])
-        dispatch(workoutActionCreators.updateWorkout(newWorkout))
+        dispatch(workoutAC.updateWorkout(newWorkout))
       }
     },
     [isNewWorkoutModal, isInPlan]
@@ -117,6 +124,10 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
     },
     [copyWorkouts, selectedWorkoutsUids]
   )
+  const onShare = useCallback(() => {
+    dispatch(publicationsAC.add(selectedFirst))
+    setSelectedWorkoutsUids([])
+  }, [selectedFirst])
 
   const onWorkoutPress = useCallback(
     (workout: WorkoutType) => {
@@ -173,13 +184,13 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
           </FlexStart>
           <FlexEnd>
             {selectedWorkoutsUids.length === 1 && (
+              <IconButton iconName={icon.share} margin={10} onPress={() => setIsShareModal(true)} />
+            )}
+            {selectedWorkoutsUids.length === 1 && (
               <IconButton
                 iconName={icon.edit}
                 onPress={() => setChangeWorkout(workouts.find(workout => workout.uid === selectedWorkoutsUids[0]))}
               />
-            )}
-            {FUTURE_FLAG.FRIENDS && selectedWorkoutsUids.length === 1 && (
-              <IconButton iconName={icon.share} onPress={() => {}} />
             )}
             <IconButton margin={10} iconName={icon.copy} onPress={() => setIsCopyModal(true)} />
             {((selectedWorkoutsUids.length === 1 && !isInPlan) || isInPlan) && (
@@ -197,14 +208,30 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
             type={'underline'}
           />
         )}
-        <NestableScrollContainer>
-          <NestableDraggableFlatList
-            data={workouts || []}
-            renderItem={renderItem}
-            keyExtractor={item => item.uid}
-            onDragEnd={({ data }) => setWorkouts(data)}
-          />
-        </NestableScrollContainer>
+        {isInPlan ? (
+          <NestableScrollContainer>
+            <NestableDraggableFlatList
+              data={workouts || []}
+              renderItem={renderItem}
+              keyExtractor={item => item.uid}
+              onDragEnd={({ data }) => setWorkouts(data)}
+            />
+          </NestableScrollContainer>
+        ) : (
+          (workouts || [])
+            .slice()
+            .reverse()
+            .map(w => (
+              <Card key={w.uid}>
+                <TouchableOpacity
+                  onLongPress={() => onWorkoutLongPress(w.uid, () => {})}
+                  onPress={() => onWorkoutPress(w)}
+                >
+                  <WorkoutCard workout={w} isInPlan={isInPlan} isSelected={selectedWorkoutsUids.includes(w.uid)} />
+                </TouchableOpacity>
+              </Card>
+            ))
+        )}
         {(isNewWorkoutModal || !!changeWorkout) && (
           <EditPlanWorkout
             isModal
@@ -227,6 +254,12 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: IPlanScreen) {
         onClose={() => setIsCopyModal(false)}
         workoutUid={selectedWorkoutsUids[0]}
         isOpen={isCopyModal}
+      />
+      <ShareModal
+        isOpen={isShareModal}
+        onShare={onShare}
+        onClose={() => setIsShareModal(false)}
+        workout={selectedFirst}
       />
       <AppModal
         isOpen={isSaveChangesModal}

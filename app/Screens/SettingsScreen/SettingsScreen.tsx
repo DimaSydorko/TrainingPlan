@@ -13,6 +13,7 @@ import {
   onWorkoutWeightStepChange,
 } from '../../store/SettingsReducer/SettingsSlice'
 import { clearWorkoutResults } from '../../store/WorkoutReducer/WorkoutSlice'
+import { clearPublicationResults } from '../../store/PublicationsReducer/PublicationsSlice'
 import { clearPlaneResults } from '../../store/PlansReducer/PlansSlice'
 import useTTS from '../../Hooks/useTTS'
 import { ConfirmButton } from '../../Common'
@@ -41,6 +42,7 @@ export default memo(function SettingsScreen() {
   const clearAll = useCallback(() => {
     dispatch(clearWorkoutResults())
     dispatch(clearPlaneResults())
+    dispatch(clearPublicationResults())
     dispatch(clearSettings())
   }, [])
 

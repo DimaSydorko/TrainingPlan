@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import { memo, useEffect } from 'react'
 import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin'
 import { GOOGLE_WEB_CLIENT_ID } from '../../Utils/constants.local'
-import { userActionCreators } from '../../store/UserReducer/UserActionCreators'
+import { userAC } from '../../store/UserReducer/UserActionCreator'
 import { useAppDispatch } from '../../Hooks/redux'
 
 interface IProps {
@@ -22,7 +22,7 @@ export default memo(function AppGoogleSignInButton({ disabled }: IProps) {
   }, [])
 
   const signIn = () => {
-    dispatch(userActionCreators.signInWithGoogle())
+    dispatch(userAC.signInWithGoogle())
   }
 
   return (

@@ -3,19 +3,20 @@ import { useState } from 'react'
 import { Text } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useAppDispatch, useSettings, useUser } from '../../Hooks/redux'
-import { userActionCreators } from '../../store/UserReducer/UserActionCreators'
+import { userAC } from '../../store/UserReducer/UserActionCreator'
 import { useNavigation } from '@react-navigation/native'
 import { FUTURE_FLAG, ScreenName } from '../../Utils/constants'
 import { ConfirmButton, MyTextInput } from '../../Common'
 import { Page, TextHeader, TextOrdinary } from '../../Theme/Parents'
 import { theme } from '../../Theme/theme'
 import AppGoogleSignInButton from './AppGoogleSignInButton'
+import { AppNavigationType } from '../../Utils/types'
 
 export default function RegistrationScreen() {
   const dispatch = useAppDispatch()
   const { colors, internet } = useSettings()
   const { error, isLoading } = useUser()
-  const navigation = useNavigation<{ navigate: (name: string) => void }>()
+  const navigation = useNavigation<AppNavigationType>()
   const [inputData, setInputData] = useState({ fullName: '', email: '', password: '', confirmPassword: '' })
 
   const onFooterLinkPress = () => {
@@ -28,7 +29,7 @@ export default function RegistrationScreen() {
       return
     }
     dispatch(
-      userActionCreators.signUp({
+      userAC.signUp({
         email: inputData.email,
         password: inputData.password,
         displayName: inputData.password,

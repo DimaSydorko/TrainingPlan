@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { DeleteWorkoutReducerType, GetWorkoutsReducerType, workoutActionCreators } from './WorkoutActionCreators'
+import { DeleteWorkoutReducerType, GetWorkoutsReducerType, workoutAC } from './WorkoutActionCreators'
 import { SelectedWorkoutType, StoredExerciseImage, WorkoutType } from '../../Utils/types'
 
 export interface WorkoutSliceType {
@@ -61,7 +61,7 @@ export const workoutSlice = createSlice({
     },
   },
   extraReducers: {
-    [workoutActionCreators.getWorkouts.fulfilled.type]: (state, { payload }: PayloadAction<GetWorkoutsReducerType>) => {
+    [workoutAC.getWorkouts.fulfilled.type]: (state, { payload }: PayloadAction<GetWorkoutsReducerType>) => {
       const isForPlan = payload.findBy === 'planUid'
       if (isForPlan) state.workoutsInPlan = payload.workouts
       else state.workouts = payload.workouts
@@ -69,40 +69,37 @@ export const workoutSlice = createSlice({
       state.isLoading = false
       state.error = ''
     },
-    [workoutActionCreators.deleteWorkout.fulfilled.type]: (
-      state,
-      { payload }: PayloadAction<DeleteWorkoutReducerType>
-    ) => {
+    [workoutAC.deleteWorkout.fulfilled.type]: (state, { payload }: PayloadAction<DeleteWorkoutReducerType>) => {
       state.workouts = state.workouts.filter(workout => workout.uid !== payload.workoutUid)
       state.workoutsInPlan = state.workoutsInPlan.filter(workout => workout.uid !== payload.workoutUid)
       if (!payload.isInternet) state.deletedWorkoutUids.push(payload.workoutUid)
       state.isLoading = false
       state.error = ''
     },
-    [workoutActionCreators.addWorkout.fulfilled.type]: (state, { payload }: PayloadAction<WorkoutType>) => {
+    [workoutAC.addWorkout.fulfilled.type]: (state, { payload }: PayloadAction<WorkoutType>) => {
       state.workouts.push(payload)
       if (payload.plansUid[0]) state.workoutsInPlan.push(payload)
       state.isLoading = false
       state.error = ''
     },
-    [workoutActionCreators.getExerciseImages.fulfilled.type]: (state, action: PayloadAction<StoredExerciseImage[]>) => {
+    [workoutAC.getExerciseImages.fulfilled.type]: (state, action: PayloadAction<StoredExerciseImage[]>) => {
       state.exerciseImages = action.payload
       state.isLoading = false
       state.error = ''
     },
-    [workoutActionCreators.updateWorkout.fulfilled.type]: updateWorkout,
-    [workoutActionCreators.removeFromPlan.fulfilled.type]: updateWorkout,
+    [workoutAC.updateWorkout.fulfilled.type]: updateWorkout,
+    [workoutAC.removeFromPlan.fulfilled.type]: updateWorkout,
 
-    [workoutActionCreators.getWorkouts.pending.type]: onLoading,
-    [workoutActionCreators.addWorkout.pending.type]: onLoading,
-    [workoutActionCreators.deleteWorkout.pending.type]: onLoading,
-    [workoutActionCreators.removeFromPlan.pending.type]: onLoading,
+    [workoutAC.getWorkouts.pending.type]: onLoading,
+    [workoutAC.addWorkout.pending.type]: onLoading,
+    [workoutAC.deleteWorkout.pending.type]: onLoading,
+    [workoutAC.removeFromPlan.pending.type]: onLoading,
 
-    [workoutActionCreators.getWorkouts.rejected.type]: onError,
-    [workoutActionCreators.addWorkout.rejected.type]: onError,
-    [workoutActionCreators.updateWorkout.rejected.type]: onError,
-    [workoutActionCreators.deleteWorkout.rejected.type]: onError,
-    [workoutActionCreators.getExerciseImages.rejected.type]: onError,
+    [workoutAC.getWorkouts.rejected.type]: onError,
+    [workoutAC.addWorkout.rejected.type]: onError,
+    [workoutAC.updateWorkout.rejected.type]: onError,
+    [workoutAC.deleteWorkout.rejected.type]: onError,
+    [workoutAC.getExerciseImages.rejected.type]: onError,
   },
 })
 export const { errorWorkoutClear, clearWorkoutResults, updateSelectedWorkout } = workoutSlice.actions

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { DeletePlanReducerType, GetPlanReducerType, plansActionCreators } from './PlansActionCreators'
+import { DeletePlanReducerType, GetPlanReducerType, plansAC } from './PlansAC'
 import { PlanType } from '../../Utils/types'
 
 export interface PlansSliceType {
@@ -59,7 +59,7 @@ export const plansSlice = createSlice({
     },
   },
   extraReducers: {
-    [plansActionCreators.getPlans.fulfilled.type]: (state, { payload }: PayloadAction<GetPlanReducerType>) => {
+    [plansAC.getPlans.fulfilled.type]: (state, { payload }: PayloadAction<GetPlanReducerType>) => {
       if (payload.isInternet) {
         state.plans = payload.plans
         state.deletedPlanUids = []
@@ -67,29 +67,29 @@ export const plansSlice = createSlice({
       state.isLoading = false
       state.error = ''
     },
-    [plansActionCreators.deletePlan.fulfilled.type]: (state, { payload }: PayloadAction<DeletePlanReducerType>) => {
+    [plansAC.deletePlan.fulfilled.type]: (state, { payload }: PayloadAction<DeletePlanReducerType>) => {
       state.plans = state.plans.filter(plan => plan.uid !== payload.planUid)
       if (!payload.isInternet) state.deletedPlanUids.push(payload.planUid)
       state.isLoading = false
       state.error = ''
     },
-    [plansActionCreators.addPlan.fulfilled.type]: (state, { payload }: PayloadAction<PlanType>) => {
+    [plansAC.addPlan.fulfilled.type]: (state, { payload }: PayloadAction<PlanType>) => {
       state.plans.push(payload)
       state.isLoading = false
       state.error = ''
     },
-    [plansActionCreators.updatePlan.fulfilled.type]: updatePlan,
-    [plansActionCreators.changeWorkoutsCount.fulfilled.type]: updatePlan,
+    [plansAC.updatePlan.fulfilled.type]: updatePlan,
+    [plansAC.changeWorkoutsCount.fulfilled.type]: updatePlan,
 
-    [plansActionCreators.changeWorkoutsCount.pending.type]: onLoading,
-    [plansActionCreators.getPlans.pending.type]: onLoading,
-    [plansActionCreators.addPlan.pending.type]: onLoading,
+    [plansAC.changeWorkoutsCount.pending.type]: onLoading,
+    [plansAC.getPlans.pending.type]: onLoading,
+    [plansAC.addPlan.pending.type]: onLoading,
 
-    [plansActionCreators.getPlans.rejected.type]: onError,
-    [plansActionCreators.addPlan.rejected.type]: onError,
-    [plansActionCreators.deletePlan.rejected.type]: onError,
-    [plansActionCreators.updatePlan.rejected.type]: onError,
-    [plansActionCreators.changeWorkoutsCount.rejected.type]: onError,
+    [plansAC.getPlans.rejected.type]: onError,
+    [plansAC.addPlan.rejected.type]: onError,
+    [plansAC.deletePlan.rejected.type]: onError,
+    [plansAC.updatePlan.rejected.type]: onError,
+    [plansAC.changeWorkoutsCount.rejected.type]: onError,
   },
 })
 export const { errorPlansClear, selectPlan, clearPlaneResults, changePlansPosition } = plansSlice.actions

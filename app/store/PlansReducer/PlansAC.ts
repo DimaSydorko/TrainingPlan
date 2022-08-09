@@ -22,7 +22,7 @@ export type DeletePlanReducerType = {
   isInternet: boolean
 }
 
-export const plansActionCreators = {
+export const plansAC = {
   getPlans: createAsyncThunk('plans/getPlans', async (userUid: string, thunkAPI) => {
     const plans: PlanType[] = []
     const { plansReducer } = thunkAPI.getState() as RootState

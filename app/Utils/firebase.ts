@@ -16,7 +16,7 @@ const firebaseConfig = {
   projectId: firebaseSDK.PROJECT_ID,
   storageBucket: firebaseSDK.STORAGE_BUCKET,
   messagingSenderId: firebaseSDK.MESSAGING_SENDER_ID,
-  appId: firebaseSDK.APP_ID
+  appId: firebaseSDK.APP_ID,
 }
 
 // Initialize Firebase
@@ -32,5 +32,6 @@ export const FB_FieldValue = firebase.firestore.FieldValue
 export const FB_Collection_UsersData = firebase.firestore().collection(FirebaseDBCollection.UsersData)
 export const FB_Collection_Workouts = firebase.firestore().collection(FirebaseDBCollection.Workouts)
 export const FB_Collection_Plans = firebase.firestore().collection(FirebaseDBCollection.Plans)
+export const FB_Collection_Publications = firebase.firestore().collection(FirebaseDBCollection.Publications)
 
 export default firebase
