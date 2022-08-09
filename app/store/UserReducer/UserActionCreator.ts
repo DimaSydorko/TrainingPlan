@@ -5,7 +5,6 @@ import { UserDataType, UserType } from '../../Utils/types'
 import { initialUserData } from './UserSlice'
 import { clearWorkoutResults } from '../WorkoutReducer/WorkoutSlice'
 import { clearPlaneResults } from '../PlansReducer/PlansSlice'
-import NetInfo from '@react-native-community/netinfo'
 
 export const userAC = {
   signUp: createAsyncThunk(
@@ -61,12 +60,9 @@ export const userAC = {
   }),
   signOut: createAsyncThunk('user/signOut', async (_, thunkAPI) => {
     try {
-      const net = await NetInfo.fetch()
-      if (net.isConnected) {
-        await GoogleSignin.revokeAccess()
-        await GoogleSignin.signOut()
-        await FB_Auth.signOut()
-      }
+      await GoogleSignin.revokeAccess()
+      await GoogleSignin.signOut()
+      await FB_Auth.signOut()
       thunkAPI.dispatch(clearWorkoutResults())
       thunkAPI.dispatch(clearPlaneResults())
       return

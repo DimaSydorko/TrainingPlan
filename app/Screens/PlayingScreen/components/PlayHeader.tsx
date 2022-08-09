@@ -19,6 +19,7 @@ interface IProps {
 export default memo(function PlayHeader({ playingLap, exerciseLaps, workoutDurationTime }: IProps) {
   const { playTimer } = usePlayTimerContext()
   const { colors } = useSettings()
+  const time = workoutDurationTime + playTimer
   return (
     <View style={[theme.containers.headerStyle, styles.header]}>
       <FlexSpaceBetween>
@@ -26,9 +27,7 @@ export default memo(function PlayHeader({ playingLap, exerciseLaps, workoutDurat
         <TextHeader>
           Laps {playingLap}/{exerciseLaps}
         </TextHeader>
-        <TextSecondary color={colors.text}>
-          {secondsToMinSec(workoutDurationTime + playTimer, false, true)}
-        </TextSecondary>
+        <TextSecondary color={colors.text}>{secondsToMinSec(time > 0 ? time : 0, false, true)}</TextSecondary>
       </FlexSpaceBetween>
     </View>
   )

@@ -23,7 +23,7 @@ interface IProps {
   photoUrl: string | undefined
 }
 
-export default memo(function UserImage({ name, photoUrl }: IProps) {
+export default memo(function UserImage({ name = '', photoUrl }: IProps) {
   const { colors } = useSettings()
   const isDarkTheme = colors.primary === colorsDark.primary
 

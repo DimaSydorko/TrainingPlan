@@ -71,7 +71,11 @@ export const userSlice = createSlice({
     [userAC.signUp.rejected.type]: onError,
     [userAC.signInWithGoogle.rejected.type]: onError,
     [userAC.signIn.rejected.type]: onError,
-    [userAC.signOut.rejected.type]: onError,
+    [userAC.signOut.rejected.type]: (state: UserSliceType, { payload }: PayloadAction<string>) => {
+      state.isLoading = false
+      state.error = payload
+      state.user = null
+    },
     [userAC.dataUpdate.rejected.type]: onError,
     [userAC.dataRequest.rejected.type]: onError,
   },

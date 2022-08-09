@@ -42,7 +42,12 @@ export default memo(function CopyWorkoutsModal({ onClose, onCopy, isOpen, workou
           const isDisabled = plan.workoutUids.includes(workoutUid)
           return (
             <TouchableOpacity key={plan.uid} disabled={isDisabled} onPress={() => onWorkoutPress(plan.uid)}>
-              <Card style={[styles.plan, { opacity: isDisabled ? 0.8 : 1 }]}>
+              <Card
+                style={[
+                  styles.plan,
+                  { opacity: isDisabled ? 0.8 : 1, borderLeftWidth: 3, borderLeftColor: colors.secondPrimary },
+                ]}
+              >
                 {(selectedPlanUids.includes(plan.uid) || isDisabled) && (
                   <Icon name={icon.checkCircle} color={colors.primary} size={16} style={styles.selectedIcon} />
                 )}

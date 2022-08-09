@@ -28,7 +28,7 @@ export default function PublicationWorkout({ route }: PropsType) {
       <FlexSpaceBetween style={{ padding: 10, paddingHorizontal: 20, width: screen.vw }}>
         <FlexCenterColumn style={{ alignItems: 'flex-start' }}>
           {!!ownerName && (
-            <TextSecondary style={{ width: screen.vw / 2 }} color={colors.primary}>
+            <TextSecondary style={{ width: screen.vw / 2 }} color={colors.secondPrimary}>
               By {ownerName}
             </TextSecondary>
           )}

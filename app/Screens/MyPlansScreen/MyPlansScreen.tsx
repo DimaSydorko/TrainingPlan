@@ -12,7 +12,7 @@ import { changePlansPosition, selectPlan } from '../../store/PlansReducer/PlansS
 import { plansAC } from '../../store/PlansReducer/PlansAC'
 import { workoutAC } from '../../store/WorkoutReducer/WorkoutActionCreators'
 import { publicationsAC } from '../../store/PublicationsReducer/PublicationsAC'
-import { useAppDispatch, usePlans } from '../../Hooks/redux'
+import { useAppDispatch, usePlans, useSettings } from '../../Hooks/redux'
 import { AppHeader, Card, FlexEnd, FlexStart, Page, TextHeader } from '../../Theme/Parents'
 import { AddMoreButton, AppModal, IconButton } from '../../Common'
 import EditPlanWorkout from '../../Components/EditPlanWorkout/EditPlanWorkout'
@@ -26,6 +26,7 @@ export default memo(function MyPlansScreen() {
   const navigation = useNavigation<AppNavigationType>()
   const dispatch = useAppDispatch()
   const statePlans = usePlans()
+  const { colors } = useSettings()
   const [selectedPlanUids, setSelectedPlanUids] = useState<string[]>([])
   const [isNewPlanModal, setIsNewPlanModal] = useState(false)
   const [isDeleteModal, setIsDeleteModal] = useState(false)
@@ -73,7 +74,7 @@ export default memo(function MyPlansScreen() {
 
   const renderItem = ({ item, drag, isActive }: RenderItemParams<PlanType>) => (
     <ScaleDecorator>
-      <Card>
+      <Card borderLeftColor={colors.secondPrimary}>
         <TouchableOpacity
           onLongPress={() => {
             Vibration.vibrate(VIBRATION.BUTTON)

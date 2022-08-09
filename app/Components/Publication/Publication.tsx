@@ -17,7 +17,6 @@ export default memo(function Publication({ publication }: IProps) {
   const navigation = useNavigation<AppNavigationType>()
   const { colors } = useSettings()
   const isPlan = !!publication?.workouts && !publication?.exercises
-  const color = isPlan ? colors.secondPrimary : colors.primary
 
   const onPress = () => {
     if (isPlan) navigation.navigate(ScreenName.PublicationPlan, { publication })
@@ -27,8 +26,8 @@ export default memo(function Publication({ publication }: IProps) {
   return (
     <>
       <TouchableOpacity onPress={onPress}>
-        <Card>
-          <TextHeader color={color}>{publication.name}</TextHeader>
+        <Card borderLeftColor={isPlan ? colors.secondPrimary : undefined}>
+          <TextHeader color={colors.secondPrimary}>{publication.name}</TextHeader>
           <FlexSpaceBetween>
             <View>
               {isPlan ? (
@@ -39,7 +38,7 @@ export default memo(function Publication({ publication }: IProps) {
                   <WorkoutDuration exercises={publication.exercises} />
                 </FlexStart>
               )}
-              <TextSecondary color={color + '80'}>By {publication.ownerName}</TextSecondary>
+              <TextSecondary color={colors.secondPrimary + '80'}>By {publication.ownerName}</TextSecondary>
             </View>
             <PublicButtons publication={publication} />
           </FlexSpaceBetween>

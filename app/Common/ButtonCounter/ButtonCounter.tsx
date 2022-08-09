@@ -1,19 +1,19 @@
 import * as React from 'react'
 import { memo, ReactNode } from 'react'
+import { StyleSheet } from 'react-native'
 import { useSettings } from '../../Hooks/redux'
 import { FlexSpaceBetween, TextHeader } from '../../Theme/Parents'
 import { IconButton } from '../index'
 import { screen } from '../../Utils/constants'
-import { StyleSheet } from 'react-native'
+import { SetStateType } from '../../Utils/types'
 
 interface ButtonCounterType {
   value: number
-  onChange: (value: number) => void
+  onChange: SetStateType<number>
   dataType?: string
   color?: string
   step?: number
   minValue?: number
-  maxValue?: number
   extraWidth?: number
   children?: ReactNode
 }
@@ -25,22 +25,22 @@ export default memo(function ButtonCounter({
   color,
   dataType = '',
   minValue = 0,
-  maxValue,
   extraWidth = 0,
   children,
 }: ButtonCounterType) {
   const { colors } = useSettings()
   const buttonColor = color || colors.textSecondary
+
   return (
     <FlexSpaceBetween style={[styles.container, { width: (screen.vw - 120) / 2 + extraWidth }]}>
       <IconButton
         size={28}
-        disableVibration
         iconName='minus'
         color={buttonColor}
         style={[styles.button, { borderColor: buttonColor }]}
         disabled={value <= minValue}
-        onPress={() => onChange(value - step)}
+        isRepeatOnLongPress
+        onPress={() => onChange(p => (p > minValue ? p - step : p))}
       />
       <TextHeader color={color || colors.secondPrimary}>
         {value}
@@ -49,12 +49,11 @@ export default memo(function ButtonCounter({
       </TextHeader>
       <IconButton
         size={28}
-        disableVibration
+        isRepeatOnLongPress
         iconName='plus'
         color={buttonColor}
         style={[styles.button, { borderColor: buttonColor }]}
-        disabled={!!maxValue ? value <= maxValue : undefined}
-        onPress={() => onChange(value + step)}
+        onPress={() => onChange(p => p + step)}
       />
     </FlexSpaceBetween>
   )

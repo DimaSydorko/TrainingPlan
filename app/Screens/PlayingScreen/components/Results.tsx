@@ -2,10 +2,11 @@ import * as React from 'react'
 import { FlexSpaceBetween, TextHeader } from '../../../Theme/Parents'
 import { ButtonCounter } from '../../../Common'
 import { useSettings } from '../../../Hooks/redux'
+import { SetStateType } from '../../../Utils/types'
 
 interface ResultsI {
   type: 'repeats' | 'weight'
-  onChange: (v: number) => void
+  onChange: SetStateType<number>
   value: number
   diff: number
   step?: number

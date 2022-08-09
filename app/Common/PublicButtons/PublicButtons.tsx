@@ -21,8 +21,8 @@ export default memo(function PublicButtons({ publication, isOpenedScreen = false
   const { colors } = useSettings()
   const { user } = useUser()
   const navigation = useNavigation<AppNavigationType>()
-  const isOwner = publication.ownerUid === user.uid
-  const isLiked = publication.likes.includes(user.uid)
+  const isOwner = publication.ownerUid === (user?.uid || '')
+  const isLiked = publication.likes.includes(user?.uid || '')
   const [isDeleteModal, setIsDeleteModal] = useState(false)
 
   const onSave = () => {

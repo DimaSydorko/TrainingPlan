@@ -143,7 +143,7 @@ export const Card = ({ children, style, borderLeftColor }: ParentProps & { borde
         !!borderLeftColor
           ? {
               borderLeftColor,
-              borderLeftWidth: 12,
+              borderLeftWidth: 6,
             }
           : {},
         style,

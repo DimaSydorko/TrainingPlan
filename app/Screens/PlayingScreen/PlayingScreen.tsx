@@ -34,7 +34,8 @@ export default memo(function PlayingScreen() {
     isTheLastOne,
     playing,
     exercise,
-    current,
+    currentRepeats,
+    currentWeight,
     approach,
     exerciseNext,
     onTimerComplete,
@@ -42,7 +43,8 @@ export default memo(function PlayingScreen() {
     onNext,
     onSaveResult,
     onPrevious,
-    setCurrent,
+    setCurrentRepeats,
+    setCurrentWeight,
     onReload,
     playingWorkout,
   } = usePlaying()
@@ -53,8 +55,8 @@ export default memo(function PlayingScreen() {
   const color = COLORS_EXERCISE[exercise?.colorIdx || 0][+isDarkTheme]
   const isTheLastOneComplete = isWaitForSubmit && isTheLastOne
 
-  const weightDiff = current?.weight - approach?.weight || 0
-  const repeatsDiff = current?.repeats - approach?.repeats || 0
+  const weightDiff = currentWeight - approach?.weight || 0
+  const repeatsDiff = currentRepeats - approach?.repeats || 0
 
   const duration = isTheLastOneComplete ? 0 : exercise.breakTimeInSec
   const workoutDurationTime =
@@ -162,16 +164,16 @@ export default memo(function PlayingScreen() {
               type={'weight'}
               step={workout.weightStep}
               color={color}
-              value={current.weight}
-              onChange={v => setCurrent(p => ({ ...p, weight: v }))}
+              value={currentWeight}
+              onChange={setCurrentWeight}
               diff={weightDiff}
             />
             <Results
               type={'repeats'}
               color={color}
-              value={current.repeats}
+              value={currentRepeats}
               repeats={exercise.repeats}
-              onChange={v => setCurrent(p => ({ ...p, repeats: v }))}
+              onChange={setCurrentRepeats}
               diff={repeatsDiff}
             />
           </View>

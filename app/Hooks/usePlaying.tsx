@@ -14,12 +14,6 @@ const initialPlaying = {
 }
 type PlayingType = typeof initialPlaying
 
-const initialCurrent = {
-  weight: 0,
-  repeats: 0,
-}
-type CurrentType = typeof initialCurrent
-
 export default function usePlaying() {
   const dispatch = useAppDispatch()
   const { selectedWorkout } = useWorkout()
@@ -28,7 +22,8 @@ export default function usePlaying() {
   const [playing, setPlaying] = useState<PlayingType>(initialPlaying)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isWaitForSubmit, setIsWaitForSubmit] = useState(false)
-  const [current, setCurrent] = useState<CurrentType>(initialCurrent)
+  const [currentWeight, setCurrentWeight] = useState<number>(0)
+  const [currentRepeats, setCurrentRepeats] = useState<number>(0)
   const [playingWorkout, setPlayingWorkout] = useState<SelectedWorkoutType>({
     ...selectedWorkout,
     exercises: selectedWorkout?.exercises?.filter(ex => ex.isVisible),
@@ -54,11 +49,10 @@ export default function usePlaying() {
   }, [playingWorkout.exercises[playing.idx]])
 
   useEffect(() => {
-    const newCurrent = {
-      repeats: approach?.currentRepeats === undefined ? approach?.repeats : approach.currentRepeats,
-      weight: approach?.currentWeight === undefined ? approach?.weight : approach.currentWeight,
-    }
-    setCurrent(p => (deepCompare(newCurrent, p) ? p : newCurrent))
+    const weight = approach?.currentWeight === undefined ? approach?.weight : approach.currentWeight
+    const repeats = approach?.currentRepeats === undefined ? approach?.repeats : approach.currentRepeats
+    setCurrentWeight(weight)
+    setCurrentRepeats(repeats)
   }, [approach])
 
   const onBack = useCallback(() => {
@@ -95,8 +89,8 @@ export default function usePlaying() {
             idx + 1 === playing.lap
               ? {
                   ...ap,
-                  currentRepeats: current.repeats,
-                  currentWeight: current.weight,
+                  currentRepeats,
+                  currentWeight,
                 }
               : ap
           ),
@@ -105,7 +99,7 @@ export default function usePlaying() {
         return newExercise
       })
     },
-    [playing.lap, current, onWorkoutSaveResult]
+    [playing.lap, currentRepeats, currentWeight, onWorkoutSaveResult]
   )
 
   const onSaveResult = useCallback(() => {
@@ -157,9 +151,8 @@ export default function usePlaying() {
       Vibration.vibrate(VIBRATION.END_EXERCISE, true)
       setTimeout(() => Vibration.cancel(), 1900)
     }
-    if (!isTheLastOne) onNext()
-    else setIsWaitForSubmit(true)
-  }, [exercise.repeats, onNext, isTheLastOne])
+    onNext()
+  }, [onNext])
 
   const onTogglePlay = useCallback(() => {
     if (isVibration) Vibration.vibrate(VIBRATION.TIMER)
@@ -186,7 +179,8 @@ export default function usePlaying() {
     playing,
     exercise,
     exerciseNext,
-    current,
+    currentRepeats,
+    currentWeight,
     approach,
     onNext,
     onBack,
@@ -195,6 +189,7 @@ export default function usePlaying() {
     onTimerComplete,
     onSaveResult,
     onReload,
-    setCurrent,
+    setCurrentRepeats,
+    setCurrentWeight,
   }
 }
