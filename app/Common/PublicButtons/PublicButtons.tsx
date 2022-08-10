@@ -37,7 +37,7 @@ export default memo(function PublicButtons({ publication, isOpenedScreen = false
 
   return (
     <>
-      <FlexEnd style={{ width: 150, alignItems: 'flex-start' }}>
+      <FlexEnd style={{ width: 115, alignItems: 'flex-start' }}>
         {isOwner && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}
         <View>
           <IconButton

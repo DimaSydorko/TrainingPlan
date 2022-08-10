@@ -3,7 +3,7 @@ import { memo, useState } from 'react'
 import { View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useSettings } from '../../Hooks/redux'
-import { AppModal, WorkoutDuration } from '../../Common'
+import { AppModal, Labels, WorkoutDuration } from '../../Common'
 import { FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { WorkoutType } from '../../Utils/types'
 import { icon } from '../../Theme/icons'
@@ -36,6 +36,7 @@ export default memo(function WorkoutCard({ workout, isInPlan, isSelected = false
             <WorkoutDuration exercises={workout.exercises} />
             {!!workout.plansUid.length && !isInPlan && <TextSecondary>(In Plan)</TextSecondary>}
           </FlexStart>
+          <Labels labels={workout.labels} />
         </View>
       </FlexSpaceBetween>
       <AppModal

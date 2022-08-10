@@ -3,7 +3,7 @@ import { memo } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useSettings } from '../../Hooks/redux'
-import { WorkoutDuration } from '../../Common'
+import { Labels, WorkoutDuration } from '../../Common'
 import { Card, FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { AppNavigationType, PublicType } from '../../Utils/types'
 import { ScreenName } from '../../Utils/constants'
@@ -38,7 +38,8 @@ export default memo(function Publication({ publication }: IProps) {
                   <WorkoutDuration exercises={publication.exercises} />
                 </FlexStart>
               )}
-              <TextSecondary color={colors.secondPrimary + '80'}>By {publication.ownerName}</TextSecondary>
+              <Labels labels={publication.labels} />
+              <TextSecondary color={colors.black}>By {publication.ownerName}</TextSecondary>
             </View>
             <PublicButtons publication={publication} />
           </FlexSpaceBetween>

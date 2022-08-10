@@ -1,9 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { FB_Collection_Publications, FB_FieldValue } from '../../Utils/firebase'
 import { QUERY_LIMIT } from '../../Utils/constants'
+import { getCurrentTime, nanoid } from '../../Utils'
+import { FB_Collection_Publications, FB_FieldValue } from '../../Utils/firebase'
 import { ApproachType, ExerciseType, PlanType, PublicType, WorkoutType } from '../../Utils/types'
 import { RootState } from '../index'
-import { getCurrentTime, nanoid } from '../../Utils'
 import { workoutAC } from '../WorkoutReducer/WorkoutActionCreators'
 import { plansAC } from '../PlansReducer/PlansAC'
 
@@ -19,16 +19,21 @@ export interface LikeToggleType {
 
 export interface getType {
   isYours?: boolean
+  labels?: string[]
 }
 
 export const publicationsAC = {
-  get: createAsyncThunk('publications/get', async ({ isYours = false }: getType, thunkAPI) => {
+  get: createAsyncThunk('publications/get', async ({ isYours = false, labels = [] }: getType, thunkAPI) => {
     const { userReducer } = thunkAPI.getState() as RootState
     const userUid: string = userReducer.user.uid
+
     try {
       const snapshot = isYours
         ? await FB_Collection_Publications.where('ownerUid', '==', userUid).limit(QUERY_LIMIT).get()
+        : labels.length && labels[0]
+        ? await FB_Collection_Publications.where('labels', 'array-contains-any', labels).limit(QUERY_LIMIT).get()
         : await FB_Collection_Publications.limit(QUERY_LIMIT).get()
+
       const publications: PublicType[] = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as PublicType))
       return { publications, isYours }
     } catch (e) {
@@ -71,7 +76,7 @@ export const publicationsAC = {
       const { userReducer } = thunkAPI.getState() as RootState
       const userUid: string = userReducer.user.uid
       try {
-        await FB_Collection_Publications.doc(publicationUid).update({
+        FB_Collection_Publications.doc(publicationUid).update({
           likes: isLiked ? FB_FieldValue.arrayRemove(userUid) : FB_FieldValue.arrayUnion(userUid),
         })
         return { isLiked, publicationUid, userUid }

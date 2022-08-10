@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { memo, useEffect } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import { useAppDispatch, usePublications, useSettings } from '../Hooks/redux'
-import { Loading } from '../Common'
+import { useAppDispatch, useSettings } from '../Hooks/redux'
 import { ScreenName } from '../Utils/constants'
 import { useScreenOptions } from '../Theme/Parents'
 import { PublicationsScreen } from '../Screens'
@@ -14,7 +13,6 @@ export default memo(function PublicationsRouter() {
   const dispatch = useAppDispatch()
   const Stack = createStackNavigator()
   const options = useScreenOptions()
-  const publications = usePublications()
   const { internet } = useSettings()
 
   useEffect(() => {
@@ -25,7 +23,6 @@ export default memo(function PublicationsRouter() {
 
   return (
     <>
-      {publications.isLoading && <Loading />}
       <Stack.Navigator>
         <Stack.Screen
           name={ScreenName.Publications}

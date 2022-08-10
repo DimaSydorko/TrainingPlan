@@ -22,11 +22,11 @@ import {
 import { AddMoreButton, AppModal, ConfirmButton, GoBackSubmitModal, MyTextInput, WorkoutDuration } from '../../Common'
 import Exercise from '../../Components/Exercise/Exercise'
 import EditExerciseModal from '../../Components/Exercise/ExerciseEditModal'
-import { FUTURE_FLAG, screen } from '../../Utils/constants'
 import { deepCompare } from '../../Utils'
+import { FUTURE_FLAG, screen } from '../../Utils/constants'
 import { ExerciseType, WorkoutType } from '../../Utils/types'
-import { headerHeight, theme } from '../../Theme/theme'
 import { icon } from '../../Theme/icons'
+import { headerHeight, theme } from '../../Theme/theme'
 import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
 
 export default function WorkoutScreen() {

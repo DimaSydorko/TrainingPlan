@@ -2,9 +2,9 @@ import * as React from 'react'
 import { memo, useState } from 'react'
 import { View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { AppModal } from '../../Common'
+import { AppModal, Labels } from '../../Common'
 import { useSettings } from '../../Hooks/redux'
-import { FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
+import { FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { PlanType } from '../../Utils/types'
 import { icon } from '../../Theme/icons'
 
@@ -32,6 +32,7 @@ export default memo(function PlanCard({ plan, isSelected, onDelete }: IPlanCard)
         <View>
           <TextHeader color={colors.secondPrimary}>{plan.name}</TextHeader>
           <TextSecondary>{plan.workoutUids.length} Workouts</TextSecondary>
+          <Labels labels={plan.labels} />
         </View>
       </FlexSpaceBetween>
       <AppModal
