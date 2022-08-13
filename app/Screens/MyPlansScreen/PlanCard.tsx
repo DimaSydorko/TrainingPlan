@@ -4,7 +4,7 @@ import { View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { AppModal, Labels } from '../../Common'
 import { useSettings } from '../../Hooks/redux'
-import { FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
+import { FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { PlanType } from '../../Utils/types'
 import { icon } from '../../Theme/icons'
 
@@ -31,7 +31,7 @@ export default memo(function PlanCard({ plan, isSelected, onDelete }: IPlanCard)
       <FlexSpaceBetween>
         <View>
           <TextHeader color={colors.secondPrimary}>{plan.name}</TextHeader>
-          <TextSecondary>{plan.workoutUids.length} Workouts</TextSecondary>
+          <TextSecondary>{plan?.workouts?.length || 0} Workouts</TextSecondary>
           <Labels labels={plan.labels} />
         </View>
       </FlexSpaceBetween>

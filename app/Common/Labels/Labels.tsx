@@ -12,11 +12,13 @@ export default function Labels({ style, labels }: IProps) {
   const { colors } = useSettings()
   return (
     <FlexStart style={[{ flexWrap: 'wrap' }, style]}>
-      {labels.map((label, idx) => (
-        <TextSecondary key={idx} color={colors.secondPrimary + 'A0'}>
-          #{label}{' '}
-        </TextSecondary>
-      ))}
+      {labels
+        .filter(l => !!l)
+        .map((label, idx) => (
+          <TextSecondary key={idx} color={colors.secondPrimary + 'A0'}>
+            #{label}{' '}
+          </TextSecondary>
+        ))}
     </FlexStart>
   )
 }

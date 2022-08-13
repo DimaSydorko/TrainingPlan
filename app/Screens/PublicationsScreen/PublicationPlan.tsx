@@ -36,7 +36,7 @@ export default function PublicationPlan({ route }: PropsType) {
             onPress={() => navigation.navigate(ScreenName.PublicationWorkout, { workout: workout as WorkoutType })}
           >
             <Card>
-              <WorkoutCard workout={workout as WorkoutType} isInPlan />
+              <WorkoutCard workout={workout as WorkoutType} />
             </Card>
           </TouchableOpacity>
         ))}

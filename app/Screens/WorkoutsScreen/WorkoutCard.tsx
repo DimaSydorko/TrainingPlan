@@ -11,10 +11,9 @@ import { icon } from '../../Theme/icons'
 interface IWorkoutCard {
   workout: WorkoutType
   isSelected?: boolean
-  isInPlan: boolean
 }
 
-export default memo(function WorkoutCard({ workout, isInPlan, isSelected = false }: IWorkoutCard) {
+export default memo(function WorkoutCard({ workout, isSelected = false }: IWorkoutCard) {
   const { colors } = useSettings()
   const [isDeleteModal, setIsDeleteModal] = useState(false)
 
@@ -32,9 +31,8 @@ export default memo(function WorkoutCard({ workout, isInPlan, isSelected = false
         <View>
           <TextHeader color={colors.secondPrimary}>{workout.name}</TextHeader>
           <FlexStart>
-            <TextSecondary>{workout.exercises.length} Exercises</TextSecondary>
+            <TextSecondary>{workout?.exercises?.length || 0} Exercises</TextSecondary>
             <WorkoutDuration exercises={workout.exercises} />
-            {!!workout.plansUid.length && !isInPlan && <TextSecondary>(In Plan)</TextSecondary>}
           </FlexStart>
           <Labels labels={workout.labels} />
         </View>
@@ -42,15 +40,7 @@ export default memo(function WorkoutCard({ workout, isInPlan, isSelected = false
       <AppModal
         isWarning
         header='Delete workout'
-        text={`Are you sure you want to delete '${workout.name}' workout ${
-          isInPlan
-            ? 'from this plan'
-            : `forever?${
-                !!workout.plansUid.length
-                  ? ` It's exist in ${workout.plansUid.length} plan${workout.plansUid.length > 1 ? 's' : ''}.`
-                  : ''
-              }`
-        }`}
+        text={`Are you sure you want to delete '${workout.name}' workout ?`}
         confirmText='Yes, delete'
         isOpen={isDeleteModal}
         onClose={() => setIsDeleteModal(false)}

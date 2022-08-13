@@ -79,9 +79,8 @@ export const plansSlice = createSlice({
       state.error = ''
     },
     [plansAC.updatePlan.fulfilled.type]: updatePlan,
-    [plansAC.changeWorkoutsCount.fulfilled.type]: updatePlan,
+    [plansAC.updateSelectedPlanWorkout.fulfilled.type]: updatePlan,
 
-    [plansAC.changeWorkoutsCount.pending.type]: onLoading,
     [plansAC.getPlans.pending.type]: onLoading,
     [plansAC.addPlan.pending.type]: onLoading,
 
@@ -89,7 +88,7 @@ export const plansSlice = createSlice({
     [plansAC.addPlan.rejected.type]: onError,
     [plansAC.deletePlan.rejected.type]: onError,
     [plansAC.updatePlan.rejected.type]: onError,
-    [plansAC.changeWorkoutsCount.rejected.type]: onError,
+    [plansAC.updateSelectedPlanWorkout.rejected.type]: onError,
   },
 })
 export const { errorPlansClear, selectPlan, clearPlaneResults, changePlansPosition } = plansSlice.actions

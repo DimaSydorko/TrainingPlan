@@ -34,7 +34,6 @@ function useAppHelper() {
   }, [])
 
   const addSavedUids = useCallback((uid: string) => {
-    console.log('addSavedUids', uid)
     setSavedUids(p => [...p, uid])
   }, [])
 

@@ -19,15 +19,19 @@ export default memo(function PlanRouter() {
     <>
       {(workout.isLoading || plans.isLoading || user.isLoading) && <Loading />}
       <Stack.Navigator>
-        <Stack.Screen name={ScreenName.SavedWorkouts} options={{ ...options, title: 'All saved Plans' }}>
-          {() => <MyPlansScreen />}
-        </Stack.Screen>
+        <Stack.Screen
+          name={ScreenName.SavedWorkouts}
+          options={{ ...options, title: 'All saved Plans' }}
+          component={MyPlansScreen}
+        />
         <Stack.Screen name={ScreenName.Plan} options={{ ...options, title: plans.selectedPlan?.name }}>
           {() => <WorkoutsScreen isInPlan />}
         </Stack.Screen>
-        <Stack.Screen name={ScreenName.WorkoutInPlan} options={{ ...options, title: workout.selectedWorkout?.name }}>
-          {() => <WorkoutScreen />}
-        </Stack.Screen>
+        <Stack.Screen
+          name={ScreenName.WorkoutInPlan}
+          options={{ ...options, title: workout.selectedWorkout?.name }}
+          component={WorkoutScreen}
+        />
       </Stack.Navigator>
     </>
   )

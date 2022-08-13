@@ -1,23 +1,23 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { DeleteWorkoutReducerType, GetWorkoutsReducerType, workoutAC } from './WorkoutActionCreators'
+import { DeleteWorkoutReducerType, GetWorkoutsReducerType, workoutAC } from './WorkoutAC'
 import { SelectedWorkoutType, StoredExerciseImage, WorkoutType } from '../../Utils/types'
 
 export interface WorkoutSliceType {
   workouts: WorkoutType[]
-  workoutsInPlan: WorkoutType[]
   selectedWorkout: SelectedWorkoutType | null
   exerciseImages: StoredExerciseImage[]
   deletedWorkoutUids: string[]
+  sortedWorkoutUids: string[]
   isLoading: boolean
   error: string
 }
 
 const initialState: WorkoutSliceType = {
   workouts: [],
-  workoutsInPlan: [],
   exerciseImages: [],
   deletedWorkoutUids: [],
   selectedWorkout: null,
+  sortedWorkoutUids: [],
   isLoading: false,
   error: '',
 }
@@ -51,34 +51,33 @@ export const workoutSlice = createSlice({
     updateSelectedWorkout(state, { payload }: PayloadAction<SelectedWorkoutType>) {
       state.selectedWorkout = payload
     },
+    changeWorkoutsPosition(state, { payload }: PayloadAction<string[]>) {
+      state.sortedWorkoutUids = payload
+    },
     clearWorkoutResults(state) {
       state.error = ''
       state.isLoading = false
       state.selectedWorkout = initialState.selectedWorkout
       state.workouts = initialState.workouts
-      state.workoutsInPlan = initialState.workoutsInPlan
       state.deletedWorkoutUids = initialState.deletedWorkoutUids
+      state.sortedWorkoutUids = initialState.sortedWorkoutUids
     },
   },
   extraReducers: {
     [workoutAC.getWorkouts.fulfilled.type]: (state, { payload }: PayloadAction<GetWorkoutsReducerType>) => {
-      const isForPlan = payload.findBy === 'planUid'
-      if (isForPlan) state.workoutsInPlan = payload.workouts
-      else state.workouts = payload.workouts
+      state.workouts = payload.workouts
       if (!payload.isInternet) state.deletedWorkoutUids = []
       state.isLoading = false
       state.error = ''
     },
-    [workoutAC.deleteWorkout.fulfilled.type]: (state, { payload }: PayloadAction<DeleteWorkoutReducerType>) => {
-      state.workouts = state.workouts.filter(workout => workout.uid !== payload.workoutUid)
-      state.workoutsInPlan = state.workoutsInPlan.filter(workout => workout.uid !== payload.workoutUid)
-      if (!payload.isInternet) state.deletedWorkoutUids.push(payload.workoutUid)
+    [workoutAC.deleteWorkouts.fulfilled.type]: (state, { payload }: PayloadAction<DeleteWorkoutReducerType>) => {
+      state.workouts = state.workouts.filter(workout => !payload.workoutUids.includes(workout.uid))
+      if (!payload.isInternet) state.deletedWorkoutUids = [...state.deletedWorkoutUids, ...payload.workoutUids]
       state.isLoading = false
       state.error = ''
     },
     [workoutAC.addWorkout.fulfilled.type]: (state, { payload }: PayloadAction<WorkoutType>) => {
       state.workouts.push(payload)
-      if (payload.plansUid[0]) state.workoutsInPlan.push(payload)
       state.isLoading = false
       state.error = ''
     },
@@ -88,19 +87,18 @@ export const workoutSlice = createSlice({
       state.error = ''
     },
     [workoutAC.updateWorkout.fulfilled.type]: updateWorkout,
-    [workoutAC.removeFromPlan.fulfilled.type]: updateWorkout,
 
     [workoutAC.getWorkouts.pending.type]: onLoading,
     [workoutAC.addWorkout.pending.type]: onLoading,
-    [workoutAC.deleteWorkout.pending.type]: onLoading,
-    [workoutAC.removeFromPlan.pending.type]: onLoading,
+    [workoutAC.deleteWorkouts.pending.type]: onLoading,
 
     [workoutAC.getWorkouts.rejected.type]: onError,
     [workoutAC.addWorkout.rejected.type]: onError,
     [workoutAC.updateWorkout.rejected.type]: onError,
-    [workoutAC.deleteWorkout.rejected.type]: onError,
+    [workoutAC.deleteWorkouts.rejected.type]: onError,
     [workoutAC.getExerciseImages.rejected.type]: onError,
   },
 })
-export const { errorWorkoutClear, clearWorkoutResults, updateSelectedWorkout } = workoutSlice.actions
+export const { errorWorkoutClear, clearWorkoutResults, updateSelectedWorkout, changeWorkoutsPosition } =
+  workoutSlice.actions
 export default workoutSlice.reducer

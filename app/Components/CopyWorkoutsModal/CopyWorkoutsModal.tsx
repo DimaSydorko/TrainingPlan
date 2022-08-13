@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { memo, useCallback, useState } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
@@ -12,54 +12,63 @@ import styles from './styles'
 
 interface PropsType {
   isOpen: boolean
+  isInPlan: boolean
   onClose: () => void
-  workoutUid: string
-  onCopy: (plans: PlanType[]) => void
+  onCopy: (plan: PlanType | undefined) => void
 }
 
-export default memo(function CopyWorkoutsModal({ onClose, onCopy, isOpen, workoutUid }: PropsType) {
-  const { plans } = usePlans()
+export default memo(function CopyWorkoutsModal({ onClose, onCopy, isOpen, isInPlan }: PropsType) {
+  const { plans, selectedPlan } = usePlans()
   const { colors } = useSettings()
-  const [selectedPlanUids, setSelectedPlanUids] = useState<string[]>([])
+  const [selectedIdx, setSelectedIdx] = useState<number | undefined>(undefined)
 
   const onConfirmCopy = useCallback(() => {
-    onCopy(plans.filter(plan => selectedPlanUids.includes(plan.uid)))
-  }, [selectedPlanUids, onCopy])
-
-  const onWorkoutPress = (planUid: string) => {
-    setSelectedPlanUids(p => (p.includes(planUid) ? p.filter(p => p !== planUid) : [...p, planUid]))
-  }
+    setSelectedIdx(undefined)
+    onCopy(plans.find((_, idx) => idx === selectedIdx))
+  }, [onCopy, plans, selectedIdx])
 
   const onRefuse = useCallback(() => {
     onClose()
-    setSelectedPlanUids([])
-  }, [])
+    setSelectedIdx(undefined)
+  }, [onClose])
+
+  const cardStyle = useMemo(
+    () => [styles.plan, { borderLeftWidth: 3, borderLeftColor: colors.secondPrimary }],
+    [colors.secondPrimary]
+  )
 
   return (
     <AppModal onConfirm={onConfirmCopy} confirmText='Copy' onClose={onRefuse} isOpen={isOpen} header={'Copy workout'}>
       <ScrollView style={styles.container}>
-        {plans.map(plan => {
-          const isDisabled = plan.workoutUids.includes(workoutUid)
-          return (
-            <TouchableOpacity key={plan.uid} disabled={isDisabled} onPress={() => onWorkoutPress(plan.uid)}>
-              <Card
-                style={[
-                  styles.plan,
-                  { opacity: isDisabled ? 0.8 : 1, borderLeftWidth: 3, borderLeftColor: colors.secondPrimary },
-                ]}
-              >
-                {(selectedPlanUids.includes(plan.uid) || isDisabled) && (
+        {isInPlan ? (
+          <TouchableOpacity onPress={() => setSelectedIdx(-1)}>
+            <Card style={cardStyle}>
+              {selectedIdx === -1 && (
+                <Icon name={icon.checkCircle} color={colors.primary} size={16} style={styles.selectedIcon} />
+              )}
+              <TextHeader color={colors.secondPrimary} numberOfLines={1} style={styles.textHeader} ellipsizeMode='tail'>
+                My workouts
+              </TextHeader>
+            </Card>
+          </TouchableOpacity>
+        ) : null}
+        {plans.map((plan, idx) => {
+          const isCurrent = isInPlan ? selectedPlan.uid === plan.uid : false
+          return isCurrent ? null : (
+            <TouchableOpacity key={plan.uid} onPress={() => setSelectedIdx(idx)}>
+              <Card style={cardStyle}>
+                {idx === selectedIdx && (
                   <Icon name={icon.checkCircle} color={colors.primary} size={16} style={styles.selectedIcon} />
                 )}
                 <TextHeader
-                  color={isDisabled ? colors.disabled : colors.secondPrimary}
+                  color={colors.secondPrimary}
                   numberOfLines={1}
                   style={styles.textHeader}
                   ellipsizeMode='tail'
                 >
                   {plan.name}
                 </TextHeader>
-                <TextSecondary>Workouts: {plan.workoutUids.length}</TextSecondary>
+                <TextSecondary>Workouts: {plan?.workouts?.length || 0}</TextSecondary>
               </Card>
             </TouchableOpacity>
           )

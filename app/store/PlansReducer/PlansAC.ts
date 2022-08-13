@@ -1,16 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import NetInfo from '@react-native-community/netinfo'
 import { FB_Collection_Plans } from '../../Utils/firebase'
+import { updateSelectedWorkout } from '../WorkoutReducer/WorkoutSlice'
 import { QUERY_LIMIT } from '../../Utils/constants'
-import { PlanType } from '../../Utils/types'
+import { PlanType, WorkoutType } from '../../Utils/types'
 import { getCurrentTime, nanoid } from '../../Utils'
 import { RootState } from '../index'
-
-export interface ChangeWorkoutsCountType {
-  planUid: string
-  workoutUids: string[]
-  type: 'add' | 'delete'
-}
 
 export type GetPlanReducerType = {
   plans?: PlanType[]
@@ -23,9 +18,10 @@ export type DeletePlanReducerType = {
 }
 
 export const plansAC = {
-  getPlans: createAsyncThunk('plans/getPlans', async (userUid: string, thunkAPI) => {
+  getPlans: createAsyncThunk('plans/getPlans', async (_, thunkAPI) => {
+    const { plansReducer, userReducer } = thunkAPI.getState() as RootState
+    const userUid: string = userReducer.user.uid
     const plans: PlanType[] = []
-    const { plansReducer } = thunkAPI.getState() as RootState
     try {
       const net = await NetInfo.fetch()
       const isInternet = net.isConnected
@@ -68,8 +64,12 @@ export const plansAC = {
   }),
 
   addPlan: createAsyncThunk('plans/addPlans', async (props: PlanType, thunkAPI) => {
+    const { userReducer } = thunkAPI.getState() as RootState
+    const ownerUid: string = userReducer.user.uid
     props.uid = props?.uid || nanoid()
+    props.ownerUid = props?.ownerUid || ownerUid
     props.lastUpdated = getCurrentTime()
+
     const { uid, ...plan } = props
     try {
       const net = await NetInfo.fetch()
@@ -96,28 +96,20 @@ export const plansAC = {
     }
   }),
 
-  changeWorkoutsCount: createAsyncThunk(
-    'plans/changeWorkoutsCount',
-    async (props: ChangeWorkoutsCountType, thunkAPI) => {
+  updateSelectedPlanWorkout: createAsyncThunk(
+    'plans/updateSelectedPlanWorkout',
+    async (workout: WorkoutType, thunkAPI) => {
       const { plansReducer } = thunkAPI.getState() as RootState
-      const { uid, ...plan }: PlanType = plansReducer.plans.find(plan => plan.uid === props.planUid)
-      const workoutUids =
-        props.type === 'add'
-          ? [...plan.workoutUids, ...props.workoutUids]
-          : plan.workoutUids.filter(uid => !props.workoutUids.includes(uid))
-
-      const newPlan = {
-        ...plan,
-        workoutUids,
-        lastUpdated: getCurrentTime(),
-      }
-
+      const { uid, ...selectedPlan }: PlanType = plansReducer.selectedPlan
+      selectedPlan.lastUpdated = getCurrentTime()
+      selectedPlan.workouts = selectedPlan.workouts.map(w => (w.uid === workout.uid ? workout : w))
       try {
         const net = await NetInfo.fetch()
         if (net.isConnected) {
-          await FB_Collection_Plans.doc(uid).update(newPlan)
+          await FB_Collection_Plans.doc(uid).set(selectedPlan)
         }
-        return { ...newPlan, uid }
+        thunkAPI.dispatch(updateSelectedWorkout(workout))
+        return { uid, ...selectedPlan }
       } catch (e) {
         return thunkAPI.rejectWithValue(e.message)
       }

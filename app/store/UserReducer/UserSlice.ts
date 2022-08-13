@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { UserDataType, UserType } from '../../Utils/types'
-import { userAC } from './UserActionCreator'
+import { userAC } from './UserAC'
 
 export interface UserSliceType {
   user: UserType | null

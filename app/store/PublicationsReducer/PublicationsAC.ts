@@ -4,14 +4,13 @@ import { getCurrentTime, nanoid } from '../../Utils'
 import { FB_Collection_Publications, FB_FieldValue } from '../../Utils/firebase'
 import { ApproachType, ExerciseType, PlanType, PublicType, WorkoutType } from '../../Utils/types'
 import { RootState } from '../index'
-import { workoutAC } from '../WorkoutReducer/WorkoutActionCreators'
+import { workoutAC } from '../WorkoutReducer/WorkoutAC'
 import { plansAC } from '../PlansReducer/PlansAC'
 
 type AddType = (PlanType | WorkoutType) & {
+  workouts?: WorkoutType[]
   exercises?: ExerciseType[]
-  workoutUids?: string[]
 }
-
 export interface LikeToggleType {
   publicationUid: string
   isLiked: boolean
@@ -43,18 +42,12 @@ export const publicationsAC = {
   add: createAsyncThunk('publications/add', async (publication: AddType, thunkAPI) => {
     const {
       userReducer: { user },
-      workoutReducer: { workouts },
     } = thunkAPI.getState() as RootState
 
     try {
-      const planWorkouts: Omit<WorkoutType, 'plansUid'>[] = []
-      if (publication?.workoutUids) {
-        publication?.workoutUids.forEach(WUid => planWorkouts.push(workouts.find(w => w.uid === WUid)))
-      }
-
       const { uid, ...newPublication }: PublicType = {
         ...(publication?.exercises ? { exercises: publication.exercises } : {}),
-        ...(publication?.workoutUids ? { workouts: planWorkouts } : {}),
+        ...(publication?.workouts ? { workouts: publication.workouts } : {}),
         uid: nanoid(),
         name: publication.name,
         lastUpdated: getCurrentTime(),
@@ -99,33 +92,17 @@ export const publicationsAC = {
             ...ex,
             approaches: ex.approaches.map(() => ({ repeats: 0, weight: 0 } as ApproachType)),
           })),
-          plansUid: [],
         }
-        thunkAPI.dispatch(workoutAC.addWorkout({ workout: newWorkout }))
+        thunkAPI.dispatch(workoutAC.addWorkout(newWorkout))
       } else {
         const { ownerName, downloads, likes, exercises, workouts, ...plan } = publication
         const newPlan: PlanType = {
           ...plan,
           uid: nanoid(),
           ownerUid,
-          workoutUids: [],
+          workouts,
         }
 
-        newPlan.workoutUids = workouts.map(workout => {
-          const newWorkout: WorkoutType = {
-            ...workout,
-            uid: nanoid(),
-            ownerUid,
-            exercises: workout.exercises.map(ex => ({
-              ...ex,
-              approaches: ex.approaches.map(() => ({ repeats: 0, weight: 0 } as ApproachType)),
-            })),
-            plansUid: [newPlan.uid],
-          }
-
-          thunkAPI.dispatch(workoutAC.addWorkout({ workout: newWorkout, isSetInPlan: false }))
-          return newWorkout.uid
-        })
         thunkAPI.dispatch(plansAC.addPlan(newPlan))
       }
       if (!publication.downloads.includes(ownerUid)) {

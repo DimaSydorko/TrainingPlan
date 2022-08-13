@@ -44,15 +44,15 @@ export const defaultPlan: PlanType = {
   uid: '',
   ownerUid: '',
   name: 'New_Plan',
-  workoutUids: [],
+  workouts: [],
   labels: [],
+  colorIdx: 0,
   lastUpdated: 0,
 }
 export const defaultWorkout: WorkoutType = {
   uid: '',
-  plansUid: [],
+  colorIdx: 0,
   name: 'New_Workout',
-  ownerUid: '',
   labels: [],
   exercises: [],
   lastUpdated: 0,

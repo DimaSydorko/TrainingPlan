@@ -49,9 +49,9 @@ export type SelectedWorkoutType = Omit<WorkoutType, 'exercises'> & {
 }
 export type SelectedExerciseType = Omit<ExerciseType, 'approaches'> & { approaches: SelectedApproachType[] }
 
-export type PublicType = Omit<WorkoutType, 'plansUid'> &
-  Omit<PlanType, 'workoutUids'> & {
-    workouts?: Omit<WorkoutType, 'plansUid'>[]
+export type PublicType = Omit<WorkoutType, 'exercises'> &
+  Omit<PlanType, 'workouts'> & {
+    workouts?: WorkoutType[]
     exercises?: ExerciseType[]
     ownerName: string
     likes: string[]
@@ -60,20 +60,21 @@ export type PublicType = Omit<WorkoutType, 'plansUid'> &
 
 export interface WorkoutType {
   uid: string
-  ownerUid: string
-  plansUid: string[]
+  colorIdx: number
   name: string
   labels: string[]
   exercises: ExerciseType[]
-  lastUpdated: number
+  ownerUid?: string
+  lastUpdated?: number
 }
 
 export interface PlanType {
   uid: string
+  colorIdx: number
   ownerUid: string
   name: string
-  workoutUids: string[]
-  labels?: string[]
+  workouts: WorkoutType[]
+  labels: string[]
   lastUpdated: number
 }
 

@@ -8,8 +8,15 @@ import {
   ScaleDecorator,
 } from 'react-native-draggable-flatlist'
 import { useAppDispatch, useSettings, useUser, useWorkout } from '../../Hooks/redux'
-import { workoutAC } from '../../store/WorkoutReducer/WorkoutActionCreators'
+import { workoutAC } from '../../store/WorkoutReducer/WorkoutAC'
+import { plansAC } from '../../store/PlansReducer/PlansAC'
 import { AppHelperContext } from '../../Hooks/AppHelperProvider'
+import { AddMoreButton, AppModal, ConfirmButton, GoBackSubmitModal, MyTextInput, WorkoutDuration } from '../../Common'
+import Exercise from '../../Components/Exercise/Exercise'
+import EditExerciseModal from '../../Components/Exercise/ExerciseEditModal'
+import { deepCompare } from '../../Utils'
+import { FUTURE_FLAG, screen } from '../../Utils/constants'
+import { ExerciseType, WorkoutType } from '../../Utils/types'
 import {
   AppFooter,
   AppHeader,
@@ -19,12 +26,6 @@ import {
   Page,
   TextSecondary,
 } from '../../Theme/Parents'
-import { AddMoreButton, AppModal, ConfirmButton, GoBackSubmitModal, MyTextInput, WorkoutDuration } from '../../Common'
-import Exercise from '../../Components/Exercise/Exercise'
-import EditExerciseModal from '../../Components/Exercise/ExerciseEditModal'
-import { deepCompare } from '../../Utils'
-import { FUTURE_FLAG, screen } from '../../Utils/constants'
-import { ExerciseType, WorkoutType } from '../../Utils/types'
 import { icon } from '../../Theme/icons'
 import { headerHeight, theme } from '../../Theme/theme'
 import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
@@ -73,7 +74,10 @@ export default function WorkoutScreen() {
 
   const onSaveWorkout = useCallback(async () => {
     if (!workoutExercises || !user || !selectedWorkout) return
-    if (isChanged) dispatch(workoutAC.updateWorkout(changedWorkout))
+    if (isChanged) {
+      if (changedWorkout?.ownerUid) dispatch(workoutAC.updateWorkout(changedWorkout))
+      else dispatch(plansAC.updateSelectedPlanWorkout(changedWorkout))
+    }
     setIsEditMode(false)
   }, [workoutExercises, user, selectedWorkout, isChanged, changedWorkout])
 

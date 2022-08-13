@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { memo, useCallback, useMemo, useState } from 'react'
-import { useSettings, useUser } from '../../Hooks/redux'
 import { defaultPlan, defaultWorkout } from '../../Utils/constants'
 import { PlanType, WorkoutType } from '../../Utils/types'
 import { AppModal, LabelsInput, MyTextInput } from '../../Common'
@@ -11,11 +10,10 @@ interface IEditPlanWorkout {
   type: 'Plan' | 'Workout'
   initialValue?: WorkoutType | PlanType
   onClose: () => void
-  onSubmit: (newItem: PlanType | WorkoutType) => void
+  onSubmit: (newItem: WorkoutType | PlanType) => void
 }
 
 export default memo(function EditPlanWorkout({ onSubmit, type, isModal, onClose, initialValue }: IEditPlanWorkout) {
-  const { user } = useUser()
   const isNew = !initialValue
   const initialName = useMemo(() => (isNew ? `New_${type}` : initialValue.name), [])
   const initialLabels = useMemo(() => (isNew ? [] : initialValue.labels), [])
@@ -24,12 +22,12 @@ export default memo(function EditPlanWorkout({ onSubmit, type, isModal, onClose,
 
   const onConfirm = useCallback(() => {
     if (isNew) {
-      const newItem = { ...(type === 'Plan' ? defaultPlan : defaultWorkout), name, ownerUid: user.uid, labels }
+      const newItem = { ...(type === 'Plan' ? defaultPlan : defaultWorkout), name, labels }
       onSubmit(newItem)
     } else {
       onSubmit({ ...initialValue, name, labels })
     }
-  }, [user, name, initialValue, isNew, labels])
+  }, [name, initialValue, isNew, labels])
 
   const onCloseModal = useCallback(() => {
     setName(initialName)

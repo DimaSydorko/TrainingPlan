@@ -2,10 +2,11 @@ import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { Vibration } from 'react-native'
 import { useAppDispatch, useSettings, useWorkout } from './redux'
 import { AppHelperContext } from './AppHelperProvider'
-import { workoutAC } from '../store/WorkoutReducer/WorkoutActionCreators'
+import { workoutAC } from '../store/WorkoutReducer/WorkoutAC'
 import { SelectedExerciseType, SelectedWorkoutType, WorkoutType } from '../Utils/types'
 import { VIBRATION } from '../Utils/constants'
 import { deepCompare } from '../Utils'
+import { plansAC } from '../store/PlansReducer/PlansAC'
 
 const initialPlaying = {
   idx: 0,
@@ -74,7 +75,8 @@ export default function usePlaying() {
             })),
           })),
       }
-      dispatch(workoutAC.updateWorkout(newWorkout))
+      if (!!newWorkout?.ownerUid) dispatch(workoutAC.updateWorkout(newWorkout))
+      else dispatch(plansAC.updateSelectedPlanWorkout(newWorkout))
       onBack()
     },
     [selectedWorkout, playingWorkout]

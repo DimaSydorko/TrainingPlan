@@ -54,7 +54,6 @@ export const userAC = {
         email: response.user?.email,
       } as UserType
     } catch (e) {
-      console.log('error', e.message)
       return thunkAPI.rejectWithValue(e.message)
     }
   }),

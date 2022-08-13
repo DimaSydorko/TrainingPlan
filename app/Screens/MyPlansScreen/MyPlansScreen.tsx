@@ -10,14 +10,13 @@ import {
 } from 'react-native-draggable-flatlist'
 import { changePlansPosition, selectPlan } from '../../store/PlansReducer/PlansSlice'
 import { plansAC } from '../../store/PlansReducer/PlansAC'
-import { workoutAC } from '../../store/WorkoutReducer/WorkoutActionCreators'
 import { publicationsAC } from '../../store/PublicationsReducer/PublicationsAC'
 import { useAppDispatch, usePlans, useSettings } from '../../Hooks/redux'
 import { AppHeader, Card, FlexEnd, FlexStart, Page, TextHeader } from '../../Theme/Parents'
 import { AddMoreButton, AppModal, IconButton } from '../../Common'
 import EditPlanWorkout from '../../Components/EditPlanWorkout/EditPlanWorkout'
 import PlanCard from './PlanCard'
-import { ScreenName, VIBRATION } from '../../Utils/constants'
+import { QUERY_LIMIT, ScreenName, VIBRATION } from '../../Utils/constants'
 import { AppNavigationType, PlanType } from '../../Utils/types'
 import { icon } from '../../Theme/icons'
 import ShareModal from '../../Components/ShareModal/ShareModal'
@@ -57,7 +56,6 @@ export default memo(function MyPlansScreen() {
       setSelectedPlanUids(p => (p.includes(plan.uid) ? p.filter(p => p !== plan.uid) : [...p, plan.uid]))
     } else {
       dispatch(selectPlan(plan))
-      dispatch(workoutAC.getWorkouts({ uid: plan.uid, findBy: 'planUid' }))
       navigation.navigate(ScreenName.Plan)
     }
   }
@@ -122,7 +120,7 @@ export default memo(function MyPlansScreen() {
           />
         </NestableScrollContainer>
       </Page>
-      <AddMoreButton onPress={() => setIsNewPlanModal(true)} />
+      {plans?.length <= QUERY_LIMIT && <AddMoreButton onPress={() => setIsNewPlanModal(true)} />}
       {(isNewPlanModal || !!changePlan) && (
         <EditPlanWorkout
           isModal
