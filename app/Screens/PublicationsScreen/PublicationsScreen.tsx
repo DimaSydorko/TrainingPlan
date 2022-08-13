@@ -27,7 +27,7 @@ export default function PublicationsScreen() {
         }, 100)
       }
     },
-    [labels, prevSearch]
+    [labels, prevSearch, setPrevSearch]
   )
 
   return (

@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { memo, useState } from 'react'
+import { memo } from 'react'
 import { View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useSettings } from '../../Hooks/redux'
-import { AppModal, Labels, WorkoutDuration } from '../../Common'
+import { Labels, WorkoutDuration } from '../../Common'
 import { FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { WorkoutType } from '../../Utils/types'
 import { icon } from '../../Theme/icons'
@@ -16,7 +16,6 @@ interface IWorkoutCard {
 
 export default memo(function WorkoutCard({ workout, isSelected = false }: IWorkoutCard) {
   const { colors } = useSettings()
-  const [isDeleteModal, setIsDeleteModal] = useState(false)
   const isDarkTheme = colors.primary === colorsDark.primary
   const color = COLORS_EXERCISE[workout?.colorIdx || 3][+isDarkTheme]
 
@@ -40,15 +39,6 @@ export default memo(function WorkoutCard({ workout, isSelected = false }: IWorko
           <Labels labels={workout.labels} />
         </View>
       </FlexSpaceBetween>
-      <AppModal
-        isWarning
-        header='Delete workout'
-        text={`Are you sure you want to delete '${workout.name}' workout ?`}
-        confirmText='Yes, delete'
-        isOpen={isDeleteModal}
-        onClose={() => setIsDeleteModal(false)}
-        onConfirm={() => {}}
-      />
     </>
   )
 })

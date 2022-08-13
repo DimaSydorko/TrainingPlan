@@ -20,7 +20,7 @@ const MAX_LABEL_LENGTH = 16
 
 export default function LabelsInput({ setLabels, style, labels, onWriteLabel }: IProps) {
   const { colors } = useSettings()
-  const [editLabelIdx, setEditLabelIdx] = useState<number>(labels.length - 1)
+  const [editLabelIdx, setEditLabelIdx] = useState<number>(labels?.length || 0)
 
   const onNextLabel = useCallback(() => {
     if (!!labels[editLabelIdx] && MAX_LABELS_COUNT > editLabelIdx + 1) {
