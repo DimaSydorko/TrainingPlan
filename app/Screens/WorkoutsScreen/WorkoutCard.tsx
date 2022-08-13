@@ -7,6 +7,7 @@ import { AppModal, Labels, WorkoutDuration } from '../../Common'
 import { FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { WorkoutType } from '../../Utils/types'
 import { icon } from '../../Theme/icons'
+import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
 
 interface IWorkoutCard {
   workout: WorkoutType
@@ -16,6 +17,8 @@ interface IWorkoutCard {
 export default memo(function WorkoutCard({ workout, isSelected = false }: IWorkoutCard) {
   const { colors } = useSettings()
   const [isDeleteModal, setIsDeleteModal] = useState(false)
+  const isDarkTheme = colors.primary === colorsDark.primary
+  const color = COLORS_EXERCISE[workout?.colorIdx || 3][+isDarkTheme]
 
   return (
     <>
@@ -29,7 +32,7 @@ export default memo(function WorkoutCard({ workout, isSelected = false }: IWorko
       )}
       <FlexSpaceBetween>
         <View>
-          <TextHeader color={colors.secondPrimary}>{workout.name}</TextHeader>
+          <TextHeader color={color}>{workout.name}</TextHeader>
           <FlexStart>
             <TextSecondary>{workout?.exercises?.length || 0} Exercises</TextSecondary>
             <WorkoutDuration exercises={workout.exercises} />

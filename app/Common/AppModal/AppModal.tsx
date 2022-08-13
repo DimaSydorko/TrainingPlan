@@ -48,7 +48,7 @@ export default function AppModal({
       <FlexCenter style={styles.modal}>
         <View style={[styles.container, { backgroundColor: colors.background }, style]}>
           <FlexCenter>
-            {!!extraPlaceRight && <FlexStart style={styles.extraPlaceLeft}>{extraPlaceLeft}</FlexStart>}
+            {!!extraPlaceLeft && <FlexStart style={styles.extraPlaceLeft}>{extraPlaceLeft}</FlexStart>}
             <TextHeader style={headerStyle}>{header}</TextHeader>
             {!!extraPlaceRight && <FlexEnd style={styles.extraPlaceRight}>{extraPlaceRight}</FlexEnd>}
           </FlexCenter>

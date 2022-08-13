@@ -46,12 +46,12 @@ export const defaultPlan: PlanType = {
   name: 'New_Plan',
   workouts: [],
   labels: [],
-  colorIdx: 0,
+  colorIdx: 3,
   lastUpdated: 0,
 }
 export const defaultWorkout: WorkoutType = {
   uid: '',
-  colorIdx: 0,
+  colorIdx: 3,
   name: 'New_Workout',
   labels: [],
   exercises: [],

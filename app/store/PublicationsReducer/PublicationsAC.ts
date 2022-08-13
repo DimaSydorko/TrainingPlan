@@ -52,6 +52,7 @@ export const publicationsAC = {
         name: publication.name,
         lastUpdated: getCurrentTime(),
         labels: publication.labels,
+        colorIdx: publication.colorIdx,
         ownerUid: user.uid,
         downloads: [],
         likes: [],

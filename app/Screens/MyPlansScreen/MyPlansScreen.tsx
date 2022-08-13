@@ -20,6 +20,7 @@ import { QUERY_LIMIT, ScreenName, VIBRATION } from '../../Utils/constants'
 import { AppNavigationType, PlanType } from '../../Utils/types'
 import { icon } from '../../Theme/icons'
 import ShareModal from '../../Components/ShareModal/ShareModal'
+import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
 
 export default memo(function MyPlansScreen() {
   const navigation = useNavigation<AppNavigationType>()
@@ -32,6 +33,7 @@ export default memo(function MyPlansScreen() {
   const [isShareModal, setIsShareModal] = useState(false)
   const [changePlan, setChangePlan] = useState<PlanType | null>(null)
   const isEditMode = !!selectedPlanUids.length
+  const isDarkTheme = colors.primary === colorsDark.primary
   const plans = statePlans.plans
     ?.slice()
     ?.sort((a, b) => (statePlans.sortedPlanUids.indexOf(a.uid) || 0) - statePlans.sortedPlanUids.indexOf(b.uid) || 0)
@@ -70,22 +72,25 @@ export default memo(function MyPlansScreen() {
     setSelectedPlanUids([])
   }, [selectedFirst])
 
-  const renderItem = ({ item, drag, isActive }: RenderItemParams<PlanType>) => (
-    <ScaleDecorator>
-      <Card borderLeftColor={colors.secondPrimary}>
-        <TouchableOpacity
-          onLongPress={() => {
-            Vibration.vibrate(VIBRATION.BUTTON)
-            !!selectedPlanUids.length ? drag() : setSelectedPlanUids([item.uid])
-          }}
-          onPress={() => onPlanPress(item)}
-          disabled={isActive}
-        >
-          <PlanCard plan={item} isSelected={selectedPlanUids.includes(item.uid)} />
-        </TouchableOpacity>
-      </Card>
-    </ScaleDecorator>
-  )
+  const renderItem = ({ item, drag, isActive }: RenderItemParams<PlanType>) => {
+    const color = COLORS_EXERCISE[item?.colorIdx || 3][+isDarkTheme]
+    return (
+      <ScaleDecorator>
+        <Card borderLeftColor={color}>
+          <TouchableOpacity
+            onLongPress={() => {
+              Vibration.vibrate(VIBRATION.BUTTON)
+              !!selectedPlanUids.length ? drag() : setSelectedPlanUids([item.uid])
+            }}
+            onPress={() => onPlanPress(item)}
+            disabled={isActive}
+          >
+            <PlanCard color={color} plan={item} isSelected={selectedPlanUids.includes(item.uid)} />
+          </TouchableOpacity>
+        </Card>
+      </ScaleDecorator>
+    )
+  }
 
   return (
     <>

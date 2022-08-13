@@ -69,7 +69,6 @@ export const plansAC = {
     props.uid = props?.uid || nanoid()
     props.ownerUid = props?.ownerUid || ownerUid
     props.lastUpdated = getCurrentTime()
-
     const { uid, ...plan } = props
     try {
       const net = await NetInfo.fetch()

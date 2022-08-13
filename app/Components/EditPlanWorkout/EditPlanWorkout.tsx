@@ -2,7 +2,7 @@ import * as React from 'react'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { defaultPlan, defaultWorkout } from '../../Utils/constants'
 import { PlanType, WorkoutType } from '../../Utils/types'
-import { AppModal, LabelsInput, MyTextInput } from '../../Common'
+import { AppColorPicker, AppModal, LabelsInput, MyTextInput } from '../../Common'
 import { FlexCenterColumn } from '../../Theme/Parents'
 
 interface IEditPlanWorkout {
@@ -19,15 +19,16 @@ export default memo(function EditPlanWorkout({ onSubmit, type, isModal, onClose,
   const initialLabels = useMemo(() => (isNew ? [] : initialValue.labels), [])
   const [name, setName] = useState<string>(initialName)
   const [labels, setLabels] = useState<string[]>(initialLabels)
+  const [colorIdx, setColorIdx] = useState<number>(initialValue?.colorIdx || 3)
 
   const onConfirm = useCallback(() => {
     if (isNew) {
-      const newItem = { ...(type === 'Plan' ? defaultPlan : defaultWorkout), name, labels }
+      const newItem = { ...(type === 'Plan' ? defaultPlan : defaultWorkout), name, labels, colorIdx }
       onSubmit(newItem)
     } else {
-      onSubmit({ ...initialValue, name, labels })
+      onSubmit({ ...initialValue, name, labels, colorIdx })
     }
-  }, [name, initialValue, isNew, labels])
+  }, [name, initialValue, isNew, labels, colorIdx])
 
   const onCloseModal = useCallback(() => {
     setName(initialName)
@@ -42,6 +43,7 @@ export default memo(function EditPlanWorkout({ onSubmit, type, isModal, onClose,
       confirmText={`Yes, ${isNew ? 'Create' : 'Save'}`}
       onConfirm={onConfirm}
       onClose={onCloseModal}
+      extraPlaceLeft={<AppColorPicker value={colorIdx} onChange={setColorIdx} />}
     >
       <FlexCenterColumn>
         <MyTextInput placeholder={`${type} name`} onChangeText={setName} value={name} type={'underline'} />

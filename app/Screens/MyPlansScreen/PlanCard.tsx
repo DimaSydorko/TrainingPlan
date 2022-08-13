@@ -11,10 +11,11 @@ import { icon } from '../../Theme/icons'
 interface IPlanCard {
   plan: PlanType
   isSelected: boolean
+  color: string
   onDelete?: () => void
 }
 
-export default memo(function PlanCard({ plan, isSelected, onDelete }: IPlanCard) {
+export default memo(function PlanCard({ plan, isSelected, onDelete, color }: IPlanCard) {
   const [isDeleteModal, setIsDeleteModal] = useState(false)
   const { colors } = useSettings()
 
@@ -30,7 +31,7 @@ export default memo(function PlanCard({ plan, isSelected, onDelete }: IPlanCard)
       )}
       <FlexSpaceBetween>
         <View>
-          <TextHeader color={colors.secondPrimary}>{plan.name}</TextHeader>
+          <TextHeader color={color}>{plan.name}</TextHeader>
           <TextSecondary>{plan?.workouts?.length || 0} Workouts</TextSecondary>
           <Labels labels={plan.labels} />
         </View>

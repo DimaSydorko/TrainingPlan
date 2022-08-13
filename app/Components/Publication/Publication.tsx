@@ -8,6 +8,7 @@ import { Card, FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '..
 import { AppNavigationType, PublicType } from '../../Utils/types'
 import { ScreenName } from '../../Utils/constants'
 import PublicButtons from '../../Common/PublicButtons/PublicButtons'
+import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
 
 interface IProps {
   publication: PublicType
@@ -17,6 +18,8 @@ export default memo(function Publication({ publication }: IProps) {
   const navigation = useNavigation<AppNavigationType>()
   const { colors } = useSettings()
   const isPlan = !!publication?.workouts && !publication?.exercises
+  const isDarkTheme = colors.primary === colorsDark.primary
+  const color = COLORS_EXERCISE[publication?.colorIdx || 3][+isDarkTheme]
 
   const onPress = () => {
     if (isPlan) navigation.navigate(ScreenName.PublicationPlan, { publication })
@@ -26,8 +29,8 @@ export default memo(function Publication({ publication }: IProps) {
   return (
     <>
       <TouchableOpacity onPress={onPress}>
-        <Card borderLeftColor={isPlan ? colors.secondPrimary : undefined}>
-          <TextHeader color={colors.secondPrimary}>{publication.name}</TextHeader>
+        <Card borderLeftColor={isPlan ? color : undefined}>
+          <TextHeader color={color}>{publication.name}</TextHeader>
           <FlexSpaceBetween>
             <View>
               {isPlan ? (
