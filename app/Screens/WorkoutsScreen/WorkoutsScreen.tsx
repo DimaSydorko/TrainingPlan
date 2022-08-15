@@ -179,12 +179,19 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
   return (
     <>
       {isEditMode && (
-        <AppHeader>
+        <AppHeader style={{ justifyContent: 'space-between' }}>
           <FlexStart>
             <IconButton iconName={icon.close} onPress={() => setSelectedWorkoutsUids([])} />
             <TextHeader>{selectedWorkoutsUids.length}</TextHeader>
+            {workouts.length > selectedWorkoutsUids.length && (
+              <IconButton
+                margin={10}
+                iconName={icon.checkAll}
+                onPress={() => setSelectedWorkoutsUids(workouts.map(w => w.uid))}
+              />
+            )}
           </FlexStart>
-          <FlexEnd>
+          <FlexEnd style={{ width: 250 }}>
             {selectedWorkoutsUids.length === 1 && (
               <IconButton iconName={icon.share} margin={10} onPress={() => setIsShareModal(true)} />
             )}

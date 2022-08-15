@@ -95,12 +95,19 @@ export default memo(function MyPlansScreen() {
   return (
     <>
       {isEditMode && (
-        <AppHeader>
+        <AppHeader style={{ justifyContent: 'space-between' }}>
           <FlexStart>
             <IconButton iconName={icon.close} onPress={() => setSelectedPlanUids([])} />
             <TextHeader>{selectedPlanUids.length}</TextHeader>
+            {plans.length > selectedPlanUids.length && (
+              <IconButton
+                margin={10}
+                iconName={icon.checkAll}
+                onPress={() => setSelectedPlanUids(plans.map(p => p.uid))}
+              />
+            )}
           </FlexStart>
-          <FlexEnd>
+          <FlexEnd style={{ width: 250 }}>
             {selectedPlanUids.length === 1 && (
               <IconButton iconName={icon.share} onPress={() => setIsShareModal(true)} />
             )}

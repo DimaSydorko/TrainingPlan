@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import {
   NestableDraggableFlatList,
   NestableScrollContainer,
@@ -15,8 +16,8 @@ import { AddMoreButton, AppModal, ConfirmButton, GoBackSubmitModal, MyTextInput,
 import Exercise from '../../Components/Exercise/Exercise'
 import EditExerciseModal from '../../Components/Exercise/ExerciseEditModal'
 import { deepCompare } from '../../Utils'
-import { FUTURE_FLAG, screen } from '../../Utils/constants'
-import { ExerciseType, WorkoutType } from '../../Utils/types'
+import { screen } from '../../Utils/constants'
+import { AppNavigationType, ExerciseType, WorkoutType } from '../../Utils/types'
 import {
   AppFooter,
   AppHeader,
@@ -32,6 +33,7 @@ import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
 
 export default function WorkoutScreen() {
   const dispatch = useAppDispatch()
+  const navigation = useNavigation<AppNavigationType>()
   const { selectedWorkout } = useWorkout()
   const { colors } = useSettings()
   const { user } = useUser()
@@ -114,6 +116,11 @@ export default function WorkoutScreen() {
     onTogglePlaying()
   }, [])
 
+  const onGoBack = useCallback(() => {
+    onSaveRefuse()
+    navigation.goBack()
+  }, [onSaveRefuse])
+
   const renderItem = useCallback(
     ({ item, drag, isActive }: RenderItemParams<ExerciseType>) => {
       const color = COLORS_EXERCISE[item?.colorIdx || 0][+isDarkTheme]
@@ -153,18 +160,6 @@ export default function WorkoutScreen() {
           )}
           <Page scrollDisabled>
             <FlexCenterColumn style={{ paddingHorizontal: 8 }}>
-              {isEditMode && (
-                <>
-                  {FUTURE_FLAG.LABELS && (
-                    <MyTextInput
-                      placeholder={'Labels:  #...'}
-                      onChangeText={value => setWorkoutLabels([value])}
-                      value={workoutLabels[0]}
-                      type={'secondary'}
-                    />
-                  )}
-                </>
-              )}
               <NestableScrollContainer
                 style={{
                   height: screen.vh - headerHeight * 2,
@@ -216,7 +211,12 @@ export default function WorkoutScreen() {
                 style={{ marginTop: 0, width: '90%' }}
               />
             )}
-            {isChanged && <GoBackSubmitModal text={`Changes in '${workoutNameInput}' workout aren\`t saved!`} />}
+            {isChanged && (
+              <GoBackSubmitModal
+                text={`Changes in '${workoutNameInput}' workout aren\`t saved!`}
+                onConfirm={onGoBack}
+              />
+            )}
           </AppFooter>
           <AppModal
             isOpen={isSaveChangesModal}

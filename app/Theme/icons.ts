@@ -24,5 +24,5 @@ export const icon = {
   logout: 'logout',
   download: 'arrow-collapse-down',
   like: 'cards-heart',
-  likeEmpty: 'cards-heart-outline',
+  checkAll: 'check-all',
 }

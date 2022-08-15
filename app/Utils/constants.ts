@@ -2,8 +2,6 @@ import { Dimensions } from 'react-native'
 import { ApproachType, ExerciseType, PlanType, WorkoutType } from './types'
 
 export const FUTURE_FLAG = {
-  LABELS: false,
-  FRIENDS: false,
   IS_DEV: false,
 }
 
