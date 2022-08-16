@@ -19,7 +19,7 @@ export default function ConfirmButton({
   headerStyle,
   color,
   style,
-  disabled = false
+  disabled = false,
 }: ConfirmButtonType) {
   const { colors } = useSettings()
   const newColor = color || colors.primary
@@ -29,15 +29,15 @@ export default function ConfirmButton({
         styles.button,
         {
           backgroundColor: disabled ? colors.disabled : newColor,
-          opacity: disabled ? 0.8 : 1
+          opacity: disabled ? 0.8 : 1,
         },
-        style
+        style,
       ]}
       onPress={onPress}
       activeOpacity={0.5}
       disabled={disabled}
     >
-      <Text style={[styles.buttonTitle, { color: colorsFixed.buttonText }, headerStyle]}>{header}</Text>
+      <Text style={[styles.buttonTitle, { color: colorsFixed.white }, headerStyle]}>{header}</Text>
     </TouchableOpacity>
   )
 }

@@ -5,6 +5,8 @@ import { PublicType } from '../../Utils/types'
 export interface PublicationsSliceType {
   publications: PublicType[]
   userPublications: PublicType[]
+  isPublicationsAll: boolean
+  isUserPublicationsAll: boolean
   isLoading: boolean
   error: string
 }
@@ -12,6 +14,8 @@ export interface PublicationsSliceType {
 const initialState: PublicationsSliceType = {
   publications: [],
   userPublications: [],
+  isPublicationsAll: false,
+  isUserPublicationsAll: false,
   isLoading: false,
   error: '',
 }
@@ -42,12 +46,32 @@ export const publicationsSlice = createSlice({
   extraReducers: {
     [publicationsAC.get.fulfilled.type]: (
       state,
-      { payload }: PayloadAction<{ publications: PublicType[]; isYours: boolean }>
+      { payload }: PayloadAction<{ publications: PublicType[]; isYours: boolean; isNextChunk: boolean }>
     ) => {
       if (payload.isYours) {
-        state.userPublications = payload.publications
+        if (payload.isNextChunk) {
+          const newPublications = [
+            ...state.userPublications,
+            ...payload.publications.filter(p => !state.userPublications.find(prev => prev.uid === p.uid)),
+          ]
+          state.isUserPublicationsAll = state.userPublications.length <= newPublications.length
+          state.userPublications = newPublications
+        } else {
+          state.userPublications = payload.publications
+          state.isUserPublicationsAll = false
+        }
       } else {
-        state.publications = payload.publications
+        if (payload.isNextChunk) {
+          const newPublications = [
+            ...state.publications,
+            ...payload.publications.filter(p => !state.publications.find(prev => prev.uid === p.uid)),
+          ]
+          state.isPublicationsAll = state.publications.length <= newPublications.length
+          state.publications = newPublications
+        } else {
+          state.publications = payload.publications
+          state.isPublicationsAll = false
+        }
       }
       state.isLoading = false
       state.error = ''

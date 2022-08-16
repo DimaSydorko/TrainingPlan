@@ -51,7 +51,7 @@ export default memo(function CopyWorkoutsModal({ onClose, onCopy, isOpen, isInPl
         ) : null}
         {plans.map((plan, idx) => {
           const isCurrent = isInPlan ? selectedPlan.uid === plan.uid : false
-          const color = COLORS_EXERCISE[plan?.colorIdx || 3][+isDarkTheme]
+          const color = COLORS_EXERCISE[plan?.colorIdx === undefined ? 3 : plan?.colorIdx][+isDarkTheme]
           return isCurrent ? null : (
             <TouchableOpacity key={plan.uid} onPress={() => setSelectedIdx(idx)}>
               <Card style={[styles.plan, { borderLeftColor: color, borderLeftWidth: 3 }]}>

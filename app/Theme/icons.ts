@@ -24,5 +24,9 @@ export const icon = {
   logout: 'logout',
   download: 'arrow-collapse-down',
   like: 'cards-heart',
+  likeEmpty: 'cards-heart-outline',
   checkAll: 'check-all',
+  alertCircleOutline: 'alert-circle-outline',
+  serverRemove: 'server-remove',
+  wifiOff: 'wifi-strength-off-outline',
 }

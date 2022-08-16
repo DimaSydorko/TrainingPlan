@@ -9,8 +9,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     zIndex: 1000,
-    opacity: 0.8
-  }
+  },
 })
 
 interface ToasterType {

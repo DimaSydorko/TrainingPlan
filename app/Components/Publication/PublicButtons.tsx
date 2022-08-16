@@ -8,7 +8,7 @@ import { AppHelperContext } from '../../Hooks/AppHelperProvider'
 import { AppNavigationType, PublicType } from '../../Utils/types'
 import { FlexEnd, TextSecondary } from '../../Theme/Parents'
 import { icon } from '../../Theme/icons'
-import { AppModal, IconButton } from '../index'
+import { AppModal, IconButton } from '../../Common'
 
 interface IProps {
   publication: PublicType

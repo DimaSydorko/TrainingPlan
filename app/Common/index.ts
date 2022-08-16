@@ -16,6 +16,6 @@ export { default as ImageSelector } from '../Components/ImageSelector/ImageSelec
 export { default as AppImage } from './AppImage/AppImage'
 export { default as TapBar } from './TapBar/TapBar'
 export { default as Timer } from './Timer/Timer'
-export { default as PublicButtons } from './PublicButtons/PublicButtons'
 export { default as LabelsInput } from './LabelsInput/LabelsInput'
 export { default as Labels } from './Labels/Labels'
+export { default as InfiniteScroll } from './InfiniteScroll/InfiniteScroll'

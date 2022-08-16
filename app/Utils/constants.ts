@@ -72,6 +72,7 @@ export const defaultApproach: ApproachType = {
 }
 
 export const QUERY_LIMIT = 30
+export const PUBLICATION_QUERY_LIMIT = 10
 
 export const settings = {
   isVibration: true,

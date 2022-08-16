@@ -1,6 +1,7 @@
 export const colorsFixed = {
-  buttonText: '#ffffff',
+  white: '#ffffff',
   shadow: '#00000030',
+  black: '#000000',
 }
 
 export const colorsLight = {

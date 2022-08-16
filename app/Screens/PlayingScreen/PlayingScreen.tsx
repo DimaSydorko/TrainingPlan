@@ -135,7 +135,7 @@ export default memo(function PlayingScreen() {
             key={`${playing.lap}_${playing.idx}_${playing.updated}`}
             isPlaying={isPlaying}
             duration={duration}
-            colors={isInvisibleTimerCircle ? new Array(3).fill('#00000000') : ([color, color, colors.error] as any)}
+            colors={isInvisibleTimerCircle ? new Array(3).fill('#00000000') : (color as any)}
             colorsTime={[exercise.breakTimeInSec, exercise.breakTimeInSec / 2, 0]}
             strokeWidth={14}
             trailColor={colors.menu as any}

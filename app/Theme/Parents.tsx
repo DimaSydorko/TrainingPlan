@@ -68,7 +68,7 @@ export const TextHeader = ({ children, color, center = false, style, ...props }:
   )
 }
 
-export const TextOrdinary = ({ children, color, center = false, style }: ParentProps & IText) => {
+export const TextOrdinary = ({ children, color, center = false, style, ...props }: ParentProps & IText) => {
   const { colors } = useSettings()
   const newColors = color || colors.text
   return (
@@ -81,6 +81,7 @@ export const TextOrdinary = ({ children, color, center = false, style }: ParentP
         },
         style,
       ]}
+      {...props}
     >
       {children}
     </Text>

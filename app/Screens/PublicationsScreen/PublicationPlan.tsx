@@ -3,12 +3,12 @@ import { useEffect } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackScreenProps } from 'react-native-screens/native-stack'
-import { PublicButtons } from '../../Common'
-import { Card, FlexCenterColumn, FlexSpaceBetween, Page, TextSecondary } from '../../Theme/Parents'
+import { useSettings } from '../../Hooks/redux'
+import PublicButtons from '../../Components/Publication/PublicButtons'
 import { AppNavigationType, TabParamList, WorkoutType } from '../../Utils/types'
 import { screen, ScreenName } from '../../Utils/constants'
+import { Card, FlexCenterColumn, FlexSpaceBetween, Page, TextSecondary } from '../../Theme/Parents'
 import WorkoutCard from '../WorkoutsScreen/WorkoutCard'
-import { useSettings } from '../../Hooks/redux'
 
 type PropsType = NativeStackScreenProps<TabParamList, 'PublicationPlan'>
 

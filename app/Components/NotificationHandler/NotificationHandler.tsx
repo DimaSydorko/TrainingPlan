@@ -5,6 +5,7 @@ import { errorPlansClear } from '../../store/PlansReducer/PlansSlice'
 import { errorWorkoutClear } from '../../store/WorkoutReducer/WorkoutSlice'
 import { errorPublicationClear } from '../../store/PublicationsReducer/PublicationsSlice'
 import { Toast, Toaster } from '../../Common'
+import { icon } from '../../Theme/icons'
 
 export default memo(function NotificationHandler() {
   const dispatch = useAppDispatch()
@@ -50,6 +51,7 @@ export default memo(function NotificationHandler() {
         isInternetInfo && !internet.isOnline && (
           <Toast
             variant='info'
+            iconName={icon.wifiOff}
             message={'No internet connection'}
             onPress={() => setIsInternetInfo(false)}
             pressAfterTime={8000}

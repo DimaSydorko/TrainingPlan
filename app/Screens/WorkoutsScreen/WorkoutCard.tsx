@@ -17,7 +17,7 @@ interface IWorkoutCard {
 export default memo(function WorkoutCard({ workout, isSelected = false }: IWorkoutCard) {
   const { colors } = useSettings()
   const isDarkTheme = colors.primary === colorsDark.primary
-  const color = COLORS_EXERCISE[workout?.colorIdx || 3][+isDarkTheme]
+  const color = COLORS_EXERCISE[workout?.colorIdx === undefined ? 3 : workout?.colorIdx][+isDarkTheme]
 
   return (
     <>

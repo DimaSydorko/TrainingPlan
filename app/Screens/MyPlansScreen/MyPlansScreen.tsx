@@ -73,7 +73,7 @@ export default memo(function MyPlansScreen() {
   }, [selectedFirst])
 
   const renderItem = ({ item, drag, isActive }: RenderItemParams<PlanType>) => {
-    const color = COLORS_EXERCISE[item?.colorIdx || 3][+isDarkTheme]
+    const color = COLORS_EXERCISE[item?.colorIdx === undefined ? 3 : item?.colorIdx][+isDarkTheme]
     return (
       <ScaleDecorator>
         <Card borderLeftColor={color}>

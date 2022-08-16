@@ -4,12 +4,13 @@ import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackScreenProps } from 'react-native-screens/native-stack'
 import { useSettings } from '../../Hooks/redux'
-import { PublicButtons, WorkoutDuration } from '../../Common'
+import { WorkoutDuration } from '../../Common'
 import { Card, FlexCenterColumn, FlexSpaceBetween, Page, TextSecondary } from '../../Theme/Parents'
 import { AppNavigationType, PublicType, TabParamList } from '../../Utils/types'
 import Exercise from '../../Components/Exercise/Exercise'
 import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
 import { screen } from '../../Utils/constants'
+import PublicButtons from '../../Components/Publication/PublicButtons'
 
 type PropsType = NativeStackScreenProps<TabParamList, 'PublicationWorkout'>
 

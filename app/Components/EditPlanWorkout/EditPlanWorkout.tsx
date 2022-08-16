@@ -19,7 +19,7 @@ export default memo(function EditPlanWorkout({ onSubmit, type, isModal, onClose,
   const initialLabels = useMemo(() => (isNew ? [] : initialValue.labels), [])
   const [name, setName] = useState<string>(initialName)
   const [labels, setLabels] = useState<string[]>(initialLabels)
-  const [colorIdx, setColorIdx] = useState<number>(initialValue?.colorIdx || 3)
+  const [colorIdx, setColorIdx] = useState<number>(initialValue.colorIdx === undefined ? 3 : initialValue.colorIdx)
 
   const onConfirm = useCallback(() => {
     if (isNew) {

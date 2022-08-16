@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { QUERY_LIMIT } from '../../Utils/constants'
 import { getCurrentTime, nanoid } from '../../Utils'
+import { PUBLICATION_QUERY_LIMIT } from '../../Utils/constants'
 import { FB_Collection_Publications, FB_FieldValue } from '../../Utils/firebase'
 import { ApproachType, ExerciseType, PlanType, PublicType, WorkoutType } from '../../Utils/types'
 import { RootState } from '../index'
@@ -11,6 +11,7 @@ type AddType = (PlanType | WorkoutType) & {
   workouts?: WorkoutType[]
   exercises?: ExerciseType[]
 }
+
 export interface LikeToggleType {
   publicationUid: string
   isLiked: boolean
@@ -19,26 +20,69 @@ export interface LikeToggleType {
 export interface getType {
   isYours?: boolean
   labels?: string[]
+  lastVisible?: PublicType
+  firstVisible?: PublicType
 }
 
+const FB_Pub = FB_Collection_Publications
+const order = 'lastUpdated'
 export const publicationsAC = {
-  get: createAsyncThunk('publications/get', async ({ isYours = false, labels = [] }: getType, thunkAPI) => {
-    const { userReducer } = thunkAPI.getState() as RootState
-    const userUid: string = userReducer.user.uid
+  get: createAsyncThunk(
+    'publications/get',
+    async ({ isYours = false, labels = [], lastVisible, firstVisible }: getType, thunkAPI) => {
+      const { userReducer, publicationsReducer } = thunkAPI.getState() as RootState
+      const userUid: string = userReducer.user.uid
+      const isPublicationsAll: boolean = publicationsReducer.isPublicationsAll
+      const isUserPublicationsAll: boolean = publicationsReducer.isUserPublicationsAll
+      const isNextChunk = !!lastVisible
 
-    try {
-      const snapshot = isYours
-        ? await FB_Collection_Publications.where('ownerUid', '==', userUid).limit(QUERY_LIMIT).get()
-        : labels.length && labels[0]
-        ? await FB_Collection_Publications.where('labels', 'array-contains-any', labels).limit(QUERY_LIMIT).get()
-        : await FB_Collection_Publications.limit(QUERY_LIMIT).get()
+      try {
+        //check if all data loaded
+        if (isPublicationsAll && !isYours && !!lastVisible) return { publications: [], isYours, isNextChunk: true }
+        else if (isUserPublicationsAll && isYours && !!firstVisible)
+          return { publications: [], isYours, isNextChunk: true }
 
-      const publications: PublicType[] = snapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as PublicType))
-      return { publications, isYours }
-    } catch (e) {
-      return thunkAPI.rejectWithValue(e.message)
+        const apiRequest = () => {
+          let snapshot
+          if (isYours) {
+            if (!!lastVisible)
+              snapshot = FB_Pub.where('ownerUid', '==', userUid).orderBy(order, 'desc').startAt(lastVisible[order])
+            else if (!!firstVisible)
+              snapshot = FB_Pub.where('ownerUid', '==', userUid).orderBy(order, 'desc').endAt(firstVisible[order])
+            else snapshot = FB_Pub.where('ownerUid', '==', userUid).orderBy(order, 'desc')
+          } else if (labels.length && labels[0]) {
+            if (!!lastVisible)
+              snapshot = FB_Pub.where('labels', 'array-contains-any', labels)
+                .orderBy(order, 'desc')
+                .startAt(lastVisible[order])
+            else if (!!firstVisible)
+              snapshot = FB_Pub.where('labels', 'array-contains-any', labels)
+                .orderBy(order, 'desc')
+                .endAt(firstVisible[order])
+            else snapshot = FB_Pub.where('labels', 'array-contains-any', labels).orderBy(order, 'desc')
+          } else {
+            if (!!lastVisible) snapshot = FB_Pub.orderBy(order, 'desc').startAt(lastVisible[order])
+            else if (!!firstVisible) snapshot = FB_Pub.orderBy(order, 'desc').endAt(firstVisible[order])
+            else snapshot = FB_Pub.orderBy(order, 'desc')
+          }
+          return snapshot.limit(PUBLICATION_QUERY_LIMIT).get()
+        }
+
+        const snapshot = await apiRequest()
+
+        const publications: PublicType[] = snapshot.docs.map(
+          doc =>
+            ({
+              ...doc.data(),
+              uid: doc.id,
+            } as PublicType)
+        )
+        return { publications, isYours, isNextChunk }
+      } catch (e) {
+        return thunkAPI.rejectWithValue(e.message)
+      }
     }
-  }),
+  ),
   add: createAsyncThunk('publications/add', async (publication: AddType, thunkAPI) => {
     const {
       userReducer: { user },

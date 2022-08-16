@@ -1,14 +1,15 @@
 import * as React from 'react'
-import { memo, useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { useAppDispatch, usePublications, useSettings, useUser } from '../../Hooks/redux'
-import { FlexCenterColumn, FlexEnd, Page, TextHeader, TextSecondary } from '../../Theme/Parents'
+import { publicationsAC } from '../../store/PublicationsReducer/PublicationsAC'
 import { userAC } from '../../store/UserReducer/UserAC'
 import UserImage from '../../Components/UserImage/UserImage'
 import Publication from '../../Components/Publication/Publication'
 import { AppNavigationType } from '../../Utils/types'
-import { ScreenName } from '../../Utils/constants'
-import { AppModal, IconButton } from '../../Common'
+import { PUBLICATION_QUERY_LIMIT, ScreenName } from '../../Utils/constants'
+import { AppModal, IconButton, InfiniteScroll } from '../../Common'
+import { FlexCenterColumn, FlexEnd, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { icon } from '../../Theme/icons'
 import styles from './styles'
 
@@ -17,10 +18,22 @@ export default memo(function ProfileScreen() {
   const dispatch = useAppDispatch()
   const { colors, internet } = useSettings()
   const { user } = useUser()
-  const { userPublications } = usePublications()
+  const { userPublications, isLoading } = usePublications()
   const [isLogoutModal, setIsLogoutModal] = useState(false)
+
+  const getNextChunk = useCallback(() => {
+    if (internet.isOnline && userPublications.length >= PUBLICATION_QUERY_LIMIT) {
+      const lastVisible = userPublications[userPublications.length - 1]
+      dispatch(publicationsAC.get({ lastVisible, isYours: true }))
+    }
+  }, [userPublications[userPublications.length - 1], internet.isOnline])
+
   return (
-    <Page>
+    <InfiniteScroll
+      isLoading={isLoading}
+      onRefresh={internet.isOnline ? () => dispatch(publicationsAC.get({ isYours: true })) : undefined}
+      onScrollToBottom={getNextChunk}
+    >
       <FlexEnd>
         {internet.isOnline && (
           <IconButton
@@ -56,6 +69,6 @@ export default memo(function ProfileScreen() {
         text={'Are you sure?'}
         header={'Log out'}
       />
-    </Page>
+    </InfiniteScroll>
   )
 })

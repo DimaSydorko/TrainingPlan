@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { memo, useEffect } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import { useAppDispatch, usePublications, useSettings, useUser } from '../Hooks/redux'
+import { useAppDispatch, useSettings, useUser } from '../Hooks/redux'
 import { Loading } from '../Common'
 import { ScreenName } from '../Utils/constants'
 import { ProfileScreen, SettingsScreen } from '../Screens'
@@ -14,7 +14,6 @@ export default memo(function ProfileRouter() {
   const options = useScreenOptions()
   const user = useUser()
   const { internet } = useSettings()
-  const publications = usePublications()
 
   useEffect(() => {
     if (internet.isOnline) {
@@ -24,7 +23,7 @@ export default memo(function ProfileRouter() {
 
   return (
     <>
-      {(user.isLoading || publications.isLoading) && <Loading />}
+      {user.isLoading && <Loading />}
       <Stack.Navigator>
         <Stack.Screen name={ScreenName.Profile} options={{ ...options, title: 'Profile' }}>
           {() => <ProfileScreen />}

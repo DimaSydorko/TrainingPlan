@@ -1,27 +1,29 @@
 import * as React from 'react'
 import { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { IconButton } from '../index'
 import { FlexSpaceBetween, TextOrdinary } from '../../Theme/Parents'
 import { useSettings } from '../../Hooks/redux'
 import { icon } from '../../Theme/icons'
-import { theme } from '../../Theme/theme'
+import { headerHeight, theme } from '../../Theme/theme'
 import { colorsFixed } from '../../Theme/colors'
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
-    marginTop: 12,
-    marginHorizontal: '5%',
-    width: '90%',
-    borderRadius: 12,
-    minHeight: 48,
+    paddingHorizontal: 8,
+    width: '100%',
+    borderBottomRightRadius: 12,
+    borderBottomLeftRadius: 12,
+    height: headerHeight,
     maxWidth: 480,
     alignItems: 'center',
     justifyContent: 'space-between',
     borderStyle: 'solid',
-    borderWidth: 1.5
-  }
+    borderBottomWidth: 1.5,
+    borderLeftWidth: 1.5,
+    borderRightWidth: 1.5,
+  },
 })
 
 interface ToastType {
@@ -29,9 +31,16 @@ interface ToastType {
   onPress: () => void
   variant: 'error' | 'info'
   pressAfterTime?: number
+  iconName?: string
 }
 
-export default React.memo(function Toast({ message, variant = 'error', onPress, pressAfterTime }: ToastType) {
+export default React.memo(function Toast({
+  message,
+  variant = 'error',
+  onPress,
+  pressAfterTime,
+  iconName = '',
+}: ToastType) {
   const { colors } = useSettings()
 
   useEffect(() => {
@@ -40,27 +49,29 @@ export default React.memo(function Toast({ message, variant = 'error', onPress, 
     }
   }, [pressAfterTime])
 
+  const _icon = iconName ? iconName : variant === 'error' ? icon.serverRemove : icon.alertCircleOutline
+
   return (
     <FlexSpaceBetween
       style={[
         styles.container,
         variant === 'error' && {
-          backgroundColor: colors.error
+          backgroundColor: colors.error,
         },
         variant === 'info' && {
-          backgroundColor: colors.info
+          backgroundColor: colors.info,
         },
         {
-          borderColor: colors.black,
-          shadowColor: colorsFixed.shadow
+          borderColor: colorsFixed.black,
         },
-        theme.view.shadow
+        theme.view.shadow,
       ]}
     >
-      <TextOrdinary>
-        {variant === 'error' && 'Error:'} {message}
+      <Icon name={_icon} color={colorsFixed.white} size={36} />
+      <TextOrdinary ellipsizeMode='tail' numberOfLines={1} color={colorsFixed.white}>
+        {message}
       </TextOrdinary>
-      <IconButton iconName={icon.close} onPress={onPress} />
+      <IconButton iconName={icon.close} size={36} color={colorsFixed.white} onPress={onPress} />
     </FlexSpaceBetween>
   )
 })
