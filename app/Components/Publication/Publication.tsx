@@ -6,7 +6,7 @@ import { useSettings } from '../../Hooks/redux'
 import { Labels, WorkoutDuration } from '../../Common'
 import { Card, FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { AppNavigationType, PublicType } from '../../Utils/types'
-import { ScreenName } from '../../Utils/constants'
+import { screen, ScreenName } from '../../Utils/constants'
 import PublicButtons from './PublicButtons'
 import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
 
@@ -41,7 +41,7 @@ export default memo(function Publication({ publication }: IProps) {
                   <WorkoutDuration exercises={publication.exercises} />
                 </FlexStart>
               )}
-              <Labels labels={publication.labels} />
+              <Labels labels={publication.labels} style={{ width: screen.vw - 180 }} />
               <TextSecondary color={colors.black}>By {publication.ownerName}</TextSecondary>
             </View>
             <PublicButtons publication={publication} />

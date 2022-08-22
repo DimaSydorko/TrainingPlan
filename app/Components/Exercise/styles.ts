@@ -25,9 +25,4 @@ export default StyleSheet.create({
   approaches: {
     marginLeft: 10,
   },
-  publicLaps: {
-    position: 'absolute',
-    left: '75%',
-    bottom: 0,
-  },
 })

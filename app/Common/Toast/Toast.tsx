@@ -2,9 +2,10 @@ import * as React from 'react'
 import { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { IconButton } from '../index'
-import { FlexSpaceBetween, TextOrdinary } from '../../Theme/Parents'
 import { useSettings } from '../../Hooks/redux'
+import { IconButton } from '../index'
+import { screen } from '../../Utils/constants'
+import { FlexSpaceBetween, TextOrdinary } from '../../Theme/Parents'
 import { icon } from '../../Theme/icons'
 import { headerHeight, theme } from '../../Theme/theme'
 import { colorsFixed } from '../../Theme/colors'
@@ -68,7 +69,7 @@ export default React.memo(function Toast({
       ]}
     >
       <Icon name={_icon} color={colorsFixed.white} size={36} />
-      <TextOrdinary ellipsizeMode='tail' numberOfLines={1} color={colorsFixed.white}>
+      <TextOrdinary ellipsizeMode='tail' numberOfLines={1} style={{ width: screen.vw - 100 }} color={colorsFixed.white}>
         {message}
       </TextOrdinary>
       <IconButton iconName={icon.close} size={36} color={colorsFixed.white} onPress={onPress} />

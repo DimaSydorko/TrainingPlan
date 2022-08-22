@@ -17,6 +17,7 @@ interface IExercise {
   exercise: ExerciseType | SelectedExerciseType
   isEdit?: boolean
   isPublic?: boolean
+  isInModal?: boolean
   playingExerciseLap?: number
   onDelete?: (exercise: ExerciseType) => void
   onCopy?: (exercise: ExerciseType, isNew: true) => void
@@ -28,6 +29,7 @@ export default memo(function Exercise({
   exercise,
   isEdit = false,
   isPublic = false,
+  isInModal = false,
   onCopy,
   onDelete,
   onVisibilityToggle,
@@ -105,10 +107,14 @@ export default memo(function Exercise({
               <TextHeader color={color} numberOfLines={1} style={{ width: screen.vw - (isImage ? 110 : 70) }}>
                 {exercise.name}
               </TextHeader>
-              {!!exercise.breakTimeInSec && (
-                <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
-              )}
-              {isPublic && <TextSecondary style={styles.publicLaps}>Laps: {exercise.laps}</TextSecondary>}
+              <FlexSpaceBetween style={{ width: screen.vw - (isImage ? 140 : 100) + (isInModal ? 0 : 40) }}>
+                {!!exercise.breakTimeInSec && (
+                  <TextSecondary style={{ width: 150 }} ellipsizeMode='tail' numberOfLines={1}>
+                    Break: {secondsToMinSec(exercise.breakTimeInSec)}
+                  </TextSecondary>
+                )}
+                {isPublic && <TextSecondary>Laps: {exercise.laps}</TextSecondary>}
+              </FlexSpaceBetween>
             </View>
           </FlexStart>
           {!isPublic && (

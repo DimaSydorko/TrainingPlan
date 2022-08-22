@@ -35,7 +35,14 @@ export default memo(function CopyWorkoutsModal({ onClose, onCopy, isOpen, isInPl
   }, [onClose])
 
   return (
-    <AppModal onConfirm={onConfirmCopy} confirmText='Copy' onClose={onRefuse} isOpen={isOpen} header={'Copy workout'}>
+    <AppModal
+      onConfirm={onConfirmCopy}
+      confirmText='Copy'
+      onClose={onRefuse}
+      isOpen={isOpen}
+      disabled={selectedIdx === undefined}
+      header={'Copy workout'}
+    >
       <ScrollView style={styles.container}>
         {isInPlan ? (
           <TouchableOpacity onPress={() => setSelectedIdx(-1)}>

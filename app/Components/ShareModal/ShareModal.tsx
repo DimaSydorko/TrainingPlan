@@ -30,7 +30,7 @@ export default memo(function ShareModal({ onClose, isOpen, onShare, workout, pla
       confirmText='Share'
       onClose={onClose}
       isOpen={isOpen}
-      header={`Share ${isPlan ? 'plan' : 'workout'}`}
+      header={`Confirm share ${isPlan ? 'plan' : 'workout'}`}
     >
       <ScrollView style={styles.container}>
         {isPlan
@@ -43,7 +43,7 @@ export default memo(function ShareModal({ onClose, isOpen, onShare, workout, pla
               const color = COLORS_EXERCISE[ex?.colorIdx || 0][+isDarkTheme]
               return (
                 <Card key={ex.uid} style={styles.card}>
-                  <Exercise exercise={ex} color={color} isPublic />
+                  <Exercise isPublic isInModal exercise={ex} color={color} />
                 </Card>
               )
             })}
