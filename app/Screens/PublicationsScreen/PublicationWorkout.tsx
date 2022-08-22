@@ -9,6 +9,7 @@ import { Card, FlexCenterColumn, FlexSpaceBetween, Page, TextSecondary } from '.
 import { AppNavigationType, PublicType, TabParamList } from '../../Utils/types'
 import Exercise from '../../Components/Exercise/Exercise'
 import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
+import NoDataIcon from '../../Assets/icons/NoDataIcon'
 import { screen } from '../../Utils/constants'
 import PublicButtons from '../../Components/Publication/PublicButtons'
 
@@ -38,16 +39,20 @@ export default function PublicationWorkout({ route }: PropsType) {
         {!!ownerName && <PublicButtons isOpenedScreen publication={route.params.workout as PublicType} />}
       </FlexSpaceBetween>
       <FlexCenterColumn style={{ padding: 0 }}>
-        {exercises.map(ex => {
-          const color = COLORS_EXERCISE[ex?.colorIdx || 0][+isDarkTheme]
-          return (
-            <TouchableOpacity key={ex.uid}>
-              <Card>
-                <Exercise isPublic exercise={ex} color={color} />
-              </Card>
-            </TouchableOpacity>
-          )
-        })}
+        {exercises.length ? (
+          exercises.map(ex => {
+            const color = COLORS_EXERCISE[ex?.colorIdx || 0][+isDarkTheme]
+            return (
+              <TouchableOpacity key={ex.uid}>
+                <Card>
+                  <Exercise isPublic exercise={ex} color={color} />
+                </Card>
+              </TouchableOpacity>
+            )
+          })
+        ) : (
+          <NoDataIcon />
+        )}
       </FlexCenterColumn>
     </Page>
   )

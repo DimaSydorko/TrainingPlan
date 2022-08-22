@@ -7,7 +7,7 @@ import { AppModal } from '../../Common'
 import { PlanType, WorkoutType } from '../../Utils/types'
 import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
 import WorkoutCard from '../../Screens/WorkoutsScreen/WorkoutCard'
-import { Card } from '../../Theme/Parents'
+import { Card, TextOrdinary } from '../../Theme/Parents'
 import Exercise from '../Exercise/Exercise'
 import styles from './styles'
 
@@ -23,9 +23,10 @@ export default memo(function ShareModal({ onClose, isOpen, onShare, workout, pla
   const { colors } = useSettings()
   const isDarkTheme = colors.primary === colorsDark.primary
   const isPlan = !!plan && !workout
-
+  const isEmpty = isPlan ? !plan?.workouts?.length : !workout?.exercises?.length
   return (
     <AppModal
+      disabled={isEmpty}
       onConfirm={onShare}
       confirmText='Share'
       onClose={onClose}
@@ -47,6 +48,11 @@ export default memo(function ShareModal({ onClose, isOpen, onShare, workout, pla
                 </Card>
               )
             })}
+        {isEmpty && (
+          <TextOrdinary center color={colors.secondPrimary}>
+            You can't share empty {isPlan ? 'Plan' : 'Workout'}!
+          </TextOrdinary>
+        )}
       </ScrollView>
     </AppModal>
   )

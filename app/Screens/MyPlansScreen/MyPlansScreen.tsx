@@ -21,6 +21,7 @@ import { AppNavigationType, PlanType } from '../../Utils/types'
 import { icon } from '../../Theme/icons'
 import ShareModal from '../../Components/ShareModal/ShareModal'
 import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
+import NoDataIcon from '../../Assets/icons/NoDataIcon'
 
 export default memo(function MyPlansScreen() {
   const navigation = useNavigation<AppNavigationType>()
@@ -123,6 +124,7 @@ export default memo(function MyPlansScreen() {
         </AppHeader>
       )}
       <Page>
+        {plans?.length === 0 && <NoDataIcon />}
         <NestableScrollContainer>
           <NestableDraggableFlatList
             data={plans}

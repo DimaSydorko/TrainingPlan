@@ -26,6 +26,7 @@ import WorkoutCard from './WorkoutCard'
 import { AppFooter, AppHeader, Card, FlexEnd, FlexStart, Page, TextHeader } from '../../Theme/Parents'
 import { icon } from '../../Theme/icons'
 import { headerHeight } from '../../Theme/theme'
+import NoDataIcon from '../../Assets/icons/NoDataIcon'
 
 type PropsType = {
   isInPlan?: boolean
@@ -217,6 +218,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
             type={'underline'}
           />
         )}
+        {workouts?.length === 0 && <NoDataIcon />}
         <NestableScrollContainer style={{ paddingBottom: headerHeight }}>
           <NestableDraggableFlatList
             data={workouts || []}
