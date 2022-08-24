@@ -3,7 +3,7 @@ import { screen } from '../../Utils/constants'
 
 export default StyleSheet.create({
   container: {
-    width: '100%'
+    width: '100%',
   },
   ordinary: {
     height: 48,
@@ -11,7 +11,7 @@ export default StyleSheet.create({
     overflow: 'hidden',
     marginVertical: 10,
     paddingHorizontal: 12,
-    width: screen.vw - 40
+    width: screen.vw - 40,
   },
   underline: {
     width: '100%',
@@ -21,7 +21,7 @@ export default StyleSheet.create({
     paddingHorizontal: 4,
     borderBottomWidth: 1,
     fontSize: 18,
-    borderRadius: 0
+    borderRadius: 0,
   },
   secondary: {
     width: '100%',
@@ -30,11 +30,11 @@ export default StyleSheet.create({
     paddingHorizontal: 4,
     borderBottomWidth: 1,
     fontSize: 14,
-    borderRadius: 0
+    borderRadius: 0,
   },
   visibilityButton: {
     position: 'absolute',
     right: 10,
-    top: 22
-  }
+    top: 22,
+  },
 })
