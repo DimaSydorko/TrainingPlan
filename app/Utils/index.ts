@@ -59,3 +59,7 @@ export function getUserInitials(name: string) {
   }
   return initials
 }
+
+export function getSoundText(fileName: string) {
+  return fileName.slice(0, -4).replace('_', ' ')
+}

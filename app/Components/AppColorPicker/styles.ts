@@ -1,10 +1,10 @@
 import { StyleSheet } from 'react-native'
-import { screen } from '../../Utils/constants'
+import { appScreen } from '../../Utils/constants'
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    height: screen.vh - 400,
+    height: appScreen.vh - 400,
   },
   selectedContainer: {
     display: 'flex',

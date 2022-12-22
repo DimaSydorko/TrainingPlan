@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { screen } from '../../Utils/constants'
-import { headerHeight } from '../../Theme/theme'
+import { appScreen } from '../../Utils/constants'
 import { SvgXml } from 'react-native-svg'
 import { FlexCenter } from '../../Theme/Parents'
 import { useSettings } from '../../Hooks/redux'
@@ -10,8 +9,8 @@ export default function EmptySearchIcon() {
   const xml = `<svg
       xmlns='http://www.w3.org/2000/svg'
       data-name='Layer 1'
-      width='${screen.vw - 50}'
-      height='${screen.vw}'
+      width='${appScreen.vw - 50}'
+      height='${appScreen.vw}'
       viewBox='0 0 862.70323 644.78592'
     >
       <polygon
@@ -186,7 +185,7 @@ export default function EmptySearchIcon() {
       />
     </svg>`
   return (
-    <FlexCenter style={{ height: screen.vh - headerHeight * 5 }}>
+    <FlexCenter style={{ height: appScreen.vh - appScreen.header * 5 }}>
       <SvgXml xml={xml} />
     </FlexCenter>
   )

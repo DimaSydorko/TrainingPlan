@@ -1,11 +1,10 @@
 import * as React from 'react'
-import { screen } from '../../Utils/constants'
-import { headerHeight } from '../../Theme/theme'
+import { appScreen } from '../../Utils/constants'
 import { SvgXml } from 'react-native-svg'
 import { FlexCenter } from '../../Theme/Parents'
 import { useSettings } from '../../Hooks/redux'
 
-export default function NoSignalIcon({ size = screen.vw, height = screen.vh - headerHeight * 5 }) {
+export default function NoSignalIcon({ size = appScreen.vw, height = appScreen.vh - appScreen.header * 5 }) {
   const { colors } = useSettings()
   const xml = `<svg
       xmlns='http://www.w3.org/2000/svg'

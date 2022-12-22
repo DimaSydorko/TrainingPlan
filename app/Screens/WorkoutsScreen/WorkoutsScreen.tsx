@@ -16,7 +16,7 @@ import { AppHelperContext } from '../../Hooks/AppHelperProvider'
 import { useAppDispatch, useWorkout } from '../../Hooks/redux'
 import useWorkoutPlan from '../../Hooks/useWorkoutPlan'
 import { deepCompare } from '../../Utils'
-import { QUERY_LIMIT, ScreenName, VIBRATION } from '../../Utils/constants'
+import { appScreen, QUERY_LIMIT, ScreenName, VIBRATION } from '../../Utils/constants'
 import { AppNavigationType, PlanType, WorkoutType } from '../../Utils/types'
 import { AddMoreButton, AppModal, ConfirmButton, GoBackSubmitModal, IconButton, MyTextInput } from '../../Common'
 import ShareModal from '../../Components/ShareModal/ShareModal'
@@ -25,7 +25,6 @@ import CopyWorkoutsModal from '../../Components/CopyWorkoutsModal/CopyWorkoutsMo
 import WorkoutCard from './WorkoutCard'
 import { AppFooter, AppHeader, Card, FlexEnd, FlexStart, Page, TextHeader } from '../../Theme/Parents'
 import { icon } from '../../Theme/icons'
-import { headerHeight } from '../../Theme/theme'
 import NoDataIcon from '../../Assets/icons/NoDataIcon'
 
 type PropsType = {
@@ -219,7 +218,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
           />
         )}
         {workouts?.length === 0 && <NoDataIcon />}
-        <NestableScrollContainer style={{ paddingBottom: headerHeight }}>
+        <NestableScrollContainer style={{ paddingBottom: appScreen.footer }}>
           <NestableDraggableFlatList
             data={workouts || []}
             renderItem={renderItem}

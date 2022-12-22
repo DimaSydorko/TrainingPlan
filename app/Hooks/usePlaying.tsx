@@ -5,21 +5,24 @@ import { AppHelperContext } from './AppHelperProvider'
 import { workoutAC } from '../store/WorkoutReducer/WorkoutAC'
 import { SelectedExerciseType, SelectedWorkoutType, WorkoutType } from '../Utils/types'
 import { VIBRATION } from '../Utils/constants'
-import { deepCompare } from '../Utils'
 import { plansAC } from '../store/PlansReducer/PlansAC'
+import useTTS from './useTTS'
+const Sound = require('react-native-sound')
 
 const initialPlaying = {
   idx: 0,
   lap: 1,
   updated: Date.now(),
 }
+Sound.setCategory('Alarm')
 type PlayingType = typeof initialPlaying
 
 export default function usePlaying() {
   const dispatch = useAppDispatch()
+  const onSay = useTTS()
   const { selectedWorkout } = useWorkout()
   const { onTogglePlaying } = useContext(AppHelperContext)
-  const { isVibration } = useSettings()
+  const { isVibration, sound } = useSettings()
   const [playing, setPlaying] = useState<PlayingType>(initialPlaying)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isWaitForSubmit, setIsWaitForSubmit] = useState(false)
@@ -31,23 +34,17 @@ export default function usePlaying() {
   })
   const [exercise, setExercise] = useState<SelectedExerciseType>(playingWorkout.exercises[playing.idx])
   const exerciseNext = useMemo(() => playingWorkout.exercises[playing.idx + 1], [playing.idx, playingWorkout.exercises])
+  const exercisePrev = useMemo(() => playingWorkout.exercises[playing.idx - 1], [playing.idx, playingWorkout.exercises])
   const approach = useMemo(() => exercise.approaches[playing.lap - 1], [exercise.approaches, playing.lap])
   const isTheLastOne = useMemo(
     () => playingWorkout.exercises.length === playing.idx + 1 && exercise.laps === playing.lap,
     [exercise.laps, playing, playingWorkout.exercises.length]
   )
-  //Change Workout when current exercise changed
-  useEffect(() => {
-    setPlayingWorkout(p => ({
-      ...p,
-      exercises: p.exercises.map(ex => (ex.uid === exercise.uid ? exercise : ex)),
-    }))
-  }, [exercise])
+  const playSound = useMemo(() => new Sound(sound.type, Sound.MAIN_BUNDLE), [])
 
   useEffect(() => {
-    const newExercise = playingWorkout.exercises[playing.idx]
-    setExercise(p => (deepCompare(newExercise, p) ? p : newExercise))
-  }, [playingWorkout.exercises[playing.idx]])
+    playSound.setVolume(sound.volume)
+  }, [playSound])
 
   useEffect(() => {
     const weight = approach?.currentWeight === undefined ? approach?.weight : approach.currentWeight
@@ -56,9 +53,22 @@ export default function usePlaying() {
     setCurrentRepeats(repeats)
   }, [approach])
 
-  const onBack = useCallback(() => {
-    onTogglePlaying()
+  const onChangeExercise = useCallback((newExercise: SelectedExerciseType) => {
+    // setExercise(p => (deepCompare(newExercise, p) ? p : newExercise))
+    setExercise(newExercise)
   }, [])
+  const onBack = useCallback(() => onTogglePlaying(), [])
+  const onChangePlayingWorkout = useCallback(
+    _exercise => {
+      setPlayingWorkout(p => {
+        return {
+          ...p,
+          exercises: p.exercises.map(ex => (ex.uid === _exercise.uid ? _exercise : ex)),
+        }
+      })
+    },
+    [setPlayingWorkout]
+  )
 
   const onWorkoutSaveResult = useCallback(
     (newExercise: SelectedExerciseType) => {
@@ -98,10 +108,11 @@ export default function usePlaying() {
           ),
         }
         if (isSaveData) onWorkoutSaveResult(newExercise)
+        onChangePlayingWorkout(newExercise)
         return newExercise
       })
     },
-    [playing.lap, currentRepeats, currentWeight, onWorkoutSaveResult]
+    [playing.lap, currentRepeats, currentWeight, onWorkoutSaveResult, onChangePlayingWorkout]
   )
 
   const onSaveResult = useCallback(() => {
@@ -116,44 +127,74 @@ export default function usePlaying() {
     setIsWaitForSubmit(p => (p ? false : p))
   }, [onApproachUpdate, exercise, exerciseNext?.repeats, playing.lap])
 
-  const onNext = useCallback(() => {
-    onChangeTimer()
-    if (playing.lap < exercise.laps) {
-      setPlaying(p => ({ ...p, lap: p.lap + 1, updated: Date.now() }))
-    } else {
-      if (playingWorkout.exercises.length <= playing.idx + 1 && playing.lap <= exercise.laps) {
-        if (isVibration) {
-          Vibration.vibrate(VIBRATION.END_WORKOUT, true)
-          setTimeout(() => Vibration.cancel(), 3000)
-        }
-        setIsWaitForSubmit(true)
+  const onNext = useCallback(
+    (isSkip = true) => {
+      onChangeTimer()
+      const isLastLap = playing.lap >= exercise.laps
+      const sayName = isLastLap ? exerciseNext?.name : exercise.name
+
+      if (isSkip) {
+        if (!!sayName) onSay(sayName)
       } else {
-        setPlaying(p => ({ idx: p.idx + 1, lap: 1, updated: Date.now() }))
+        playSound.play()
+        if (!!sayName) setTimeout(() => onSay(sayName), playSound.getDuration() * 1000)
       }
-    }
-  }, [exercise.laps, playing, playingWorkout.exercises.length, onChangeTimer])
+
+      if (!isLastLap) {
+        setPlaying(p => ({ ...p, lap: p.lap + 1, updated: Date.now() }))
+      } else {
+        if (playingWorkout.exercises.length <= playing.idx + 1 && playing.lap <= exercise.laps) {
+          if (isVibration) {
+            Vibration.vibrate(VIBRATION.END_WORKOUT, true)
+            setTimeout(() => Vibration.cancel(), 3000)
+          }
+          setIsWaitForSubmit(true)
+        } else {
+          setPlaying(p => {
+            onChangeExercise(playingWorkout.exercises[p.idx + 1])
+            return { idx: p.idx + 1, lap: 1, updated: Date.now() }
+          })
+        }
+      }
+    },
+    [exercise.laps, playing, playingWorkout.exercises.length, onChangeTimer, exerciseNext?.name]
+  )
 
   const onPrevious = useCallback(() => {
     onChangeTimer()
-    if (playing.lap > 1) setPlaying(p => ({ ...p, lap: p.lap - 1, updated: Date.now() }))
+    const isFirstLap = playing.lap < 1
+    const sayName = isFirstLap ? exercisePrev?.name : exercise.name
+
+    if (!!sayName) onSay(sayName)
+
+    if (!isFirstLap)
+      setPlaying(p => {
+        onChangeExercise(playingWorkout.exercises[p.idx])
+        return { ...p, lap: p.lap - 1, updated: Date.now() }
+      })
     else {
-      if (playing.idx <= 0 && playing.lap <= 2) setPlaying({ idx: 0, lap: 1, updated: Date.now() })
-      else {
-        setPlaying(p => ({
-          idx: p.idx - 1,
-          lap: playingWorkout.exercises[playing.idx - 1].laps,
-          updated: Date.now(),
-        }))
+      if (playing.idx <= 0 && playing.lap <= 2) {
+        setPlaying({ idx: 0, lap: 1, updated: Date.now() })
+        onChangeExercise(playingWorkout.exercises[0])
+      } else {
+        setPlaying(p => {
+          onChangeExercise(playingWorkout.exercises[p.idx - 1])
+          return {
+            idx: p.idx - 1,
+            lap: playingWorkout.exercises[playing.idx - 1].laps,
+            updated: Date.now(),
+          }
+        })
       }
     }
-  }, [playing, onChangeTimer, playingWorkout.exercises])
+  }, [playing, onChangeTimer, playingWorkout.exercises, exercisePrev?.name])
 
   const onTimerComplete = useCallback(() => {
     if (isVibration) {
       Vibration.vibrate(VIBRATION.END_EXERCISE, true)
       setTimeout(() => Vibration.cancel(), 1900)
     }
-    onNext()
+    onNext(false)
   }, [onNext])
 
   const onTogglePlay = useCallback(() => {
@@ -184,6 +225,7 @@ export default function usePlaying() {
     currentRepeats,
     currentWeight,
     approach,
+    playSound,
     onNext,
     onBack,
     onPrevious,

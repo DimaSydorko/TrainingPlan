@@ -1,10 +1,9 @@
 import { TextStyle, ViewStyle } from 'react-native'
 import { StackNavigationOptions } from '@react-navigation/stack'
-import { screen } from '../Utils/constants'
+import { appScreen } from '../Utils/constants'
 
-export const headerHeight = 55
 const headerStyle: TextStyle = {
-  height: headerHeight,
+  height: appScreen.header,
   shadowOpacity: 0.1,
   shadowRadius: 5,
   shadowOffset: {
@@ -36,10 +35,11 @@ export const theme = {
 
   view: {
     card: {
-      padding: 14,
+      padding: 6,
+      paddingLeft: 8,
       borderRadius: 10,
-      margin: 3,
-      width: screen.vw - 30,
+      margin: 2,
+      width: appScreen.vw - 30,
     } as ViewStyle,
     shadow: {
       shadowOpacity: 0.1,
@@ -80,7 +80,7 @@ export const theme = {
     secondHeader: {
       marginVertical: 10,
       paddingHorizontal: 5,
-      width: screen.vw - 10,
+      width: appScreen.vw - 10,
     } as ViewStyle,
     end: {
       width: '100%',

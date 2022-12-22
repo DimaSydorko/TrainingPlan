@@ -1,12 +1,11 @@
 {
   "name": "training-plan-together",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
+    "start": "react-native start",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "start": "react-native start",
-    "test": "jest",
     "bandle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/",
     "clean:android": "cd ./android && ./gradlew clean",
     "clean:yarn": "rmdir /s node_modules && yarn cache clean --force && yarn install"
@@ -42,6 +41,7 @@
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
     "react-native-scroll-picker-wheel": "^1.0.2",
+    "react-native-sound": "^0.11.2",
     "react-native-svg": "^12.3.0",
     "react-native-tts": "4.1.0",
     "react-native-vector-icons": "^9.0.0",

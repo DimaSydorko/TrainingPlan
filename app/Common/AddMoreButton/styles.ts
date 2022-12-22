@@ -1,6 +1,5 @@
-import { StatusBar, StyleSheet } from 'react-native'
-import { screen } from '../../Utils/constants'
-import { headerHeight } from '../../Theme/theme'
+import { StyleSheet } from 'react-native'
+import { appScreen } from '../../Utils/constants'
 
 export default StyleSheet.create({
   container: {
@@ -8,7 +7,7 @@ export default StyleSheet.create({
     borderRadius: 24,
     position: 'absolute',
     zIndex: 101,
-    top: screen.vh + (StatusBar.currentHeight || 0) - headerHeight * 2 - 100,
+    bottom: appScreen.footer + 20,
     right: 20,
   },
 })

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { screen } from '../../Utils/constants'
+import { appScreen } from '../../Utils/constants'
 
 export default StyleSheet.create({
   profileContainer: {
@@ -10,6 +10,6 @@ export default StyleSheet.create({
     marginTop: 10,
   },
   signOutButton: {
-    marginRight: screen.vw - 92,
+    marginRight: appScreen.vw - 92,
   },
 })

@@ -1,11 +1,10 @@
 import { StyleSheet } from 'react-native'
-import { screen } from '../../Utils/constants'
-import { headerHeight } from '../../Theme/theme'
+import { appScreen } from '../../Utils/constants'
 
 export default StyleSheet.create({
   container: {
     marginTop: 10,
-    maxHeight: screen.vh - headerHeight * 4,
+    maxHeight: appScreen.vh - appScreen.header * 4,
   },
   card: {
     width: '100%',

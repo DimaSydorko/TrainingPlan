@@ -1,12 +1,11 @@
 import { StyleSheet } from 'react-native'
-import { screen } from '../../Utils/constants'
-import { headerHeight } from '../../Theme/theme'
+import { appScreen } from '../../Utils/constants'
 
 export default StyleSheet.create({
   container: {
     marginHorizontal: 20,
     marginTop: 10,
-    maxHeight: screen.vh - headerHeight * 4,
+    maxHeight: appScreen.vh - (appScreen.header + appScreen.footer) * 2,
   },
   plan: {
     margin: 2,
@@ -22,7 +21,7 @@ export default StyleSheet.create({
     zIndex: 0,
   },
   textHeader: {
-    width: screen.vw - 210,
+    width: appScreen.vw - 210,
     zIndex: 1,
   },
 })

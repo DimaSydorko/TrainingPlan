@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Image, ScrollView, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useSettings, useWorkout } from '../../Hooks/redux'
-import { screen } from '../../Utils/constants'
+import { appScreen } from '../../Utils/constants'
 import { AppImage, AppModal, TapBar } from '../../Common'
 import { ExerciseImageFilterType } from '../../Utils/types'
 import { FlexCenterColumn, TextSecondary } from '../../Theme/Parents'
@@ -56,7 +56,7 @@ export default function ImageSelector({ onSubmit, value = '' }: IImageSelector) 
             currentValue={filter}
             onChange={value => setFilter(value as ExerciseImageFilterType)}
           />
-          <ScrollView style={{ height: screen.vh - 400 }}>
+          <ScrollView style={{ height: appScreen.vh - 400 }}>
             <View style={styles.listContainer}>
               <TouchableOpacity style={[styles.imageCard, styles.emptySelect]} onPress={() => setSelected('')}>
                 <Icon name={icon.image} color={colors.textSecondary} size={66} />

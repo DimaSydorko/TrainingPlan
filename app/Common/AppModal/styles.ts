@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { screen } from '../../Utils/constants'
+import { appScreen } from '../../Utils/constants'
 
 export default StyleSheet.create({
   emptySpace: {
@@ -19,7 +19,7 @@ export default StyleSheet.create({
     zIndex: 1,
     maxWidth: 500,
     minHeight: 150,
-    width: screen.vw - 40,
+    width: appScreen.vw - 40,
     marginHorizontal: 20,
     borderRadius: 8,
     marginBottom: 48,

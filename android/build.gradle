@@ -8,6 +8,7 @@ project.ext.react = [
 
 buildscript {
     ext {
+        kotlinVersion = "1.6.0"
         buildToolsVersion = "31.0.0"
         minSdkVersion = 21
         compileSdkVersion = 31
@@ -64,6 +65,11 @@ allprojects {
         maven {
           url "$rootDir/../node_modules/react-native/android"
 //             url 'https://www.jitpack.io'
+        }
+    }
+    configurations.all {
+        resolutionStrategy {
+            force 'com.facebook.react:react-native:0.68.1'
         }
     }
 }

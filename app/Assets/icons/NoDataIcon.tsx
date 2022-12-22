@@ -1,16 +1,15 @@
 import * as React from 'react'
 import { SvgXml } from 'react-native-svg'
-import { screen } from '../../Utils/constants'
+import { appScreen } from '../../Utils/constants'
 import { FlexCenter } from '../../Theme/Parents'
-import { headerHeight } from '../../Theme/theme'
 import { useSettings } from '../../Hooks/redux'
 
 export default function NoDataIcon() {
   const { colors } = useSettings()
   const xml = `<svg xmlns='http://www.w3.org/2000/svg'
       data-name='Layer 1'
-      width=${screen.vw - 50}
-      height=${screen.vw}
+      width=${appScreen.vw - 50}
+      height=${appScreen.vw}
       viewBox='0 0 647.63626 632.17383'
     >
       <path
@@ -50,7 +49,7 @@ export default function NoDataIcon() {
     </svg>`
 
   return (
-    <FlexCenter style={{ height: screen.vh - headerHeight * 5 }}>
+    <FlexCenter style={{ height: appScreen.vh - appScreen.header * 5 }}>
       <SvgXml xml={xml} />
     </FlexCenter>
   )

@@ -4,10 +4,10 @@ import { StyleSheet } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useSettings } from '../../Hooks/redux'
 import { IconButton } from '../index'
-import { screen } from '../../Utils/constants'
+import { appScreen } from '../../Utils/constants'
 import { FlexSpaceBetween, TextOrdinary } from '../../Theme/Parents'
 import { icon } from '../../Theme/icons'
-import { headerHeight, theme } from '../../Theme/theme'
+import { theme } from '../../Theme/theme'
 import { colorsFixed } from '../../Theme/colors'
 
 const styles = StyleSheet.create({
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     width: '100%',
     borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,
-    height: headerHeight,
+    height: appScreen.header,
     maxWidth: 480,
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -69,7 +69,12 @@ export default React.memo(function Toast({
       ]}
     >
       <Icon name={_icon} color={colorsFixed.white} size={36} />
-      <TextOrdinary ellipsizeMode='tail' numberOfLines={1} style={{ width: screen.vw - 100 }} color={colorsFixed.white}>
+      <TextOrdinary
+        ellipsizeMode='tail'
+        numberOfLines={1}
+        style={{ width: appScreen.vw - 100 }}
+        color={colorsFixed.white}
+      >
         {message}
       </TextOrdinary>
       <IconButton iconName={icon.close} size={36} color={colorsFixed.white} onPress={onPress} />

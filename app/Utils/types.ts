@@ -112,6 +112,6 @@ export type TabParamList = {
   PublicationPlan: { publication: PublicType } | undefined
 }
 export type AppNavigationType = CompositeNavigationProp<
-  BottomTabNavigationProp<TabParamList, 'Profile'>,
+  BottomTabNavigationProp<TabParamList>,
   StackNavigationProp<TabParamList>
 >

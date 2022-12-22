@@ -3,6 +3,7 @@ import { NamedExoticComponent, useContext, useEffect } from 'react'
 import { Text } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+
 import { useAppDispatch, useSettings } from '../Hooks/redux'
 import { AppHelperContext } from '../Hooks/AppHelperProvider'
 import { workoutAC } from '../store/WorkoutReducer/WorkoutAC'
@@ -15,6 +16,7 @@ import { PlayTimerProvider } from '../Screens/PlayingScreen/components/PlayTimer
 import { icon } from '../Theme/icons'
 import ProfileRouter from './ProfileRouter'
 import PublicationsRouter from './PublicationsRouter'
+import { appScreen } from '../Utils/constants'
 
 type TabType = {
   name: string
@@ -89,10 +91,13 @@ export default function AppRouter() {
               tabBarIcon: ({ focused }) => icon(focused ? colors.secondPrimary : colors.black),
               headerShown: false,
               tabBarStyle: {
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
                 backgroundColor: colors.menu,
                 paddingTop: 5,
                 paddingBottom: 5,
-                height: 55,
+                height: appScreen.footer,
                 display: isTabMenu ? undefined : 'none',
               },
             }}

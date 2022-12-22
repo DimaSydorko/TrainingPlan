@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { screen } from '../../Utils/constants'
+import { appScreen } from '../../Utils/constants'
 
 export default StyleSheet.create({
   page: {
@@ -15,6 +15,7 @@ export default StyleSheet.create({
     paddingVertical: 15,
     width: '100%',
     zIndex: 15,
+    height: appScreen.footer,
   },
   footer: {
     position: 'absolute',
@@ -45,7 +46,7 @@ export default StyleSheet.create({
   },
   timerContent: {
     justifyContent: 'center',
-    maxWidth: screen.vw - 160,
-    maxHeight: screen.vw - 160,
+    maxWidth: appScreen.vw - 160,
+    maxHeight: appScreen.vw - 160,
   },
 })

@@ -7,7 +7,7 @@ import { userAC } from '../../store/UserReducer/UserAC'
 import UserImage from '../../Components/UserImage/UserImage'
 import Publication from '../../Components/Publication/Publication'
 import { AppNavigationType } from '../../Utils/types'
-import { PUBLICATION_QUERY_LIMIT, screen, ScreenName } from '../../Utils/constants'
+import { PUBLICATION_QUERY_LIMIT, appScreen, ScreenName } from '../../Utils/constants'
 import { AppModal, IconButton, InfiniteScroll } from '../../Common'
 import { FlexCenterColumn, FlexEnd, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { icon } from '../../Theme/icons'
@@ -62,7 +62,7 @@ export default memo(function ProfileScreen() {
         {internet.isOnline ? (
           userPublications.map(publication => <Publication key={publication.uid} publication={publication} />)
         ) : (
-          <NoSignalIcon height={screen.vw} />
+          <NoSignalIcon height={appScreen.vw} />
         )}
       </FlexCenterColumn>
       <AppModal

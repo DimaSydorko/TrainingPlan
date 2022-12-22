@@ -6,7 +6,7 @@ import { NativeStackScreenProps } from 'react-native-screens/native-stack'
 import { useSettings } from '../../Hooks/redux'
 import PublicButtons from '../../Components/Publication/PublicButtons'
 import { AppNavigationType, TabParamList, WorkoutType } from '../../Utils/types'
-import { screen, ScreenName } from '../../Utils/constants'
+import { appScreen, ScreenName } from '../../Utils/constants'
 import { Card, FlexCenterColumn, FlexSpaceBetween, Page, TextSecondary } from '../../Theme/Parents'
 import WorkoutCard from '../WorkoutsScreen/WorkoutCard'
 
@@ -23,8 +23,8 @@ export default function PublicationPlan({ route }: PropsType) {
 
   return (
     <Page>
-      <FlexSpaceBetween style={{ padding: 10, paddingHorizontal: 20, width: screen.vw }}>
-        <TextSecondary style={{ width: screen.vw / 2 }} color={colors.secondPrimary}>
+      <FlexSpaceBetween style={{ padding: 10, paddingHorizontal: 20, width: appScreen.vw }}>
+        <TextSecondary style={{ width: appScreen.vw / 2 }} color={colors.secondPrimary}>
           By {ownerName}
         </TextSecondary>
         <PublicButtons isOpenedScreen publication={route.params.publication} />

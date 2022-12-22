@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, RefreshControl, ScrollView } from 'react-native'
 import { useSettings } from '../../Hooks/redux'
-import { screen } from '../../Utils/constants'
+import { appScreen } from '../../Utils/constants'
 
 interface IProps {
   children: React.ReactNode
@@ -40,7 +40,7 @@ export default function InfiniteScroll({ children, isLoading = false, onScrollTo
   return (
     <ScrollView
       centerContent
-      style={{ width: screen.vw, backgroundColor: colors.background }}
+      style={{ width: appScreen.vw, backgroundColor: colors.background }}
       onScroll={e => isCloseToBottom(e.nativeEvent) && _onScrollToBottom()}
       scrollEventThrottle={100}
       refreshControl={

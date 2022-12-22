@@ -16,7 +16,7 @@ import { AddMoreButton, AppModal, ConfirmButton, GoBackSubmitModal, MyTextInput,
 import Exercise from '../../Components/Exercise/Exercise'
 import EditExerciseModal from '../../Components/Exercise/ExerciseEditModal'
 import { deepCompare } from '../../Utils'
-import { screen } from '../../Utils/constants'
+import { appScreen } from '../../Utils/constants'
 import { AppNavigationType, ExerciseType, WorkoutType } from '../../Utils/types'
 import {
   AppFooter,
@@ -28,7 +28,7 @@ import {
   TextSecondary,
 } from '../../Theme/Parents'
 import { icon } from '../../Theme/icons'
-import { headerHeight, theme } from '../../Theme/theme'
+import { theme } from '../../Theme/theme'
 import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
 
 export default function WorkoutScreen() {
@@ -162,8 +162,8 @@ export default function WorkoutScreen() {
             <FlexCenterColumn style={{ paddingHorizontal: 8 }}>
               <NestableScrollContainer
                 style={{
-                  height: screen.vh - headerHeight * 2,
-                  marginBottom: headerHeight,
+                  height: appScreen.vh - appScreen.footer - appScreen.header,
+                  marginBottom: appScreen.footer,
                 }}
               >
                 {isEditMode && !!workoutExercises.length ? (

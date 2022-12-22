@@ -33,6 +33,9 @@ target 'TrainingPlanTogether_CLI' do
 
   pod 'RNGoogleSignin', :path => '../node_modules/@react-native-google-signin/google-signin'
 
+
+  pod 'RNSound', :path => '../node_modules/react-native-sound'
+
   target 'TrainingPlanTogether_CLITests' do
     inherit! :complete
     # Pods for testing

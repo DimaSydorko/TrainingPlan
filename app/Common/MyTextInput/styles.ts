@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { screen } from '../../Utils/constants'
+import { appScreen } from '../../Utils/constants'
 
 export default StyleSheet.create({
   container: {
@@ -11,7 +11,7 @@ export default StyleSheet.create({
     overflow: 'hidden',
     marginVertical: 10,
     paddingHorizontal: 12,
-    width: screen.vw - 40,
+    width: appScreen.vw - 40,
   },
   underline: {
     width: '100%',

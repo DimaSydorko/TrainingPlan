@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native'
 import { useSettings } from '../../Hooks/redux'
 import { FlexSpaceBetween, TextHeader } from '../../Theme/Parents'
 import { IconButton } from '../index'
-import { screen } from '../../Utils/constants'
+import { appScreen } from '../../Utils/constants'
 import { SetStateType } from '../../Utils/types'
 
 interface ButtonCounterType {
@@ -32,7 +32,7 @@ export default memo(function ButtonCounter({
   const buttonColor = color || colors.textSecondary
 
   return (
-    <FlexSpaceBetween style={[styles.container, { width: (screen.vw - 120) / 2 + extraWidth }]}>
+    <FlexSpaceBetween style={[styles.container, { width: (appScreen.vw - 120) / 2 + extraWidth }]}>
       <IconButton
         size={28}
         iconName='minus'

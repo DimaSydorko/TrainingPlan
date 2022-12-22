@@ -2,8 +2,9 @@ import * as React from 'react'
 import { ReactNode } from 'react'
 import { SafeAreaView, ScrollView, Text, TextProps, TextStyle, View, ViewStyle } from 'react-native'
 import { useSettings } from '../Hooks/redux'
-import { headerHeight, theme } from './theme'
+import { theme } from './theme'
 import { colorsFixed } from './colors'
+import { appScreen } from '../Utils/constants'
 
 interface ParentProps {
   children?: ReactNode
@@ -22,7 +23,13 @@ interface IPage {
 export const Page = ({ children, style, scrollDisabled = false }: ParentProps & IPage) => {
   const { colors } = useSettings()
   return (
-    <SafeAreaView style={[theme.containers.centerColumn, { backgroundColor: colors.background }, style]}>
+    <SafeAreaView
+      style={[
+        theme.containers.centerColumn,
+        { backgroundColor: colors.background, paddingBottom: appScreen.footer },
+        style,
+      ]}
+    >
       <ScrollView scrollEnabled={!scrollDisabled}>{children}</ScrollView>
     </SafeAreaView>
   )
@@ -169,7 +176,7 @@ export const AppHeader = ({ children, style }: ParentProps) => {
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center',
-          top: -headerHeight,
+          top: -appScreen.header,
           left: 0,
           padding: 8,
           zIndex: 10,
@@ -219,6 +226,7 @@ export const useScreenOptions = () => {
       ...theme.containers.headerStyle,
       backgroundColor: colors.menu,
       shadowColor: colorsFixed.shadow,
+      height: appScreen.header,
     },
   }
 }

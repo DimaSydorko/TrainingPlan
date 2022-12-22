@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ColorsType } from '../../Utils/types'
 import { colorsLight } from '../../Theme/colors'
+import { SoundType } from '../../Utils/constants'
 
 export interface SettingsSliceType {
   colors: ColorsType
@@ -17,6 +18,10 @@ export interface SettingsSliceType {
   }
   workout: {
     weightStep: number
+  }
+  sound: {
+    type: SoundType
+    volume: number
   }
 }
 
@@ -36,6 +41,10 @@ const initialState: SettingsSliceType = {
   workout: {
     weightStep: 1,
   },
+  sound: {
+    type: SoundType.Bell,
+    volume: 1,
+  },
 }
 
 export const settingsSlice = createSlice({
@@ -49,6 +58,7 @@ export const settingsSlice = createSlice({
       state.internet = initialState.internet
       state.workout = initialState.workout
       state.colors = initialState.colors
+      state.sound = initialState.sound
       state.tts = initialState.tts
       state.isVibration = true
     },
@@ -75,6 +85,13 @@ export const settingsSlice = createSlice({
       state.internet.isOnline = payload
       if (payload) state.internet.lastBeOline = new Date().getTime()
     },
+
+    onSoundTypeChange: (state, { payload }: PayloadAction<SoundType>) => {
+      state.sound.type = payload
+    },
+    onSoundVolumeChange: (state, { payload }: PayloadAction<number>) => {
+      state.sound.volume = payload
+    },
   },
 })
 export const {
@@ -87,5 +104,7 @@ export const {
   onTtsPitchChange,
   onTtsRateChange,
   onWorkoutWeightStepChange,
+  onSoundTypeChange,
+  onSoundVolumeChange,
 } = settingsSlice.actions
 export default settingsSlice.reducer

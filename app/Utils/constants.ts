@@ -31,11 +31,14 @@ export enum ScreenName {
   Settings = 'Settings',
 }
 
-export const screen = {
+export const appScreen = {
   vw: Dimensions.get('window').width,
   vh: Dimensions.get('window').height,
   sw: Dimensions.get('screen').width,
   sh: Dimensions.get('screen').height,
+  header: 40,
+  footer: 55,
+  content: Dimensions.get('window').width - 50 - 55,
 }
 
 export const defaultPlan: PlanType = {
@@ -83,4 +86,11 @@ export const VIBRATION = {
   BUTTON: 25,
   END_EXERCISE: [100, 200],
   END_WORKOUT: [100, 400, 200, 100],
+}
+
+export enum SoundType {
+  Bell = 'bell.mp3',
+  DigitalClock = 'digital_clock.mp3',
+  DoubleDing = 'double_ding.mp3',
+  HopBell = 'hop_bell.mp3',
 }

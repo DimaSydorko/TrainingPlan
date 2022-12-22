@@ -6,6 +6,7 @@ import { errorWorkoutClear } from '../../store/WorkoutReducer/WorkoutSlice'
 import { errorPublicationClear } from '../../store/PublicationsReducer/PublicationsSlice'
 import { Toast, Toaster } from '../../Common'
 import { icon } from '../../Theme/icons'
+import { LayoutAnimation } from 'react-native'
 
 export default memo(function NotificationHandler() {
   const dispatch = useAppDispatch()
@@ -26,7 +27,10 @@ export default memo(function NotificationHandler() {
       toasts={[
         !!plans.error && (
           <Toast
-            onPress={() => dispatch(errorPlansClear())}
+            onPress={() => {
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+              dispatch(errorPlansClear())
+            }}
             variant='error'
             message={plans.error}
             pressAfterTime={16000}
@@ -34,7 +38,10 @@ export default memo(function NotificationHandler() {
         ),
         !!workout.error && (
           <Toast
-            onPress={() => dispatch(errorWorkoutClear())}
+            onPress={() => {
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+              dispatch(errorWorkoutClear())
+            }}
             variant='error'
             message={workout.error}
             pressAfterTime={16000}
@@ -42,7 +49,10 @@ export default memo(function NotificationHandler() {
         ),
         !!publications.error && (
           <Toast
-            onPress={() => dispatch(errorPublicationClear())}
+            onPress={() => {
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+              dispatch(errorPublicationClear())
+            }}
             variant='error'
             message={publications.error}
             pressAfterTime={16000}
@@ -53,8 +63,11 @@ export default memo(function NotificationHandler() {
             variant='info'
             iconName={icon.wifiOff}
             message={'No internet connection'}
-            onPress={() => setIsInternetInfo(false)}
-            pressAfterTime={8000}
+            onPress={() => {
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+              setIsInternetInfo(false)
+            }}
+            pressAfterTime={6000}
           />
         ),
       ]}

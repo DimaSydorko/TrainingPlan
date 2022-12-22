@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { memo, useCallback, useContext, useEffect, useState } from 'react'
-import { SafeAreaView, TouchableOpacity, View } from 'react-native'
+import { LayoutAnimation, SafeAreaView, TouchableOpacity, View } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import KeepAwake from 'react-native-keep-awake'
 
 import usePlaying from '../../Hooks/usePlaying'
-import { screen } from '../../Utils/constants'
+import { appScreen } from '../../Utils/constants'
 import useTTS from '../../Hooks/useTTS'
 import { useSettings } from '../../Hooks/redux'
 import { AppHelperContext } from '../../Hooks/AppHelperProvider'
@@ -37,6 +37,7 @@ export default memo(function PlayingScreen() {
     currentRepeats,
     currentWeight,
     approach,
+    playSound,
     exerciseNext,
     onTimerComplete,
     onTogglePlay,
@@ -81,12 +82,14 @@ export default memo(function PlayingScreen() {
 
   useEffect(() => {
     onSay(exercise.name)
-  }, [playing.lap, exercise.name])
+  }, [])
 
   useEffect(() => {
     if (isTheLastOneComplete) {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       setIsWorkoutReview(p => (p ? p : true))
-      onSay('Workout complete')
+      playSound.play()
+      setTimeout(() => onSay('Workout complete'), playSound.getDuration() * 1000)
     }
   }, [isTheLastOneComplete])
 
@@ -96,6 +99,11 @@ export default memo(function PlayingScreen() {
     }
     onTimeSay([10, 3, 2, 1])
   }, [])
+
+  const toggleWorkoutReview = useCallback(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    setIsWorkoutReview(p => !p)
+  }, [setIsWorkoutReview])
 
   return (
     <SafeAreaView style={[theme.containers.centerColumn, styles.page, { backgroundColor: colors.background }]}>
@@ -141,7 +149,7 @@ export default memo(function PlayingScreen() {
             trailColor={colors.menu as any}
             onComplete={onTimerComplete}
             onUpdate={onTimerUpdate}
-            size={screen.vw - 120}
+            size={appScreen.vw - 120}
           >
             {({ remainingTime }) => (
               <FlexCenterColumn style={styles.timerContent}>
@@ -159,7 +167,7 @@ export default memo(function PlayingScreen() {
         </TouchableOpacity>
 
         {!!exercise.repeats && (
-          <View style={{ width: screen.vw - 140 }}>
+          <View style={{ width: appScreen.vw - 140 }}>
             <Results
               type={'weight'}
               step={workout.weightStep}
@@ -179,7 +187,7 @@ export default memo(function PlayingScreen() {
           </View>
         )}
         {isTheLastOneComplete && (
-          <ConfirmButton header={'Save Result'} style={{ width: screen.vw - 80 }} onPress={onSaveResult} />
+          <ConfirmButton header={'Save Result'} style={{ width: appScreen.vw - 80 }} onPress={onSaveResult} />
         )}
       </FlexCenterColumn>
 
@@ -193,7 +201,7 @@ export default memo(function PlayingScreen() {
         ]}
       >
         <IconButton
-          onPress={() => setIsWorkoutReview(p => !p)}
+          onPress={toggleWorkoutReview}
           iconName={isWorkoutReview ? icon.timer : icon.list}
           color={colors.black}
           size={35}

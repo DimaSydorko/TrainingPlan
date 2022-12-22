@@ -10,7 +10,7 @@ import { AppNavigationType, PublicType, TabParamList } from '../../Utils/types'
 import Exercise from '../../Components/Exercise/Exercise'
 import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
 import NoDataIcon from '../../Assets/icons/NoDataIcon'
-import { screen } from '../../Utils/constants'
+import { appScreen } from '../../Utils/constants'
 import PublicButtons from '../../Components/Publication/PublicButtons'
 
 type PropsType = NativeStackScreenProps<TabParamList, 'PublicationWorkout'>
@@ -27,10 +27,10 @@ export default function PublicationWorkout({ route }: PropsType) {
 
   return (
     <Page>
-      <FlexSpaceBetween style={{ padding: 10, paddingHorizontal: 20, width: screen.vw }}>
+      <FlexSpaceBetween style={{ padding: 10, paddingHorizontal: 20, width: appScreen.vw }}>
         <FlexCenterColumn style={{ alignItems: 'flex-start' }}>
           {!!ownerName && (
-            <TextSecondary style={{ width: screen.vw / 2 }} color={colors.secondPrimary}>
+            <TextSecondary style={{ width: appScreen.vw / 2 }} color={colors.secondPrimary}>
               By {ownerName}
             </TextSecondary>
           )}

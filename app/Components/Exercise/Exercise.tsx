@@ -6,7 +6,7 @@ import { AppImage, AppModal, IconButton } from '../../Common'
 import { secondsToMinSec } from '../WorkoutDuration/WorkoutDuration'
 import { Divider, FlexEnd, FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
 import { ExerciseType, SelectedExerciseType } from '../../Utils/types'
-import { screen } from '../../Utils/constants'
+import { appScreen } from '../../Utils/constants'
 import { icon } from '../../Theme/icons'
 import Approach from './Approach'
 import styles from './styles'
@@ -68,7 +68,7 @@ export default memo(function Exercise({
             <TextHeader
               color={isVisible ? color : `${color}80`}
               numberOfLines={1}
-              style={{ width: screen.vw - (isImage ? 215 : 170) }}
+              style={{ width: appScreen.vw - (isImage ? 215 : 170) }}
             >
               {exercise.name}
             </TextHeader>
@@ -104,10 +104,10 @@ export default memo(function Exercise({
           <FlexStart>
             {isImage && <AppImage src={exercise.imageUrl} size={IMG_SIZE} style={{ marginLeft: -10 }} />}
             <View>
-              <TextHeader color={color} numberOfLines={1} style={{ width: screen.vw - (isImage ? 110 : 70) }}>
+              <TextHeader color={color} numberOfLines={1} style={{ width: appScreen.vw - (isImage ? 110 : 70) }}>
                 {exercise.name}
               </TextHeader>
-              <FlexSpaceBetween style={{ width: screen.vw - (isImage ? 140 : 100) + (isInModal ? 0 : 40) }}>
+              <FlexSpaceBetween style={{ width: appScreen.vw - (isImage ? 140 : 100) + (isInModal ? 0 : 40) }}>
                 {!!exercise.breakTimeInSec && (
                   <TextSecondary style={{ width: 150 }} ellipsizeMode='tail' numberOfLines={1}>
                     Break: {secondsToMinSec(exercise.breakTimeInSec)}

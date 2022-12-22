@@ -2,7 +2,7 @@ import * as React from 'react'
 import { memo, ReactNode } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { TextSecondary } from '../../Theme/Parents'
-import { screen } from '../../Utils/constants'
+import { appScreen } from '../../Utils/constants'
 
 interface IProps {
   label: string
@@ -20,7 +20,7 @@ export default memo(function SettingsHeader({ label, children }: IProps) {
 
 const styles = StyleSheet.create({
   container: {
-    width: screen.vw,
+    width: appScreen.vw,
   },
   label: {
     marginLeft: 10,

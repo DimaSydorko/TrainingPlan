@@ -1,9 +1,12 @@
 import * as React from 'react'
-import { memo, useCallback } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
+const Sound = require('react-native-sound')
+
 import { useAppDispatch, useSettings } from '../../Hooks/redux'
 import {
   clearSettings,
+  onSoundVolumeChange,
   onThemeChange,
   onTtsDuckingToggle,
   onTtsPitchChange,
@@ -17,16 +20,24 @@ import { clearPublicationResults } from '../../store/PublicationsReducer/Publica
 import { clearPlaneResults } from '../../store/PlansReducer/PlansSlice'
 import useTTS from '../../Hooks/useTTS'
 import { ConfirmButton } from '../../Common'
+import AppSoundPicker from '../../Components/AppSoundPicker/AppSoundPicker'
 import { FlexCenter, Page, TextHeader } from '../../Theme/Parents'
 import { colorsDark, colorsLight } from '../../Theme/colors'
+
 import SettingsItem from './SettingsItem'
 import SettingsHeader from './SettingsHeader'
+import { getSoundText } from '../../Utils'
+
+Sound.setCategory('Alarm')
 
 export default memo(function SettingsScreen() {
   const dispatch = useAppDispatch()
   const onSay = useTTS()
-  const { colors, isVibration, tts, workout } = useSettings()
+  const { colors, isVibration, tts, workout, sound } = useSettings()
+  const [isSoundModal, setIsSoundModal] = useState<boolean>(false)
+
   const isDarkTheme = colors.primary === colorsDark.primary
+  const playSound = new Sound(sound.type, Sound.MAIN_BUNDLE)
 
   const onThemeToggle = useCallback(
     () => dispatch(onThemeChange(isDarkTheme ? colorsLight : colorsDark)),
@@ -38,6 +49,9 @@ export default memo(function SettingsScreen() {
   const onTtsPitch = useCallback(value => dispatch(onTtsPitchChange(value)), [])
   const onTtsRate = useCallback(value => dispatch(onTtsRateChange(value)), [])
   const onWorkoutWeightStep = useCallback(value => dispatch(onWorkoutWeightStepChange(value)), [])
+  const onSoundVolume = useCallback(value => {
+    dispatch(onSoundVolumeChange(value))
+  }, [])
 
   const clearAll = useCallback(() => {
     dispatch(clearWorkoutResults())
@@ -65,7 +79,7 @@ export default memo(function SettingsScreen() {
       <SettingsHeader label={'Speaking'}>
         <FlexCenter>
           <TouchableOpacity onPress={() => onSay('Test speech')}>
-            <TextHeader color={colors.secondPrimary}>Press for test speech</TextHeader>
+            <TextHeader color={colors.primary}>Press for test speech</TextHeader>
           </TouchableOpacity>
         </FlexCenter>
       </SettingsHeader>
@@ -91,12 +105,38 @@ export default memo(function SettingsScreen() {
         sliderMaxValue={0.9}
         onSliderChange={onTtsRate}
       />
+      <SettingsHeader label={'Sound'}>
+        <FlexCenter>
+          <TouchableOpacity
+            onPress={() => {
+              playSound.setVolume(sound.volume)
+              playSound.play()
+            }}
+          >
+            <TextHeader color={colors.primary}>Press for test sound</TextHeader>
+          </TouchableOpacity>
+        </FlexCenter>
+      </SettingsHeader>
+      <SettingsItem
+        label={'Sound Volume'}
+        valueSlider={sound.volume}
+        sliderMinValue={0}
+        sliderMaxValue={1}
+        sliderStep={0.1}
+        onSliderChange={onSoundVolume}
+      />
+      <TouchableOpacity onPress={() => setIsSoundModal(true)}>
+        <TextHeader color={colors.black} style={{ marginHorizontal: 16, marginVertical: 6 }}>
+          Sound type: <TextHeader color={colors.secondPrimary}>{getSoundText(sound.type)}</TextHeader>
+        </TextHeader>
+      </TouchableOpacity>
       <ConfirmButton
         header={'Clear local storage'}
         style={{ marginTop: 250, marginBottom: 20 }}
         color={colors.secondPrimary}
         onPress={clearAll}
       />
+      <AppSoundPicker isOpen={isSoundModal} setIsOpen={setIsSoundModal} />
     </Page>
   )
 })

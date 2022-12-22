@@ -1,11 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { getCurrentTime, nanoid } from '../../Utils'
-import { PUBLICATION_QUERY_LIMIT } from '../../Utils/constants'
+import { FirebaseDBCollection, PUBLICATION_QUERY_LIMIT } from '../../Utils/constants'
 import { FB_Collection_Publications, FB_FieldValue } from '../../Utils/firebase'
 import { ApproachType, ExerciseType, PlanType, PublicType, WorkoutType } from '../../Utils/types'
 import { RootState } from '../index'
 import { workoutAC } from '../WorkoutReducer/WorkoutAC'
 import { plansAC } from '../PlansReducer/PlansAC'
+import firebase from 'firebase'
 
 type AddType = (PlanType | WorkoutType) & {
   workouts?: WorkoutType[]

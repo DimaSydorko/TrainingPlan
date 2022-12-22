@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native'
 import Slider from '@react-native-community/slider'
 import { useSettings } from '../../Hooks/redux'
 import { Divider, FlexSpaceBetween, TextOrdinary, TextSecondary } from '../../Theme/Parents'
-import { screen } from '../../Utils/constants'
+import { appScreen } from '../../Utils/constants'
 import { MySwitch } from '../../Common'
 
 interface IProps {
@@ -40,7 +40,7 @@ export default memo(function SettingsItem({
   return (
     <View style={styles.container}>
       <FlexSpaceBetween style={styles.content}>
-        <TextOrdinary style={{ width: screen.vw - 100 }}>{label}</TextOrdinary>
+        <TextOrdinary style={{ width: appScreen.vw - 100 }}>{label}</TextOrdinary>
         {!!onToggleSwitch && <MySwitch value={valueSwitch} onValueChange={onToggleSwitch} />}
         {!!onSliderChange && (
           <TextSecondary>
@@ -70,7 +70,7 @@ export default memo(function SettingsItem({
 
 const styles = StyleSheet.create({
   container: {
-    width: screen.vw,
+    width: appScreen.vw,
   },
   content: {
     paddingVertical: 10,
