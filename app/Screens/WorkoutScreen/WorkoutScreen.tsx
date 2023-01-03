@@ -105,9 +105,17 @@ export default function WorkoutScreen() {
   }, [selectedWorkout?.labels, selectedWorkout?.name, selectedWorkout?.exercises])
 
   const onSaveExercise = useCallback(
-    (newExercise: ExerciseType, isNew = false) => {
-      if (isNewExercise || isNew) setWorkoutExercises(prev => [...(prev || []), newExercise])
-      else setWorkoutExercises(prev => prev?.map(ex => (ex.uid === newExercise.uid ? newExercise : ex)) || [])
+    (newExercise: ExerciseType, isNew = false, idx: undefined | number = undefined) => {
+      if (isNewExercise || isNew) {
+        setWorkoutExercises(prev => {
+          if (idx === undefined) return [...(prev || []), newExercise]
+          else {
+            const _prev = [...(prev || [])]
+            _prev.splice(idx, 0, newExercise)
+            return _prev
+          }
+        })
+      } else setWorkoutExercises(prev => prev?.map(ex => (ex.uid === newExercise.uid ? newExercise : ex)) || [])
     },
     [isNewExercise]
   )
@@ -122,13 +130,14 @@ export default function WorkoutScreen() {
   }, [onSaveRefuse])
 
   const renderItem = useCallback(
-    ({ item, drag, isActive }: RenderItemParams<ExerciseType>) => {
+    ({ item, drag, isActive, index }: RenderItemParams<ExerciseType>) => {
       const color = COLORS_EXERCISE[item?.colorIdx || 0][+isDarkTheme]
       return (
         <ScaleDecorator>
           <Card borderLeftColor={item.isVisible ? `${color}` : `${color}80`}>
             <TouchableOpacity onLongPress={drag} onPress={() => setChangeExercise(item)} disabled={isActive}>
               <Exercise
+                idx={index}
                 exercise={item}
                 isEdit={isEditMode}
                 color={color}
@@ -155,6 +164,7 @@ export default function WorkoutScreen() {
                 onChangeText={workoutName => setWorkoutNameInput(workoutName)}
                 value={workoutNameInput}
                 type={'underline'}
+                style={{ height: appScreen.header - 2 }}
               />
             </AppHeader>
           )}
@@ -172,7 +182,7 @@ export default function WorkoutScreen() {
                     data={workoutExercises}
                     dragItemOverflow
                     autoscrollSpeed={40}
-                    style={{ paddingBottom: 10 }}
+                    style={{ paddingVertical: 10 }}
                     keyExtractor={item => item.uid}
                     onDragEnd={({ data }) => setWorkoutExercises(data)}
                   />
@@ -202,14 +212,9 @@ export default function WorkoutScreen() {
           />
           <AppFooter>
             {isEditMode ? (
-              <ConfirmButton onPress={onSaveWorkout} header={'Save workout'} style={{ marginTop: 0, width: '90%' }} />
+              <ConfirmButton isFooter onPress={onSaveWorkout} header={'Save workout'} />
             ) : (
-              <ConfirmButton
-                disabled={isEmpty}
-                header={'Start Workout'}
-                onPress={onStartPlaying}
-                style={{ marginTop: 0, width: '90%' }}
-              />
+              <ConfirmButton isFooter disabled={isEmpty} header={'Start Workout'} onPress={onStartPlaying} />
             )}
             {isChanged && (
               <GoBackSubmitModal

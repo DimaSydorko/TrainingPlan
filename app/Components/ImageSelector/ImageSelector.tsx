@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useState } from 'react'
-import { Image, ScrollView, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useSettings, useWorkout } from '../../Hooks/redux'
 import { appScreen } from '../../Utils/constants'
@@ -56,25 +56,28 @@ export default function ImageSelector({ onSubmit, value = '' }: IImageSelector) 
             currentValue={filter}
             onChange={value => setFilter(value as ExerciseImageFilterType)}
           />
-          <ScrollView style={{ height: appScreen.vh - 400 }}>
-            <View style={styles.listContainer}>
-              <TouchableOpacity style={[styles.imageCard, styles.emptySelect]} onPress={() => setSelected('')}>
-                <Icon name={icon.image} color={colors.textSecondary} size={66} />
-              </TouchableOpacity>
-              {exerciseImages
-                ?.filter(img => img.filter === filter)
-                ?.map(image => (
-                  <TouchableOpacity
-                    key={image.storageKey}
-                    onPress={() => setSelected(image.downloadUrl)}
-                    style={styles.imageCard}
-                  >
-                    <AppImage src={image.downloadUrl} size={60} />
-                    <TextSecondary numberOfLines={1}>{image.fileName}</TextSecondary>
+          <FlatList
+            data={exerciseImages?.filter(img => img.filter === filter)}
+            numColumns={4}
+            style={{ height: appScreen.vh - 400 }}
+            renderItem={({ item, index }) => (
+              <>
+                {index === 0 && (
+                  <TouchableOpacity style={[styles.imageCard, styles.emptySelect]} onPress={() => setSelected('')}>
+                    <Icon name={icon.image} color={colors.textSecondary} size={66} />
                   </TouchableOpacity>
-                ))}
-            </View>
-          </ScrollView>
+                )}
+                <TouchableOpacity
+                  key={item.storageKey}
+                  onPress={() => setSelected(item.downloadUrl)}
+                  style={styles.imageCard}
+                >
+                  <AppImage src={item.downloadUrl} size={60} />
+                  <TextSecondary numberOfLines={1}>{item.fileName}</TextSecondary>
+                </TouchableOpacity>
+              </>
+            )}
+          />
         </FlexCenterColumn>
       </AppModal>
     </>

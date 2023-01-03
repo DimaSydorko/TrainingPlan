@@ -3,12 +3,14 @@ import { Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native'
 import { useSettings } from '../../Hooks/redux'
 import { colorsFixed } from '../../Theme/colors'
 import styles from './styles'
+import { appScreen } from '../../Utils/constants'
 
 interface ConfirmButtonType {
   header: string
   onPress: () => void
   headerStyle?: TextStyle
   disabled?: boolean
+  isFooter?: boolean
   color?: string
   style?: ViewStyle
 }
@@ -18,6 +20,7 @@ export default function ConfirmButton({
   header,
   headerStyle,
   color,
+  isFooter,
   style,
   disabled = false,
 }: ConfirmButtonType) {
@@ -27,6 +30,7 @@ export default function ConfirmButton({
     <TouchableOpacity
       style={[
         styles.button,
+        isFooter ? { marginTop: 0, width: '90%', height: appScreen.footer - 16, paddingVertical: 0 } : {},
         {
           backgroundColor: disabled ? colors.disabled : newColor,
           opacity: disabled ? 0.8 : 1,

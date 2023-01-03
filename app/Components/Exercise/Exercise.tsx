@@ -14,18 +14,20 @@ import styles from './styles'
 const IMG_SIZE = 45
 
 interface IExercise {
+  idx?: number
   exercise: ExerciseType | SelectedExerciseType
   isEdit?: boolean
   isPublic?: boolean
   isInModal?: boolean
   playingExerciseLap?: number
   onDelete?: (exercise: ExerciseType) => void
-  onCopy?: (exercise: ExerciseType, isNew: true) => void
+  onCopy?: (exercise: ExerciseType, isNew: boolean, idx: number) => void
   onVisibilityToggle?: (exercise: ExerciseType) => void
   color: string
 }
 
 export default memo(function Exercise({
+  idx,
   exercise,
   isEdit = false,
   isPublic = false,
@@ -55,7 +57,8 @@ export default memo(function Exercise({
           weight: 0,
         })),
       },
-      true
+      true,
+      idx
     )
   }, [exercise])
 
