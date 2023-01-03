@@ -27,8 +27,9 @@ import { colorsDark, colorsLight } from '../../Theme/colors'
 import SettingsItem from './SettingsItem'
 import SettingsHeader from './SettingsHeader'
 import { getSoundText } from '../../Utils'
+import { SoundType } from '../../Utils/constants'
 
-Sound.setCategory('Alarm')
+Sound.setCategory('Playback', true)
 
 export default memo(function SettingsScreen() {
   const dispatch = useAppDispatch()
@@ -37,7 +38,7 @@ export default memo(function SettingsScreen() {
   const [isSoundModal, setIsSoundModal] = useState<boolean>(false)
 
   const isDarkTheme = colors.primary === colorsDark.primary
-  const playSound = new Sound(sound.type, Sound.MAIN_BUNDLE)
+  const playSound = new Sound(sound?.type || SoundType.Bell, Sound.MAIN_BUNDLE)
 
   const onThemeToggle = useCallback(
     () => dispatch(onThemeChange(isDarkTheme ? colorsLight : colorsDark)),
@@ -109,7 +110,7 @@ export default memo(function SettingsScreen() {
         <FlexCenter>
           <TouchableOpacity
             onPress={() => {
-              playSound.setVolume(sound.volume)
+              playSound.setVolume(sound?.volume)
               playSound.play()
             }}
           >
@@ -119,7 +120,7 @@ export default memo(function SettingsScreen() {
       </SettingsHeader>
       <SettingsItem
         label={'Sound Volume'}
-        valueSlider={sound.volume}
+        valueSlider={sound?.volume}
         sliderMinValue={0}
         sliderMaxValue={1}
         sliderStep={0.1}
@@ -127,7 +128,8 @@ export default memo(function SettingsScreen() {
       />
       <TouchableOpacity onPress={() => setIsSoundModal(true)}>
         <TextHeader color={colors.black} style={{ marginHorizontal: 16, marginVertical: 6 }}>
-          Sound type: <TextHeader color={colors.secondPrimary}>{getSoundText(sound.type)}</TextHeader>
+          Sound type:{' '}
+          <TextHeader color={colors.secondPrimary}>{getSoundText(sound?.type || SoundType.Bell)}</TextHeader>
         </TextHeader>
       </TouchableOpacity>
       <ConfirmButton

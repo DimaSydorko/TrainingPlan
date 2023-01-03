@@ -7,6 +7,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "bandle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/",
+    "bandle:release": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/build/intermediates/res/merged/release/ && rm -rf android/app/src/main/res/drawable-* && rm -rf android/app/src/main/res/raw/* && cd android && ./gradlew assembleRelease && cd ..",
     "clean:android": "cd ./android && ./gradlew clean",
     "clean:yarn": "rmdir /s node_modules && yarn cache clean --force && yarn install"
   },

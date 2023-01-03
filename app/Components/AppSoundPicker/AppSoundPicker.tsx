@@ -21,7 +21,7 @@ type PropsT = {
 export default memo(({ isOpen, setIsOpen }: PropsT) => {
   const dispatch = useAppDispatch()
   const { sound, colors } = useSettings()
-  const [soundType, setSoundType] = useState<SoundType>(sound.type)
+  const [soundType, setSoundType] = useState<SoundType>(sound?.type || SoundType.Bell)
   const [isPressing, setIsPressing] = useState<boolean>(false)
   const playSound = new Sound(soundType, Sound.MAIN_BUNDLE)
 
@@ -32,7 +32,7 @@ export default memo(({ isOpen, setIsOpen }: PropsT) => {
   }, [soundType, isPressing])
 
   const onConfirm = useCallback(() => {
-    if (soundType !== sound.type) dispatch(onSoundTypeChange(soundType))
+    if (soundType !== sound?.type) dispatch(onSoundTypeChange(soundType))
     setIsOpen(false)
   }, [soundType])
 

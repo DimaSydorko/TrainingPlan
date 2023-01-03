@@ -14,7 +14,7 @@ const initialPlaying = {
   lap: 1,
   updated: Date.now(),
 }
-Sound.setCategory('Alarm')
+Sound.setCategory('Playback', true)
 type PlayingType = typeof initialPlaying
 
 export default function usePlaying() {
@@ -40,10 +40,10 @@ export default function usePlaying() {
     () => playingWorkout.exercises.length === playing.idx + 1 && exercise.laps === playing.lap,
     [exercise.laps, playing, playingWorkout.exercises.length]
   )
-  const playSound = useMemo(() => new Sound(sound.type, Sound.MAIN_BUNDLE), [])
+  const playSound = useMemo(() => new Sound(sound?.type, Sound.MAIN_BUNDLE), [])
 
   useEffect(() => {
-    playSound.setVolume(sound.volume)
+    playSound.setVolume(sound?.volume)
   }, [playSound])
 
   useEffect(() => {
@@ -53,10 +53,6 @@ export default function usePlaying() {
     setCurrentRepeats(repeats)
   }, [approach])
 
-  const onChangeExercise = useCallback((newExercise: SelectedExerciseType) => {
-    // setExercise(p => (deepCompare(newExercise, p) ? p : newExercise))
-    setExercise(newExercise)
-  }, [])
   const onBack = useCallback(() => onTogglePlaying(), [])
   const onChangePlayingWorkout = useCallback(
     _exercise => {
@@ -151,7 +147,7 @@ export default function usePlaying() {
           setIsWaitForSubmit(true)
         } else {
           setPlaying(p => {
-            onChangeExercise(playingWorkout.exercises[p.idx + 1])
+            setExercise(playingWorkout.exercises[p.idx + 1])
             return { idx: p.idx + 1, lap: 1, updated: Date.now() }
           })
         }
@@ -169,16 +165,16 @@ export default function usePlaying() {
 
     if (!isFirstLap)
       setPlaying(p => {
-        onChangeExercise(playingWorkout.exercises[p.idx])
+        setExercise(playingWorkout.exercises[p.idx])
         return { ...p, lap: p.lap - 1, updated: Date.now() }
       })
     else {
       if (playing.idx <= 0 && playing.lap <= 2) {
         setPlaying({ idx: 0, lap: 1, updated: Date.now() })
-        onChangeExercise(playingWorkout.exercises[0])
+        setExercise(playingWorkout.exercises[0])
       } else {
         setPlaying(p => {
-          onChangeExercise(playingWorkout.exercises[p.idx - 1])
+          setExercise(playingWorkout.exercises[p.idx - 1])
           return {
             idx: p.idx - 1,
             lap: playingWorkout.exercises[playing.idx - 1].laps,
