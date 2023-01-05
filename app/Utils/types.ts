@@ -1,6 +1,7 @@
 import { CompositeNavigationProp } from '@react-navigation/native'
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
 import { StackNavigationProp } from '@react-navigation/stack'
+import { ScreenName } from './constants'
 
 export interface UserType {
   uid: string
@@ -107,6 +108,7 @@ export type TabParamList = {
   Plan: undefined
   Profile: undefined
   Settings: undefined
+  Playing: undefined
   Publications: undefined
   PublicationWorkout: { workout: (PublicType | WorkoutType) & { ownerName?: string } } | undefined
   PublicationPlan: { publication: PublicType } | undefined

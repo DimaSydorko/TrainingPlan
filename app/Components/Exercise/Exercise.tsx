@@ -60,7 +60,7 @@ export default memo(function Exercise({
       true,
       idx
     )
-  }, [exercise])
+  }, [exercise, idx])
 
   return (
     <>

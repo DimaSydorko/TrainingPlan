@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ColorsType } from '../../Utils/types'
-import { colorsLight } from '../../Theme/colors'
+import { colorsDark, colorsLight } from '../../Theme/colors'
 import { SoundType } from '../../Utils/constants'
 
 export interface SettingsSliceType {
   colors: ColorsType
   isVibration: boolean
+  isSaveBatteryMode: boolean
   tts: {
     isDucking: boolean
     volume: number
@@ -28,6 +29,7 @@ export interface SettingsSliceType {
 const initialState: SettingsSliceType = {
   colors: colorsLight,
   isVibration: true,
+  isSaveBatteryMode: false,
   internet: {
     isOnline: false,
     lastBeOline: 0,
@@ -54,6 +56,12 @@ export const settingsSlice = createSlice({
     onThemeChange: (state, { payload }: PayloadAction<ColorsType>) => {
       state.colors = payload
     },
+    onBatteryModeChange: state => {
+      state.isSaveBatteryMode = !state.isSaveBatteryMode
+      if (!!state.isSaveBatteryMode) {
+        state.colors = colorsDark
+      }
+    },
     clearSettings: state => {
       state.internet = initialState.internet
       state.workout = initialState.workout
@@ -61,6 +69,7 @@ export const settingsSlice = createSlice({
       state.sound = initialState.sound
       state.tts = initialState.tts
       state.isVibration = true
+      state.isSaveBatteryMode = false
     },
     onVibrationToggle: state => {
       state.isVibration = !state.isVibration
@@ -106,5 +115,6 @@ export const {
   onWorkoutWeightStepChange,
   onSoundTypeChange,
   onSoundVolumeChange,
+  onBatteryModeChange,
 } = settingsSlice.actions
 export default settingsSlice.reducer

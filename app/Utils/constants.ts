@@ -29,6 +29,7 @@ export enum ScreenName {
   PublicationPlan = 'PublicationPlan',
   Profile = 'Profile',
   Settings = 'Settings',
+  Playing = 'Playing',
 }
 
 export const appScreen = {

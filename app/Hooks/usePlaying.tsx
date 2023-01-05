@@ -1,12 +1,14 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Vibration } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
+
 import { useAppDispatch, useSettings, useWorkout } from './redux'
-import { AppHelperContext } from './AppHelperProvider'
 import { workoutAC } from '../store/WorkoutReducer/WorkoutAC'
-import { SelectedExerciseType, SelectedWorkoutType, WorkoutType } from '../Utils/types'
+import { AppNavigationType, SelectedExerciseType, SelectedWorkoutType, WorkoutType } from '../Utils/types'
 import { VIBRATION } from '../Utils/constants'
 import { plansAC } from '../store/PlansReducer/PlansAC'
 import useTTS from './useTTS'
+
 const Sound = require('react-native-sound')
 
 const initialPlaying = {
@@ -21,7 +23,7 @@ export default function usePlaying() {
   const dispatch = useAppDispatch()
   const onSay = useTTS()
   const { selectedWorkout } = useWorkout()
-  const { onTogglePlaying } = useContext(AppHelperContext)
+  const navigation = useNavigation<AppNavigationType>()
   const { isVibration, sound } = useSettings()
   const [playing, setPlaying] = useState<PlayingType>(initialPlaying)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -53,7 +55,7 @@ export default function usePlaying() {
     setCurrentRepeats(repeats)
   }, [approach])
 
-  const onBack = useCallback(() => onTogglePlaying(), [])
+  const onBack = useCallback(() => navigation.goBack(), [])
   const onChangePlayingWorkout = useCallback(
     _exercise => {
       setPlayingWorkout(p => {
@@ -83,7 +85,6 @@ export default function usePlaying() {
       }
       if (!!newWorkout?.ownerUid) dispatch(workoutAC.updateWorkout(newWorkout))
       else dispatch(plansAC.updateSelectedPlanWorkout(newWorkout))
-      onBack()
     },
     [selectedWorkout, playingWorkout]
   )
@@ -115,13 +116,17 @@ export default function usePlaying() {
     onApproachUpdate(true)
   }, [onApproachUpdate])
 
-  const onChangeTimer = useCallback(() => {
-    onApproachUpdate()
-    if (exercise.repeats || (playing.lap >= exercise.laps && exerciseNext?.repeats)) {
-      setIsPlaying(p => (p ? false : p))
-    }
-    setIsWaitForSubmit(p => (p ? false : p))
-  }, [onApproachUpdate, exercise, exerciseNext?.repeats, playing.lap])
+  const onChangeTimer = useCallback(
+    (isPrev = false) => {
+      onApproachUpdate()
+      const isLastLap = playing.lap >= exercise.laps
+      if ((!isLastLap && exercise.repeats) || (isLastLap && exerciseNext?.repeats) || isPrev) {
+        setIsPlaying(p => (p ? false : p))
+      }
+      setIsWaitForSubmit(p => (p ? false : p))
+    },
+    [onApproachUpdate, exercise, exerciseNext?.repeats, playing.lap, exercisePrev?.repeats]
+  )
 
   const onNext = useCallback(
     (isSkip = true) => {
@@ -157,10 +162,9 @@ export default function usePlaying() {
   )
 
   const onPrevious = useCallback(() => {
-    onChangeTimer()
-    const isFirstLap = playing.lap < 1
+    onChangeTimer(true)
+    const isFirstLap = playing.lap <= 1
     const sayName = isFirstLap ? exercisePrev?.name : exercise.name
-
     if (!!sayName) onSay(sayName)
 
     if (!isFirstLap)

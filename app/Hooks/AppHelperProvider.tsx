@@ -4,7 +4,6 @@ import Tts from 'react-native-tts'
 import { useSettings } from './redux'
 
 function useAppHelper() {
-  const [isPlaying, setIsPlaying] = useState<boolean>(false)
   const [isTabMenu, setIsTabMenu] = useState<boolean>(true)
   const [savedUids, setSavedUids] = useState<string[]>([])
 
@@ -24,10 +23,6 @@ function useAppHelper() {
     Tts.setDucking(isDucking)
   }, [isDucking])
 
-  const onTogglePlaying = useCallback(() => {
-    setIsPlaying(p => !p)
-  }, [])
-
   const onToggleTabMenu = useCallback((isTabMenu?: boolean) => {
     if (isTabMenu === undefined) setIsTabMenu(p => !p)
     else setIsTabMenu(isTabMenu)
@@ -38,20 +33,16 @@ function useAppHelper() {
   }, [])
 
   return {
-    isPlaying,
     isTabMenu,
     savedUids,
-    onTogglePlaying,
     onToggleTabMenu,
     addSavedUids,
   }
 }
 
 export interface IContext {
-  isPlaying: boolean
   isTabMenu: boolean
   savedUids: string[]
-  onTogglePlaying: () => void
   onToggleTabMenu: (arg?: boolean) => void
   addSavedUids: (uid: string) => void
 }

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { memo } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { usePlans, useUser, useWorkout } from '../Hooks/redux'
-import { MyPlansScreen, WorkoutScreen, WorkoutsScreen } from '../Screens'
+import { MyPlansScreen, PlayingScreen, WorkoutScreen, WorkoutsScreen } from '../Screens'
 import { useScreenOptions } from '../Theme/Parents'
 import { Loading } from '../Common'
 import { ScreenName } from '../Utils/constants'
@@ -31,6 +31,11 @@ export default memo(function PlanRouter() {
           name={ScreenName.WorkoutInPlan}
           options={{ ...options, title: workout.selectedWorkout?.name }}
           component={WorkoutScreen}
+        />
+        <Stack.Screen
+          name={ScreenName.Playing}
+          options={{ ...options, headerShown: false }}
+          component={PlayingScreen}
         />
       </Stack.Navigator>
     </>

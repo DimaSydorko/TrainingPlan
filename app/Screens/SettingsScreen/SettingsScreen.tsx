@@ -6,6 +6,7 @@ const Sound = require('react-native-sound')
 import { useAppDispatch, useSettings } from '../../Hooks/redux'
 import {
   clearSettings,
+  onBatteryModeChange,
   onSoundVolumeChange,
   onThemeChange,
   onTtsDuckingToggle,
@@ -34,7 +35,7 @@ Sound.setCategory('Playback', true)
 export default memo(function SettingsScreen() {
   const dispatch = useAppDispatch()
   const onSay = useTTS()
-  const { colors, isVibration, tts, workout, sound } = useSettings()
+  const { colors, isVibration, tts, workout, sound, isSaveBatteryMode } = useSettings()
   const [isSoundModal, setIsSoundModal] = useState<boolean>(false)
 
   const isDarkTheme = colors.primary === colorsDark.primary
@@ -46,6 +47,7 @@ export default memo(function SettingsScreen() {
   )
   const onVibration = useCallback(() => dispatch(onVibrationToggle()), [])
   const onDuckingToggle = useCallback(() => dispatch(onTtsDuckingToggle()), [])
+  const onBatteryModeToggle = useCallback(() => dispatch(onBatteryModeChange()), [])
   const onTtsVolume = useCallback(value => dispatch(onTtsVolumeChange(value)), [])
   const onTtsPitch = useCallback(value => dispatch(onTtsPitchChange(value)), [])
   const onTtsRate = useCallback(value => dispatch(onTtsRateChange(value)), [])
@@ -65,6 +67,8 @@ export default memo(function SettingsScreen() {
     <Page>
       <SettingsHeader label={'Colors'} />
       <SettingsItem label={'Dark Theme'} valueSwitch={isDarkTheme} onToggleSwitch={onThemeToggle} />
+      <SettingsHeader label={'Performance'} />
+      <SettingsItem label={'Safe battery mode'} valueSwitch={isSaveBatteryMode} onToggleSwitch={onBatteryModeToggle} />
       <SettingsHeader label={'Workout'} />
       <SettingsItem
         label={'Weight step'}

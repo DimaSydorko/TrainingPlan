@@ -54,7 +54,7 @@ const tabs = [
 
 export default function AppRouter() {
   const Tab = createBottomTabNavigator()
-  const { isPlaying, isTabMenu } = useContext(AppHelperContext)
+  const { isTabMenu } = useContext(AppHelperContext)
   const dispatch = useAppDispatch()
   const { colors, internet } = useSettings()
 
@@ -69,11 +69,6 @@ export default function AppRouter() {
   return (
     <>
       <NotificationHandler />
-      {isPlaying && (
-        <PlayTimerProvider>
-          <PlayingScreen />
-        </PlayTimerProvider>
-      )}
       <Tab.Navigator
         sceneContainerStyle={{
           backgroundColor: colors.background,

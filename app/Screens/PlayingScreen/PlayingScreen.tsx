@@ -1,15 +1,16 @@
 import * as React from 'react'
-import { memo, useCallback, useContext, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { LayoutAnimation, SafeAreaView, TouchableOpacity, View } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
+import { useNavigation } from '@react-navigation/native'
 import KeepAwake from 'react-native-keep-awake'
 
 import usePlaying from '../../Hooks/usePlaying'
 import { appScreen } from '../../Utils/constants'
 import useTTS from '../../Hooks/useTTS'
 import { useSettings } from '../../Hooks/redux'
-import { AppHelperContext } from '../../Hooks/AppHelperProvider'
 import { getWorkoutDuration } from '../../Utils'
+import { AppNavigationType } from '../../Utils/types'
 import { AppImage, ConfirmButton, GoBackSubmitModal, IconButton } from '../../Common'
 import { secondsToMinSec } from '../../Components/WorkoutDuration/WorkoutDuration'
 import { FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '../../Theme/Parents'
@@ -25,9 +26,9 @@ import PlayHeader from './components/PlayHeader'
 import styles from './styles'
 
 export default memo(function PlayingScreen() {
-  const { colors, workout } = useSettings()
+  const { colors, workout, isSaveBatteryMode } = useSettings()
   const onSay = useTTS()
-  const { onTogglePlaying } = useContext(AppHelperContext)
+  const navigation = useNavigation<AppNavigationType>()
   const {
     isPlaying,
     isWaitForSubmit,
@@ -50,6 +51,7 @@ export default memo(function PlayingScreen() {
     playingWorkout,
   } = usePlaying()
   const [isWorkoutReview, setIsWorkoutReview] = useState<boolean>(false)
+  const [isSubmitGoBack, setIsSubmitGoBack] = useState<boolean>(false)
   const [isInvisibleTimerCircle, setIsInvisibleTimerCircle] = useState<boolean>(false)
 
   const isDarkTheme = colors.primary === colorsDark.primary
@@ -76,13 +78,17 @@ export default memo(function PlayingScreen() {
   }, [isPlaying])
 
   useEffect(() => {
-    KeepAwake.activate()
-    return () => KeepAwake.deactivate()
+    if (!isSaveBatteryMode) KeepAwake.activate()
+    return () => !isSaveBatteryMode && KeepAwake.deactivate()
   }, [])
 
   useEffect(() => {
     onSay(exercise.name)
   }, [])
+
+  useEffect(() => {
+    if (isSubmitGoBack) navigation.goBack()
+  }, [isSubmitGoBack])
 
   useEffect(() => {
     if (isTheLastOneComplete) {
@@ -92,6 +98,15 @@ export default memo(function PlayingScreen() {
       setTimeout(() => onSay('Workout complete'), playSound.getDuration() * 1000)
     }
   }, [isTheLastOneComplete])
+
+  const onGoBack = useCallback(() => {
+    setIsSubmitGoBack(true)
+  }, [])
+
+  const _onSaveResult = useCallback(() => {
+    setTimeout(() => onSaveResult(), 100)
+    setIsSubmitGoBack(true)
+  }, [onSaveResult])
 
   const onTimerUpdate = useCallback((remainingTime: number) => {
     const onTimeSay = (time: number[]) => {
@@ -237,17 +252,19 @@ export default memo(function PlayingScreen() {
           playingExerciseIdx={playing.idx}
           playingExerciseLap={playing.lap}
           isTheLastOneComplete={isTheLastOneComplete}
-          onSaveResult={onSaveResult}
+          onSaveResult={_onSaveResult}
         />
       )}
-      <GoBackSubmitModal text={'Current results will be lost!'} onConfirm={onTogglePlaying} />
-      <BackgroundAction
-        color={color}
-        duration={duration}
-        taskName={playingWorkout.name}
-        taskTitle={playingWorkout.name}
-        taskDesc={`${exercise.name}:  ${playing.lap}/${exercise.laps}`}
-      />
+      {!isSubmitGoBack && <GoBackSubmitModal text={'Current results will be lost!'} onConfirm={onGoBack} />}
+      {!isSaveBatteryMode && (
+        <BackgroundAction
+          color={color}
+          duration={duration}
+          taskName={playingWorkout.name}
+          taskTitle={playingWorkout.name}
+          taskDesc={`${exercise.name}:  ${playing.lap}/${exercise.laps}`}
+        />
+      )}
     </SafeAreaView>
   )
 })

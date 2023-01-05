@@ -16,7 +16,7 @@ import { AddMoreButton, AppModal, ConfirmButton, GoBackSubmitModal, MyTextInput,
 import Exercise from '../../Components/Exercise/Exercise'
 import EditExerciseModal from '../../Components/Exercise/ExerciseEditModal'
 import { deepCompare } from '../../Utils'
-import { appScreen } from '../../Utils/constants'
+import { appScreen, ScreenName } from '../../Utils/constants'
 import { AppNavigationType, ExerciseType, WorkoutType } from '../../Utils/types'
 import {
   AppFooter,
@@ -37,7 +37,7 @@ export default function WorkoutScreen() {
   const { selectedWorkout } = useWorkout()
   const { colors } = useSettings()
   const { user } = useUser()
-  const { onTogglePlaying, onToggleTabMenu } = useContext(AppHelperContext)
+  const { onToggleTabMenu } = useContext(AppHelperContext)
   const [isEditMode, setIsEditMode] = useState(false)
   const [isNewExercise, setIsNewExercise] = useState(false)
   const [isSaveChangesModal, setIsSaveChangesModal] = useState(false)
@@ -120,9 +120,7 @@ export default function WorkoutScreen() {
     [isNewExercise]
   )
 
-  const onStartPlaying = useCallback(() => {
-    onTogglePlaying()
-  }, [])
+  const onStartPlaying = useCallback(() => navigation.push(ScreenName.Playing), [])
 
   const onGoBack = useCallback(() => {
     onSaveRefuse()
@@ -183,7 +181,7 @@ export default function WorkoutScreen() {
                     dragItemOverflow
                     autoscrollSpeed={40}
                     style={{ paddingVertical: 10 }}
-                    keyExtractor={item => item.uid}
+                    keyExtractor={(item, idx) => item.uid + idx}
                     onDragEnd={({ data }) => setWorkoutExercises(data)}
                   />
                 ) : (
