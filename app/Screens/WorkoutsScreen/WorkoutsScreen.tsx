@@ -240,7 +240,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
       </Page>
       {!isTabMenu && (
         <AppFooter>
-          <ConfirmButton style={{ width: '80%', marginTop: 0 }} header='Save Plan' onPress={onSavePlan} />
+          <ConfirmButton isFooter header='Save Plan' onPress={onSavePlan} />
         </AppFooter>
       )}
       {workouts?.length <= QUERY_LIMIT && <AddMoreButton onPress={() => setIsNewWorkoutModal(true)} />}

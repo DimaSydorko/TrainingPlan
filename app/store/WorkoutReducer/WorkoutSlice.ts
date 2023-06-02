@@ -31,16 +31,6 @@ const onLoading = (state: WorkoutSliceType) => {
   state.isLoading = true
 }
 
-const updateWorkout = (state, { payload }: PayloadAction<WorkoutType>) => {
-  state.workouts = state.workouts.map(workout => (workout.uid === payload.uid ? payload : workout))
-  state.workoutsInPlan = state.workoutsInPlan.map(workout => (workout.uid === payload.uid ? payload : workout))
-  if (state.selectedWorkout.uid === payload.uid) {
-    state.selectedWorkout = { ...state.selectedWorkout, ...payload }
-  }
-  state.isLoading = false
-  state.error = ''
-}
-
 export const workoutSlice = createSlice({
   name: 'plans',
   initialState,
@@ -86,7 +76,14 @@ export const workoutSlice = createSlice({
       state.isLoading = false
       state.error = ''
     },
-    [workoutAC.updateWorkout.fulfilled.type]: updateWorkout,
+    [workoutAC.updateWorkout.fulfilled.type]: (state, { payload }: PayloadAction<WorkoutType>) => {
+      state.workouts = state.workouts.map(workout => (workout.uid === payload.uid ? payload : workout))
+      if (state.selectedWorkout.uid === payload.uid) {
+        state.selectedWorkout = { ...state.selectedWorkout, ...payload }
+      }
+      state.isLoading = false
+      state.error = ''
+    },
 
     [workoutAC.getWorkouts.pending.type]: onLoading,
     [workoutAC.addWorkout.pending.type]: onLoading,

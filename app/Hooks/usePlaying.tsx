@@ -147,7 +147,7 @@ export default function usePlaying() {
         if (playingWorkout.exercises.length <= playing.idx + 1 && playing.lap <= exercise.laps) {
           if (isVibration) {
             Vibration.vibrate(VIBRATION.END_WORKOUT, true)
-            setTimeout(() => Vibration.cancel(), 3000)
+            setTimeout(() => Vibration.cancel(), 1500)
           }
           setIsWaitForSubmit(true)
         } else {

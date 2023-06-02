@@ -57,7 +57,7 @@ export default function WorkoutScreen() {
     }),
     [workoutNameInput, workoutLabels, workoutExercises, selectedWorkout]
   )
-  const isChanged = useMemo(() => !deepCompare(selectedWorkout, changedWorkout), [selectedWorkout, changedWorkout])
+  const isChanged = !deepCompare(selectedWorkout, changedWorkout)
 
   useEffect(() => {
     onToggleTabMenu(false)
@@ -67,8 +67,8 @@ export default function WorkoutScreen() {
   }, [])
 
   useEffect(() => {
-    setWorkoutExercises(selectedWorkout?.exercises || null)
-  }, [selectedWorkout?.exercises])
+    if (isChanged && !isEditMode) setWorkoutExercises(selectedWorkout?.exercises || null)
+  }, [isChanged, isEditMode])
 
   useEffect(() => {
     if (!selectedWorkout?.exercises?.filter(ex => ex.isVisible)?.length) setIsEditMode(true)
