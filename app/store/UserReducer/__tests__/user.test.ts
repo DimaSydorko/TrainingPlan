@@ -26,6 +26,7 @@ jest.mock('@react-native-community/netinfo', () => ({ fetch: jest.fn() }))
 jest.mock('../../../services/googleAuth', () => ({
   getGoogleIdToken: jest.fn(),
   signOutGoogle: jest.fn(() => Promise.resolve()),
+  isGoogleSignInCancelled: jest.fn(e => e?.code === 'cancelled'),
 }))
 
 import * as fbAuth from 'firebase/auth'
@@ -96,11 +97,21 @@ describe('userAC thunks', () => {
     expect(action.payload).toEqual(user)
   })
 
-  it('signInWithGoogle rejects with the seam error (e.g. cancel)', async () => {
-    google.getGoogleIdToken.mockRejectedValue(new Error('cancelled'))
+  it('signInWithGoogle rejects with the seam error message', async () => {
+    google.getGoogleIdToken.mockRejectedValue(new Error('Google Play Services are not available'))
     const action = await run(userAC.signInWithGoogle())
     expect(action.type).toBe('user/signInWithGoogle/rejected')
-    expect(action.payload).toBe('cancelled')
+    expect(action.payload).toBe('Google Play Services are not available')
+  })
+
+  it('signInWithGoogle treats a cancelled picker as no error', async () => {
+    google.getGoogleIdToken.mockRejectedValue(Object.assign(new Error('Google sign-in was cancelled'), { code: 'cancelled' }))
+    const action = await run(userAC.signInWithGoogle())
+    expect(action.type).toBe('user/signInWithGoogle/rejected')
+    expect(action.payload).toBe('')
+    const s = reducer(reducer(initial(), userAC.signInWithGoogle.pending('r')), action)
+    expect(s.error).toBe('')
+    expect(s.isLoading).toBe(false)
   })
 
   it('signOut signs out of Firebase even if Google sign-out fails', async () => {

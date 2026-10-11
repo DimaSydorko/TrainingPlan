@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { getGoogleIdToken, signOutGoogle } from '../../services/googleAuth'
+import { getGoogleIdToken, isGoogleSignInCancelled, signOutGoogle } from '../../services/googleAuth'
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -50,6 +50,8 @@ export const userAC = {
 
       return toUserType(response.user)
     } catch (e) {
+      // The user closed the account picker: not an error, so leave userReducer.error empty.
+      if (isGoogleSignInCancelled(e)) return thunkAPI.rejectWithValue('')
       return thunkAPI.rejectWithValue(errorMessage(e))
     }
   }),
