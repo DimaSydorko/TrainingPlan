@@ -1,0 +1,22 @@
+# Login with email and password from a clean install.
+appId: ${APP_ID}
+name: Login with email
+tags:
+  - auth
+  - smoke
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible:
+      id: login.email
+    timeout: 30000
+- assertVisible:
+    id: login.submit
+- runFlow: subflows/login.yaml
+- assertVisible:
+    id: tab.plans
+- assertVisible:
+    id: tab.publications
+- assertVisible:
+    id: tab.profile

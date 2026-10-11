@@ -1,0 +1,25 @@
+# In WorkoutScreen edit mode: adds an exercise named EXERCISE_NAME with a non-zero break
+# (the Save button is disabled while the break is 0 min 0 sec).
+appId: ${APP_ID}
+---
+- tapOn:
+    id: workout.fab
+- extendedWaitUntil:
+    visible:
+      id: exerciseEdit.name
+    timeout: 5000
+- tapOn:
+    id: exerciseEdit.name
+- eraseText: 40
+- inputText: ${EXERCISE_NAME}
+- hideKeyboard
+# Seconds wheel steps by 5 s; one swipe up moves it past 0.
+- swipe:
+    from:
+      id: exerciseEdit.breakSeconds
+    direction: UP
+- tapOn:
+    id: appModal.confirm
+    enabled: true
+- assertNotVisible:
+    id: exerciseEdit.name

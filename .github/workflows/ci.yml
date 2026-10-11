@@ -1,0 +1,52 @@
+# Mobile app checks (owned by A7). The admin panel (admin/) is not covered here.
+name: CI
+
+on:
+  pull_request:
+    branches: [migration/expo, main]
+  push:
+    branches: [migration/expo]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npx expo lint
+
+      - name: Unit tests
+        run: npx jest --ci
+
+      # TODO(A8): drop continue-on-error after the Phase 2 Prettier pass.
+      - name: Prettier
+        run: npm run format:check
+        continue-on-error: true
+
+      # TODO(A8): drop continue-on-error once the React Native Directory check passes
+      # (unmaintained JS libraries are expected to be flagged until A5 replaces them; see STATUS.md).
+      - name: expo-doctor
+        run: npx expo-doctor
+        continue-on-error: true
+
+      - name: Bundle (Android and iOS)
+        run: |
+          npx expo export --platform android --output-dir /tmp/export-android
+          npx expo export --platform ios --output-dir /tmp/export-ios
