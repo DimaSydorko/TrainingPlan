@@ -97,5 +97,5 @@ export enum SoundType {
 }
 
 // Added by A0: delay between a cue sound and the following speech. The old code used
-// playSound.getDuration(); the SoundPlayer seam has no duration. TODO(A3/A4): revisit.
+// playSound.getDuration(). Now a fallback for SoundPlayer.durationMs while the sound is not loaded.
 export const SOUND_CUE_DURATION_MS = 1000
