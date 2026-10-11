@@ -1,22 +1,22 @@
 import * as React from 'react'
 import { useState } from 'react'
-import { Text } from 'react-native'
+import { Text, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import { useAppDispatch, useSettings, useUser } from '../../Hooks/redux'
 import { userAC } from '../../store/UserReducer/UserAC'
 import { FUTURE_FLAG, ScreenName } from '../../Utils/constants'
 import { ConfirmButton, MyTextInput } from '../../Common'
-import { FlexCenterColumn, Page, TextOrdinary, TextSecondary } from '../../Theme/Parents'
+import { FlexCenterColumn, TextOrdinary, TextSecondary } from '../../Theme/Parents'
 import { theme } from '../../Theme/theme'
 import AppGoogleSignInButton from './AppGoogleSignInButton'
-import { AppNavigationType } from '../../Utils/types'
+import { AuthNavigation } from '../../Utils/types'
 
 export default function LoginScreen() {
   const dispatch = useAppDispatch()
   const { error, isLoading } = useUser()
   const [inputData, setInputData] = useState({ email: '', password: '' })
-  const navigation = useNavigation<AppNavigationType>()
+  const navigation = useNavigation<AuthNavigation>()
   const { colors, internet } = useSettings()
 
   const onFooterLinkPress = () => {
@@ -28,9 +28,11 @@ export default function LoginScreen() {
   }
 
   return (
-    <Page style={{ backgroundColor: colors.background }}>
+    // KeyboardAwareScrollView is the scroller here (it was nested in Page's ScrollView before, which
+    // left it with nothing to scroll). react-native-keyboard-controller works with edge-to-edge.
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
       <TextSecondary color={colors.error}>{error}</TextSecondary>
-      <KeyboardAwareScrollView keyboardShouldPersistTaps='always'>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps='always' bottomOffset={20}>
         <FlexCenterColumn>
           <MyTextInput
             value={inputData.email}
@@ -46,15 +48,15 @@ export default function LoginScreen() {
         </FlexCenterColumn>
         <ConfirmButton disabled={isLoading || !internet.isOnline} onPress={onLoginPress} header='Log in' />
         {!FUTURE_FLAG.IS_DEV && <AppGoogleSignInButton disabled={!internet.isOnline} />}
-        <Page style={theme.margin.top20}>
+        <FlexCenterColumn style={theme.margin.top20}>
           <TextOrdinary>
             Don't have an account?{' '}
             <Text onPress={onFooterLinkPress} style={[theme.text.link, { color: colors.primary }]}>
               Sign up
             </Text>
           </TextOrdinary>
-        </Page>
+        </FlexCenterColumn>
       </KeyboardAwareScrollView>
-    </Page>
+    </View>
   )
 }
