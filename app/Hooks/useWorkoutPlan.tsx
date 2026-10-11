@@ -46,10 +46,8 @@ export default function useWorkoutPlan() {
     })
 
     if (!plan) {
-      workouts.forEach(w => {
-        w.uid = nanoid()
-        dispatch(workoutAC.addWorkout(w))
-      })
+      // Workouts come from frozen Redux state: copy instead of assigning w.uid
+      workouts.forEach(w => dispatch(workoutAC.addWorkout({ ...w, uid: nanoid() })))
     } else {
       const newPlan = {
         ...plan,
