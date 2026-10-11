@@ -43,8 +43,27 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         recordAudioAndroid: false,
       },
     ],
-    // TODO(A4): expo-notifications options (icon, color, cue sounds)
-    'expo-notifications',
+    // A4: workout cue notifications (D3). `sounds` copies these files into Android res/raw and the
+    // iOS bundle (app/services/backgroundSession.ts picks the right one per platform). Android
+    // channels use the mp3s; iOS cannot play mp3 as a notification sound, so it uses IMA4 .caf
+    // copies (generated with ffmpeg; different basenames to avoid clashing res/raw names).
+    // No `icon` yet: Android needs a white-on-transparent silhouette PNG, see handoff/A4.md.
+    [
+      'expo-notifications',
+      {
+        color: '#3c8739',
+        sounds: [
+          './app/Assets/sounds/bell.mp3',
+          './app/Assets/sounds/digital_clock.mp3',
+          './app/Assets/sounds/double_ding.mp3',
+          './app/Assets/sounds/hop_bell.mp3',
+          './app/Screens/PlayingScreen/notificationSounds/bell_cue.caf',
+          './app/Screens/PlayingScreen/notificationSounds/digital_clock_cue.caf',
+          './app/Screens/PlayingScreen/notificationSounds/double_ding_cue.caf',
+          './app/Screens/PlayingScreen/notificationSounds/hop_bell_cue.caf',
+        ],
+      },
+    ],
     // TODO(A2): enable after `npx expo install @react-native-google-signin/google-signin`.
     // The package is not installed in Phase 0, so declaring the plugin now would break prebuild.
     // ['@react-native-google-signin/google-signin', { iosUrlScheme: process.env.EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME }],
