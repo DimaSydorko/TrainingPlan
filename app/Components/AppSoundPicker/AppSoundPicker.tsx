@@ -11,7 +11,8 @@ import { SetStateType } from '../../Utils/types'
 import { SoundType } from '../../Utils/constants'
 import { FlexCenterColumn, TextHeader } from '../../Theme/Parents'
 
-// TODO(A3): was Sound.setCategory('Alarm') for the picker preview
+// The old code switched to Sound.setCategory('Alarm') here so previews were heard with the silent
+// switch on. The shared session from audio.ts already plays in silent mode, so no category change.
 
 type PropsT = {
   isOpen: boolean
@@ -26,7 +27,7 @@ export default memo(({ isOpen, setIsOpen }: PropsT) => {
 
   useEffect(() => {
     if (isPressing) {
-      setTimeout(() => previewSound(soundType), 100)
+      setTimeout(() => previewSound(soundType, { volume: sound?.volume }), 100)
     }
   }, [soundType, isPressing])
 
@@ -40,6 +41,7 @@ export default memo(({ isOpen, setIsOpen }: PropsT) => {
       <FlexCenterColumn style={{ alignItems: 'flex-start' }}>
         {Object.values(SoundType).map(s => (
           <TouchableOpacity
+            key={s}
             onPressIn={() => {
               setIsPressing(true)
               setSoundType(s)

@@ -110,10 +110,7 @@ export default memo(function SettingsScreen() {
       <SettingsHeader label={'Sound'}>
         <FlexCenter>
           <TouchableOpacity
-            onPress={() => {
-              // TODO(A3): preview at sound?.volume (was playSound.setVolume(sound?.volume) before play)
-              previewSound(sound?.type || SoundType.Bell)
-            }}
+            onPress={() => previewSound(sound?.type || SoundType.Bell, { volume: sound?.volume })}
           >
             <TextHeader color={colors.primary}>Press for test sound</TextHeader>
           </TouchableOpacity>
