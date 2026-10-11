@@ -2,7 +2,7 @@ import { TextStyle, ViewStyle } from 'react-native'
 import { StackNavigationOptions } from '@react-navigation/stack'
 import { appScreen } from '../Utils/constants'
 
-const headerStyle: TextStyle = {
+const headerStyle: ViewStyle = {
   height: appScreen.header,
   shadowOpacity: 0.1,
   shadowRadius: 5,
@@ -101,6 +101,6 @@ export const theme = {
     headerTitleAlign: 'center',
     headerTitleStyle: {
       fontWeight: 'bold',
-    } as ViewStyle,
+    } as TextStyle,
   } as StackNavigationOptions,
 }

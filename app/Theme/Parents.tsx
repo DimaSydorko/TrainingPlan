@@ -1,17 +1,24 @@
 import * as React from 'react'
 import { ReactNode } from 'react'
-import { SafeAreaView, ScrollView, Text, TextProps, TextStyle, View, ViewStyle } from 'react-native'
+import { ScrollView, StyleProp, Text, TextProps, TextStyle, View, ViewStyle } from 'react-native'
+import { StackNavigationOptions } from '@react-navigation/stack'
 import { useSettings } from '../Hooks/redux'
 import { theme } from './theme'
 import { colorsFixed } from './colors'
 import { appScreen } from '../Utils/constants'
+import { useAppInsets } from './insets'
 
 interface ParentProps {
   children?: ReactNode
-  style?: ViewStyle | TextStyle | ViewStyle[] | TextStyle[]
+  style?: StyleProp<ViewStyle>
 }
 
-type IText = TextProps & {
+interface TextParentProps {
+  children?: ReactNode
+  style?: StyleProp<TextStyle>
+}
+
+type IText = Omit<TextProps, 'style'> & {
   color?: string
   center?: boolean
 }
@@ -22,20 +29,17 @@ interface IPage {
 
 export const Page = ({ children, style, scrollDisabled = false }: ParentProps & IPage) => {
   const { colors } = useSettings()
+  // The stack header already covers the top inset; the bottom padding keeps content above the
+  // absolutely positioned tab bar, which is taller by the navigation bar inset (edge-to-edge).
+  const { footer } = useAppInsets()
   return (
-    <SafeAreaView
-      style={[
-        theme.containers.centerColumn,
-        { backgroundColor: colors.background, paddingBottom: appScreen.footer },
-        style,
-      ]}
-    >
+    <View style={[theme.containers.centerColumn, { backgroundColor: colors.background, paddingBottom: footer }, style]}>
       <ScrollView scrollEnabled={!scrollDisabled}>{children}</ScrollView>
-    </SafeAreaView>
+    </View>
   )
 }
 
-export const TextSecondary = ({ children, color, center = false, style, ...props }: ParentProps & IText) => {
+export const TextSecondary = ({ children, color, center = false, style, ...props }: TextParentProps & IText) => {
   const { colors } = useSettings()
   const newColors = color || colors.textSecondary
   return (
@@ -55,7 +59,7 @@ export const TextSecondary = ({ children, color, center = false, style, ...props
   )
 }
 
-export const TextHeader = ({ children, color, center = false, style, ...props }: ParentProps & IText) => {
+export const TextHeader = ({ children, color, center = false, style, ...props }: TextParentProps & IText) => {
   const { colors } = useSettings()
   const newColors = color || colors.text
   return (
@@ -75,7 +79,7 @@ export const TextHeader = ({ children, color, center = false, style, ...props }:
   )
 }
 
-export const TextOrdinary = ({ children, color, center = false, style, ...props }: ParentProps & IText) => {
+export const TextOrdinary = ({ children, color, center = false, style, ...props }: TextParentProps & IText) => {
   const { colors } = useSettings()
   const newColors = color || colors.text
   return (
@@ -191,6 +195,7 @@ export const AppHeader = ({ children, style }: ParentProps) => {
 
 export const AppFooter = ({ children, style }: ParentProps) => {
   const { colors } = useSettings()
+  const { bottom } = useAppInsets()
   return (
     <View
       style={[
@@ -205,7 +210,9 @@ export const AppFooter = ({ children, style }: ParentProps) => {
           alignItems: 'center',
           bottom: 0,
           left: 0,
-          paddingVertical: 8,
+          height: appScreen.header + bottom,
+          paddingTop: 8,
+          paddingBottom: 8 + bottom,
           paddingHorizontal: 30,
           zIndex: 100,
         },
@@ -217,8 +224,11 @@ export const AppFooter = ({ children, style }: ParentProps) => {
   )
 }
 
-export const useScreenOptions = () => {
+export const useScreenOptions = (): StackNavigationOptions => {
   const { colors } = useSettings()
+  // The header height includes the status bar inset (React Navigation draws it behind the bar),
+  // so the visible part keeps the old 40dp height on edge-to-edge Android and notched iPhones.
+  const { header } = useAppInsets()
   return {
     ...theme.screenOptions,
     headerTintColor: colors.text,
@@ -226,7 +236,8 @@ export const useScreenOptions = () => {
       ...theme.containers.headerStyle,
       backgroundColor: colors.menu,
       shadowColor: colorsFixed.shadow,
-      height: appScreen.header,
+      height: header,
     },
+    cardStyle: { backgroundColor: colors.background },
   }
 }

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, View, ViewStyle } from 'react-native'
+import { StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
 import { TextOrdinary } from '../../Theme/Parents'
 import { useSettings } from '../../Hooks/redux'
 
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   textRepWeight: {
     width: '35%',
     textAlign: 'center',
-  } as ViewStyle,
+  } as TextStyle,
   textCurrPrev: {
     width: '30%',
   },
