@@ -1,12 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { getCurrentTime, nanoid } from '../../Utils'
-import { FirebaseDBCollection, PUBLICATION_QUERY_LIMIT } from '../../Utils/constants'
-import { FB_Collection_Publications, FB_FieldValue } from '../../Utils/firebase'
+import { arrayRemove, arrayUnion, deleteDoc, doc, getDocs, query, setDoc, updateDoc } from 'firebase/firestore'
+import { publicationsCollection } from '../../Utils/firebase'
 import { ApproachType, ExerciseType, PlanType, PublicType, WorkoutType } from '../../Utils/types'
-import { RootState } from '../index'
+import type { RootState } from '../index'
 import { workoutAC } from '../WorkoutReducer/WorkoutAC'
 import { plansAC } from '../PlansReducer/PlansAC'
-import firebase from 'firebase/compat/app'
+import { errorMessage } from '../sync'
+import { buildPublicationsQuery } from './publicationsQuery'
 
 type AddType = (PlanType | WorkoutType) & {
   workouts?: WorkoutType[]
@@ -25,8 +26,6 @@ export interface getType {
   firstVisible?: PublicType
 }
 
-const FB_Pub = FB_Collection_Publications
-const order = 'lastUpdated'
 export const publicationsAC = {
   get: createAsyncThunk(
     'publications/get',
@@ -43,44 +42,20 @@ export const publicationsAC = {
         else if (isUserPublicationsAll && isYours && !!firstVisible)
           return { publications: [], isYours, isNextChunk: true }
 
-        const apiRequest = () => {
-          let snapshot
-          if (isYours) {
-            if (!!lastVisible)
-              snapshot = FB_Pub.where('ownerUid', '==', userUid).orderBy(order, 'desc').startAt(lastVisible[order])
-            else if (!!firstVisible)
-              snapshot = FB_Pub.where('ownerUid', '==', userUid).orderBy(order, 'desc').endAt(firstVisible[order])
-            else snapshot = FB_Pub.where('ownerUid', '==', userUid).orderBy(order, 'desc')
-          } else if (labels.length && labels[0]) {
-            if (!!lastVisible)
-              snapshot = FB_Pub.where('labels', 'array-contains-any', labels)
-                .orderBy(order, 'desc')
-                .startAt(lastVisible[order])
-            else if (!!firstVisible)
-              snapshot = FB_Pub.where('labels', 'array-contains-any', labels)
-                .orderBy(order, 'desc')
-                .endAt(firstVisible[order])
-            else snapshot = FB_Pub.where('labels', 'array-contains-any', labels).orderBy(order, 'desc')
-          } else {
-            if (!!lastVisible) snapshot = FB_Pub.orderBy(order, 'desc').startAt(lastVisible[order])
-            else if (!!firstVisible) snapshot = FB_Pub.orderBy(order, 'desc').endAt(firstVisible[order])
-            else snapshot = FB_Pub.orderBy(order, 'desc')
-          }
-          return snapshot.limit(PUBLICATION_QUERY_LIMIT).get()
-        }
-
-        const snapshot = await apiRequest()
+        const snapshot = await getDocs(
+          query(publicationsCollection, ...buildPublicationsQuery({ isYours, labels, lastVisible, firstVisible, userUid }))
+        )
 
         const publications: PublicType[] = snapshot.docs.map(
-          doc =>
+          d =>
             ({
-              ...doc.data(),
-              uid: doc.id,
-            } as PublicType)
+              ...d.data(),
+              uid: d.id,
+            }) as PublicType
         )
         return { publications, isYours, isNextChunk }
       } catch (e) {
-        return thunkAPI.rejectWithValue(e.message)
+        return thunkAPI.rejectWithValue(errorMessage(e))
       }
     }
   ),
@@ -103,10 +78,10 @@ export const publicationsAC = {
         likes: [],
         ownerName: user.displayName,
       } as PublicType
-      await FB_Collection_Publications.doc(uid).set(newPublication)
+      await setDoc(doc(publicationsCollection, uid), newPublication)
       return { uid, ...newPublication }
     } catch (e) {
-      return thunkAPI.rejectWithValue(e.message)
+      return thunkAPI.rejectWithValue(errorMessage(e))
     }
   }),
   likeToggle: createAsyncThunk(
@@ -115,12 +90,13 @@ export const publicationsAC = {
       const { userReducer } = thunkAPI.getState() as RootState
       const userUid: string = userReducer.user.uid
       try {
-        FB_Collection_Publications.doc(publicationUid).update({
-          likes: isLiked ? FB_FieldValue.arrayRemove(userUid) : FB_FieldValue.arrayUnion(userUid),
-        })
+        // Not awaited, as before: the like shows at once; failures are logged.
+        updateDoc(doc(publicationsCollection, publicationUid), {
+          likes: isLiked ? arrayRemove(userUid) : arrayUnion(userUid),
+        }).catch(e => console.warn(`[publications] like: ${errorMessage(e)}`))
         return { isLiked, publicationUid, userUid }
       } catch (e) {
-        return thunkAPI.rejectWithValue(e.message)
+        return thunkAPI.rejectWithValue(errorMessage(e))
       }
     }
   ),
@@ -152,14 +128,14 @@ export const publicationsAC = {
         thunkAPI.dispatch(plansAC.addPlan(newPlan))
       }
       if (!publication.downloads.includes(ownerUid)) {
-        await FB_Collection_Publications.doc(publication.uid).update({
-          downloads: FB_FieldValue.arrayUnion(ownerUid),
+        await updateDoc(doc(publicationsCollection, publication.uid), {
+          downloads: arrayUnion(ownerUid),
         })
         return { publicationUid: publication.uid, userUid: ownerUid }
       }
       return null
     } catch (e) {
-      return thunkAPI.rejectWithValue(e.message)
+      return thunkAPI.rejectWithValue(errorMessage(e))
     }
   }),
   delete: createAsyncThunk('publications/delete', async (publication: PublicType, thunkAPI) => {
@@ -167,12 +143,12 @@ export const publicationsAC = {
     const ownerUid: string = userReducer.user.uid
     try {
       if (publication.ownerUid === ownerUid) {
-        await FB_Collection_Publications.doc(publication.uid).delete()
+        await deleteDoc(doc(publicationsCollection, publication.uid))
         return publication.uid
       }
       return thunkAPI.rejectWithValue("You can't delete this")
     } catch (e) {
-      return thunkAPI.rejectWithValue(e.message)
+      return thunkAPI.rejectWithValue(errorMessage(e))
     }
   }),
 }

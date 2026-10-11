@@ -29,9 +29,9 @@ const onLoading = (state: PlansSliceType) => {
   state.isLoading = true
 }
 
-const updatePlan = (state, { payload }: PayloadAction<PlanType>) => {
+const updatePlan = (state: PlansSliceType, { payload }: PayloadAction<PlanType>) => {
   state.plans = state.plans.map(plan => (plan.uid === payload.uid ? payload : plan))
-  if (state.selectedPlan.uid === payload.uid) state.selectedPlan = payload
+  if (state.selectedPlan?.uid === payload.uid) state.selectedPlan = payload
   state.isLoading = false
   state.error = ''
 }
@@ -62,7 +62,7 @@ export const plansSlice = createSlice({
     builder
       .addCase(plansAC.getPlans.fulfilled.type, (state, { payload }: PayloadAction<GetPlanReducerType>) => {
         if (payload.isInternet) {
-          state.plans = payload.plans
+          state.plans = payload.plans || []
           state.deletedPlanUids = []
         }
         state.isLoading = false

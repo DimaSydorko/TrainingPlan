@@ -1,11 +1,14 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import NetInfo from '@react-native-community/netinfo'
-import { FB_Collection_Plans } from '../../Utils/firebase'
+import { deleteDoc, doc, getDocs, limit, query, setDoc, where } from 'firebase/firestore'
+import { plansCollection } from '../../Utils/firebase'
 import { updateSelectedWorkout } from '../WorkoutReducer/WorkoutSlice'
 import { QUERY_LIMIT } from '../../Utils/constants'
 import { PlanType, WorkoutType } from '../../Utils/types'
 import { getCurrentTime, nanoid } from '../../Utils'
-import { RootState } from '../index'
+import type { RootState } from '../index'
+import { errorMessage, ownedBy, splitUid, syncWithRemote } from '../sync'
+import { pushSync } from '../firestore'
 
 export type GetPlanReducerType = {
   plans?: PlanType[]
@@ -21,77 +24,59 @@ export const plansAC = {
   getPlans: createAsyncThunk('plans/getPlans', async (_, thunkAPI) => {
     const { plansReducer, userReducer } = thunkAPI.getState() as RootState
     const userUid: string = userReducer.user.uid
-    const plans: PlanType[] = []
     try {
       const net = await NetInfo.fetch()
       const isInternet = net.isConnected
       if (isInternet) {
-        const snapshot = await FB_Collection_Plans.where('ownerUid', '==', userUid).limit(QUERY_LIMIT).get()
-        snapshot.docs.forEach(doc => plans.push({ ...doc.data(), uid: doc.id } as PlanType))
+        const snapshot = await getDocs(query(plansCollection, where('ownerUid', '==', userUid), limit(QUERY_LIMIT)))
+        const plans = snapshot.docs.map(d => ({ ...d.data(), uid: d.id }) as PlanType)
 
-        //Synchronize data local Storage & Database
-        const newPlans: PlanType[] =
-          plans
-            ?.filter(st => !plansReducer.deletedPlanUids?.includes(st.uid))
-            ?.map(bd => {
-              const stored = plansReducer?.plans?.find(st => st.uid === bd.uid)
-              if (!stored) return bd
-
-              const { uid, ...storedPlan } = stored
-              const isStoredUpdated = (stored?.lastUpdated || 0) > (bd?.lastUpdated || 0)
-
-              if (isStoredUpdated) FB_Collection_Plans.doc(uid).set(storedPlan)
-              return isStoredUpdated ? stored : bd
-            }) || []
-
-        //delete workouts in Database if it was deleted in Storage
-        plansReducer.deletedPlanUids?.forEach(deletedUid => FB_Collection_Plans.doc(deletedUid).delete())
-
-        //if plan Stored but didn't exist in Database
-        plansReducer.plans.forEach(plan => {
-          if (!newPlans.find(st => st.uid === plan.uid)) {
-            newPlans.push(plan)
-            const { uid, ...storedPlan } = plan
-            FB_Collection_Plans.doc(uid).set(storedPlan)
-          }
-        })
-        return { plans: newPlans, isInternet } as GetPlanReducerType
+        // Synchronize local storage and the database
+        const { merged, toUpload, toDelete } = syncWithRemote(
+          plans,
+          ownedBy(plansReducer.plans, userUid),
+          plansReducer.deletedPlanUids
+        )
+        pushSync(plansCollection, toUpload, toDelete)
+        return { plans: merged, isInternet } as GetPlanReducerType
       }
-      return { plans, isInternet } as GetPlanReducerType
+      return { plans: [], isInternet } as GetPlanReducerType
     } catch (e) {
-      return thunkAPI.rejectWithValue(e.message)
+      return thunkAPI.rejectWithValue(errorMessage(e))
     }
   }),
 
   addPlan: createAsyncThunk('plans/addPlans', async (props: PlanType, thunkAPI) => {
     const { userReducer } = thunkAPI.getState() as RootState
-    const ownerUid: string = userReducer.user.uid
-    props.uid = props?.uid || nanoid()
-    props.ownerUid = props?.ownerUid || ownerUid
-    props.lastUpdated = getCurrentTime()
-    const { uid, ...plan } = props
+    const newPlan: PlanType = {
+      ...props,
+      uid: props?.uid || nanoid(),
+      ownerUid: props?.ownerUid || userReducer.user.uid,
+      lastUpdated: getCurrentTime(),
+    }
+    const { uid, data } = splitUid(newPlan)
     try {
       const net = await NetInfo.fetch()
       if (net.isConnected) {
-        await FB_Collection_Plans.doc(uid).set(plan)
+        await setDoc(doc(plansCollection, uid), data)
       }
-      return props
+      return newPlan
     } catch (e) {
-      return thunkAPI.rejectWithValue(e.message)
+      return thunkAPI.rejectWithValue(errorMessage(e))
     }
   }),
 
   updatePlan: createAsyncThunk('plans/updatePlan', async (props: PlanType, thunkAPI) => {
-    props.lastUpdated = getCurrentTime()
-    const { uid, ...plan } = props
+    const updated: PlanType = { ...props, lastUpdated: getCurrentTime() }
+    const { uid, data } = splitUid(updated)
     try {
       const net = await NetInfo.fetch()
       if (net.isConnected) {
-        await FB_Collection_Plans.doc(uid).set(plan)
+        await setDoc(doc(plansCollection, uid), data)
       }
-      return props
+      return updated
     } catch (e) {
-      return thunkAPI.rejectWithValue(e.message)
+      return thunkAPI.rejectWithValue(errorMessage(e))
     }
   }),
 
@@ -99,18 +84,21 @@ export const plansAC = {
     'plans/updateSelectedPlanWorkout',
     async (workout: WorkoutType, thunkAPI) => {
       const { plansReducer } = thunkAPI.getState() as RootState
-      const { uid, ...selectedPlan }: PlanType = plansReducer.selectedPlan
-      selectedPlan.lastUpdated = getCurrentTime()
-      selectedPlan.workouts = selectedPlan.workouts.map(w => (w.uid === workout.uid ? workout : w))
+      const { uid, data: current } = splitUid(plansReducer.selectedPlan)
+      const selectedPlan: Omit<PlanType, 'uid'> = {
+        ...current,
+        lastUpdated: getCurrentTime(),
+        workouts: current.workouts.map(w => (w.uid === workout.uid ? workout : w)),
+      }
       try {
         const net = await NetInfo.fetch()
         if (net.isConnected) {
-          await FB_Collection_Plans.doc(uid).set(selectedPlan)
+          await setDoc(doc(plansCollection, uid), selectedPlan)
         }
         thunkAPI.dispatch(updateSelectedWorkout(workout))
-        return { uid, ...selectedPlan }
+        return { uid, ...selectedPlan } as PlanType
       } catch (e) {
-        return thunkAPI.rejectWithValue(e.message)
+        return thunkAPI.rejectWithValue(errorMessage(e))
       }
     }
   ),
@@ -120,11 +108,11 @@ export const plansAC = {
       const net = await NetInfo.fetch()
       const isInternet = net.isConnected
       if (isInternet) {
-        await FB_Collection_Plans.doc(planUid).delete()
+        await deleteDoc(doc(plansCollection, planUid))
       }
       return { planUid, isInternet } as DeletePlanReducerType
     } catch (e) {
-      return thunkAPI.rejectWithValue(e.message)
+      return thunkAPI.rejectWithValue(errorMessage(e))
     }
   }),
 }

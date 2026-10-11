@@ -1,7 +1,18 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { getGoogleIdToken, signOutGoogle } from '../../services/googleAuth'
-import firebase, { FB_Auth, FB_Collection_UsersData } from '../../Utils/firebase'
-import { UserDataType, UserType } from '../../Utils/types'
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithCredential,
+  signInWithEmailAndPassword,
+  signOut as firebaseSignOut,
+  updateProfile,
+} from 'firebase/auth'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { auth, usersDataCollection } from '../../Utils/firebase'
+import { errorMessage } from '../sync'
+import { toUserType } from './authState'
+import { UserDataType } from '../../Utils/types'
 import { initialUserData } from './UserSlice'
 import { clearWorkoutResults } from '../WorkoutReducer/WorkoutSlice'
 import { clearPlaneResults } from '../PlansReducer/PlansSlice'
@@ -11,78 +22,64 @@ export const userAC = {
     'user/signUp',
     async (props: { email: string; password: string; displayName: string }, thunkAPI) => {
       try {
-        const response = await FB_Auth.createUserWithEmailAndPassword(props.email, props.password)
+        const response = await createUserWithEmailAndPassword(auth, props.email, props.password)
         thunkAPI.dispatch(userAC.dataUpdate({ userUid: response.user?.uid || '', data: initialUserData }))
-        await response.user?.updateProfile({ displayName: props.displayName })
-        return {
-          uid: response.user?.uid,
-          displayName: response.user?.displayName || '',
-          photoURL: response.user?.photoURL,
-          email: response.user?.email,
-        } as UserType
+        await updateProfile(response.user, { displayName: props.displayName })
+        return toUserType(response.user)
       } catch (e) {
-        return thunkAPI.rejectWithValue(e.message)
+        return thunkAPI.rejectWithValue(errorMessage(e))
       }
     }
   ),
   signIn: createAsyncThunk('user/signIn', async (props: { email: string; password: string }, thunkAPI) => {
     try {
-      const response = await FB_Auth.signInWithEmailAndPassword(props.email, props.password)
+      const response = await signInWithEmailAndPassword(auth, props.email, props.password)
       thunkAPI.dispatch(userAC.dataRequest(response.user?.uid || ''))
-      return {
-        uid: response.user?.uid,
-        displayName: response.user?.displayName || '',
-        photoURL: response.user?.photoURL,
-        email: response.user?.email,
-      } as UserType
+      return toUserType(response.user)
     } catch (e) {
-      return thunkAPI.rejectWithValue(e.message)
+      return thunkAPI.rejectWithValue(errorMessage(e))
     }
   }),
   signInWithGoogle: createAsyncThunk('user/signInWithGoogle', async (props, thunkAPI) => {
     try {
       // hasPlayServices + signIn now live in the googleAuth seam (A2)
       const idToken = await getGoogleIdToken()
-      const credential = firebase.auth.GoogleAuthProvider.credential(idToken)
-      const response = await FB_Auth.signInWithCredential(credential)
+      const credential = GoogleAuthProvider.credential(idToken)
+      const response = await signInWithCredential(auth, credential)
       thunkAPI.dispatch(userAC.dataRequest(response.user?.uid || ''))
 
-      return {
-        uid: response.user?.uid,
-        displayName: response.user?.displayName || '',
-        photoURL: response.user?.photoURL,
-        email: response.user?.email,
-      } as UserType
+      return toUserType(response.user)
     } catch (e) {
-      return thunkAPI.rejectWithValue(e.message)
+      return thunkAPI.rejectWithValue(errorMessage(e))
     }
   }),
   signOut: createAsyncThunk('user/signOut', async (_, thunkAPI) => {
     try {
-      // revokeAccess + signOut now live in the googleAuth seam (A2)
-      await signOutGoogle()
-      await FB_Auth.signOut()
+      // revokeAccess + signOut now live in the googleAuth seam (A2). A Google failure (e.g. the user
+      // signed in with email) must not keep the Firebase session alive.
+      await signOutGoogle().catch(e => console.warn(`[auth] Google sign-out: ${errorMessage(e)}`))
+      await firebaseSignOut(auth)
       thunkAPI.dispatch(clearWorkoutResults())
       thunkAPI.dispatch(clearPlaneResults())
       return
     } catch (e) {
-      return thunkAPI.rejectWithValue(e.message)
+      return thunkAPI.rejectWithValue(errorMessage(e))
     }
   }),
   dataRequest: createAsyncThunk('user/dataRequest', async (userUid: string, thunkAPI) => {
     try {
-      const response = await FB_Collection_UsersData.doc(userUid).get()
+      const response = await getDoc(doc(usersDataCollection, userUid))
       return response.data() as UserDataType
     } catch (e) {
-      return thunkAPI.rejectWithValue(e.message)
+      return thunkAPI.rejectWithValue(errorMessage(e))
     }
   }),
   dataUpdate: createAsyncThunk('user/dataUpdate', async (props: { userUid: string; data: UserDataType }, thunkAPI) => {
     try {
-      await FB_Collection_UsersData.doc(props.userUid).set(props.data)
+      await setDoc(doc(usersDataCollection, props.userUid), props.data)
       return props.data
     } catch (e) {
-      return thunkAPI.rejectWithValue(e.message)
+      return thunkAPI.rejectWithValue(errorMessage(e))
     }
   }),
 }

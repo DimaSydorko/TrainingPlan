@@ -54,7 +54,9 @@ export const publicationsSlice = createSlice({
                 ...state.userPublications,
                 ...payload.publications.filter(p => !state.userPublications.find(prev => prev.uid === p.uid)),
               ]
-              state.isUserPublicationsAll = state.userPublications.length <= newPublications.length
+              // All loaded when a next chunk brings nothing new (was `<=`, which was always true and
+              // stopped pagination after the second page).
+              state.isUserPublicationsAll = newPublications.length === state.userPublications.length
               state.userPublications = newPublications
             } else {
               state.userPublications = payload.publications
@@ -66,7 +68,7 @@ export const publicationsSlice = createSlice({
                 ...state.publications,
                 ...payload.publications.filter(p => !state.publications.find(prev => prev.uid === p.uid)),
               ]
-              state.isPublicationsAll = state.publications.length <= newPublications.length
+              state.isPublicationsAll = newPublications.length === state.publications.length
               state.publications = newPublications
             } else {
               state.publications = payload.publications
@@ -103,15 +105,14 @@ export const publicationsSlice = createSlice({
       )
       .addCase(
         publicationsAC.save.fulfilled.type,
-        (
-          state,
-          { payload: { userUid, publicationUid } }: PayloadAction<{ userUid: string; publicationUid: string } | null>
-        ) => {
-          if (publicationUid) {
+        (state, { payload }: PayloadAction<{ userUid: string; publicationUid: string } | null>) => {
+          // payload is null when the user had already downloaded it (destructuring it used to throw)
+          if (payload?.publicationUid) {
+            const { userUid, publicationUid } = payload
             state.publications = state.publications.map(p =>
               p.uid === publicationUid ? { ...p, downloads: [...p.downloads, userUid] } : p
             )
-            state.userPublications = state.publications.map(p =>
+            state.userPublications = state.userPublications.map(p =>
               p.uid === publicationUid ? { ...p, downloads: [...p.downloads, userUid] } : p
             )
           }
