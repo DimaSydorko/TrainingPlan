@@ -47,8 +47,8 @@ describe('store persistence', () => {
   it('starts from the initial state when nothing is persisted', async () => {
     const { store } = await loadStore()
     const state = store.getState()
-    expect(state.userReducer.user).toBeNull()
-    expect(state.settingsReducer.sound.type).toBeDefined()
+    expect(state.userReducer?.user).toBeNull()
+    expect(state.settingsReducer?.sound.type).toBeDefined()
     expect(state.plansReducer).toBeDefined()
     expect(state.workoutReducer).toBeDefined()
     expect(state.publicationsReducer).toBeDefined()
@@ -66,8 +66,8 @@ describe('store persistence', () => {
 
     const { store } = await loadStore()
     const state = store.getState()
-    expect(state.userReducer.user).toEqual({ uid: 'old-user' })
-    expect(state.settingsReducer.isVibration).toBe(false)
+    expect(state.userReducer?.user).toEqual({ uid: 'old-user' })
+    expect(state.settingsReducer?.isVibration).toBe(false)
   })
 
   it('writes state changes back to AsyncStorage', async () => {

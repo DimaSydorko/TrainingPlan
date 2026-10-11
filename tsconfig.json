@@ -1,7 +1,15 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": false
+    // Path to `strict: true` is in docs/migration/TESTING.md ("TypeScript strictness roadmap").
+    // `strict` stays off; the strict-family flags below already pass and are enabled one by one.
+    "strict": false,
+    "alwaysStrict": true,
+    "strictBindCallApply": true,
+    "noImplicitThis": true,
+    "strictBuiltinIteratorReturn": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "admin"]

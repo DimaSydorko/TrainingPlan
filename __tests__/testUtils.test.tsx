@@ -1,5 +1,4 @@
 /** Checks the shared test helpers in __tests__/utils. */
-import * as React from 'react'
 import { Text } from 'react-native'
 import { screen } from '@testing-library/react-native'
 import { useSettings, useUser } from '../app/Hooks/redux'

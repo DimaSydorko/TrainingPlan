@@ -9,6 +9,7 @@ import plansReducer from '../../app/store/PlansReducer/PlansSlice'
 import workoutReducer from '../../app/store/WorkoutReducer/WorkoutSlice'
 import settingsReducer from '../../app/store/SettingsReducer/SettingsSlice'
 import publicationsReducer from '../../app/store/PublicationsReducer/PublicationsSlice'
+import type { Persistor } from 'redux-persist'
 import type { RootState } from '../../app/store'
 
 export const testRootReducer = combineReducers({
@@ -54,15 +55,15 @@ export type TestStore = ReturnType<typeof createTestStore>
  * A persistor that reports itself as already rehydrated, for rendering `<PersistGate>` with a
  * store that has no persisted reducer.
  */
-export function createBootstrappedPersistor() {
+export function createBootstrappedPersistor(): Persistor {
   const state = { bootstrapped: true, registry: [] as string[] }
   return {
-    subscribe: (_listener: () => void) => () => {},
+    subscribe: () => () => {},
     getState: () => state,
-    dispatch: (action: unknown) => action,
+    dispatch: action => action,
     persist: () => {},
-    purge: async () => undefined,
-    flush: async () => undefined,
+    purge: async (): Promise<unknown> => undefined,
+    flush: async (): Promise<unknown> => undefined,
     pause: () => {},
   }
 }

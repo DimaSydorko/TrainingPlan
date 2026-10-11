@@ -2,7 +2,6 @@
  * Smoke test: the whole app tree (redux Provider, PersistGate, gesture root, AppHelperProvider,
  * navigation) renders with a mock store and reaches the login screen when nobody is signed in.
  */
-import * as React from 'react'
 import { render, screen } from '@testing-library/react-native'
 import App from '../app/App'
 
