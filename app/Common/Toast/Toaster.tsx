@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
 })
 
 interface ToasterType {
-  toasts: (JSX.Element | boolean)[]
+  toasts: (React.JSX.Element | boolean)[]
 }
 
 export default memo(function Toaster({ toasts }: ToasterType) {

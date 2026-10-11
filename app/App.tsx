@@ -8,8 +8,8 @@ import { persistedStore, store } from './store'
 import AppHelperProvider from './Hooks/AppHelperProvider'
 import AuthRouter from './Routers/AuthRouter'
 
-if (!global.btoa) global.btoa = encode
-if (!global.atob) global.atob = decode
+if (!globalThis.btoa) globalThis.btoa = encode
+if (!globalThis.atob) globalThis.atob = decode
 
 function App() {
   return (

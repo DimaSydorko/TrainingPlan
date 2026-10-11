@@ -23,6 +23,7 @@ export default memo(function PublicationsRouter() {
 
   return (
     <>
+      {/* @ts-expect-error TODO(A5): React Navigation 7 navigator typings (createStackNavigator() without param list requires `id`) */}
       <Stack.Navigator>
         <Stack.Screen
           name={ScreenName.Publications}

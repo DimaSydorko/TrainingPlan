@@ -38,6 +38,7 @@ export default memo(function GoBackSubmitModal({
   useEffect(
     () =>
       navigation.addListener('beforeRemove', e => {
+        // @ts-expect-error TODO(A5): React Navigation 7 types beforeRemove as non-preventable on this navigation type; still preventable at runtime
         e.preventDefault()
         Alert.alert(title, text, [
           { text: 'Cancel', style: 'cancel', onPress: () => null },

@@ -24,6 +24,7 @@ export default memo(function ProfileRouter() {
   return (
     <>
       {user.isLoading && <Loading />}
+      {/* @ts-expect-error TODO(A5): React Navigation 7 navigator typings (createStackNavigator() without param list requires `id`) */}
       <Stack.Navigator>
         <Stack.Screen name={ScreenName.Profile} options={{ ...options, title: 'Profile' }}>
           {() => <ProfileScreen />}

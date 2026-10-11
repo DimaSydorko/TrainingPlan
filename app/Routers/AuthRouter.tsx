@@ -26,6 +26,7 @@ export default function AuthRouter() {
 
   return (
     <NavigationContainer>
+      {/* @ts-expect-error TODO(A5): React Navigation 7 navigator typings (createStackNavigator() without param list requires `id`) */}
       <Stack.Navigator>
         {user?.uid ? (
           <Stack.Screen name={ScreenName.App} options={{ headerShown: false }}>

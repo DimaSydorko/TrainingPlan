@@ -22,7 +22,7 @@ type TabType = {
   name: string
   component: NamedExoticComponent<object>
   buttonLabel: string
-  icon: (color: string) => JSX.Element
+  icon: (color: string) => React.JSX.Element
 }
 
 const tabs = [
@@ -70,6 +70,7 @@ export default function AppRouter() {
     <>
       <NotificationHandler />
       <Tab.Navigator
+        // @ts-expect-error TODO(A5): bottom-tabs 7 removed sceneContainerStyle (use screenOptions.sceneStyle); navigator also wants `id`
         sceneContainerStyle={{
           backgroundColor: colors.background,
         }}

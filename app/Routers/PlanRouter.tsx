@@ -18,6 +18,7 @@ export default memo(function PlanRouter() {
   return (
     <>
       {(workout.isLoading || plans.isLoading || user.isLoading) && <Loading />}
+      {/* @ts-expect-error TODO(A5): React Navigation 7 navigator typings (createStackNavigator() without param list requires `id`) */}
       <Stack.Navigator>
         <Stack.Screen
           name={ScreenName.SavedWorkouts}

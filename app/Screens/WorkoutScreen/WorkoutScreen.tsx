@@ -128,14 +128,14 @@ export default function WorkoutScreen() {
   }, [onSaveRefuse])
 
   const renderItem = useCallback(
-    ({ item, drag, isActive, index }: RenderItemParams<ExerciseType>) => {
+    ({ item, drag, isActive, getIndex }: RenderItemParams<ExerciseType>) => {
       const color = COLORS_EXERCISE[item?.colorIdx || 0][+isDarkTheme]
       return (
         <ScaleDecorator>
           <Card borderLeftColor={item.isVisible ? `${color}` : `${color}80`}>
             <TouchableOpacity onLongPress={drag} onPress={() => setChangeExercise(item)} disabled={isActive}>
               <Exercise
-                idx={index}
+                idx={getIndex()}
                 exercise={item}
                 isEdit={isEditMode}
                 color={color}
