@@ -3,7 +3,7 @@ import { PlayTimerProvider } from './components/PlayTimerProvider'
 import PlayingScreen from './PlayingScreen'
 import * as React from 'react'
 
-export default memo(() => {
+export default memo(function PlayingScreenWithTimer() {
   return (
     <PlayTimerProvider>
       <PlayingScreen />

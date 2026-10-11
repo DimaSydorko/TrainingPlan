@@ -50,7 +50,7 @@ export default memo(function ShareModal({ onClose, isOpen, onShare, workout, pla
             })}
         {isEmpty && (
           <TextOrdinary center color={colors.secondPrimary}>
-            You can't share empty {isPlan ? 'Plan' : 'Workout'}!
+            You can&apos;t share empty {isPlan ? 'Plan' : 'Workout'}!
           </TextOrdinary>
         )}
       </ScrollView>

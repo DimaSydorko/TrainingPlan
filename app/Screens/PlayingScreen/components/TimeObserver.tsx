@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { usePlayTimerContext } from './PlayTimerProvider'
 import { memo, useEffect } from 'react'
 

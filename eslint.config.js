@@ -72,31 +72,6 @@ module.exports = defineConfig([
       'react-hooks/incompatible-library': 'warn',
       'react-hooks/config': 'warn',
       'react-hooks/gating': 'warn',
-      // Pre-existing errors in app/ (Phase 1 must not autofix app/). TODO(A8): back to 'error' after
-      // the Phase 2 fix pass. Locations are listed in docs/migration/handoff/A7.md.
-      'react/jsx-key': 'warn',
-      'react/display-name': 'warn',
-      'react/no-unescaped-entities': 'warn',
-    },
-  },
-  {
-    // Temporary exceptions: the seam implementations that still use a banned import.
-    // TODO(A8): delete each entry once its owner has merged the replacement.
-    files: ['app/Utils/firebase.ts', 'app/store/**'], // A1 converts compat to modular
-    rules: {
-      'no-restricted-imports': ['error', { paths: removedLibraries, patterns: removedLibraryPatterns }],
-    },
-  },
-  {
-    files: ['app/Common/Icon/Icon.tsx'], // A5 moves to @react-native-vector-icons/material-design-icons
-    rules: {
-      'no-restricted-imports': [
-        'error',
-        {
-          paths: removedLibraries.filter(p => p.name !== '@expo/vector-icons'),
-          patterns: [removedLibraryPatterns[0], firebaseCompatPattern],
-        },
-      ],
     },
   },
   {

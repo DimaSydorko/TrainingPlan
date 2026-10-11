@@ -39,7 +39,8 @@ export default memo(function GoBackSubmitModal({
           text: confirmText,
           onPress: () => {
             isConfirmed.current = true
-            onConfirm ? onConfirm() : BackHandler.exitApp()
+            if (onConfirm) onConfirm()
+            else BackHandler.exitApp()
           },
         },
       ])
@@ -62,7 +63,8 @@ export default memo(function GoBackSubmitModal({
           style: 'destructive',
           onPress: () => {
             isConfirmed.current = true
-            onConfirm ? onConfirm() : navigation.dispatch(e.data.action)
+            if (onConfirm) onConfirm()
+            else navigation.dispatch(e.data.action)
           },
         },
       ])

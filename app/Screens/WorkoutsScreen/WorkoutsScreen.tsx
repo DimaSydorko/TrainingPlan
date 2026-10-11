@@ -10,7 +10,7 @@ import { AppHelperContext } from '../../Hooks/AppHelperProvider'
 import { useAppDispatch, useWorkout } from '../../Hooks/redux'
 import useWorkoutPlan from '../../Hooks/useWorkoutPlan'
 import { deepCompare } from '../../Utils'
-import { appScreen, QUERY_LIMIT, ScreenName, VIBRATION } from '../../Utils/constants'
+import { QUERY_LIMIT, ScreenName, VIBRATION } from '../../Utils/constants'
 import { PlanType, PlansNavigation, WorkoutType, WorkoutsNavigation } from '../../Utils/types'
 import {
   AddMoreButton,

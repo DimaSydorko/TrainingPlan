@@ -83,7 +83,8 @@ export default memo(function MyPlansScreen() {
           <TouchableOpacity
             onLongPress={() => {
               Vibration.vibrate(VIBRATION.BUTTON)
-              !!selectedPlanUids.length ? drag() : setSelectedPlanUids([item.uid])
+              if (selectedPlanUids.length) drag()
+              else setSelectedPlanUids([item.uid])
             }}
             onPress={() => onPlanPress(item)}
             disabled={isActive}

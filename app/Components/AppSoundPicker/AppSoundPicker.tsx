@@ -19,7 +19,7 @@ type PropsT = {
   setIsOpen: SetStateType<boolean>
 }
 
-export default memo(({ isOpen, setIsOpen }: PropsT) => {
+export default memo(function AppSoundPicker({ isOpen, setIsOpen }: PropsT) {
   const dispatch = useAppDispatch()
   const { sound, colors } = useSettings()
   const [soundType, setSoundType] = useState<SoundType>(sound?.type || SoundType.Bell)

@@ -57,7 +57,7 @@ export default function LoginScreen() {
         {!FUTURE_FLAG.IS_DEV && <AppGoogleSignInButton disabled={!internet.isOnline} />}
         <FlexCenterColumn style={theme.margin.top20}>
           <TextOrdinary>
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Text onPress={onFooterLinkPress} style={[theme.text.link, { color: colors.primary }]}>
               Sign up
             </Text>
