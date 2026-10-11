@@ -1,0 +1,9 @@
+# Opens the "My Workouts" tab and taps the workout named WORKOUT_NAME.
+appId: ${APP_ID}
+---
+- tapOn:
+    id: tab.workouts
+- extendedWaitUntil:
+    visible: ${WORKOUT_NAME}
+    timeout: 20000
+- tapOn: ${WORKOUT_NAME}

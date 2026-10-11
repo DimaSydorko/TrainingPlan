@@ -1,0 +1,22 @@
+# Signs in with E2E_EMAIL / E2E_PASSWORD when the login screen is showing, then waits for the tabs.
+# Safe to call when already signed in (redux-persist keeps the user across launches).
+appId: ${APP_ID}
+---
+- runFlow:
+    when:
+      visible:
+        id: login.email
+    commands:
+      - tapOn:
+          id: login.email
+      - inputText: ${E2E_EMAIL}
+      - tapOn:
+          id: login.password
+      - inputText: ${E2E_PASSWORD}
+      - hideKeyboard
+      - tapOn:
+          id: login.submit
+- extendedWaitUntil:
+    visible:
+      id: tab.workouts
+    timeout: 30000

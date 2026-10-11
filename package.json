@@ -13,7 +13,9 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "format": "prettier --write \"app/**/*.{js,ts,tsx}\" \"__tests__/**/*.{js,ts,tsx}\" \"e2e/**/*.yaml\" \"*.{js,ts}\"",
-    "format:check": "prettier --check \"app/**/*.{js,ts,tsx}\" \"__tests__/**/*.{js,ts,tsx}\" \"e2e/**/*.yaml\" \"*.{js,ts}\""
+    "format:check": "prettier --check \"app/**/*.{js,ts,tsx}\" \"__tests__/**/*.{js,ts,tsx}\" \"e2e/**/*.yaml\" \"*.{js,ts}\"",
+    "e2e:android": "maestro test -e APP_ID=com.trainingplantogether_cli -e E2E_EMAIL=\"$E2E_EMAIL\" -e E2E_PASSWORD=\"$E2E_PASSWORD\" e2e/",
+    "e2e:ios": "maestro test -e APP_ID=com.trainingplantogether-cli -e E2E_EMAIL=\"$E2E_EMAIL\" -e E2E_PASSWORD=\"$E2E_PASSWORD\" e2e/"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",

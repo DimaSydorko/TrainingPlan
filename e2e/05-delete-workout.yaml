@@ -1,0 +1,29 @@
+# Clean up: delete the workout created by 02 so repeated runs don't pile up test data.
+appId: ${APP_ID}
+name: Delete the E2E workout
+tags:
+  - workouts
+  - cleanup
+env:
+  WORKOUT_NAME: E2E Workout
+---
+- launchApp
+- runFlow: subflows/login.yaml
+- tapOn:
+    id: tab.workouts
+- extendedWaitUntil:
+    visible: ${WORKOUT_NAME}
+    timeout: 20000
+# Delete every copy (earlier failed runs may have left more than one).
+- repeat:
+    while:
+      visible: ${WORKOUT_NAME}
+    commands:
+      - longPressOn: ${WORKOUT_NAME}
+      - tapOn:
+          id: workouts.delete
+      - tapOn:
+          id: appModal.confirm
+      - waitForAnimationToEnd:
+          timeout: 5000
+- assertNotVisible: ${WORKOUT_NAME}

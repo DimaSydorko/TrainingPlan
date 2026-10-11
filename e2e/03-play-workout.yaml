@@ -1,0 +1,55 @@
+# Play the workout created by 02 for about 30 seconds.
+appId: ${APP_ID}
+name: Play a workout for 30 seconds
+tags:
+  - playing
+env:
+  WORKOUT_NAME: E2E Workout
+---
+- launchApp
+- runFlow: subflows/login.yaml
+- runFlow: subflows/open-workout.yaml
+- tapOn:
+    id: workout.start
+- extendedWaitUntil:
+    visible:
+      id: playing.timer
+    timeout: 10000
+- assertVisible: E2E Push-ups
+# Start the timer if it is not already running.
+- runFlow:
+    when:
+      visible:
+        id: playing.play
+    commands:
+      - tapOn:
+          id: playing.play
+- assertVisible:
+    id: playing.pause
+# Let it run ~30 s. Maestro has no sleep: wait for the end-of-workout button, which may or may not
+# appear in that time (two 5 s breaks finish early; longer breaks don't). Either outcome is fine.
+- extendedWaitUntil:
+    visible:
+      id: playing.saveResult
+    timeout: 30000
+  optional: true
+# The app must still be on the playing screen (no crash, no navigation away).
+- assertVisible:
+    id: playing.screen
+- takeScreenshot: e2e-playing-after-30s
+# Pause if still running, then leave the screen.
+- runFlow:
+    when:
+      visible:
+        id: playing.pause
+    commands:
+      - tapOn:
+          id: playing.pause
+- back
+- runFlow:
+    when:
+      visible:
+        id: appModal.confirm
+    commands:
+      - tapOn:
+          id: appModal.confirm

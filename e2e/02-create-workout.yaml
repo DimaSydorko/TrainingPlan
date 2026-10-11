@@ -1,0 +1,46 @@
+# Create a workout with two exercises and save it.
+appId: ${APP_ID}
+name: Create a workout with 2 exercises
+tags:
+  - workouts
+env:
+  WORKOUT_NAME: E2E Workout
+---
+- launchApp
+- runFlow: subflows/login.yaml
+- tapOn:
+    id: tab.workouts
+- tapOn:
+    id: workouts.add
+- extendedWaitUntil:
+    visible:
+      id: editPlanWorkout.name
+    timeout: 5000
+- tapOn:
+    id: editPlanWorkout.name
+- eraseText: 40
+- inputText: ${WORKOUT_NAME}
+- hideKeyboard
+- tapOn:
+    id: appModal.confirm
+- runFlow: subflows/open-workout.yaml
+# A new workout has no exercises, so WorkoutScreen opens in edit mode.
+- extendedWaitUntil:
+    visible:
+      id: workout.nameInput
+    timeout: 10000
+- runFlow:
+    file: subflows/add-exercise.yaml
+    env:
+      EXERCISE_NAME: E2E Push-ups
+- runFlow:
+    file: subflows/add-exercise.yaml
+    env:
+      EXERCISE_NAME: E2E Plank
+- tapOn:
+    id: workout.save
+- assertVisible: E2E Push-ups
+- assertVisible: E2E Plank
+- assertVisible:
+    id: workout.start
+    enabled: true

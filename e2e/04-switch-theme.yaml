@@ -1,0 +1,48 @@
+# Switch to the dark theme and back; the choice survives an app restart.
+appId: ${APP_ID}
+name: Switch the theme
+tags:
+  - settings
+---
+- launchApp
+- runFlow: subflows/login.yaml
+- tapOn:
+    id: tab.profile
+- tapOn:
+    id: profile.settings
+- assertVisible: Dark Theme
+# Normalise: start from the light theme.
+- runFlow:
+    when:
+      visible:
+        id: settings.darkTheme
+        checked: true
+    commands:
+      - tapOn:
+          id: settings.darkTheme
+- assertVisible:
+    id: settings.darkTheme
+    checked: false
+- tapOn:
+    id: settings.darkTheme
+- assertVisible:
+    id: settings.darkTheme
+    checked: true
+- takeScreenshot: e2e-theme-dark
+# Persisted by redux-persist: still dark after a restart.
+- stopApp
+- launchApp
+- runFlow: subflows/login.yaml
+- tapOn:
+    id: tab.profile
+- tapOn:
+    id: profile.settings
+- assertVisible:
+    id: settings.darkTheme
+    checked: true
+- tapOn:
+    id: settings.darkTheme
+- assertVisible:
+    id: settings.darkTheme
+    checked: false
+- takeScreenshot: e2e-theme-light
