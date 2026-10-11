@@ -35,13 +35,11 @@ jobs:
       - name: Unit tests
         run: npx jest --ci
 
-      # TODO(A8): drop continue-on-error after the Phase 2 Prettier pass.
       - name: Prettier
         run: npm run format:check
-        continue-on-error: true
 
-      # TODO(A8): drop continue-on-error once the React Native Directory check passes
-      # (unmaintained JS libraries are expected to be flagged until A5 replaces them; see STATUS.md).
+      # TODO: drop continue-on-error once the React Native Directory check passes. It may still flag
+      # react-native-draggable-flatlist and react-native-countdown-circle-timer (see STATUS.md).
       - name: expo-doctor
         run: npx expo-doctor
         continue-on-error: true
