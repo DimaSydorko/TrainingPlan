@@ -1,22 +1,24 @@
 // Firebase App (the core Firebase SDK) is always required and must be listed first
-import firebase from 'firebase/app'
+// TODO(A1): Phase 0 uses the compat layer (v8 namespaced API on the current SDK). Convert to the
+// modular API with getReactNativePersistence(AsyncStorage); compat auth only persists in memory on RN.
+import firebase from 'firebase/compat/app'
 // Add the Firebase products that you want to use
-import 'firebase/auth'
-import 'firebase/firestore'
-import 'firebase/database'
-import 'firebase/storage'
-import 'firebase/functions'
+import 'firebase/compat/auth'
+import 'firebase/compat/firestore'
+import 'firebase/compat/database'
+import 'firebase/compat/storage'
+import 'firebase/compat/functions'
 import { FirebaseDBCollection } from './constants'
-import { firebaseSDK } from './constants.local'
 
+// Was read from the gitignored constants.local.ts (firebaseSDK). Keys are listed in .env.example.
 const firebaseConfig = {
-  apiKey: firebaseSDK.API_KEY,
-  authDomain: firebaseSDK.AUTH_DOMAIN,
-  databaseURL: firebaseSDK.DATABASE_URL,
-  projectId: firebaseSDK.PROJECT_ID,
-  storageBucket: firebaseSDK.STORAGE_BUCKET,
-  messagingSenderId: firebaseSDK.MESSAGING_SENDER_ID,
-  appId: firebaseSDK.APP_ID,
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.EXPO_PUBLIC_FIREBASE_DATABASE_URL,
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
 }
 
 // Initialize Firebase

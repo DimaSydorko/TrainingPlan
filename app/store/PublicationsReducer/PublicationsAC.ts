@@ -6,7 +6,7 @@ import { ApproachType, ExerciseType, PlanType, PublicType, WorkoutType } from '.
 import { RootState } from '../index'
 import { workoutAC } from '../WorkoutReducer/WorkoutAC'
 import { plansAC } from '../PlansReducer/PlansAC'
-import firebase from 'firebase'
+import firebase from 'firebase/compat/app'
 
 type AddType = (PlanType | WorkoutType) & {
   workouts?: WorkoutType[]
