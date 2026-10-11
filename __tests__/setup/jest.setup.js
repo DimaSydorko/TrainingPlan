@@ -53,6 +53,13 @@ firebaseEntryPoints.forEach(name => {
   mockModule(name, () => require('./mocks/firebase').createStub(name))
 })
 
+// Keyboard controller (A5): the package's own Jest mock (its native module is not linked in Jest).
+mockModule('react-native-keyboard-controller', () => require('react-native-keyboard-controller/jest'))
+
+// Safe-area context (A5 added SafeAreaProvider at the root): without the official mock the
+// provider waits for native inset metrics and renders nothing.
+mockModule('react-native-safe-area-context', () => require('react-native-safe-area-context/jest/mock').default)
+
 // Reanimated 4 runs worklets on a native runtime; use the worklets package's own JS mock.
 mockModule('react-native-worklets', () => require('react-native-worklets/src/mock'))
 
