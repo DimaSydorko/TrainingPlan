@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { memo, useCallback, useEffect, useState } from 'react'
-import { LayoutAnimation, SafeAreaView, TouchableOpacity, View } from 'react-native'
+import { LayoutAnimation, TouchableOpacity, View } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import { useNavigation } from '@react-navigation/native'
 import { activateKeepAwake, deactivateKeepAwake } from '../../services/keepAwake'
@@ -17,6 +17,7 @@ import { FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '.
 import { COLORS_EXERCISE, colorsDark, colorsFixed } from '../../Theme/colors'
 import { theme } from '../../Theme/theme'
 import { icon } from '../../Theme/icons'
+import { useAppInsets } from '../../Theme/insets'
 
 import PlayingReview from './PlayingReview/PlayingReview'
 import Results from './components/Results'
@@ -29,6 +30,8 @@ export default memo(function PlayingScreen() {
   const { colors, workout, isSaveBatteryMode, sound, isVibration } = useSettings()
   const onSay = useTTS()
   const navigation = useNavigation<AppNavigationType>()
+  // Edge-to-edge: keep the header below the status bar and the controls above the navigation bar
+  const { top, bottom, footer } = useAppInsets()
   const {
     isPlaying,
     isWaitForSubmit,
@@ -137,7 +140,7 @@ export default memo(function PlayingScreen() {
   }, [setIsWorkoutReview])
 
   return (
-    <SafeAreaView style={[theme.containers.centerColumn, styles.page, { backgroundColor: colors.background }]}>
+    <View style={[theme.containers.centerColumn, styles.page, { backgroundColor: colors.background, paddingTop: top }]}>
       <PlayHeader
         isPlaying={isPlaying}
         playingLap={playing.lap}
@@ -230,6 +233,8 @@ export default memo(function PlayingScreen() {
         style={[
           styles.footer,
           {
+            height: footer,
+            paddingBottom: bottom,
             backgroundColor: colors.menu,
             shadowColor: colorsFixed.shadow,
           },
@@ -276,6 +281,6 @@ export default memo(function PlayingScreen() {
         />
       )}
       {!isSubmitGoBack && <GoBackSubmitModal text={'Current results will be lost!'} onConfirm={onGoBack} />}
-    </SafeAreaView>
+    </View>
   )
 })
