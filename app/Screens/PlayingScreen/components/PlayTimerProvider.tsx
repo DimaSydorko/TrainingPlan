@@ -30,7 +30,7 @@ export function PlayTimerProvider({ children }: IProvider) {
 export function usePlayTimerContext() {
   const context = useContext(PlayTimerContext)
   if (!context) {
-    throw new Error('useBackgroundActionContext must be used within BackgroundActionProvider')
+    throw new Error('usePlayTimerContext must be used within PlayTimerProvider')
   }
   return context
 }

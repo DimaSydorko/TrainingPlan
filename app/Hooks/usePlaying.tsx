@@ -1,14 +1,43 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Vibration } from 'react-native'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { AppState, Vibration } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import { useAppDispatch, useSettings, useWorkout } from './redux'
 import { workoutAC } from '../store/WorkoutReducer/WorkoutAC'
 import { AppNavigationType, SelectedExerciseType, SelectedWorkoutType, WorkoutType } from '../Utils/types'
-import { SOUND_CUE_DURATION_MS, VIBRATION } from '../Utils/constants'
+import { SOUND_CUE_DURATION_MS, SoundType, VIBRATION } from '../Utils/constants'
 import { plansAC } from '../store/PlansReducer/PlansAC'
 import useTTS from './useTTS'
-import { configureAudioSession, createSoundPlayer } from '../services/audio'
+import { configureAudioSession, createSoundPlayer, SoundPlayer } from '../services/audio'
+import {
+  advance,
+  buildSegments,
+  Clock,
+  findSegmentIndex,
+  pauseClock,
+  remainingMs,
+  resetClock,
+  resumeClock,
+  Segment,
+  segmentEndsAt,
+} from '../Screens/PlayingScreen/playbackSchedule'
+
+// Foreground tick for the UI. The clock itself is timestamp based (playbackSchedule.ts), so the
+// interval only decides how quickly the display and cues react; it never counts time.
+const TICK_MS = 250
+// Spoken countdown, as before (was the CountdownCircleTimer onUpdate handler in PlayingScreen)
+const COUNTDOWN_SAY_AT = [10, 3, 2, 1]
+
+// A3 amends the audio seam additively: createSoundPlayer(type, { volume }) and SoundPlayer.durationMs
+// (undefined until loaded). Typed loosely here so this file compiles before and after that lands.
+type CuePlayer = SoundPlayer & { readonly durationMs?: number }
+const createCuePlayer = createSoundPlayer as (type: SoundType, opts?: { volume?: number }) => CuePlayer
+/** Delay between a cue sound and the speech that follows it */
+export function cueDelayMs(player: CuePlayer): number {
+  return player?.durationMs ?? SOUND_CUE_DURATION_MS
+}
+
+type PendingClock = { segmentIndex: number; clock: Clock }
 
 const initialPlaying = {
   idx: 0,
@@ -42,7 +71,7 @@ export default function usePlaying() {
     () => playingWorkout.exercises.length === playing.idx + 1 && exercise.laps === playing.lap,
     [exercise.laps, playing, playingWorkout.exercises.length]
   )
-  const playSound = useMemo(() => createSoundPlayer(sound?.type, { volume: sound?.volume }), [])
+  const playSound = useMemo(() => createCuePlayer(sound?.type, { volume: sound?.volume }), [])
 
   // Release the native player when the playing screen unmounts
   useEffect(() => () => playSound.release(), [playSound])
@@ -137,8 +166,7 @@ export default function usePlaying() {
         if (!!sayName) onSay(sayName)
       } else {
         playSound.play()
-        // durationMs is undefined until the sound has loaded; fall back to the fixed cue delay
-        if (!!sayName) setTimeout(() => onSay(sayName), playSound.durationMs ?? SOUND_CUE_DURATION_MS)
+        if (!!sayName) setTimeout(() => onSay(sayName), cueDelayMs(playSound))
       }
 
       if (!isLastLap) {
@@ -214,6 +242,148 @@ export default function usePlaying() {
     setIsWaitForSubmit(p => (p ? false : p))
   }, [])
 
+  // ------------------------------------------------------------------------------------------
+  // Timestamp-based clock (D3). `playing` and `isPlaying` stay the source of truth for *where* the
+  // player is; the clock tracks *when* the current segment started, so remaining time is derived
+  // from Date.now() and survives the JS thread being suspended (locked screen / background).
+  const isTheLastOneComplete = isWaitForSubmit && isTheLastOne
+  const segments = useMemo<Segment[]>(() => buildSegments(playingWorkout.exercises), [playingWorkout.exercises])
+  const segmentIndex = useMemo(
+    () => findSegmentIndex(segments, playing.idx, playing.lap),
+    [segments, playing.idx, playing.lap]
+  )
+  const clockRef = useRef<Clock>(resetClock(0, false, Date.now()))
+  // Set right before a transition, so the next segment starts at the exact boundary time
+  const pendingClockRef = useRef<PendingClock | null>(null)
+  const lastUpdatedRef = useRef<number | null>(null)
+  const lastIsPlayingRef = useRef<boolean>(isPlaying)
+  // `playing.updated` of the segment whose completion was already handled
+  const completedUpdatedRef = useRef<number | null>(null)
+  const lastSecRef = useRef<number | null>(null)
+  const [remainingSec, setRemainingSec] = useState<number>(exercise?.breakTimeInSec || 0)
+  // Bumped whenever the clock changes (reset, pause, resume, resync): consumers reschedule cues
+  const [clockVersion, setClockVersion] = useState(0)
+  // Remounts the countdown circle at the right position after a resync or a mid-segment start
+  const [timerSync, setTimerSync] = useState<{ updated: number; key: number; initialRemainingSec?: number }>({
+    updated: playing.updated,
+    key: 0,
+  })
+  // The workout finished while the app was in the background: don't replay the finish cues
+  const [isCompletedSilently, setIsCompletedSilently] = useState(false)
+  const [isAppActive, setIsAppActive] = useState(AppState.currentState === 'active')
+
+  const syncDisplay = (now: number, remountTimer: boolean) => {
+    const clock = clockRef.current
+    const rem = remainingMs(segments, clock, now)
+    const sec = Math.ceil(rem / 1000)
+    lastSecRef.current = sec
+    setRemainingSec(sec)
+    setClockVersion(v => v + 1)
+    const segment = segments[clock.segmentIndex]
+    if (remountTimer || (segment && segment.durationMs - rem > 300)) {
+      setTimerSync(p => ({ updated: playing.updated, key: p.key + 1, initialRemainingSec: rem / 1000 }))
+    }
+  }
+
+  // Segment changes (skip, previous, reload, auto-advance) and play/pause
+  useEffect(() => {
+    const now = Date.now()
+    if (lastUpdatedRef.current !== playing.updated) {
+      lastUpdatedRef.current = playing.updated
+      const pending = pendingClockRef.current
+      pendingClockRef.current = null
+      completedUpdatedRef.current = null
+      if (pending && pending.segmentIndex === segmentIndex) {
+        // A running pending clock with the player now paused means a manual-start segment
+        clockRef.current =
+          pending.clock.startedAt !== null && !isPlaying ? resetClock(segmentIndex, false, now) : pending.clock
+      } else {
+        clockRef.current = resetClock(segmentIndex, isPlaying, now)
+      }
+    } else if (lastIsPlayingRef.current !== isPlaying) {
+      if (!isTheLastOneComplete) {
+        clockRef.current = isPlaying ? resumeClock(clockRef.current, now) : pauseClock(clockRef.current, now)
+      }
+    } else if (clockRef.current.segmentIndex !== segmentIndex) {
+      clockRef.current = { ...clockRef.current, segmentIndex }
+    } else {
+      return
+    }
+    lastIsPlayingRef.current = isPlaying
+    syncDisplay(now, false)
+  }, [playing.updated, isPlaying, segmentIndex])
+
+  const tick = () => {
+    const now = Date.now()
+    const clock = clockRef.current
+    const rem = remainingMs(segments, clock, now)
+    const sec = Math.ceil(rem / 1000)
+    if (sec !== lastSecRef.current) {
+      lastSecRef.current = sec
+      setRemainingSec(sec)
+      if (COUNTDOWN_SAY_AT.includes(sec) && exercise.breakTimeInSec > sec) onSay(`${sec}`)
+    }
+    if (rem <= 0 && clock.startedAt !== null && completedUpdatedRef.current !== playing.updated) {
+      completedUpdatedRef.current = playing.updated
+      const end = segmentEndsAt(segments, clock) ?? now
+      const next = segments[clock.segmentIndex + 1]
+      pendingClockRef.current = next ? { segmentIndex: next.index, clock: resetClock(next.index, true, now, end) } : null
+      onTimerComplete()
+    }
+  }
+  const tickRef = useRef(tick)
+  tickRef.current = tick
+
+  // Foreground-only UI tick
+  useEffect(() => {
+    if (!isPlaying || !isAppActive || isTheLastOneComplete) return
+    tickRef.current()
+    const interval = setInterval(() => tickRef.current(), TICK_MS)
+    return () => clearInterval(interval)
+  }, [isPlaying, isAppActive, isTheLastOneComplete])
+
+  // Back from background: jump to where the workout should be now, without replaying missed cues
+  const resync = () => {
+    const now = Date.now()
+    if (isTheLastOneComplete) return
+    const result = advance(segments, clockRef.current, now)
+    if (!result.crossed.length) {
+      syncDisplay(now, true)
+      return
+    }
+    const target = segments[result.clock.segmentIndex]
+    // Record what the user entered for the approach that was running when the app went away
+    onApproachUpdate()
+    if (result.finished) {
+      setIsCompletedSilently(true)
+      setIsWaitForSubmit(true)
+    } else {
+      setIsPlaying(result.clock.startedAt !== null)
+    }
+    if (target.idx !== playing.idx || target.lap !== playing.lap) {
+      pendingClockRef.current = { segmentIndex: target.index, clock: result.clock }
+      if (target.idx !== playing.idx) setExercise(playingWorkout.exercises[target.idx])
+      setPlaying({ idx: target.idx, lap: target.lap, updated: now })
+    } else {
+      clockRef.current = result.clock
+      syncDisplay(now, true)
+    }
+  }
+  const resyncRef = useRef(resync)
+  resyncRef.current = resync
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', state => {
+      const active = state === 'active'
+      setIsAppActive(active)
+      if (active) resyncRef.current()
+    })
+    return () => subscription.remove()
+  }, [])
+
+  /** Current schedule snapshot, for scheduling background cue notifications */
+  const getSchedule = useCallback(() => ({ segments, clock: clockRef.current }), [segments])
+
   return {
     playingWorkout,
     isPlaying,
@@ -235,5 +405,11 @@ export default function usePlaying() {
     onReload,
     setCurrentRepeats,
     setCurrentWeight,
+    // Timestamp clock (A4)
+    remainingSec,
+    clockVersion,
+    timerSync,
+    isCompletedSilently,
+    getSchedule,
   }
 }
