@@ -1,3 +1,5 @@
+import type { IconName } from '../Common/Icon/Icon'
+
 export const icon = {
   edit: 'pencil-outline',
   visibilityOn: 'eye-outline',
@@ -29,4 +31,8 @@ export const icon = {
   alertCircleOutline: 'alert-circle-outline',
   serverRemove: 'server-remove',
   wifiOff: 'wifi-strength-off-outline',
-}
+  minus: 'minus',
+  tabPlans: 'clipboard-list-outline',
+  tabWorkouts: 'clock-fast',
+  tabPublications: 'tooltip-text-outline',
+} as const satisfies Record<string, IconName>

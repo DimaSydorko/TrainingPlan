@@ -6,6 +6,7 @@ import { FlexSpaceBetween, TextHeader } from '../../Theme/Parents'
 import { IconButton } from '../index'
 import { appScreen } from '../../Utils/constants'
 import { SetStateType } from '../../Utils/types'
+import { icon } from '../../Theme/icons'
 
 interface ButtonCounterType {
   value: number
@@ -35,7 +36,7 @@ export default memo(function ButtonCounter({
     <FlexSpaceBetween style={[styles.container, { width: (appScreen.vw - 120) / 2 + extraWidth }]}>
       <IconButton
         size={28}
-        iconName='minus'
+        iconName={icon.minus}
         color={buttonColor}
         style={[styles.button, { borderColor: buttonColor }]}
         disabled={value <= minValue}
@@ -50,7 +51,7 @@ export default memo(function ButtonCounter({
       <IconButton
         size={28}
         isRepeatOnLongPress
-        iconName='plus'
+        iconName={icon.plus}
         color={buttonColor}
         style={[styles.button, { borderColor: buttonColor }]}
         onPress={() => onChange(p => p + step)}
