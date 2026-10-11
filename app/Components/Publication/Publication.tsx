@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native'
 import { useSettings } from '../../Hooks/redux'
 import { Labels, WorkoutDuration } from '../../Common'
 import { Card, FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'
-import { AppNavigationType, PublicType } from '../../Utils/types'
+import { PublicType, PublicationsNavigation } from '../../Utils/types'
 import { appScreen, ScreenName } from '../../Utils/constants'
 import PublicButtons from './PublicButtons'
 import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
@@ -15,7 +15,7 @@ interface IProps {
 }
 
 export default memo(function Publication({ publication }: IProps) {
-  const navigation = useNavigation<AppNavigationType>()
+  const navigation = useNavigation<PublicationsNavigation>()
   const { colors } = useSettings()
   const isPlan = !!publication?.workouts && !publication?.exercises
   const isDarkTheme = colors.primary === colorsDark.primary

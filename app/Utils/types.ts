@@ -1,7 +1,6 @@
-import { CompositeNavigationProp } from '@react-navigation/native'
-import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
-import { StackNavigationProp } from '@react-navigation/stack'
-import { ScreenName } from './constants'
+import type { NavigatorScreenParams, ParamListBase } from '@react-navigation/native'
+import type { StackNavigationProp } from '@react-navigation/stack'
+import { ScreenName, TabName } from './constants'
 
 export interface UserType {
   uid: string
@@ -98,22 +97,70 @@ export interface ColorsType {
 
 export type SetStateType<S> = (arg: S | ((prevState: S) => S)) => void
 
-export type TabParamList = {
-  App: undefined
-  Workout: undefined
-  WorkoutInPlan: undefined
-  SavedWorkouts: undefined
-  Login: undefined
-  Registration: undefined
-  Plan: undefined
-  Profile: undefined
-  Settings: undefined
-  Playing: undefined
-  Publications: undefined
-  PublicationWorkout: { workout: (PublicType | WorkoutType) & { ownerName?: string } } | undefined
-  PublicationPlan: { publication: PublicType } | undefined
+// ---------------------------------------------------------------------------
+// Navigation (React Navigation 7). One param list per navigator, so `tsc` catches
+// navigate() calls to screens that are not in the current stack.
+// ---------------------------------------------------------------------------
+
+export type PublicationWorkoutParams = { workout: (PublicType | WorkoutType) & { ownerName?: string } }
+export type PublicationPlanParams = { publication: PublicType }
+
+/** Screens that open a publication. Both the Publications and the Profile stacks register them. */
+export type PublicationScreensParamList = {
+  [ScreenName.PublicationWorkout]: PublicationWorkoutParams
+  [ScreenName.PublicationPlan]: PublicationPlanParams
 }
-export type AppNavigationType = CompositeNavigationProp<
-  BottomTabNavigationProp<TabParamList>,
-  StackNavigationProp<TabParamList>
->
+
+/** Root stack (AuthRouter): auth screens when logged out, the tab app when logged in. */
+export type AuthStackParamList = {
+  [ScreenName.Login]: undefined
+  [ScreenName.Registration]: undefined
+  [ScreenName.App]: NavigatorScreenParams<AppTabParamList> | undefined
+}
+
+/** Bottom tabs (AppRouter). */
+export type AppTabParamList = {
+  [TabName.Plans]: NavigatorScreenParams<PlansStackParamList> | undefined
+  [TabName.Workouts]: NavigatorScreenParams<WorkoutsStackParamList> | undefined
+  [TabName.Publications]: NavigatorScreenParams<PublicationsStackParamList> | undefined
+  [TabName.Profile]: NavigatorScreenParams<ProfileStackParamList> | undefined
+}
+
+/** Stack screens that can start a workout (both the Plans and the Workouts stacks have it). */
+export type PlayableStackParamList = {
+  [ScreenName.Playing]: undefined
+}
+
+export type PlansStackParamList = PlayableStackParamList & {
+  [ScreenName.SavedWorkouts]: undefined
+  [ScreenName.Plan]: undefined
+  [ScreenName.WorkoutInPlan]: undefined
+}
+
+export type WorkoutsStackParamList = PlayableStackParamList & {
+  [ScreenName.SavedWorkouts]: undefined
+  [ScreenName.Workout]: undefined
+}
+
+export type PublicationsStackParamList = PublicationScreensParamList & {
+  [ScreenName.Publications]: undefined
+}
+
+export type ProfileStackParamList = PublicationScreensParamList & {
+  [ScreenName.Profile]: undefined
+  [ScreenName.Settings]: undefined
+}
+
+export type AuthNavigation = StackNavigationProp<AuthStackParamList>
+export type PlansNavigation = StackNavigationProp<PlansStackParamList>
+export type WorkoutsNavigation = StackNavigationProp<WorkoutsStackParamList>
+export type PlayableNavigation = StackNavigationProp<PlayableStackParamList>
+export type PublicationsNavigation = StackNavigationProp<PublicationScreensParamList>
+export type ProfileNavigation = StackNavigationProp<ProfileStackParamList>
+
+/**
+ * Navigation prop for screens that only need stack actions common to every stack
+ * (goBack, setOptions, addListener). Kept for A4's PlayingScreen / usePlaying, which only call goBack().
+ * New code should use one of the navigator-specific types above.
+ */
+export type AppNavigationType = StackNavigationProp<ParamListBase>

@@ -6,7 +6,7 @@ import { publicationsAC } from '../../store/PublicationsReducer/PublicationsAC'
 import { userAC } from '../../store/UserReducer/UserAC'
 import UserImage from '../../Components/UserImage/UserImage'
 import Publication from '../../Components/Publication/Publication'
-import { AppNavigationType } from '../../Utils/types'
+import { ProfileNavigation } from '../../Utils/types'
 import { PUBLICATION_QUERY_LIMIT, appScreen, ScreenName } from '../../Utils/constants'
 import { AppModal, IconButton, InfiniteScroll } from '../../Common'
 import { FlexCenterColumn, FlexEnd, TextHeader, TextSecondary } from '../../Theme/Parents'
@@ -15,7 +15,7 @@ import styles from './styles'
 import NoSignalIcon from '../../Assets/icons/NoSignalIcon'
 
 export default memo(function ProfileScreen() {
-  const navigation = useNavigation<AppNavigationType>()
+  const navigation = useNavigation<ProfileNavigation>()
   const dispatch = useAppDispatch()
   const { colors, internet } = useSettings()
   const { user } = useUser()

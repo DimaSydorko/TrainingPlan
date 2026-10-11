@@ -1,22 +1,20 @@
 import * as React from 'react'
 import { useEffect } from 'react'
 import { TouchableOpacity } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { StackScreenProps } from '@react-navigation/stack'
 import { useSettings } from '../../Hooks/redux'
 import { WorkoutDuration } from '../../Common'
 import { Card, FlexCenterColumn, FlexSpaceBetween, Page, TextSecondary } from '../../Theme/Parents'
-import { AppNavigationType, PublicType, TabParamList } from '../../Utils/types'
+import { PublicType, PublicationScreensParamList } from '../../Utils/types'
 import Exercise from '../../Components/Exercise/Exercise'
 import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
 import NoDataIcon from '../../Assets/icons/NoDataIcon'
-import { appScreen } from '../../Utils/constants'
+import { appScreen, ScreenName } from '../../Utils/constants'
 import PublicButtons from '../../Components/Publication/PublicButtons'
 
-type PropsType = NativeStackScreenProps<TabParamList, 'PublicationWorkout'>
+type PropsType = StackScreenProps<PublicationScreensParamList, ScreenName.PublicationWorkout>
 
-export default function PublicationWorkout({ route }: PropsType) {
-  const navigation = useNavigation<AppNavigationType>()
+export default function PublicationWorkout({ route, navigation }: PropsType) {
   const { colors } = useSettings()
   const { name, exercises, ownerName } = route.params.workout
   const isDarkTheme = colors.primary === colorsDark.primary

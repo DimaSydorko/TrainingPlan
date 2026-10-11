@@ -7,9 +7,13 @@ import { ScreenName } from '../Utils/constants'
 import { ProfileScreen, SettingsScreen } from '../Screens'
 import { useScreenOptions } from '../Theme/Parents'
 import { publicationsAC } from '../store/PublicationsReducer/PublicationsAC'
+import PublicationPlan from '../Screens/PublicationsScreen/PublicationPlan'
+import PublicationWorkout from '../Screens/PublicationsScreen/PublicationWorkout'
+import { ProfileStackParamList } from '../Utils/types'
+
+const Stack = createStackNavigator<ProfileStackParamList, 'ProfileStack'>()
 
 export default memo(function ProfileRouter() {
-  const Stack = createStackNavigator()
   const dispatch = useAppDispatch()
   const options = useScreenOptions()
   const user = useUser()
@@ -24,14 +28,25 @@ export default memo(function ProfileRouter() {
   return (
     <>
       {user.isLoading && <Loading />}
-      {/* @ts-expect-error TODO(A5): React Navigation 7 navigator typings (createStackNavigator() without param list requires `id`) */}
-      <Stack.Navigator>
-        <Stack.Screen name={ScreenName.Profile} options={{ ...options, title: 'Profile' }}>
-          {() => <ProfileScreen />}
-        </Stack.Screen>
-        <Stack.Screen name={ScreenName.Settings} options={{ ...options, title: 'Settings' }}>
-          {() => <SettingsScreen />}
-        </Stack.Screen>
+      <Stack.Navigator id='ProfileStack'>
+        <Stack.Screen name={ScreenName.Profile} options={{ ...options, title: 'Profile' }} component={ProfileScreen} />
+        <Stack.Screen
+          name={ScreenName.Settings}
+          options={{ ...options, title: 'Settings' }}
+          component={SettingsScreen}
+        />
+        {/* The profile lists the user's own publications (Components/Publication). Opening one stays in
+            this tab; before, navigate() targeted screens that only existed in the Publications stack. */}
+        <Stack.Screen
+          name={ScreenName.PublicationPlan}
+          options={{ ...options, title: 'Plan' }}
+          component={PublicationPlan}
+        />
+        <Stack.Screen
+          name={ScreenName.PublicationWorkout}
+          options={{ ...options, title: 'Workout' }}
+          component={PublicationWorkout}
+        />
       </Stack.Navigator>
     </>
   )

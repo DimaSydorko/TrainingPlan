@@ -6,9 +6,15 @@ import { MyPlansScreen, PlayingScreen, WorkoutScreen, WorkoutsScreen } from '../
 import { useScreenOptions } from '../Theme/Parents'
 import { Loading } from '../Common'
 import { ScreenName } from '../Utils/constants'
+import { PlansStackParamList } from '../Utils/types'
+
+const Stack = createStackNavigator<PlansStackParamList, 'PlansStack'>()
+
+function PlanWorkoutsScreen() {
+  return <WorkoutsScreen isInPlan />
+}
 
 export default memo(function PlanRouter() {
-  const Stack = createStackNavigator()
   const options = useScreenOptions()
   const user = useUser()
 
@@ -18,16 +24,17 @@ export default memo(function PlanRouter() {
   return (
     <>
       {(workout.isLoading || plans.isLoading || user.isLoading) && <Loading />}
-      {/* @ts-expect-error TODO(A5): React Navigation 7 navigator typings (createStackNavigator() without param list requires `id`) */}
-      <Stack.Navigator>
+      <Stack.Navigator id='PlansStack'>
         <Stack.Screen
           name={ScreenName.SavedWorkouts}
           options={{ ...options, title: 'All saved Plans' }}
           component={MyPlansScreen}
         />
-        <Stack.Screen name={ScreenName.Plan} options={{ ...options, title: plans.selectedPlan?.name }}>
-          {() => <WorkoutsScreen isInPlan />}
-        </Stack.Screen>
+        <Stack.Screen
+          name={ScreenName.Plan}
+          options={{ ...options, title: plans.selectedPlan?.name }}
+          component={PlanWorkoutsScreen}
+        />
         <Stack.Screen
           name={ScreenName.WorkoutInPlan}
           options={{ ...options, title: workout.selectedWorkout?.name }}
