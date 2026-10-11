@@ -104,7 +104,13 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
         }
       >
         <FlexCenterColumn>
-          <MyTextInput placeholder={'Exercise name'} onChangeText={setName} value={name} type={'underline'} />
+          <MyTextInput
+            placeholder={'Exercise name'}
+            onChangeText={setName}
+            value={name}
+            type={'underline'}
+            testID='exerciseEdit.name'
+          />
           <FlexCenter>
             <TextHeader color={colors.textSecondary}>Break: </TextHeader>
             {isKeyboardVisible && (
@@ -116,8 +122,19 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
           {!isKeyboardVisible && (
             <View style={styles.breakContainer}>
               <FlexSpaceBetween style={styles.swipeContainer}>
-                <SwipeSelector maxValue={60} value={selectMinutes} onChange={setSelectMinutes} />
-                <SwipeSelector step={5} maxValue={60} value={selectSeconds} onChange={setSelectSeconds} />
+                <SwipeSelector
+                  maxValue={60}
+                  value={selectMinutes}
+                  onChange={setSelectMinutes}
+                  testID='exerciseEdit.breakMinutes'
+                />
+                <SwipeSelector
+                  step={5}
+                  maxValue={60}
+                  value={selectSeconds}
+                  onChange={setSelectSeconds}
+                  testID='exerciseEdit.breakSeconds'
+                />
               </FlexSpaceBetween>
               <FlexSpaceBetween>
                 <TextSecondary style={styles.breakText}>min</TextSecondary>

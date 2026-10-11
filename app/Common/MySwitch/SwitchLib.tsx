@@ -1,6 +1,16 @@
 import * as React from 'react'
 import { Component, ReactNode } from 'react'
-import { Text, StyleSheet, Animated, TouchableWithoutFeedback, StyleProp, TextStyle, ViewStyle } from 'react-native'
+import {
+  Text,
+  StyleSheet,
+  Animated,
+  TouchableWithoutFeedback,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+  AccessibilityRole,
+  AccessibilityState,
+} from 'react-native'
 import SpringAnimationConfig = Animated.SpringAnimationConfig
 
 interface SwitchProps {
@@ -33,6 +43,10 @@ interface SwitchProps {
   switchBorderRadius?: number
   circleInactiveBorderColor?: string
   circleActiveBorderColor?: string
+  // Passed through to the touchable (E2E selectors, screen readers)
+  testID?: string
+  accessibilityRole?: AccessibilityRole
+  accessibilityState?: AccessibilityState
 }
 
 interface SwitchState {

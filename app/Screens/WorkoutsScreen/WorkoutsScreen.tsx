@@ -212,7 +212,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
             )}
             <IconButton margin={10} iconName={icon.copy} onPress={() => setIsCopyModal(true)} />
             {!!selectedWorkoutsUids.length && (
-              <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />
+              <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} testID='workouts.delete' />
             )}
           </FlexEnd>
         </AppHeader>
@@ -252,7 +252,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
           <ConfirmButton isFooter header='Save Plan' onPress={onSavePlan} />
         </AppFooter>
       )}
-      {workouts?.length <= QUERY_LIMIT && <AddMoreButton onPress={() => setIsNewWorkoutModal(true)} />}
+      {workouts?.length <= QUERY_LIMIT && <AddMoreButton onPress={() => setIsNewWorkoutModal(true)} testID='workouts.add' />}
       {isChanged && isInPlan && <GoBackSubmitModal text={`Changes in '${selectedPlan?.name}' plan aren\`t saved!`} />}
       <CopyWorkoutsModal
         isInPlan={isInPlan}

@@ -15,6 +15,7 @@ interface IconButtonType {
   disabled?: boolean
   disableVibration?: boolean
   style?: ViewStyle | ViewStyle[]
+  testID?: string
 }
 
 export default function IconButton({
@@ -27,6 +28,7 @@ export default function IconButton({
   color,
   margin = 0,
   style,
+  testID,
 }: IconButtonType) {
   const { colors, isVibration } = useSettings()
   const newColor = color || colors.textSecondary
@@ -58,6 +60,9 @@ export default function IconButton({
       onLongPress={isRepeatOnLongPress ? startInterval : undefined}
       onPressOut={!!intervalID ? stopInterval : undefined}
       disabled={disabled}
+      testID={testID}
+      accessibilityRole='button'
+      accessibilityState={{ disabled }}
       style={[
         {
           opacity: disabled ? 0.5 : 1,

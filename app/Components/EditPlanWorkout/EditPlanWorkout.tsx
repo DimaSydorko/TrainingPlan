@@ -46,7 +46,13 @@ export default memo(function EditPlanWorkout({ onSubmit, type, isModal, onClose,
       extraPlaceLeft={<AppColorPicker value={colorIdx} onChange={setColorIdx} />}
     >
       <FlexCenterColumn>
-        <MyTextInput placeholder={`${type} name`} onChangeText={setName} value={name} type={'underline'} />
+        <MyTextInput
+          placeholder={`${type} name`}
+          onChangeText={setName}
+          value={name}
+          type={'underline'}
+          testID='editPlanWorkout.name'
+        />
         <LabelsInput labels={labels} setLabels={setLabels} />
       </FlexCenterColumn>
     </AppModal>

@@ -63,7 +63,12 @@ export default memo(function SettingsScreen() {
   return (
     <Page>
       <SettingsHeader label={'Colors'} />
-      <SettingsItem label={'Dark Theme'} valueSwitch={isDarkTheme} onToggleSwitch={onThemeToggle} />
+      <SettingsItem
+        label={'Dark Theme'}
+        valueSwitch={isDarkTheme}
+        onToggleSwitch={onThemeToggle}
+        testID='settings.darkTheme'
+      />
       <SettingsHeader label={'Performance'} />
       <SettingsItem label={'Safe battery mode'} valueSwitch={isSaveBatteryMode} onToggleSwitch={onBatteryModeToggle} />
       <SettingsHeader label={'Workout'} />

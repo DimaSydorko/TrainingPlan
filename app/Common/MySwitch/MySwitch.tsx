@@ -10,9 +10,10 @@ interface MySwitchType {
   disableVibration?: boolean
   onValueChange: () => void
   color?: string
+  testID?: string
 }
 
-export default function MySwitch({ value, disabled, disableVibration, onValueChange, color }: MySwitchType) {
+export default function MySwitch({ value, disabled, disableVibration, onValueChange, color, testID }: MySwitchType) {
   const { colors, isVibration } = useSettings()
   const newColor = color || colors.secondPrimary
 
@@ -34,6 +35,10 @@ export default function MySwitch({ value, disabled, disableVibration, onValueCha
       circleInActiveColor={newColor}
       renderActiveText={false}
       renderInActiveText={false}
+      testID={testID}
+      accessibilityRole='switch'
+      // SwitchLib's value is inverted for styling; the setting itself is `value`
+      accessibilityState={{ checked: !!value, disabled: !!disabled }}
     />
   )
 }

@@ -166,6 +166,7 @@ export default function WorkoutScreen() {
             <AppHeader>
               <MyTextInput
                 placeholder={'Workout Name'}
+                testID='workout.nameInput'
                 onChangeText={workoutName => setWorkoutNameInput(workoutName)}
                 value={workoutNameInput}
                 type={'underline'}
@@ -213,13 +214,20 @@ export default function WorkoutScreen() {
           </Page>
           <AddMoreButton
             icon={isEditMode ? icon.plus : icon.edit}
+            testID='workout.fab'
             onPress={() => (isEditMode ? setIsNewExercise(true) : setIsEditMode(true))}
           />
           <AppFooter>
             {isEditMode ? (
-              <ConfirmButton isFooter onPress={onSaveWorkout} header={'Save workout'} />
+              <ConfirmButton isFooter onPress={onSaveWorkout} header={'Save workout'} testID='workout.save' />
             ) : (
-              <ConfirmButton isFooter disabled={isEmpty} header={'Start Workout'} onPress={onStartPlaying} />
+              <ConfirmButton
+                isFooter
+                disabled={isEmpty}
+                header={'Start Workout'}
+                onPress={onStartPlaying}
+                testID='workout.start'
+              />
             )}
             {isChanged && (
               <GoBackSubmitModal

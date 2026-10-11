@@ -13,6 +13,7 @@ interface ConfirmButtonType {
   isFooter?: boolean
   color?: string
   style?: ViewStyle
+  testID?: string
 }
 
 export default function ConfirmButton({
@@ -23,6 +24,7 @@ export default function ConfirmButton({
   isFooter,
   style,
   disabled = false,
+  testID,
 }: ConfirmButtonType) {
   const { colors } = useSettings()
   const newColor = color || colors.primary
@@ -40,6 +42,9 @@ export default function ConfirmButton({
       onPress={onPress}
       activeOpacity={0.5}
       disabled={disabled}
+      testID={testID}
+      accessibilityRole='button'
+      accessibilityState={{ disabled }}
     >
       <Text style={[styles.buttonTitle, { color: colorsFixed.white }, headerStyle]}>{header}</Text>
     </TouchableOpacity>

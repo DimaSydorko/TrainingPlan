@@ -17,9 +17,10 @@ interface SwipeSelectorType {
   value?: number
   step?: number
   maxValue?: number
+  testID?: string
 }
 
-export default memo(function SwipeSelector({ onChange, value = 0, step = 1, maxValue = 60 }: SwipeSelectorType) {
+export default memo(function SwipeSelector({ onChange, value = 0, step = 1, maxValue = 60, testID }: SwipeSelectorType) {
   const { colors } = useSettings()
   const values = useMemo(() => buildPickerValues(maxValue, step), [maxValue, step])
   const valueIndex = indexForValue(value, step, values.length)
@@ -75,6 +76,7 @@ export default memo(function SwipeSelector({ onChange, value = 0, step = 1, maxV
 
   return (
     <View
+      testID={testID}
       style={{
         height: WRAPPER_HEIGHT,
         width: WRAPPER_WIDTH,

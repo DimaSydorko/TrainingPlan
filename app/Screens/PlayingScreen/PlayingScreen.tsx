@@ -140,7 +140,10 @@ export default memo(function PlayingScreen() {
   }, [setIsWorkoutReview])
 
   return (
-    <View style={[theme.containers.centerColumn, styles.page, { backgroundColor: colors.background, paddingTop: top }]}>
+    <View
+      testID='playing.screen'
+      style={[theme.containers.centerColumn, styles.page, { backgroundColor: colors.background, paddingTop: top }]}
+    >
       <PlayHeader
         isPlaying={isPlaying}
         playingLap={playing.lap}
@@ -172,7 +175,7 @@ export default memo(function PlayingScreen() {
           )}
         </View>
 
-        <TouchableOpacity style={styles.timerContainer} onPress={onTogglePlay}>
+        <TouchableOpacity testID='playing.timer' style={styles.timerContainer} onPress={onTogglePlay}>
           <CountdownCircleTimer
             key={timerKey}
             isPlaying={isPlaying && !isTheLastOneComplete}
@@ -225,7 +228,12 @@ export default memo(function PlayingScreen() {
           </View>
         )}
         {isTheLastOneComplete && (
-          <ConfirmButton header={'Save Result'} style={{ width: appScreen.vw - 80 }} onPress={onSaveResult} />
+          <ConfirmButton
+            header={'Save Result'}
+            style={{ width: appScreen.vw - 80 }}
+            onPress={onSaveResult}
+            testID='playing.saveResult'
+          />
         )}
       </FlexCenterColumn>
 
@@ -242,6 +250,7 @@ export default memo(function PlayingScreen() {
       >
         <IconButton
           onPress={toggleWorkoutReview}
+          testID='playing.review'
           iconName={isWorkoutReview ? icon.timer : icon.list}
           color={colors.black}
           size={35}
@@ -249,6 +258,7 @@ export default memo(function PlayingScreen() {
         <FlexSpaceBetween style={{ width: '50%' }}>
           <IconButton
             onPress={onPrevious}
+            testID='playing.previous'
             disabled={playing.idx <= 0 && playing.lap <= 1}
             iconName={icon.skipPrevious}
             color={colors.black}
@@ -256,6 +266,7 @@ export default memo(function PlayingScreen() {
           />
           <IconButton
             onPress={onTogglePlay}
+            testID={isPlaying ? 'playing.pause' : 'playing.play'}
             disabled={isTheLastOneComplete}
             iconName={isPlaying ? icon.pause : icon.play}
             color={colors.primary}
@@ -263,13 +274,14 @@ export default memo(function PlayingScreen() {
           />
           <IconButton
             onPress={onNext}
+            testID='playing.next'
             disabled={isTheLastOneComplete}
             iconName={icon.skipNext}
             color={colors.black}
             size={35}
           />
         </FlexSpaceBetween>
-        <IconButton onPress={onReload} iconName={icon.restart} color={colors.black} size={35} />
+        <IconButton onPress={onReload} iconName={icon.restart} color={colors.black} size={35} testID='playing.reload' />
       </FlexSpaceBetween>
       {isWorkoutReview && (
         <PlayingReview

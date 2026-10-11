@@ -38,15 +38,22 @@ export default function LoginScreen() {
             value={inputData.email}
             onChangeText={email => setInputData({ ...inputData, email })}
             placeholder='E-mail'
+            testID='login.email'
           />
           <MyTextInput
             secureTextEntry
             value={inputData.password}
             onChangeText={password => setInputData({ ...inputData, password })}
             placeholder='Password'
+            testID='login.password'
           />
         </FlexCenterColumn>
-        <ConfirmButton disabled={isLoading || !internet.isOnline} onPress={onLoginPress} header='Log in' />
+        <ConfirmButton
+          disabled={isLoading || !internet.isOnline}
+          onPress={onLoginPress}
+          header='Log in'
+          testID='login.submit'
+        />
         {!FUTURE_FLAG.IS_DEV && <AppGoogleSignInButton disabled={!internet.isOnline} />}
         <FlexCenterColumn style={theme.margin.top20}>
           <TextOrdinary>

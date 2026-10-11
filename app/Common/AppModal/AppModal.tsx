@@ -57,10 +57,17 @@ export default function AppModal({
             {children}
           </FlexCenter>
           <FlexCenter>
-            <ConfirmButton header={'Cancel'} color={colors.disabled} style={buttonStyle} onPress={onClose} />
+            <ConfirmButton
+              header={'Cancel'}
+              color={colors.disabled}
+              style={buttonStyle}
+              onPress={onClose}
+              testID='appModal.cancel'
+            />
             {!!onRefuse && (
               <ConfirmButton
                 header={'No'}
+                testID='appModal.refuse'
                 color={colors.error}
                 style={buttonStyle}
                 onPress={() => {
@@ -71,6 +78,7 @@ export default function AppModal({
             )}
             <ConfirmButton
               header={confirmText}
+              testID='appModal.confirm'
               color={isWarning ? colors.error : colors.primary}
               style={buttonStyle}
               disabled={disabled}

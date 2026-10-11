@@ -17,6 +17,8 @@ interface IProps {
   sliderMinValue?: number
   sliderValueType?: string
   onSliderChange?: (v: number) => void
+  /** Passed to the switch (E2E selectors) */
+  testID?: string
 }
 
 export default memo(function SettingsItem({
@@ -29,6 +31,7 @@ export default memo(function SettingsItem({
   sliderMinValue = 0,
   sliderValueType = '',
   onSliderChange,
+  testID,
 }: IProps) {
   const { colors } = useSettings()
   const [valSlider, setValSlider] = useState<number>(valueSlider)
@@ -41,7 +44,7 @@ export default memo(function SettingsItem({
     <View style={styles.container}>
       <FlexSpaceBetween style={styles.content}>
         <TextOrdinary style={{ width: appScreen.vw - 100 }}>{label}</TextOrdinary>
-        {!!onToggleSwitch && <MySwitch value={valueSwitch} onValueChange={onToggleSwitch} />}
+        {!!onToggleSwitch && <MySwitch value={valueSwitch} onValueChange={onToggleSwitch} testID={testID} />}
         {!!onSliderChange && (
           <TextSecondary>
             {valSlider}

@@ -24,6 +24,7 @@ type TabType = {
   name: keyof AppTabParamList
   component: ComponentType<object>
   buttonLabel: string
+  testID: string
   icon: (color: string) => React.JSX.Element
 }
 
@@ -32,24 +33,28 @@ const tabs = [
     name: TabName.Plans,
     component: PlanRouter,
     buttonLabel: 'My Plans',
+    testID: 'tab.plans',
     icon: color => <Icon name={icon.tabPlans} size={28} color={color} />,
   },
   {
     name: TabName.Workouts,
     component: WorkoutsRouter,
     buttonLabel: 'My Workouts',
+    testID: 'tab.workouts',
     icon: color => <Icon name={icon.tabWorkouts} size={28} color={color} />,
   },
   {
     name: TabName.Publications,
     component: PublicationsRouter,
     buttonLabel: 'Publications',
+    testID: 'tab.publications',
     icon: color => <Icon name={icon.tabPublications} size={28} color={color} />,
   },
   {
     name: TabName.Profile,
     component: ProfileRouter,
     buttonLabel: 'Profile',
+    testID: 'tab.profile',
     icon: color => <Icon name={icon.account} size={28} color={color} />,
   },
 ] as TabType[]
@@ -72,7 +77,7 @@ export default function AppRouter() {
     <>
       <NotificationHandler />
       <Tab.Navigator id='AppTabs' screenOptions={{ sceneStyle: { backgroundColor: colors.background } }}>
-        {tabs.map(({ name, icon, buttonLabel, component }) => (
+        {tabs.map(({ name, icon, buttonLabel, testID, component }) => (
           <Tab.Screen
             key={name}
             name={name}
@@ -83,6 +88,7 @@ export default function AppRouter() {
               ),
               tabBarIcon: ({ focused }) => icon(focused ? colors.secondPrimary : colors.black),
               headerShown: false,
+              tabBarButtonTestID: testID,
               tabBarStyle: {
                 position: 'absolute',
                 bottom: 0,

@@ -39,6 +39,7 @@ export default memo(function ProfileScreen() {
         {internet.isOnline && (
           <IconButton
             iconName={icon.logout}
+            testID='profile.logout'
             onPress={() => setIsLogoutModal(true)}
             color={colors.textSecondary}
             size={36}
@@ -47,6 +48,7 @@ export default memo(function ProfileScreen() {
         )}
         <IconButton
           iconName={icon.settings}
+          testID='profile.settings'
           onPress={() => navigation.navigate(ScreenName.Settings)}
           color={colors.textSecondary}
           size={36}

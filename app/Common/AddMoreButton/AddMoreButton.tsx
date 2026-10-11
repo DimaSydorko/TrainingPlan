@@ -11,16 +11,17 @@ interface AddMoreButtonType {
   iconColor?: string
   icon?: string
   style?: ViewStyle
+  testID?: string
 }
 
-export default function AddMoreButton({ onPress, icon, iconColor, color, style }: AddMoreButtonType) {
+export default function AddMoreButton({ onPress, icon, iconColor, color, style, testID }: AddMoreButtonType) {
   const { colors } = useSettings()
   const newIconColor = iconColor || colors.background
   const newColor = color || colors.primary
   // Sits above the tab bar / AppFooter, which grow by the navigation bar inset (edge-to-edge)
   const { bottom } = useAppInsets()
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.container, { backgroundColor: newColor, bottom: styles.container.bottom + bottom }, style]}>
+    <TouchableOpacity testID={testID} accessibilityRole='button' onPress={onPress} style={[styles.container, { backgroundColor: newColor, bottom: styles.container.bottom + bottom }, style]}>
       <Icon name={icon || 'plus'} size={24} color={newIconColor} />
     </TouchableOpacity>
   )
