@@ -1,7 +1,12 @@
-// @ts-nocheck -- jest globals are untyped until A7 adds the Jest tooling (@types/jest); remove then.
 import { errorMessage, ownedBy, splitUid, syncWithRemote } from '../sync'
 
-const item = (uid: string, lastUpdated?: number, extra = {}) => ({ uid, lastUpdated, ...extra })
+// Loosely typed on purpose: the sync helpers only look at uid / lastUpdated / ownerUid
+type Item = { uid: string; lastUpdated?: number; ownerUid?: string; [key: string]: unknown }
+const item = (uid: string, lastUpdated?: number, extra: Record<string, unknown> = {}): Item => ({
+  uid,
+  lastUpdated,
+  ...extra,
+})
 
 describe('syncWithRemote', () => {
   it('returns remote items when nothing is cached', () => {

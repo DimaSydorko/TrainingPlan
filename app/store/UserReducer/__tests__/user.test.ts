@@ -1,4 +1,6 @@
-// @ts-nocheck -- jest globals are untyped until A7 adds the Jest tooling (@types/jest); remove then.
+import reducer, { authUserChanged, errorUserClear, sessionEnded } from '../UserSlice'
+import { userAC } from '../UserAC'
+
 jest.mock('../../../Utils/firebase', () => ({
   auth: { name: 'auth' },
   db: {},
@@ -29,11 +31,9 @@ jest.mock('../../../services/googleAuth', () => ({
   isGoogleSignInCancelled: jest.fn(e => e?.code === 'cancelled'),
 }))
 
-import * as fbAuth from 'firebase/auth'
-import * as firestore from 'firebase/firestore'
-import * as google from '../../../services/googleAuth'
-import reducer, { authUserChanged, errorUserClear, sessionEnded } from '../UserSlice'
-import { userAC } from '../UserAC'
+const fbAuth = jest.requireMock('firebase/auth')
+const firestore = jest.requireMock('firebase/firestore')
+const google = jest.requireMock('../../../services/googleAuth')
 
 const fbUser = { uid: 'u1', displayName: 'Ann', photoURL: null, email: 'a@b.c' }
 const user = { uid: 'u1', displayName: 'Ann', photoURL: null, email: 'a@b.c' }
@@ -82,7 +82,7 @@ describe('userAC thunks', () => {
       u.displayName = displayName
     })
     const dispatch = jest.fn()
-    const action = await userAC.signUp({ email: 'a@b.c', password: 'pw', displayName: 'Ann' })(dispatch, () => ({}), undefined)
+    const action: any = await userAC.signUp({ email: 'a@b.c', password: 'pw', displayName: 'Ann' })(dispatch, () => ({}), undefined)
     expect(fbAuth.updateProfile).toHaveBeenCalledWith(created, { displayName: 'Ann' })
     expect(action.payload.displayName).toBe('Ann')
     expect(dispatch).toHaveBeenCalled()

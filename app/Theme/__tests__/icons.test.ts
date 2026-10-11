@@ -2,9 +2,6 @@ import { icon } from '../icons'
 
 // Jest globals are provided at runtime by A7's jest-expo setup. They are declared here (module
 // scope, so they never clash with @types/jest) to keep `tsc --noEmit` green before that lands.
-declare const describe: (name: string, fn: () => void) => void
-declare const it: any
-declare const expect: any
 
 
 // The Icon seam renders @react-native-vector-icons/material-design-icons. A name missing from its

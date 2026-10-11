@@ -1,9 +1,8 @@
-// @ts-nocheck -- jest globals are untyped until A7 adds the Jest tooling (@types/jest); remove then.
 // Only the pure spec is tested; keep the real SDK out of the test.
-jest.mock('firebase/firestore', () => ({}))
-
 import { publicationsQuerySpec } from '../publicationsQuery'
 import { PUBLICATION_QUERY_LIMIT } from '../../../Utils/constants'
+
+jest.mock('firebase/firestore', () => ({}))
 
 const base = { isYours: false, labels: [], userUid: 'u1' }
 const order = { field: 'lastUpdated', direction: 'desc' }
@@ -31,8 +30,8 @@ describe('publicationsQuerySpec', () => {
   })
 
   it('paginates from lastVisible with startAt, or up to firstVisible with endAt', () => {
-    expect(publicationsQuerySpec({ ...base, lastVisible: { lastUpdated: 50 } }).startAt).toBe(50)
-    const spec = publicationsQuerySpec({ ...base, firstVisible: { lastUpdated: 70 } })
+    expect(publicationsQuerySpec({ ...base, lastVisible: { lastUpdated: 50 } as any }).startAt).toBe(50)
+    const spec = publicationsQuerySpec({ ...base, firstVisible: { lastUpdated: 70 } as any })
     expect(spec.endAt).toBe(70)
     expect(spec.startAt).toBeUndefined()
   })

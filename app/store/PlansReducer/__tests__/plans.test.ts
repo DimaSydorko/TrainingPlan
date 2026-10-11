@@ -1,4 +1,6 @@
-// @ts-nocheck -- jest globals are untyped until A7 adds the Jest tooling (@types/jest); remove then.
+import reducer, { changePlansPosition, clearPlaneResults, selectPlan } from '../PlansSlice'
+import { plansAC } from '../PlansAC'
+
 jest.mock('../../../Utils/firebase', () => ({
   db: {},
   auth: {},
@@ -26,10 +28,8 @@ jest.mock('firebase/firestore', () => {
 jest.mock('firebase/database', () => ({ get: jest.fn(), ref: jest.fn() }))
 jest.mock('@react-native-community/netinfo', () => ({ fetch: jest.fn() }))
 
-import NetInfo from '@react-native-community/netinfo'
-import * as firestore from 'firebase/firestore'
-import reducer, { changePlansPosition, clearPlaneResults, selectPlan } from '../PlansSlice'
-import { plansAC } from '../PlansAC'
+const NetInfo = jest.requireMock('@react-native-community/netinfo')
+const firestore = jest.requireMock('firebase/firestore')
 
 const plan = (uid: string, lastUpdated = 1, extra = {}) => ({
   uid,

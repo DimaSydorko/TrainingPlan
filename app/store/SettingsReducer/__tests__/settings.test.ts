@@ -1,4 +1,3 @@
-// @ts-nocheck -- jest globals are untyped until A7 adds the Jest tooling (@types/jest); remove then.
 import reducer, {
   clearSettings,
   onBatteryModeChange,

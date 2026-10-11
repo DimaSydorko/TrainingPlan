@@ -1,4 +1,6 @@
-// @ts-nocheck -- jest globals are untyped until A7 adds the Jest tooling (@types/jest); remove then.
+import reducer, { clearWorkoutResults, updateSelectedWorkout } from '../WorkoutSlice'
+import { workoutAC } from '../WorkoutAC'
+
 jest.mock('../../../Utils/firebase', () => ({
   db: {},
   auth: {},
@@ -26,11 +28,9 @@ jest.mock('firebase/firestore', () => {
 jest.mock('firebase/database', () => ({ get: jest.fn(), ref: jest.fn((db, path) => ({ db, path })) }))
 jest.mock('@react-native-community/netinfo', () => ({ fetch: jest.fn() }))
 
-import NetInfo from '@react-native-community/netinfo'
-import * as firestore from 'firebase/firestore'
-import * as database from 'firebase/database'
-import reducer, { clearWorkoutResults, updateSelectedWorkout } from '../WorkoutSlice'
-import { workoutAC } from '../WorkoutAC'
+const NetInfo = jest.requireMock('@react-native-community/netinfo')
+const firestore = jest.requireMock('firebase/firestore')
+const database = jest.requireMock('firebase/database')
 
 const workout = (uid: string, lastUpdated = 1, extra = {}) => ({
   uid,
@@ -82,7 +82,7 @@ describe('WorkoutSlice reducers', () => {
   })
 
   it('stores exercise images and clears results', () => {
-    const images = [{ fileName: 'a.gif', storageKey: 'k', downloadUrl: 'u', filter: 'gym' }]
+    const images = [{ fileName: 'a.gif', storageKey: 'k', downloadUrl: 'u', filter: 'gym' }] as any[]
     let s = reducer(initial(), workoutAC.getExerciseImages.fulfilled(images, 'r'))
     expect(s.exerciseImages).toEqual(images)
     s = reducer({ ...s, workouts: [workout('a')] }, updateSelectedWorkout(workout('a')))

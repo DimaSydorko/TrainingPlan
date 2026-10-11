@@ -3,9 +3,6 @@ import { appScreen } from '../../Utils/constants'
 
 // Jest globals are provided at runtime by A7's jest-expo setup. They are declared here (module
 // scope, so they never clash with @types/jest) to keep `tsc --noEmit` green before that lands.
-declare const describe: (name: string, fn: () => void) => void
-declare const it: (name: string, fn: () => void) => void
-declare const expect: any
 
 describe('getBarHeights', () => {
   it('keeps the old bar heights without insets', () => {

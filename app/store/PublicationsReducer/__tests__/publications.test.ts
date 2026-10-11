@@ -1,4 +1,6 @@
-// @ts-nocheck -- jest globals are untyped until A7 adds the Jest tooling (@types/jest); remove then.
+import reducer, { clearPublicationResults } from '../PublicationsSlice'
+import { publicationsAC } from '../PublicationsAC'
+
 jest.mock('../../../Utils/firebase', () => ({
   db: {},
   auth: {},
@@ -27,9 +29,7 @@ jest.mock('firebase/firestore', () => ({
 jest.mock('firebase/database', () => ({ get: jest.fn(), ref: jest.fn() }))
 jest.mock('@react-native-community/netinfo', () => ({ fetch: jest.fn(() => Promise.resolve({ isConnected: true })) }))
 
-import * as firestore from 'firebase/firestore'
-import reducer, { clearPublicationResults } from '../PublicationsSlice'
-import { publicationsAC } from '../PublicationsAC'
+const firestore = jest.requireMock('firebase/firestore')
 
 const pub = (uid: string, extra = {}) => ({
   uid,
@@ -114,7 +114,7 @@ describe('publicationsAC thunks', () => {
 
   it('add writes the same document shape as before', async () => {
     const workout = { uid: 'w', name: 'W', colorIdx: 2, labels: ['l'], exercises: [{ uid: 'e' }] }
-    const action = await run(publicationsAC.add(workout))
+    const action = await run(publicationsAC.add(workout as any))
     const [ref, data] = firestore.setDoc.mock.calls[0]
     expect(ref.path).toBe(`publications/${action.payload.uid}`)
     expect(Object.keys(data).sort()).toEqual(

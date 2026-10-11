@@ -10,9 +10,6 @@ import {
 } from '../mediaUtils'
 
 // Jest globals. Declared locally so `tsc` passes before A7 adds @types/jest; remove once it lands.
-declare const describe: (name: string, fn: () => void) => void
-declare const it: (name: string, fn: () => void) => void
-declare const expect: any
 
 describe('clamp / normalizeVolume', () => {
   it('clamps into range and handles NaN', () => {

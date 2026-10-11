@@ -1,4 +1,3 @@
-// @ts-nocheck -- Jest globals have no types until A7 adds jest-expo/@types/jest. Remove then.
 import {
   GoogleAuthError,
   idTokenFromSignInResult,

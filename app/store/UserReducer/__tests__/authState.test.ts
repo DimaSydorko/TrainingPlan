@@ -1,4 +1,3 @@
-// @ts-nocheck -- jest globals are untyped until A7 adds the Jest tooling (@types/jest); remove then.
 import { resolveAuthChange, toUserType } from '../authState'
 
 const fbUser = (over = {}) => ({ uid: 'u1', displayName: 'Ann', photoURL: null, email: 'a@b.c', ...over })

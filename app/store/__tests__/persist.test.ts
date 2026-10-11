@@ -1,4 +1,3 @@
-// @ts-nocheck -- jest globals are untyped until A7 adds the Jest tooling (@types/jest); remove then.
 // Guards the redux-persist config: changing it would drop the state stored by the pre-migration app.
 jest.mock('../../Utils/firebase', () => ({ auth: {}, db: {}, rtdb: {} }))
 jest.mock('firebase/auth', () => ({ onAuthStateChanged: jest.fn(() => () => {}) }))
@@ -52,7 +51,7 @@ describe('redux-persist config', () => {
 
   it('rehydrates state stored by the old app', async () => {
     for (let i = 0; i < 50 && !persistedStore.getState().bootstrapped; i++) {
-      await new Promise(resolve => setImmediate(resolve))
+      await new Promise<void>(resolve => setImmediate(resolve))
     }
     const state = store.getState()
     expect(persistedStore.getState().bootstrapped).toBe(true)

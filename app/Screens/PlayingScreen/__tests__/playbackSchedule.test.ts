@@ -15,9 +15,6 @@ import {
 } from '../playbackSchedule'
 
 // Jest globals. Declared locally so `tsc` passes before A7 adds @types/jest; remove once it lands.
-declare const describe: (name: string, fn: () => void) => void
-declare const it: (name: string, fn: () => void) => void
-declare const expect: any
 
 const T0 = 1_700_000_000_000
 const s = (sec: number) => sec * 1000
