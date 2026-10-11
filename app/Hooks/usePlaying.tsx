@@ -5,10 +5,10 @@ import { useNavigation } from '@react-navigation/native'
 import { useAppDispatch, useSettings, useWorkout } from './redux'
 import { workoutAC } from '../store/WorkoutReducer/WorkoutAC'
 import { AppNavigationType, SelectedExerciseType, SelectedWorkoutType, WorkoutType } from '../Utils/types'
-import { SOUND_CUE_DURATION_MS, SoundType, VIBRATION } from '../Utils/constants'
+import { SOUND_CUE_DURATION_MS, VIBRATION } from '../Utils/constants'
 import { plansAC } from '../store/PlansReducer/PlansAC'
 import useTTS from './useTTS'
-import { configureAudioSession, createSoundPlayer, SoundPlayer } from '../services/audio'
+import { createSoundPlayer, SoundPlayer } from '../services/audio'
 import {
   advance,
   buildSegments,
@@ -28,12 +28,8 @@ const TICK_MS = 250
 // Spoken countdown, as before (was the CountdownCircleTimer onUpdate handler in PlayingScreen)
 const COUNTDOWN_SAY_AT = [10, 3, 2, 1]
 
-// A3 amends the audio seam additively: createSoundPlayer(type, { volume }) and SoundPlayer.durationMs
-// (undefined until loaded). Typed loosely here so this file compiles before and after that lands.
-type CuePlayer = SoundPlayer & { readonly durationMs?: number }
-const createCuePlayer = createSoundPlayer as (type: SoundType, opts?: { volume?: number }) => CuePlayer
-/** Delay between a cue sound and the speech that follows it */
-export function cueDelayMs(player: CuePlayer): number {
+/** Delay between a cue sound and the speech that follows it (durationMs is undefined until loaded) */
+export function cueDelayMs(player: SoundPlayer): number {
   return player?.durationMs ?? SOUND_CUE_DURATION_MS
 }
 
@@ -44,8 +40,6 @@ const initialPlaying = {
   lap: 1,
   updated: Date.now(),
 }
-// Was Sound.setCategory('Playback', true): playback mixed with other audio
-configureAudioSession({ duckOthers: false }).then()
 type PlayingType = typeof initialPlaying
 
 export default function usePlaying() {
@@ -71,7 +65,7 @@ export default function usePlaying() {
     () => playingWorkout.exercises.length === playing.idx + 1 && exercise.laps === playing.lap,
     [exercise.laps, playing, playingWorkout.exercises.length]
   )
-  const playSound = useMemo(() => createCuePlayer(sound?.type, { volume: sound?.volume }), [])
+  const playSound = useMemo(() => createSoundPlayer(sound?.type, { volume: sound?.volume }), [])
 
   // Release the native player when the playing screen unmounts
   useEffect(() => () => playSound.release(), [playSound])
