@@ -103,15 +103,14 @@ export const publicationsSlice = createSlice({
       )
       .addCase(
         publicationsAC.save.fulfilled.type,
-        (
-          state,
-          { payload: { userUid, publicationUid } }: PayloadAction<{ userUid: string; publicationUid: string } | null>
-        ) => {
-          if (publicationUid) {
+        (state, { payload }: PayloadAction<{ userUid: string; publicationUid: string } | null>) => {
+          // payload is null when the user had already downloaded it (destructuring it used to throw)
+          if (payload?.publicationUid) {
+            const { userUid, publicationUid } = payload
             state.publications = state.publications.map(p =>
               p.uid === publicationUid ? { ...p, downloads: [...p.downloads, userUid] } : p
             )
-            state.userPublications = state.publications.map(p =>
+            state.userPublications = state.userPublications.map(p =>
               p.uid === publicationUid ? { ...p, downloads: [...p.downloads, userUid] } : p
             )
           }

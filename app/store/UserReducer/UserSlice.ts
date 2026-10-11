@@ -48,6 +48,17 @@ export const userSlice = createSlice({
     errorUserClear(state) {
       state.error = ''
     },
+    // From onAuthStateChanged (authListener.ts)
+    authUserChanged(state, { payload }: PayloadAction<UserType>) {
+      state.user = payload
+    },
+    // Firebase has no session any more: show the login screen. Cached workouts and plans are kept
+    // so unsynced local changes survive and sync when the same user logs in again.
+    sessionEnded(state) {
+      state.user = null
+      state.data = null
+      state.isLoading = false
+    },
   },
   extraReducers: builder => {
     builder
@@ -65,6 +76,7 @@ export const userSlice = createSlice({
       .addCase(userAC.dataUpdate.pending.type, onLoading)
       .addCase(userAC.signIn.pending.type, onLoading)
       .addCase(userAC.signUp.pending.type, onLoading)
+      .addCase(userAC.signInWithGoogle.pending.type, onLoading)
       .addCase(userAC.dataRequest.pending.type, onLoading)
       .addCase(userAC.signOut.pending.type, onLoading)
       .addCase(userAC.signUp.rejected.type, onError)
@@ -79,5 +91,5 @@ export const userSlice = createSlice({
       .addCase(userAC.dataRequest.rejected.type, onError)
   },
 })
-export const { errorUserClear } = userSlice.actions
+export const { errorUserClear, authUserChanged, sessionEnded } = userSlice.actions
 export default userSlice.reducer

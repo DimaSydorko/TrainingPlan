@@ -56,8 +56,10 @@ export const workoutSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(workoutAC.getWorkouts.fulfilled.type, (state, { payload }: PayloadAction<GetWorkoutsReducerType>) => {
-        state.workouts = payload.workouts
-        if (!payload.isInternet) state.deletedWorkoutUids = []
+        state.workouts = payload.workouts || []
+        // Pending offline deletes were pushed to Firestore by the thunk (was `!isInternet`, which
+        // dropped them when the list loaded offline).
+        if (payload.isInternet) state.deletedWorkoutUids = []
         state.isLoading = false
         state.error = ''
       })
@@ -82,7 +84,7 @@ export const workoutSlice = createSlice({
       })
       .addCase(workoutAC.updateWorkout.fulfilled.type, (state, { payload }: PayloadAction<WorkoutType>) => {
         state.workouts = state.workouts.map(workout => (workout.uid === payload.uid ? payload : workout))
-        if (state.selectedWorkout.uid === payload.uid) {
+        if (state.selectedWorkout?.uid === payload.uid) {
           state.selectedWorkout = { ...state.selectedWorkout, ...payload }
         }
         state.isLoading = false
