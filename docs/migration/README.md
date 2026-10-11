@@ -134,15 +134,17 @@ A0 sets up thin service modules so Phase 1 agents can swap implementations witho
 
 ```ts
 // app/services/audio.ts             (A3)
-export type SoundPlayer = { play(): void; stop(): void; release(): void }
-export function createSoundPlayer(type: SoundType): SoundPlayer
-export function previewSound(type: SoundType): void
+export type SoundPlayer = { play(): void; stop(): void; release(): void; readonly durationMs?: number } // durationMs: undefined until loaded
+export function createSoundPlayer(type: SoundType, opts?: { volume?: number }): SoundPlayer
+export function previewSound(type: SoundType, opts?: { volume?: number }): void
 export function configureAudioSession(opts: { duckOthers: boolean }): Promise<void>
+export function beginDucking(): () => void            // A3 internal (used by speech.ts); returns an idempotent end()
+export function getLivePlayerCount(): number           // dev leak check
 
 // app/services/speech.ts            (A3)
 export function speak(text: string, opts?: { rate?: number; pitch?: number; volume?: number }): void
 export function stopSpeaking(): void
-export function setSpeechDefaults(opts: { rate?: number; pitch?: number; duck?: boolean }): void
+export function setSpeechDefaults(opts: { rate?: number; pitch?: number; duck?: boolean; voice?: string }): void
 
 // app/services/keepAwake.ts         (A3)
 export function activateKeepAwake(tag?: string): void
