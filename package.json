@@ -11,7 +11,9 @@
     "doctor": "expo-doctor",
     "prebuild": "expo prebuild --clean",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "format": "prettier --write \"app/**/*.{js,ts,tsx}\" \"__tests__/**/*.{js,ts,tsx}\" \"e2e/**/*.yaml\" \"*.{js,ts}\"",
+    "format:check": "prettier --check \"app/**/*.{js,ts,tsx}\" \"__tests__/**/*.{js,ts,tsx}\" \"e2e/**/*.yaml\" \"*.{js,ts}\""
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
@@ -60,6 +62,9 @@
     "@types/jest": "^29.5.14",
     "@types/react": "~19.2.2",
     "babel-preset-expo": "~57.0.14",
+    "eslint": "^9.39.5",
+    "eslint-config-expo": "~57.0.2",
+    "eslint-config-prettier": "^10.1.8",
     "jest": "^29.7.0",
     "jest-expo": "~57.0.5",
     "prettier": "^2.6.2",
