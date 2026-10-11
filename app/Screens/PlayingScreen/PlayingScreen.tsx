@@ -5,8 +5,8 @@ import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import { useNavigation } from '@react-navigation/native'
 import { activateKeepAwake, deactivateKeepAwake } from '../../services/keepAwake'
 
-import usePlaying from '../../Hooks/usePlaying'
-import { appScreen, SOUND_CUE_DURATION_MS } from '../../Utils/constants'
+import usePlaying, { cueDelayMs } from '../../Hooks/usePlaying'
+import { appScreen } from '../../Utils/constants'
 import useTTS from '../../Hooks/useTTS'
 import { useSettings } from '../../Hooks/redux'
 import { getWorkoutDuration } from '../../Utils'
@@ -20,13 +20,13 @@ import { icon } from '../../Theme/icons'
 
 import PlayingReview from './PlayingReview/PlayingReview'
 import Results from './components/Results'
-import BackgroundAction from './components/BackgroundAction'
 import TimeObserver from './components/TimeObserver'
 import PlayHeader from './components/PlayHeader'
 import styles from './styles'
+import useBackgroundCues from './useBackgroundCues'
 
 export default memo(function PlayingScreen() {
-  const { colors, workout, isSaveBatteryMode } = useSettings()
+  const { colors, workout, isSaveBatteryMode, sound, isVibration } = useSettings()
   const onSay = useTTS()
   const navigation = useNavigation<AppNavigationType>()
   const {
@@ -40,7 +40,6 @@ export default memo(function PlayingScreen() {
     approach,
     playSound,
     exerciseNext,
-    onTimerComplete,
     onTogglePlay,
     onNext,
     onSaveResult,
@@ -49,6 +48,11 @@ export default memo(function PlayingScreen() {
     setCurrentWeight,
     onReload,
     playingWorkout,
+    remainingSec,
+    clockVersion,
+    timerSync,
+    isCompletedSilently,
+    getSchedule,
   } = usePlaying()
   const [isWorkoutReview, setIsWorkoutReview] = useState<boolean>(false)
   const [isSubmitGoBack, setIsSubmitGoBack] = useState<boolean>(false)
@@ -65,6 +69,23 @@ export default memo(function PlayingScreen() {
   const workoutDurationTime =
     getWorkoutDuration(playingWorkout.exercises.filter((ex, idx) => idx > playing.idx)) +
     (exercise.laps - playing.lap) * duration
+  const displayRemainingSec = isTheLastOneComplete ? 0 : Math.max(0, remainingSec)
+  // The circle animates by itself; it is remounted at the clock's position after a resync
+  const isTimerSynced = timerSync.updated === playing.updated
+  const timerKey = `${playing.lap}_${playing.idx}_${playing.updated}_${isTimerSynced ? timerSync.key : 0}`
+
+  useBackgroundCues({
+    getSchedule,
+    clockVersion,
+    isPlaying,
+    isComplete: isTheLastOneComplete,
+    showSession: !isSaveBatteryMode,
+    workoutName: playingWorkout.name,
+    description: `${exercise.name}:  ${playing.lap}/${exercise.laps}`,
+    color,
+    sound: sound?.type,
+    isVibration,
+  })
 
   useEffect(() => {
     if (isPlaying) setIsInvisibleTimerCircle(p => (p ? !p : p))
@@ -94,9 +115,10 @@ export default memo(function PlayingScreen() {
     if (isTheLastOneComplete) {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       setIsWorkoutReview(p => (p ? p : true))
+      // Finished while in the background: the finish was already announced by a notification
+      if (isCompletedSilently) return
       playSound.play()
-      // TODO(A3/A4): the SoundPlayer seam has no duration; was playSound.getDuration() * 1000
-      setTimeout(() => onSay('Workout complete'), SOUND_CUE_DURATION_MS)
+      setTimeout(() => onSay('Workout complete'), cueDelayMs(playSound))
     }
   }, [isTheLastOneComplete])
 
@@ -108,13 +130,6 @@ export default memo(function PlayingScreen() {
     setTimeout(() => onSaveResult(), 100)
     setIsSubmitGoBack(true)
   }, [onSaveResult])
-
-  const onTimerUpdate = useCallback((remainingTime: number) => {
-    const onTimeSay = (time: number[]) => {
-      if (time.includes(remainingTime) && exercise.breakTimeInSec > remainingTime) onSay(`${remainingTime}`)
-    }
-    onTimeSay([10, 3, 2, 1])
-  }, [])
 
   const toggleWorkoutReview = useCallback(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -156,27 +171,31 @@ export default memo(function PlayingScreen() {
 
         <TouchableOpacity style={styles.timerContainer} onPress={onTogglePlay}>
           <CountdownCircleTimer
-            key={`${playing.lap}_${playing.idx}_${playing.updated}`}
-            isPlaying={isPlaying}
+            key={timerKey}
+            isPlaying={isPlaying && !isTheLastOneComplete}
             duration={duration}
+            initialRemainingTime={
+              isTimerSynced && timerSync.initialRemainingSec !== undefined && !isTheLastOneComplete
+                ? Math.min(duration, timerSync.initialRemainingSec)
+                : undefined
+            }
             colors={isInvisibleTimerCircle ? new Array(3).fill('#00000000') : (color as any)}
             colorsTime={[exercise.breakTimeInSec, exercise.breakTimeInSec / 2, 0]}
             strokeWidth={14}
             trailColor={colors.menu as any}
-            onComplete={onTimerComplete}
-            onUpdate={onTimerUpdate}
+            // Segment completion and the spoken countdown are driven by the timestamp clock in usePlaying
             size={appScreen.vw - 120}
           >
-            {({ remainingTime }) => (
+            {() => (
               <FlexCenterColumn style={styles.timerContent}>
                 {!!exercise.imageUrl && <AppImage size={100} src={exercise.imageUrl} />}
                 <TextHeader center color={color} style={{ fontSize: 24 }} ellipsizeMode='tail' numberOfLines={2}>
                   {exercise.name}
                 </TextHeader>
                 <TextHeader color={colors.text} style={{ fontSize: 22 }}>
-                  {secondsToMinSec(remainingTime < 0 ? 0 : remainingTime, false)}
+                  {secondsToMinSec(displayRemainingSec, false)}
                 </TextHeader>
-                <TimeObserver time={remainingTime} />
+                <TimeObserver time={displayRemainingSec} />
               </FlexCenterColumn>
             )}
           </CountdownCircleTimer>
@@ -257,15 +276,6 @@ export default memo(function PlayingScreen() {
         />
       )}
       {!isSubmitGoBack && <GoBackSubmitModal text={'Current results will be lost!'} onConfirm={onGoBack} />}
-      {!isSaveBatteryMode && (
-        <BackgroundAction
-          color={color}
-          duration={duration}
-          taskName={playingWorkout.name}
-          taskTitle={playingWorkout.name}
-          taskDesc={`${exercise.name}:  ${playing.lap}/${exercise.laps}`}
-        />
-      )}
     </SafeAreaView>
   )
 })
