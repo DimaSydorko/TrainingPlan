@@ -149,10 +149,15 @@ export function activateKeepAwake(tag?: string): void
 export function deactivateKeepAwake(tag?: string): void
 
 // app/services/backgroundSession.ts (A4)
-export type SessionInfo = { title: string; description: string; color?: string; progress?: { value: number; max: number } }
-export function startSession(info: SessionInfo): Promise<void>
+export type SessionInfo = { title: string; description: string; color?: string; progress?: { value: number; max: number }; endsAt?: number | null }
+export function startSession(info: SessionInfo): Promise<void>   // Android ongoing notification; no-op on iOS
 export function updateSession(info: Partial<SessionInfo>): Promise<void>
 export function stopSession(): Promise<void>
+// Added by A4 (additive):
+export type CueNotification = { id: string; at: number; title: string; body: string }
+export function scheduleCues(cues: CueNotification[], opts?: { sound?: SoundType; vibrate?: boolean; color?: string }): Promise<void>
+export function cancelCues(): Promise<void>
+export function requestNotificationPermission(): Promise<boolean>
 
 // app/services/googleAuth.ts        (A2)
 export function configureGoogleSignIn(): void
