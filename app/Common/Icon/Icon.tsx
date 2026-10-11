@@ -14,7 +14,12 @@ import {
 /** Every valid icon name. `app/Theme/icons.ts` is checked against it. */
 export type IconName = MaterialDesignIconsIconName
 
-export function Icon(props: { name: string; size?: number; color?: string; style?: StyleProp<TextStyle> }): JSX.Element {
+export function Icon(props: {
+  name: string
+  size?: number
+  color?: string
+  style?: StyleProp<TextStyle>
+}): JSX.Element {
   const { name, size, color, style } = props
   return <MaterialDesignIcons name={name as IconName} size={size} color={color} style={style} />
 }

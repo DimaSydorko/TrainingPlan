@@ -4,7 +4,12 @@ const fbUser = (over = {}) => ({ uid: 'u1', displayName: 'Ann', photoURL: null, 
 
 describe('toUserType', () => {
   it('maps a Firebase user to the stored UserType shape', () => {
-    expect(toUserType(fbUser({ displayName: null }))).toEqual({ uid: 'u1', displayName: '', photoURL: null, email: 'a@b.c' })
+    expect(toUserType(fbUser({ displayName: null }))).toEqual({
+      uid: 'u1',
+      displayName: '',
+      photoURL: null,
+      email: 'a@b.c',
+    })
   })
 })
 

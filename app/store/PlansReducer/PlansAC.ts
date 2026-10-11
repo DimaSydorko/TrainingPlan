@@ -29,7 +29,7 @@ export const plansAC = {
       const isInternet = net.isConnected
       if (isInternet) {
         const snapshot = await getDocs(query(plansCollection, where('ownerUid', '==', userUid), limit(QUERY_LIMIT)))
-        const plans = snapshot.docs.map(d => ({ ...d.data(), uid: d.id }) as PlanType)
+        const plans = snapshot.docs.map(d => ({ ...d.data(), uid: d.id } as PlanType))
 
         // Synchronize local storage and the database
         const { merged, toUpload, toDelete } = syncWithRemote(

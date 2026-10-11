@@ -28,7 +28,10 @@ export type AuthChange =
  *   persisted, e.g. builds that ran on the compat layer). Clear the user so the login screen shows,
  *   instead of letting every Firestore call fail with permission-denied.
  */
-export function resolveAuthChange(reduxUser: UserType | null | undefined, firebaseUser: AuthUserLike | null): AuthChange {
+export function resolveAuthChange(
+  reduxUser: UserType | null | undefined,
+  firebaseUser: AuthUserLike | null
+): AuthChange {
   if (!firebaseUser) return reduxUser?.uid ? { type: 'logout' } : { type: 'none' }
   const user = toUserType(firebaseUser)
   if (!reduxUser?.uid || reduxUser.uid !== user.uid) return { type: 'login', user }

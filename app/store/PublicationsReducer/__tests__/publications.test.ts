@@ -55,25 +55,38 @@ beforeEach(() => jest.clearAllMocks())
 describe('PublicationsSlice', () => {
   it('appends the next chunk without duplicates and marks the end', () => {
     const start = { ...initial(), publications: [pub('a'), pub('b')] }
-    let s = reducer(start, publicationsAC.get.fulfilled({ publications: [pub('b'), pub('c')], isYours: false, isNextChunk: true }, 'r', {}))
+    let s = reducer(
+      start,
+      publicationsAC.get.fulfilled({ publications: [pub('b'), pub('c')], isYours: false, isNextChunk: true }, 'r', {})
+    )
     expect(s.publications.map(p => p.uid)).toEqual(['a', 'b', 'c'])
     expect(s.isPublicationsAll).toBe(false)
-    s = reducer(s, publicationsAC.get.fulfilled({ publications: [pub('c')], isYours: false, isNextChunk: true }, 'r', {}))
+    s = reducer(
+      s,
+      publicationsAC.get.fulfilled({ publications: [pub('c')], isYours: false, isNextChunk: true }, 'r', {})
+    )
     expect(s.isPublicationsAll).toBe(true)
   })
 
   it('a first page replaces the list', () => {
-    const s = reducer({ ...initial(), userPublications: [pub('x')], isUserPublicationsAll: true },
-      publicationsAC.get.fulfilled({ publications: [pub('y')], isYours: true, isNextChunk: false }, 'r', {}))
+    const s = reducer(
+      { ...initial(), userPublications: [pub('x')], isUserPublicationsAll: true },
+      publicationsAC.get.fulfilled({ publications: [pub('y')], isYours: true, isNextChunk: false }, 'r', {})
+    )
     expect(s.userPublications.map(p => p.uid)).toEqual(['y'])
     expect(s.isUserPublicationsAll).toBe(false)
   })
 
   it('likeToggle adds and removes the like', () => {
-    let s = reducer({ ...initial(), publications: [pub('a')] },
-      publicationsAC.likeToggle.fulfilled({ publicationUid: 'a', isLiked: false, userUid: 'u1' }, 'r', null))
+    let s = reducer(
+      { ...initial(), publications: [pub('a')] },
+      publicationsAC.likeToggle.fulfilled({ publicationUid: 'a', isLiked: false, userUid: 'u1' }, 'r', null)
+    )
     expect(s.publications[0].likes).toEqual(['u1'])
-    s = reducer(s, publicationsAC.likeToggle.fulfilled({ publicationUid: 'a', isLiked: true, userUid: 'u1' }, 'r', null))
+    s = reducer(
+      s,
+      publicationsAC.likeToggle.fulfilled({ publicationUid: 'a', isLiked: true, userUid: 'u1' }, 'r', null)
+    )
     expect(s.publications[0].likes).toEqual([])
   })
 
@@ -86,8 +99,10 @@ describe('PublicationsSlice', () => {
   })
 
   it('delete and clear', () => {
-    let s = reducer({ ...initial(), publications: [pub('a')], userPublications: [pub('a')] },
-      publicationsAC.delete.fulfilled('a', 'r', pub('a')))
+    let s = reducer(
+      { ...initial(), publications: [pub('a')], userPublications: [pub('a')] },
+      publicationsAC.delete.fulfilled('a', 'r', pub('a'))
+    )
     expect(s.publications).toEqual([])
     expect(s.userPublications).toEqual([])
     s = reducer({ ...s, error: 'x', publications: [pub('b')] }, clearPublicationResults())

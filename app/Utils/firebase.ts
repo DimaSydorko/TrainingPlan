@@ -2,7 +2,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { FirebaseApp, FirebaseOptions, getApp, getApps, initializeApp } from 'firebase/app'
 import { Auth, getAuth, getReactNativePersistence, initializeAuth } from 'firebase/auth'
-import { collection, CollectionReference, DocumentData, Firestore, getFirestore, initializeFirestore } from 'firebase/firestore'
+import {
+  collection,
+  CollectionReference,
+  DocumentData,
+  Firestore,
+  getFirestore,
+  initializeFirestore,
+} from 'firebase/firestore'
 import { Database, getDatabase } from 'firebase/database'
 import { FirebaseDBCollection } from './constants'
 

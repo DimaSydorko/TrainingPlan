@@ -86,7 +86,9 @@ describe('PlansSlice reducers', () => {
     const s = reducer(start, plansAC.updatePlan.fulfilled(plan('a', 2, { name: 'new' }), 'r', plan('a')))
     expect(s.plans[0].name).toBe('new')
     expect(s.selectedPlan.name).toBe('new')
-    expect(() => reducer({ ...start, selectedPlan: null }, plansAC.updatePlan.fulfilled(plan('a'), 'r', plan('a')))).not.toThrow()
+    expect(() =>
+      reducer({ ...start, selectedPlan: null }, plansAC.updatePlan.fulfilled(plan('a'), 'r', plan('a')))
+    ).not.toThrow()
   })
 
   it('rejected actions set a prefixed error', () => {

@@ -13,7 +13,11 @@ describe('publicationsQuerySpec', () => {
   })
 
   it("filters by owner for the user's own publications", () => {
-    expect(publicationsQuerySpec({ ...base, isYours: true }).filter).toEqual({ field: 'ownerUid', op: '==', value: 'u1' })
+    expect(publicationsQuerySpec({ ...base, isYours: true }).filter).toEqual({
+      field: 'ownerUid',
+      op: '==',
+      value: 'u1',
+    })
   })
 
   it('filters by labels with array-contains-any, ignoring an empty first label', () => {
@@ -25,7 +29,7 @@ describe('publicationsQuerySpec', () => {
     expect(publicationsQuerySpec({ ...base, labels: [''] }).filter).toBeUndefined()
   })
 
-  it("owner filter wins over labels (as before)", () => {
+  it('owner filter wins over labels (as before)', () => {
     expect(publicationsQuerySpec({ ...base, isYours: true, labels: ['x'] }).filter.field).toBe('ownerUid')
   })
 

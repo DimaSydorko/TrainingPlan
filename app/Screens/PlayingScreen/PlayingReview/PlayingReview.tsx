@@ -42,7 +42,11 @@ export default memo(function PlayingReview({
     <View
       style={[
         styles.container,
-        { backgroundColor: colors.background, top: styles.container.top + top, paddingBottom: styles.container.paddingBottom + top + bottom },
+        {
+          backgroundColor: colors.background,
+          top: styles.container.top + top,
+          paddingBottom: styles.container.paddingBottom + top + bottom,
+        },
       ]}
     >
       <ScrollView ref={scrollRef}>

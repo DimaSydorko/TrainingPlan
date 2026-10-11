@@ -83,7 +83,7 @@ export class SwitchLib extends Component<SwitchProps, SwitchState> {
     switchRightPx: 2,
     switchWidthMultiplier: 2,
     switchBorderRadius: null,
-    testID: null
+    testID: null,
   }
 
   constructor(props, context) {
@@ -96,7 +96,7 @@ export class SwitchLib extends Component<SwitchProps, SwitchState> {
       ),
       backgroundColor: new Animated.Value(props.value ? 75 : -75),
       circleColor: new Animated.Value(props.value ? 75 : -75),
-      circleBorderColor: new Animated.Value(props.value ? 75 : -75)
+      circleBorderColor: new Animated.Value(props.value ? 75 : -75),
     }
   }
 
@@ -137,23 +137,23 @@ export class SwitchLib extends Component<SwitchProps, SwitchState> {
         toValue: value
           ? this.props.circleSize / this.props.switchLeftPx
           : -this.props.circleSize / this.props.switchRightPx,
-        useNativeDriver: false
+        useNativeDriver: false,
       } as SpringAnimationConfig),
       Animated.timing(this.state.backgroundColor, {
         toValue: value ? 75 : -75,
         duration: 200,
-        useNativeDriver: false
+        useNativeDriver: false,
       }),
       Animated.timing(this.state.circleColor, {
         toValue: value ? 75 : -75,
         duration: 200,
-        useNativeDriver: false
+        useNativeDriver: false,
       }),
       Animated.timing(this.state.circleBorderColor, {
         toValue: value ? 75 : -75,
         duration: 200,
-        useNativeDriver: false
-      })
+        useNativeDriver: false,
+      }),
     ]).start(cb)
   }
 
@@ -188,17 +188,17 @@ export class SwitchLib extends Component<SwitchProps, SwitchState> {
 
     const interpolatedColorAnimation = backgroundColor.interpolate({
       inputRange: [-75, 75],
-      outputRange: [backgroundInactive, backgroundActive]
+      outputRange: [backgroundInactive, backgroundActive],
     })
 
     const interpolatedCircleColor = circleColor.interpolate({
       inputRange: [-75, 75],
-      outputRange: [circleInActiveColor, circleActiveColor]
+      outputRange: [circleInActiveColor, circleActiveColor],
     })
 
     const interpolatedCircleBorderColor = circleBorderColor.interpolate({
       inputRange: [-75, 75],
-      outputRange: [circleInactiveBorderColor, circleActiveBorderColor]
+      outputRange: [circleInactiveBorderColor, circleActiveBorderColor],
     })
 
     return (
@@ -211,8 +211,8 @@ export class SwitchLib extends Component<SwitchProps, SwitchState> {
               backgroundColor: interpolatedColorAnimation,
               width: circleSize * switchWidthMultiplier,
               height: barHeight || circleSize,
-              borderRadius: switchBorderRadius || circleSize
-            }
+              borderRadius: switchBorderRadius || circleSize,
+            },
           ]}
         >
           <Animated.View
@@ -220,9 +220,9 @@ export class SwitchLib extends Component<SwitchProps, SwitchState> {
               styles.animatedContainer,
               {
                 left: transformSwitch,
-                width: circleSize * switchWidthMultiplier
+                width: circleSize * switchWidthMultiplier,
               },
-              outerCircleStyle
+              outerCircleStyle,
             ]}
           >
             {value && renderActiveText && (
@@ -238,9 +238,9 @@ export class SwitchLib extends Component<SwitchProps, SwitchState> {
                   backgroundColor: interpolatedCircleColor,
                   width: circleSize,
                   height: circleSize,
-                  borderRadius: circleSize / 2
+                  borderRadius: circleSize / 2,
                 },
-                innerCircleStyle
+                innerCircleStyle,
               ]}
             >
               {renderInsideCircle()}
@@ -260,29 +260,29 @@ const styles = StyleSheet.create({
     width: 71,
     height: 30,
     borderRadius: 30,
-    backgroundColor: 'black'
+    backgroundColor: 'black',
   },
   animatedContainer: {
     flex: 1,
     width: 78,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   circle: {
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   text: {
     color: 'white',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   paddingRight: {
-    paddingRight: 5
+    paddingRight: 5,
   },
   paddingLeft: {
-    paddingLeft: 5
-  }
+    paddingLeft: 5,
+  },
 })

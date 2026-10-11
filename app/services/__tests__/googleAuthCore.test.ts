@@ -68,7 +68,10 @@ describe('toGoogleAuthError', () => {
 
 describe('config helpers', () => {
   it('treats blank env values as missing', () => {
-    const config = readGoogleClientConfig({ EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: '  ', EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: '' })
+    const config = readGoogleClientConfig({
+      EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: '  ',
+      EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: '',
+    })
     expect(config).toEqual({ webClientId: undefined, iosClientId: undefined })
   })
 

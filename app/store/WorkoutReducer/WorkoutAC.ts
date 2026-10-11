@@ -29,7 +29,7 @@ export const workoutAC = {
       const isInternet = net.isConnected
       if (isInternet) {
         const snapshot = await getDocs(query(workoutsCollection, where('ownerUid', '==', userUid), limit(QUERY_LIMIT)))
-        const workouts = snapshot.docs.map(d => ({ ...d.data(), uid: d.id }) as WorkoutType)
+        const workouts = snapshot.docs.map(d => ({ ...d.data(), uid: d.id } as WorkoutType))
 
         // Synchronize local storage and the database
         const { merged, toUpload, toDelete } = syncWithRemote(

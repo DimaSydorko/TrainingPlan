@@ -321,7 +321,9 @@ export default function usePlaying() {
       completedUpdatedRef.current = playing.updated
       const end = segmentEndsAt(segments, clock) ?? now
       const next = segments[clock.segmentIndex + 1]
-      pendingClockRef.current = next ? { segmentIndex: next.index, clock: resetClock(next.index, true, now, end) } : null
+      pendingClockRef.current = next
+        ? { segmentIndex: next.index, clock: resetClock(next.index, true, now, end) }
+        : null
       onTimerComplete()
     }
   }

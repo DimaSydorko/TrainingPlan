@@ -5,8 +5,8 @@ const styles = StyleSheet.create({
   imageC: {
     borderRadius: 100,
     overflow: 'hidden',
-    margin: 3
-  }
+    margin: 3,
+  },
 })
 
 interface IAppImage {

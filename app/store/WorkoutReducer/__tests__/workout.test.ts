@@ -67,7 +67,10 @@ describe('WorkoutSlice reducers', () => {
 
   it('deleteWorkouts.fulfilled removes workouts and remembers offline deletes', () => {
     const start = { ...initial(), workouts: [workout('a'), workout('b'), workout('c')] }
-    const s = reducer(start, workoutAC.deleteWorkouts.fulfilled({ workoutUids: ['a', 'c'], isInternet: false }, 'r', []))
+    const s = reducer(
+      start,
+      workoutAC.deleteWorkouts.fulfilled({ workoutUids: ['a', 'c'], isInternet: false }, 'r', [])
+    )
     expect(s.workouts.map(w => w.uid)).toEqual(['b'])
     expect(s.deletedWorkoutUids).toEqual(['a', 'c'])
   })

@@ -7,32 +7,32 @@ export default StyleSheet.create({
     justifyContent: 'center',
     flexWrap: 'wrap',
     alignItems: 'center',
-    width: '100%'
+    width: '100%',
   },
   imageCard: {
     margin: 5,
-    width: 70
+    width: 70,
   },
   imageC: {
     borderRadius: 100,
     overflow: 'hidden',
-    margin: 3
+    margin: 3,
   },
   image: {
     height: 60,
-    width: 60
+    width: 60,
   },
   imageButton: {
     height: 30,
-    width: 30
+    width: 30,
   },
   selectedContainer: {
-    height: 65
+    height: 65,
   },
   emptySelect: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: 18
-  }
+    paddingBottom: 18,
+  },
 })

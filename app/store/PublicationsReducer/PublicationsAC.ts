@@ -43,7 +43,10 @@ export const publicationsAC = {
           return { publications: [], isYours, isNextChunk: true }
 
         const snapshot = await getDocs(
-          query(publicationsCollection, ...buildPublicationsQuery({ isYours, labels, lastVisible, firstVisible, userUid }))
+          query(
+            publicationsCollection,
+            ...buildPublicationsQuery({ isYours, labels, lastVisible, firstVisible, userUid })
+          )
         )
 
         const publications: PublicType[] = snapshot.docs.map(
@@ -51,7 +54,7 @@ export const publicationsAC = {
             ({
               ...d.data(),
               uid: d.id,
-            }) as PublicType
+            } as PublicType)
         )
         return { publications, isYours, isNextChunk }
       } catch (e) {

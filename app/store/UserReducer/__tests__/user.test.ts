@@ -82,7 +82,11 @@ describe('userAC thunks', () => {
       u.displayName = displayName
     })
     const dispatch = jest.fn()
-    const action: any = await userAC.signUp({ email: 'a@b.c', password: 'pw', displayName: 'Ann' })(dispatch, () => ({}), undefined)
+    const action: any = await userAC.signUp({ email: 'a@b.c', password: 'pw', displayName: 'Ann' })(
+      dispatch,
+      () => ({}),
+      undefined
+    )
     expect(fbAuth.updateProfile).toHaveBeenCalledWith(created, { displayName: 'Ann' })
     expect(action.payload.displayName).toBe('Ann')
     expect(dispatch).toHaveBeenCalled()
@@ -105,7 +109,9 @@ describe('userAC thunks', () => {
   })
 
   it('signInWithGoogle treats a cancelled picker as no error', async () => {
-    google.getGoogleIdToken.mockRejectedValue(Object.assign(new Error('Google sign-in was cancelled'), { code: 'cancelled' }))
+    google.getGoogleIdToken.mockRejectedValue(
+      Object.assign(new Error('Google sign-in was cancelled'), { code: 'cancelled' })
+    )
     const action = await run(userAC.signInWithGoogle())
     expect(action.type).toBe('user/signInWithGoogle/rejected')
     expect(action.payload).toBe('')

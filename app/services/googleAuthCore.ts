@@ -84,9 +84,7 @@ export function iosUrlSchemeFromClientId(iosClientId?: string): string | undefin
 }
 
 /** Shape of the library's `signIn()` result we rely on (v13+). */
-export type SignInResult =
-  | { type: 'success'; data: { idToken: string | null } }
-  | { type: 'cancelled'; data: null }
+export type SignInResult = { type: 'success'; data: { idToken: string | null } } | { type: 'cancelled'; data: null }
 
 /** Turns a `signIn()` result into the ID token, or throws a typed GoogleAuthError. */
 export function idTokenFromSignInResult(result: SignInResult): string {
