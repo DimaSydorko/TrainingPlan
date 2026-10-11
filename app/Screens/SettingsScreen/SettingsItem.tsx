@@ -60,7 +60,8 @@ export default memo(function SettingsItem({
           thumbTintColor={colors.secondPrimary}
           maximumTrackTintColor={colors.disabled}
           minimumTrackTintColor={colors.secondPrimary}
-          onResponderEnd={() => onSliderChange(valSlider)}
+          // The native slider (community/slider 5) does not deliver responder events reliably
+          onSlidingComplete={v => onSliderChange(Math.round(v * 100) / 100)}
         />
       )}
       <Divider width={1} color={`${colors.black}40`} />
