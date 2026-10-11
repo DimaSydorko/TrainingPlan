@@ -15,8 +15,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   // The app has light and dark themes
   userInterfaceStyle: 'automatic',
   ios: {
-    // D1: same identifier as Android
-    bundleIdentifier: 'com.trainingplantogether_cli',
+    // D1 asked for the Android value, but Apple bundle IDs only allow letters, digits, '-' and '.',
+    // so `com.trainingplantogether_cli` fails prebuild. Nearest valid value used until Dmytro confirms.
+    // TODO(A2): confirm the final iOS bundle identifier with Dmytro (DECISIONS.md D1).
+    bundleIdentifier: 'com.trainingplantogether-cli',
     supportsTablet: false,
   },
   android: {
