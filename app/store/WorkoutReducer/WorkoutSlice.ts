@@ -53,47 +53,49 @@ export const workoutSlice = createSlice({
       state.sortedWorkoutUids = initialState.sortedWorkoutUids
     },
   },
-  extraReducers: {
-    [workoutAC.getWorkouts.fulfilled.type]: (state, { payload }: PayloadAction<GetWorkoutsReducerType>) => {
-      state.workouts = payload.workouts
-      if (!payload.isInternet) state.deletedWorkoutUids = []
-      state.isLoading = false
-      state.error = ''
-    },
-    [workoutAC.deleteWorkouts.fulfilled.type]: (state, { payload }: PayloadAction<DeleteWorkoutReducerType>) => {
-      state.workouts = state.workouts.filter(workout => !payload.workoutUids.includes(workout.uid))
-      if (!payload.isInternet) state.deletedWorkoutUids = [...state.deletedWorkoutUids, ...payload.workoutUids]
-      state.isLoading = false
-      state.error = ''
-    },
-    [workoutAC.addWorkout.fulfilled.type]: (state, { payload }: PayloadAction<WorkoutType>) => {
-      state.workouts.push(payload)
-      state.isLoading = false
-      state.error = ''
-    },
-    [workoutAC.getExerciseImages.fulfilled.type]: (state, action: PayloadAction<StoredExerciseImage[]>) => {
-      state.exerciseImages = action.payload
-      state.isLoading = false
-      state.error = ''
-    },
-    [workoutAC.updateWorkout.fulfilled.type]: (state, { payload }: PayloadAction<WorkoutType>) => {
-      state.workouts = state.workouts.map(workout => (workout.uid === payload.uid ? payload : workout))
-      if (state.selectedWorkout.uid === payload.uid) {
-        state.selectedWorkout = { ...state.selectedWorkout, ...payload }
-      }
-      state.isLoading = false
-      state.error = ''
-    },
-
-    [workoutAC.getWorkouts.pending.type]: onLoading,
-    [workoutAC.addWorkout.pending.type]: onLoading,
-    [workoutAC.deleteWorkouts.pending.type]: onLoading,
-
-    [workoutAC.getWorkouts.rejected.type]: onError,
-    [workoutAC.addWorkout.rejected.type]: onError,
-    [workoutAC.updateWorkout.rejected.type]: onError,
-    [workoutAC.deleteWorkouts.rejected.type]: onError,
-    [workoutAC.getExerciseImages.rejected.type]: onError,
+  extraReducers: builder => {
+    builder
+      .addCase(workoutAC.getWorkouts.fulfilled.type, (state, { payload }: PayloadAction<GetWorkoutsReducerType>) => {
+        state.workouts = payload.workouts
+        if (!payload.isInternet) state.deletedWorkoutUids = []
+        state.isLoading = false
+        state.error = ''
+      })
+      .addCase(
+        workoutAC.deleteWorkouts.fulfilled.type,
+        (state, { payload }: PayloadAction<DeleteWorkoutReducerType>) => {
+          state.workouts = state.workouts.filter(workout => !payload.workoutUids.includes(workout.uid))
+          if (!payload.isInternet) state.deletedWorkoutUids = [...state.deletedWorkoutUids, ...payload.workoutUids]
+          state.isLoading = false
+          state.error = ''
+        }
+      )
+      .addCase(workoutAC.addWorkout.fulfilled.type, (state, { payload }: PayloadAction<WorkoutType>) => {
+        state.workouts.push(payload)
+        state.isLoading = false
+        state.error = ''
+      })
+      .addCase(workoutAC.getExerciseImages.fulfilled.type, (state, action: PayloadAction<StoredExerciseImage[]>) => {
+        state.exerciseImages = action.payload
+        state.isLoading = false
+        state.error = ''
+      })
+      .addCase(workoutAC.updateWorkout.fulfilled.type, (state, { payload }: PayloadAction<WorkoutType>) => {
+        state.workouts = state.workouts.map(workout => (workout.uid === payload.uid ? payload : workout))
+        if (state.selectedWorkout.uid === payload.uid) {
+          state.selectedWorkout = { ...state.selectedWorkout, ...payload }
+        }
+        state.isLoading = false
+        state.error = ''
+      })
+      .addCase(workoutAC.getWorkouts.pending.type, onLoading)
+      .addCase(workoutAC.addWorkout.pending.type, onLoading)
+      .addCase(workoutAC.deleteWorkouts.pending.type, onLoading)
+      .addCase(workoutAC.getWorkouts.rejected.type, onError)
+      .addCase(workoutAC.addWorkout.rejected.type, onError)
+      .addCase(workoutAC.updateWorkout.rejected.type, onError)
+      .addCase(workoutAC.deleteWorkouts.rejected.type, onError)
+      .addCase(workoutAC.getExerciseImages.rejected.type, onError)
   },
 })
 export const { errorWorkoutClear, clearWorkoutResults, updateSelectedWorkout, changeWorkoutsPosition } =

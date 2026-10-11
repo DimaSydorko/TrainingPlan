@@ -49,35 +49,34 @@ export const userSlice = createSlice({
       state.error = ''
     },
   },
-  extraReducers: {
-    [userAC.signOut.fulfilled.type]: state => {
-      state.user = null
-      state.data = null
-      state.isLoading = false
-      state.error = ''
-    },
-    [userAC.signIn.fulfilled.type]: onLogin,
-    [userAC.signUp.fulfilled.type]: onLogin,
-    [userAC.signInWithGoogle.fulfilled.type]: onLogin,
-    [userAC.dataRequest.fulfilled.type]: onDataUpdate,
-    [userAC.dataUpdate.fulfilled.type]: onDataUpdate,
-
-    [userAC.dataUpdate.pending.type]: onLoading,
-    [userAC.signIn.pending.type]: onLoading,
-    [userAC.signUp.pending.type]: onLoading,
-    [userAC.dataRequest.pending.type]: onLoading,
-    [userAC.signOut.pending.type]: onLoading,
-
-    [userAC.signUp.rejected.type]: onError,
-    [userAC.signInWithGoogle.rejected.type]: onError,
-    [userAC.signIn.rejected.type]: onError,
-    [userAC.signOut.rejected.type]: (state: UserSliceType, { payload }: PayloadAction<string>) => {
-      state.isLoading = false
-      state.error = payload
-      state.user = null
-    },
-    [userAC.dataUpdate.rejected.type]: onError,
-    [userAC.dataRequest.rejected.type]: onError,
+  extraReducers: builder => {
+    builder
+      .addCase(userAC.signOut.fulfilled.type, state => {
+        state.user = null
+        state.data = null
+        state.isLoading = false
+        state.error = ''
+      })
+      .addCase(userAC.signIn.fulfilled.type, onLogin)
+      .addCase(userAC.signUp.fulfilled.type, onLogin)
+      .addCase(userAC.signInWithGoogle.fulfilled.type, onLogin)
+      .addCase(userAC.dataRequest.fulfilled.type, onDataUpdate)
+      .addCase(userAC.dataUpdate.fulfilled.type, onDataUpdate)
+      .addCase(userAC.dataUpdate.pending.type, onLoading)
+      .addCase(userAC.signIn.pending.type, onLoading)
+      .addCase(userAC.signUp.pending.type, onLoading)
+      .addCase(userAC.dataRequest.pending.type, onLoading)
+      .addCase(userAC.signOut.pending.type, onLoading)
+      .addCase(userAC.signUp.rejected.type, onError)
+      .addCase(userAC.signInWithGoogle.rejected.type, onError)
+      .addCase(userAC.signIn.rejected.type, onError)
+      .addCase(userAC.signOut.rejected.type, (state: UserSliceType, { payload }: PayloadAction<string>) => {
+        state.isLoading = false
+        state.error = payload
+        state.user = null
+      })
+      .addCase(userAC.dataUpdate.rejected.type, onError)
+      .addCase(userAC.dataRequest.rejected.type, onError)
   },
 })
 export const { errorUserClear } = userSlice.actions

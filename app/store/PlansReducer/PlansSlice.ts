@@ -58,37 +58,36 @@ export const plansSlice = createSlice({
       state.sortedPlanUids = initialState.sortedPlanUids
     },
   },
-  extraReducers: {
-    [plansAC.getPlans.fulfilled.type]: (state, { payload }: PayloadAction<GetPlanReducerType>) => {
-      if (payload.isInternet) {
-        state.plans = payload.plans
-        state.deletedPlanUids = []
-      }
-      state.isLoading = false
-      state.error = ''
-    },
-    [plansAC.deletePlan.fulfilled.type]: (state, { payload }: PayloadAction<DeletePlanReducerType>) => {
-      state.plans = state.plans.filter(plan => plan.uid !== payload.planUid)
-      if (!payload.isInternet) state.deletedPlanUids.push(payload.planUid)
-      state.isLoading = false
-      state.error = ''
-    },
-    [plansAC.addPlan.fulfilled.type]: (state, { payload }: PayloadAction<PlanType>) => {
-      state.plans.push(payload)
-      state.isLoading = false
-      state.error = ''
-    },
-    [plansAC.updatePlan.fulfilled.type]: updatePlan,
-    [plansAC.updateSelectedPlanWorkout.fulfilled.type]: updatePlan,
-
-    [plansAC.getPlans.pending.type]: onLoading,
-    [plansAC.addPlan.pending.type]: onLoading,
-
-    [plansAC.getPlans.rejected.type]: onError,
-    [plansAC.addPlan.rejected.type]: onError,
-    [plansAC.deletePlan.rejected.type]: onError,
-    [plansAC.updatePlan.rejected.type]: onError,
-    [plansAC.updateSelectedPlanWorkout.rejected.type]: onError,
+  extraReducers: builder => {
+    builder
+      .addCase(plansAC.getPlans.fulfilled.type, (state, { payload }: PayloadAction<GetPlanReducerType>) => {
+        if (payload.isInternet) {
+          state.plans = payload.plans
+          state.deletedPlanUids = []
+        }
+        state.isLoading = false
+        state.error = ''
+      })
+      .addCase(plansAC.deletePlan.fulfilled.type, (state, { payload }: PayloadAction<DeletePlanReducerType>) => {
+        state.plans = state.plans.filter(plan => plan.uid !== payload.planUid)
+        if (!payload.isInternet) state.deletedPlanUids.push(payload.planUid)
+        state.isLoading = false
+        state.error = ''
+      })
+      .addCase(plansAC.addPlan.fulfilled.type, (state, { payload }: PayloadAction<PlanType>) => {
+        state.plans.push(payload)
+        state.isLoading = false
+        state.error = ''
+      })
+      .addCase(plansAC.updatePlan.fulfilled.type, updatePlan)
+      .addCase(plansAC.updateSelectedPlanWorkout.fulfilled.type, updatePlan)
+      .addCase(plansAC.getPlans.pending.type, onLoading)
+      .addCase(plansAC.addPlan.pending.type, onLoading)
+      .addCase(plansAC.getPlans.rejected.type, onError)
+      .addCase(plansAC.addPlan.rejected.type, onError)
+      .addCase(plansAC.deletePlan.rejected.type, onError)
+      .addCase(plansAC.updatePlan.rejected.type, onError)
+      .addCase(plansAC.updateSelectedPlanWorkout.rejected.type, onError)
   },
 })
 export const { errorPlansClear, selectPlan, clearPlaneResults, changePlansPosition } = plansSlice.actions
