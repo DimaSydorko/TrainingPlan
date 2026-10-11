@@ -7,7 +7,7 @@ Turn the repo into an Expo SDK 57 project that **boots to the login screen and n
 Dmytro's answers to D1–D6 (README §2). Record them in `docs/migration/DECISIONS.md`.
 
 ## Branch
-`migration/expo` from `origin/dev` (D6). Work directly on this branch; A8 takes over ownership afterwards.
+`migration/expo` from `main` (D6). Work directly on this branch; A8 takes over ownership afterwards.
 
 ## Tasks
 1. **Scaffold the project.** Create a reference Expo project somewhere outside the repo (`npx create-expo-app@latest tp-ref --template blank-typescript`) and use it as a source for configs. Don't run the generator inside the repo.

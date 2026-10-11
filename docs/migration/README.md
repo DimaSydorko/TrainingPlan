@@ -41,7 +41,7 @@ Rule for versions: **always install native-facing packages with `npx expo instal
 | D3 | Background workout: rewrite with timestamps + notifications, or keep the foreground-service library behind a custom config plugin | **Rewrite**. It works on iOS too, and avoids Android 14+ foreground-service-type rules | A4 |
 | D4 | Expo Router now or later | **Later**. React Navigation 7 is the smaller change, and moving to Expo Router can be its own project | A5 |
 | D5 | Admin panel (`admin/`) in scope? | Yes, but run it as a separate stream (A6) that never blocks the mobile app | A6 |
-| D6 | Base branch. `origin/dev` is **51 commits ahead of `main`** | **Branch from `origin/dev`** | Everyone |
+| D6 | Base branch. `main` is 51 commits ahead of `dev` (dev is an old ancestor) | **Branch from `main`** | Everyone |
 
 Record each answer in `docs/migration/DECISIONS.md` (A0 creates the file).
 
@@ -85,7 +85,7 @@ Phase 1 dependencies:
 
 ## 4. Branches and worktrees
 
-- Integration branch: **`migration/expo`**, created by A0 from `origin/dev` (D6).
+- Integration branch: **`migration/expo`**, created from `main` (D6).
 - Each Phase 1 agent creates its branch from `migration/expo` **after A0 has merged**:
 
 ```bash

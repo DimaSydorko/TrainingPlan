@@ -34,7 +34,7 @@ After all six are merged:
 3. EAS: `preview` builds for both platforms go to testers (Dmytro and his brother). Collect feedback in `STATUS.md`.
 4. `production` build. Store metadata: if the bundle ID changed (D1), it's a new listing; otherwise bump the version.
 5. Update `ReadMe.md` with the new stack, setup (`.env`), and the run, build, and test commands.
-6. Merge `migration/expo` → `dev` with a PR summarizing all handoffs, then `dev` → `main` per Dmytro's process. Clean up the worktrees with `git worktree remove`.
+6. Merge `migration/expo` → `main` with a PR summarizing all handoffs. Clean up the worktrees with `git worktree remove`.
 
 ## Acceptance criteria
 - Every item in README §8 is ticked.
