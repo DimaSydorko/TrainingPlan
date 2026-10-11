@@ -95,8 +95,8 @@ export default memo(function PlayingScreen() {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       setIsWorkoutReview(p => (p ? p : true))
       playSound.play()
-      // TODO(A3/A4): the SoundPlayer seam has no duration; was playSound.getDuration() * 1000
-      setTimeout(() => onSay('Workout complete'), SOUND_CUE_DURATION_MS)
+      // durationMs is undefined until the sound has loaded; fall back to the fixed cue delay
+      setTimeout(() => onSay('Workout complete'), playSound.durationMs ?? SOUND_CUE_DURATION_MS)
     }
   }, [isTheLastOneComplete])
 

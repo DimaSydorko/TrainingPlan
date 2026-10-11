@@ -42,11 +42,10 @@ export default function usePlaying() {
     () => playingWorkout.exercises.length === playing.idx + 1 && exercise.laps === playing.lap,
     [exercise.laps, playing, playingWorkout.exercises.length]
   )
-  const playSound = useMemo(() => createSoundPlayer(sound?.type), [])
+  const playSound = useMemo(() => createSoundPlayer(sound?.type, { volume: sound?.volume }), [])
 
-  useEffect(() => {
-    // TODO(A3): the SoundPlayer seam has no volume control; was playSound.setVolume(sound?.volume)
-  }, [playSound])
+  // Release the native player when the playing screen unmounts
+  useEffect(() => () => playSound.release(), [playSound])
 
   useEffect(() => {
     const weight = approach?.currentWeight === undefined ? approach?.weight : approach.currentWeight
@@ -138,8 +137,8 @@ export default function usePlaying() {
         if (!!sayName) onSay(sayName)
       } else {
         playSound.play()
-        // TODO(A3/A4): the SoundPlayer seam has no duration; was playSound.getDuration() * 1000
-        if (!!sayName) setTimeout(() => onSay(sayName), SOUND_CUE_DURATION_MS)
+        // durationMs is undefined until the sound has loaded; fall back to the fixed cue delay
+        if (!!sayName) setTimeout(() => onSay(sayName), playSound.durationMs ?? SOUND_CUE_DURATION_MS)
       }
 
       if (!isLastLap) {

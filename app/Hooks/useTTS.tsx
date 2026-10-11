@@ -10,9 +10,11 @@ export default function useTTS() {
   return useCallback(
     (textToSpeech: string) => {
       stopSpeaking()
-      // TODO(A3): old call used iosVoiceId 'com.apple.ttsbundle.Moira-compact' and Android
-      // KEY_PARAM_PAN: 1, KEY_PARAM_STREAM: 'STREAM_MUSIC'
-      speak(textToSpeech, { rate: rate, volume: volume })
+      // The old react-native-tts call hard-coded the iOS 'Moira' voice; speech.ts now picks the
+      // best English voice. Android KEY_PARAM_STREAM 'STREAM_MUSIC' is the TTS default stream, so it
+      // needs no option. KEY_PARAM_PAN: 1 (right channel only) was dropped on purpose.
+      // Pitch comes from setSpeechDefaults (AppHelperProvider), as before.
+      speak(textToSpeech, { rate, volume })
     },
     [volume, rate]
   )
