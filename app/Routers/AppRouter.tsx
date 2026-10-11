@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { NamedExoticComponent, useContext, useEffect } from 'react'
+import { ComponentType, useContext, useEffect } from 'react'
 import { Text } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Icon } from '../Common/Icon/Icon'
@@ -11,41 +11,43 @@ import { plansAC } from '../store/PlansReducer/PlansAC'
 import NotificationHandler from '../Components/NotificationHandler/NotificationHandler'
 import WorkoutsRouter from './WorkoutsRouter'
 import PlanRouter from './PlanRouter'
-import { PlayingScreen } from '../Screens'
-import { PlayTimerProvider } from '../Screens/PlayingScreen/components/PlayTimerProvider'
 import { icon } from '../Theme/icons'
 import ProfileRouter from './ProfileRouter'
 import PublicationsRouter from './PublicationsRouter'
-import { appScreen } from '../Utils/constants'
+import { TabName } from '../Utils/constants'
+import { AppTabParamList } from '../Utils/types'
+import { useAppInsets } from '../Theme/insets'
+
+const Tab = createBottomTabNavigator<AppTabParamList, 'AppTabs'>()
 
 type TabType = {
-  name: string
-  component: NamedExoticComponent<object>
+  name: keyof AppTabParamList
+  component: ComponentType<object>
   buttonLabel: string
   icon: (color: string) => React.JSX.Element
 }
 
 const tabs = [
   {
-    name: 'All saved Plans',
+    name: TabName.Plans,
     component: PlanRouter,
     buttonLabel: 'My Plans',
-    icon: color => <Icon name='clipboard-list-outline' size={28} color={color} />,
+    icon: color => <Icon name={icon.tabPlans} size={28} color={color} />,
   },
   {
-    name: 'All saved Workouts',
+    name: TabName.Workouts,
     component: WorkoutsRouter,
     buttonLabel: 'My Workouts',
-    icon: color => <Icon name='clock-fast' size={28} color={color} />,
+    icon: color => <Icon name={icon.tabWorkouts} size={28} color={color} />,
   },
   {
-    name: 'Publications',
+    name: TabName.Publications,
     component: PublicationsRouter,
     buttonLabel: 'Publications',
-    icon: color => <Icon name='tooltip-text-outline' size={28} color={color} />,
+    icon: color => <Icon name={icon.tabPublications} size={28} color={color} />,
   },
   {
-    name: 'Profile',
+    name: TabName.Profile,
     component: ProfileRouter,
     buttonLabel: 'Profile',
     icon: color => <Icon name={icon.account} size={28} color={color} />,
@@ -53,10 +55,10 @@ const tabs = [
 ] as TabType[]
 
 export default function AppRouter() {
-  const Tab = createBottomTabNavigator()
   const { isTabMenu } = useContext(AppHelperContext)
   const dispatch = useAppDispatch()
   const { colors, internet } = useSettings()
+  const { bottom, footer } = useAppInsets()
 
   useEffect(() => {
     if (internet.isOnline) {
@@ -69,12 +71,7 @@ export default function AppRouter() {
   return (
     <>
       <NotificationHandler />
-      <Tab.Navigator
-        // @ts-expect-error TODO(A5): bottom-tabs 7 removed sceneContainerStyle (use screenOptions.sceneStyle); navigator also wants `id`
-        sceneContainerStyle={{
-          backgroundColor: colors.background,
-        }}
-      >
+      <Tab.Navigator id='AppTabs' screenOptions={{ sceneStyle: { backgroundColor: colors.background } }}>
         {tabs.map(({ name, icon, buttonLabel, component }) => (
           <Tab.Screen
             key={name}
@@ -92,8 +89,9 @@ export default function AppRouter() {
                 left: 0,
                 backgroundColor: colors.menu,
                 paddingTop: 5,
-                paddingBottom: 5,
-                height: appScreen.footer,
+                // Edge-to-edge: the bar extends under the Android navigation bar / iOS home indicator
+                paddingBottom: 5 + bottom,
+                height: footer,
                 display: isTabMenu ? undefined : 'none',
               },
             }}

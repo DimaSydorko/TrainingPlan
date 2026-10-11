@@ -8,10 +8,12 @@ import { PublicationsScreen } from '../Screens'
 import { publicationsAC } from '../store/PublicationsReducer/PublicationsAC'
 import PublicationPlan from '../Screens/PublicationsScreen/PublicationPlan'
 import PublicationWorkout from '../Screens/PublicationsScreen/PublicationWorkout'
+import { PublicationsStackParamList } from '../Utils/types'
+
+const Stack = createStackNavigator<PublicationsStackParamList, 'PublicationsStack'>()
 
 export default memo(function PublicationsRouter() {
   const dispatch = useAppDispatch()
-  const Stack = createStackNavigator()
   const options = useScreenOptions()
   const { internet } = useSettings()
 
@@ -22,25 +24,22 @@ export default memo(function PublicationsRouter() {
   }, [internet.isOnline])
 
   return (
-    <>
-      {/* @ts-expect-error TODO(A5): React Navigation 7 navigator typings (createStackNavigator() without param list requires `id`) */}
-      <Stack.Navigator>
-        <Stack.Screen
-          name={ScreenName.Publications}
-          options={{ ...options, title: 'Publications' }}
-          component={PublicationsScreen}
-        />
-        <Stack.Screen
-          name={ScreenName.PublicationPlan}
-          options={{ ...options, title: 'Plan' }}
-          component={PublicationPlan}
-        />
-        <Stack.Screen
-          name={ScreenName.PublicationWorkout}
-          options={{ ...options, title: 'Workout' }}
-          component={PublicationWorkout}
-        />
-      </Stack.Navigator>
-    </>
+    <Stack.Navigator id='PublicationsStack'>
+      <Stack.Screen
+        name={ScreenName.Publications}
+        options={{ ...options, title: 'Publications' }}
+        component={PublicationsScreen}
+      />
+      <Stack.Screen
+        name={ScreenName.PublicationPlan}
+        options={{ ...options, title: 'Plan' }}
+        component={PublicationPlan}
+      />
+      <Stack.Screen
+        name={ScreenName.PublicationWorkout}
+        options={{ ...options, title: 'Workout' }}
+        component={PublicationWorkout}
+      />
+    </Stack.Navigator>
   )
 })

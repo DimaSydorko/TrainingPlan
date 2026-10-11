@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ActivityIndicator, SafeAreaView, StyleSheet } from 'react-native'
+import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import { useSettings } from '../../Hooks/redux'
 
 const styles = StyleSheet.create({
@@ -19,8 +19,8 @@ const styles = StyleSheet.create({
 export default function Loading() {
   const { colors } = useSettings()
   return (
-    <SafeAreaView style={[styles.bg, { backgroundColor: colors.background }]}>
+    <View style={[styles.bg, { backgroundColor: colors.background }]}>
       <ActivityIndicator size='large' color={colors.secondPrimary} />
-    </SafeAreaView>
+    </View>
   )
 }

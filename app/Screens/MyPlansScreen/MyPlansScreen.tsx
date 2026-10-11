@@ -2,29 +2,31 @@ import * as React from 'react'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { TouchableOpacity, Vibration } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import {
-  NestableDraggableFlatList,
-  NestableScrollContainer,
-  RenderItemParams,
-  ScaleDecorator,
-} from 'react-native-draggable-flatlist'
 import { changePlansPosition, selectPlan } from '../../store/PlansReducer/PlansSlice'
 import { plansAC } from '../../store/PlansReducer/PlansAC'
 import { publicationsAC } from '../../store/PublicationsReducer/PublicationsAC'
 import { useAppDispatch, usePlans, useSettings } from '../../Hooks/redux'
 import { AppHeader, Card, FlexEnd, FlexStart, Page, TextHeader } from '../../Theme/Parents'
-import { AddMoreButton, AppModal, IconButton } from '../../Common'
+import {
+  AddMoreButton,
+  AppModal,
+  DraggableItem,
+  DraggableList,
+  DraggableRenderItemParams,
+  DraggableScrollContainer,
+  IconButton,
+} from '../../Common'
 import EditPlanWorkout from '../../Components/EditPlanWorkout/EditPlanWorkout'
 import PlanCard from './PlanCard'
 import { QUERY_LIMIT, ScreenName, VIBRATION } from '../../Utils/constants'
-import { AppNavigationType, PlanType } from '../../Utils/types'
+import { PlanType, PlansNavigation } from '../../Utils/types'
 import { icon } from '../../Theme/icons'
 import ShareModal from '../../Components/ShareModal/ShareModal'
 import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
 import NoDataIcon from '../../Assets/icons/NoDataIcon'
 
 export default memo(function MyPlansScreen() {
-  const navigation = useNavigation<AppNavigationType>()
+  const navigation = useNavigation<PlansNavigation>()
   const dispatch = useAppDispatch()
   const statePlans = usePlans()
   const { colors } = useSettings()
@@ -73,10 +75,10 @@ export default memo(function MyPlansScreen() {
     setSelectedPlanUids([])
   }, [selectedFirst])
 
-  const renderItem = ({ item, drag, isActive }: RenderItemParams<PlanType>) => {
+  const renderItem = ({ item, drag, isActive }: DraggableRenderItemParams<PlanType>) => {
     const color = COLORS_EXERCISE[item?.colorIdx === undefined ? 3 : item?.colorIdx][+isDarkTheme]
     return (
-      <ScaleDecorator>
+      <DraggableItem>
         <Card borderLeftColor={color}>
           <TouchableOpacity
             onLongPress={() => {
@@ -89,7 +91,7 @@ export default memo(function MyPlansScreen() {
             <PlanCard color={color} plan={item} isSelected={selectedPlanUids.includes(item.uid)} />
           </TouchableOpacity>
         </Card>
-      </ScaleDecorator>
+      </DraggableItem>
     )
   }
 
@@ -125,14 +127,14 @@ export default memo(function MyPlansScreen() {
       )}
       <Page>
         {plans?.length === 0 && <NoDataIcon />}
-        <NestableScrollContainer>
-          <NestableDraggableFlatList
+        <DraggableScrollContainer>
+          <DraggableList
             data={plans}
             renderItem={renderItem}
             keyExtractor={item => item.uid}
             onDragEnd={({ data }) => dispatch(changePlansPosition(data.map(plan => plan.uid)))}
           />
-        </NestableScrollContainer>
+        </DraggableScrollContainer>
       </Page>
       {plans?.length <= QUERY_LIMIT && <AddMoreButton onPress={() => setIsNewPlanModal(true)} />}
       {(isNewPlanModal || !!changePlan) && (

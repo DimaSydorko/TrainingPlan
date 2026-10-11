@@ -50,5 +50,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     // ['@react-native-google-signin/google-signin', { iosUrlScheme: process.env.EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME }],
     // TODO(A2): expo-build-properties (override min/target SDK only with a reason)
     ['expo-build-properties', {}],
+    // A5: icon font for the Icon seam (app/Common/Icon/Icon.tsx). Adds MaterialDesignIcons.ttf to
+    // UIAppFonts on iOS so the static (build-time embedded) icon set renders without runtime loading.
+    '@react-native-vector-icons/material-design-icons',
   ],
 })

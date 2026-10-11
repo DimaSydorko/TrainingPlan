@@ -6,9 +6,11 @@ import { PlayingScreen, WorkoutScreen, WorkoutsScreen } from '../Screens'
 import { useScreenOptions } from '../Theme/Parents'
 import { Loading } from '../Common'
 import { ScreenName } from '../Utils/constants'
+import { WorkoutsStackParamList } from '../Utils/types'
+
+const Stack = createStackNavigator<WorkoutsStackParamList, 'WorkoutsStack'>()
 
 export default memo(function WorkoutsRouter() {
-  const Stack = createStackNavigator()
   const options = useScreenOptions()
   const { selectedWorkout, isLoading } = useWorkout()
   const plans = usePlans()
@@ -17,8 +19,7 @@ export default memo(function WorkoutsRouter() {
   return (
     <>
       {(isLoading || plans.isLoading || user.isLoading) && <Loading />}
-      {/* @ts-expect-error TODO(A5): React Navigation 7 navigator typings (createStackNavigator() without param list requires `id`) */}
-      <Stack.Navigator>
+      <Stack.Navigator id='WorkoutsStack'>
         <Stack.Screen
           name={ScreenName.SavedWorkouts}
           options={{ ...options, title: 'All saved Workouts' }}

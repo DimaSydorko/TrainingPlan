@@ -99,3 +99,11 @@ export enum SoundType {
 // Added by A0: delay between a cue sound and the following speech. The old code used
 // playSound.getDuration(); the SoundPlayer seam has no duration. TODO(A3/A4): revisit.
 export const SOUND_CUE_DURATION_MS = 1000
+
+// Added by A5: bottom tab route names (AppRouter). The values are the old tab names, kept unchanged.
+export enum TabName {
+  Plans = 'All saved Plans',
+  Workouts = 'All saved Workouts',
+  Publications = 'Publications',
+  Profile = 'Profile',
+}
