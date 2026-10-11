@@ -1,17 +1,14 @@
-// Firebase App (the core Firebase SDK) is always required and must be listed first
-// TODO(A1): Phase 0 uses the compat layer (v8 namespaced API on the current SDK). Convert to the
-// modular API with getReactNativePersistence(AsyncStorage); compat auth only persists in memory on RN.
-import firebase from 'firebase/compat/app'
-// Add the Firebase products that you want to use
-import 'firebase/compat/auth'
-import 'firebase/compat/firestore'
-import 'firebase/compat/database'
-import 'firebase/compat/storage'
-import 'firebase/compat/functions'
+// Firebase modular JS SDK (D2). Auth is persisted with AsyncStorage so the session survives restarts.
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { FirebaseApp, FirebaseOptions, getApp, getApps, initializeApp } from 'firebase/app'
+import { Auth, getAuth, getReactNativePersistence, initializeAuth } from 'firebase/auth'
+import { collection, CollectionReference, DocumentData, Firestore, getFirestore, initializeFirestore } from 'firebase/firestore'
+import { Database, getDatabase } from 'firebase/database'
 import { FirebaseDBCollection } from './constants'
 
 // Was read from the gitignored constants.local.ts (firebaseSDK). Keys are listed in .env.example.
-const firebaseConfig = {
+// EXPO_PUBLIC_* must be referenced literally (process.env.EXPO_PUBLIC_X) so Metro can inline them.
+export const firebaseConfig: FirebaseOptions = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
   databaseURL: process.env.EXPO_PUBLIC_FIREBASE_DATABASE_URL,
@@ -21,19 +18,44 @@ const firebaseConfig = {
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
 }
 
-// Initialize Firebase
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig)
-  firebase.firestore().settings({ experimentalForceLongPolling: true })
+if (__DEV__ && !firebaseConfig.apiKey) {
+  console.warn('[firebase] EXPO_PUBLIC_FIREBASE_* env vars are missing. Copy .env.example to .env and fill it in.')
 }
 
-export const FB_Auth = firebase.auth()
-export const FB_Store = firebase.storage()
-export const FB_Database = firebase.database()
-export const FB_FieldValue = firebase.firestore.FieldValue
-export const FB_Collection_UsersData = firebase.firestore().collection(FirebaseDBCollection.UsersData)
-export const FB_Collection_Workouts = firebase.firestore().collection(FirebaseDBCollection.Workouts)
-export const FB_Collection_Plans = firebase.firestore().collection(FirebaseDBCollection.Plans)
-export const FB_Collection_Publications = firebase.firestore().collection(FirebaseDBCollection.Publications)
+// getApps() guards against double initialisation on Fast Refresh.
+const isFirstInit = getApps().length === 0
+export const app: FirebaseApp = isFirstInit ? initializeApp(firebaseConfig) : getApp()
 
-export default firebase
+const createAuth = (): Auth => {
+  if (!isFirstInit) return getAuth(app)
+  try {
+    return initializeAuth(app, { persistence: getReactNativePersistence(AsyncStorage) })
+  } catch {
+    // initializeAuth throws auth/already-initialized if it was called before for this app.
+    return getAuth(app)
+  }
+}
+
+const createFirestore = (): Firestore => {
+  if (!isFirstInit) return getFirestore(app)
+  try {
+    // The old app forced long polling (WebChannel streaming is unreliable on React Native).
+    // Auto-detection picks long polling when it is needed and is the SDK default since v10;
+    // switch to `experimentalForceLongPolling: true` only if device testing shows Firestore hanging.
+    return initializeFirestore(app, { experimentalAutoDetectLongPolling: true })
+  } catch {
+    return getFirestore(app)
+  }
+}
+
+export const auth: Auth = createAuth()
+export const db: Firestore = createFirestore()
+// Realtime Database: holds the exercise GIF catalogue (FirebaseDatabase.ExerciseImages).
+export const rtdb: Database = getDatabase(app)
+
+const col = (name: FirebaseDBCollection) => collection(db, name) as CollectionReference<DocumentData>
+
+export const usersDataCollection = col(FirebaseDBCollection.UsersData)
+export const workoutsCollection = col(FirebaseDBCollection.Workouts)
+export const plansCollection = col(FirebaseDBCollection.Plans)
+export const publicationsCollection = col(FirebaseDBCollection.Publications)
