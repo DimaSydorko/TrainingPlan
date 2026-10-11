@@ -66,13 +66,5 @@ mockModule('react-native-worklets', () => require('react-native-worklets/src/moc
 // Gesture handler's official setup (mocks the native module and the touchables).
 require('react-native-gesture-handler/jestSetup')
 
-// Keep test output readable: the Phase 0 seam stubs log `[stub] ...` on every call (some at import
-// time). Other warnings still print.
-const originalWarn = console.warn
-console.warn = (...args) => {
-  if (typeof args[0] === 'string' && args[0].startsWith('[stub]')) return
-  originalWarn(...args)
-}
-
 // EXPO_PUBLIC_* values are inlined by babel-preset-expo at build time; in tests they are undefined
 // unless a test sets them. Never put real credentials here.
