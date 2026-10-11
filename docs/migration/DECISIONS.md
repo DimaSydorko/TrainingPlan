@@ -13,6 +13,7 @@ Answered by Dmytro on 2026-10-11.
 | — | Expo SDK | **SDK 57** (latest stable at time of work, RN 0.86 / React 19.2). Use `expo@^57.0.17` or later (fixes Hermes v1 memory and dev startup regressions) |
 
 ## Open questions for Dmytro
+- All open questions from Phase 1 and 2 (Q1–Q13, including D1 below) are consolidated in [DEVICE-TEST.md §3](DEVICE-TEST.md#3-open-questions-for-dmytro).
 - **D1 (iOS bundle ID):** Apple bundle identifiers may only contain letters, digits, `-` and `.`, so `com.trainingplantogether_cli` is invalid on iOS and `expo prebuild` rejects it. A0 set `ios.bundleIdentifier` to `com.trainingplantogether-cli` as the nearest valid value. Please confirm or choose another; the Android package stays `com.trainingplantogether_cli`.
 
 ## Environment notes for agents

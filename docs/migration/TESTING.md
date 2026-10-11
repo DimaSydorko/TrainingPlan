@@ -108,27 +108,22 @@ const { store } = await renderWithStore(<SettingsScreen />, {
 
 - `react-hooks/exhaustive-deps`: **warn**.
 - `no-restricted-imports`: **error** for libraries removed by the migration: `react-native-sound`, `react-native-tts`, `react-native-keep-awake`, `react-native-background-actions`, `react-native-vector-icons` (and subpaths), `@expo/vector-icons` (deprecated in SDK 56; use `app/Common/Icon`), and `firebase/compat/*`.
-  - Temporary exceptions, marked `TODO(A8)` in the config: `app/Utils/firebase.ts` and `app/store/**` may still import `firebase/compat/*` until A1 merges; `app/Common/Icon/Icon.tsx` may import `@expo/vector-icons` until A5 merges. Delete each exception once its owner's branch is in.
-- The React Compiler rules that `eslint-plugin-react-hooks` 7 turns on as errors (`set-state-in-effect`, `use-memo`, `refs`, `purity`, ...) are **warnings**, and so are three rules with existing violations in `app/` (`react/jsx-key`, `react/display-name`, `react/no-unescaped-entities`). Phase 1 doesn't autofix `app/`; A8 promotes the three React rules back to errors after the fix pass.
+- The React Compiler rules that `eslint-plugin-react-hooks` 7 turns on as errors (`set-state-in-effect`, `use-memo`, `refs`, `purity`, ...) are **warnings** until the code is cleaned up. `react/jsx-key`, `react/display-name` and `react/no-unescaped-entities` are errors again (A8 fixed the violations in Phase 2), and the temporary `firebase/compat` / `@expo/vector-icons` exceptions are gone.
 - Test files may use `require()` (needed in `jest.mock` factories).
 
 Prettier keeps the existing `.prettierrc.js` style (no semicolons, single quotes, 120 columns). `npm run format` writes, `npm run format:check` checks `app/`, `__tests__/`, `e2e/` and root config files. ESLint does not report formatting.
 
-**Baseline (A7, on top of A0):** `npx expo lint` = **0 errors, 97 warnings**.
+**After Phase 2 (A8, 2026-10-12):** `npx expo lint` = **0 errors, 86 warnings**; `npm run format:check` passes (blocking in CI).
 
 | Rule | Warnings |
 |---|---|
-| react-hooks/exhaustive-deps | 74 |
-| @typescript-eslint/no-unused-vars | 7 |
+| react-hooks/exhaustive-deps | 76 |
 | react-hooks/set-state-in-effect | 5 |
 | react-hooks/use-memo | 2 |
-| react/jsx-key | 2 |
-| react/display-name | 2 |
-| react/no-unescaped-entities | 2 |
-| import/no-duplicates | 2 |
-| no-unused-expressions | 1 |
+| react-hooks/refs | 2 |
+| react-hooks/purity | 1 |
 
-`npm run format:check` baseline: 6 files in `app/` not Prettier-formatted (AppImage, AppModal/styles, Icon, Loading, SwitchLib, ImageSelector/styles).
+(A7's Phase 1 baseline was 0 errors / 97 warnings.)
 
 ---
 
