@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { GoogleSignin } from '@react-native-google-signin/google-signin'
+import { getGoogleIdToken, signOutGoogle } from '../../services/googleAuth'
 import firebase, { FB_Auth, FB_Collection_UsersData } from '../../Utils/firebase'
 import { UserDataType, UserType } from '../../Utils/types'
 import { initialUserData } from './UserSlice'
@@ -41,8 +41,8 @@ export const userAC = {
   }),
   signInWithGoogle: createAsyncThunk('user/signInWithGoogle', async (props, thunkAPI) => {
     try {
-      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true })
-      const { idToken } = await GoogleSignin.signIn()
+      // hasPlayServices + signIn now live in the googleAuth seam (A2)
+      const idToken = await getGoogleIdToken()
       const credential = firebase.auth.GoogleAuthProvider.credential(idToken)
       const response = await FB_Auth.signInWithCredential(credential)
       thunkAPI.dispatch(userAC.dataRequest(response.user?.uid || ''))
@@ -59,8 +59,8 @@ export const userAC = {
   }),
   signOut: createAsyncThunk('user/signOut', async (_, thunkAPI) => {
     try {
-      await GoogleSignin.revokeAccess()
-      await GoogleSignin.signOut()
+      // revokeAccess + signOut now live in the googleAuth seam (A2)
+      await signOutGoogle()
       await FB_Auth.signOut()
       thunkAPI.dispatch(clearWorkoutResults())
       thunkAPI.dispatch(clearPlaneResults())

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { TouchableOpacity, Vibration, ViewStyle } from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { Icon } from '../Icon/Icon'
 import { useSettings } from '../../Hooks/redux'
 import { VIBRATION } from '../../Utils/constants'
 

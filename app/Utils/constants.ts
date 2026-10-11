@@ -95,3 +95,7 @@ export enum SoundType {
   DoubleDing = 'double_ding.mp3',
   HopBell = 'hop_bell.mp3',
 }
+
+// Added by A0: delay between a cue sound and the following speech. The old code used
+// playSound.getDuration(); the SoundPlayer seam has no duration. TODO(A3/A4): revisit.
+export const SOUND_CUE_DURATION_MS = 1000

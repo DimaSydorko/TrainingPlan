@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { View } from 'react-native'
 import { memo, useEffect } from 'react'
-import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin'
-import { GOOGLE_WEB_CLIENT_ID } from '../../Utils/constants.local'
+import { configureGoogleSignIn } from '../../services/googleAuth'
 import { userAC } from '../../store/UserReducer/UserAC'
 import { useAppDispatch } from '../../Hooks/redux'
+import { ConfirmButton } from '../../Common'
 
 interface IProps {
   disabled?: boolean
@@ -14,31 +14,19 @@ export default memo(function AppGoogleSignInButton({ disabled }: IProps) {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    GoogleSignin.configure({
-      webClientId: GOOGLE_WEB_CLIENT_ID,
-      offlineAccess: true,
-      forceCodeForRefreshToken: true,
-    })
+    // webClientId, offlineAccess and forceCodeForRefreshToken now live in the googleAuth seam (A2)
+    configureGoogleSignIn()
   }, [])
 
   const signIn = () => {
     dispatch(userAC.signInWithGoogle())
   }
 
+  // TODO(A2): temporary button. The library's GoogleSigninButton (Size.Wide, Color.Dark,
+  // style { marginLeft: 30, width: '83%', marginTop: 20, height: 48 }) was removed with the package.
   return (
     <View>
-      <GoogleSigninButton
-        style={{
-          marginLeft: 30,
-          width: '83%',
-          marginTop: 20,
-          height: 48,
-        }}
-        disabled={disabled}
-        size={GoogleSigninButton.Size.Wide}
-        color={GoogleSigninButton.Color.Dark}
-        onPress={signIn}
-      />
+      <ConfirmButton header={'Sign in with Google'} disabled={disabled} onPress={signIn} style={{ marginTop: 20 }} />
     </View>
   )
 })

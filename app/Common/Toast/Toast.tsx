@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { Icon } from '../Icon/Icon'
 import { useSettings } from '../../Hooks/redux'
 import { IconButton } from '../index'
 import { appScreen } from '../../Utils/constants'

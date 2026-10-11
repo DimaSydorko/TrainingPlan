@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { memo, useCallback, useState } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { Icon } from '../../Common/Icon/Icon'
 
 import { usePlans, useSettings } from '../../Hooks/redux'
 import { AppModal } from '../../Common'

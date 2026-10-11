@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { memo, useCallback, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
-const Sound = require('react-native-sound')
+import { previewSound } from '../../services/audio'
 
 import { useAppDispatch, useSettings } from '../../Hooks/redux'
 import {
@@ -30,8 +30,6 @@ import SettingsHeader from './SettingsHeader'
 import { getSoundText } from '../../Utils'
 import { SoundType } from '../../Utils/constants'
 
-Sound.setCategory('Playback', true)
-
 export default memo(function SettingsScreen() {
   const dispatch = useAppDispatch()
   const onSay = useTTS()
@@ -39,7 +37,6 @@ export default memo(function SettingsScreen() {
   const [isSoundModal, setIsSoundModal] = useState<boolean>(false)
 
   const isDarkTheme = colors.primary === colorsDark.primary
-  const playSound = new Sound(sound?.type || SoundType.Bell, Sound.MAIN_BUNDLE)
 
   const onThemeToggle = useCallback(
     () => dispatch(onThemeChange(isDarkTheme ? colorsLight : colorsDark)),
@@ -114,8 +111,8 @@ export default memo(function SettingsScreen() {
         <FlexCenter>
           <TouchableOpacity
             onPress={() => {
-              playSound.setVolume(sound?.volume)
-              playSound.play()
+              // TODO(A3): preview at sound?.volume (was playSound.setVolume(sound?.volume) before play)
+              previewSound(sound?.type || SoundType.Bell)
             }}
           >
             <TextHeader color={colors.primary}>Press for test sound</TextHeader>

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { memo } from 'react'
 import { View } from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { Icon } from '../../Common/Icon/Icon'
 import { useSettings } from '../../Hooks/redux'
 import { Labels, WorkoutDuration } from '../../Common'
 import { FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../Theme/Parents'

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { createContext, ReactNode, useCallback, useEffect, useState } from 'react'
-import Tts from 'react-native-tts'
+import { setSpeechDefaults } from '../services/speech'
 import { useSettings } from './redux'
 
 function useAppHelper() {
@@ -12,15 +12,15 @@ function useAppHelper() {
   } = useSettings()
 
   useEffect(() => {
-    Tts.setDefaultRate(rate)
+    setSpeechDefaults({ rate })
   }, [rate])
 
   useEffect(() => {
-    Tts.setDefaultPitch(pitch)
+    setSpeechDefaults({ pitch })
   }, [pitch])
 
   useEffect(() => {
-    Tts.setDucking(isDucking)
+    setSpeechDefaults({ duck: isDucking })
   }, [isDucking])
 
   const onToggleTabMenu = useCallback((isTabMenu?: boolean) => {

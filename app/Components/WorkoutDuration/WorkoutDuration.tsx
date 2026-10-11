@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { memo } from 'react'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { Icon } from '../../Common/Icon/Icon'
 import { FlexStart, TextSecondary } from '../../Theme/Parents'
 import { ExerciseType } from '../../Utils/types'
 import { useSettings } from '../../Hooks/redux'

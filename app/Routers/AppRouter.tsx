@@ -2,7 +2,7 @@ import * as React from 'react'
 import { NamedExoticComponent, useContext, useEffect } from 'react'
 import { Text } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { Icon } from '../Common/Icon/Icon'
 
 import { useAppDispatch, useSettings } from '../Hooks/redux'
 import { AppHelperContext } from '../Hooks/AppHelperProvider'

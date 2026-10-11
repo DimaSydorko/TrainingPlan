@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { FlatList, Image, TouchableOpacity, View } from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { Icon } from '../../Common/Icon/Icon'
 import { useSettings, useWorkout } from '../../Hooks/redux'
 import { appScreen } from '../../Utils/constants'
 import { AppImage, AppModal, TapBar } from '../../Common'

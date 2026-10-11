@@ -3,10 +3,10 @@ import { memo, useCallback, useEffect, useState } from 'react'
 import { LayoutAnimation, SafeAreaView, TouchableOpacity, View } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import { useNavigation } from '@react-navigation/native'
-import KeepAwake from 'react-native-keep-awake'
+import { activateKeepAwake, deactivateKeepAwake } from '../../services/keepAwake'
 
 import usePlaying from '../../Hooks/usePlaying'
-import { appScreen } from '../../Utils/constants'
+import { appScreen, SOUND_CUE_DURATION_MS } from '../../Utils/constants'
 import useTTS from '../../Hooks/useTTS'
 import { useSettings } from '../../Hooks/redux'
 import { getWorkoutDuration } from '../../Utils'
@@ -78,8 +78,8 @@ export default memo(function PlayingScreen() {
   }, [isPlaying])
 
   useEffect(() => {
-    if (!isSaveBatteryMode) KeepAwake.activate()
-    return () => !isSaveBatteryMode && KeepAwake.deactivate()
+    if (!isSaveBatteryMode) activateKeepAwake()
+    return () => !isSaveBatteryMode && deactivateKeepAwake()
   }, [])
 
   useEffect(() => {
@@ -95,7 +95,8 @@ export default memo(function PlayingScreen() {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       setIsWorkoutReview(p => (p ? p : true))
       playSound.play()
-      setTimeout(() => onSay('Workout complete'), playSound.getDuration() * 1000)
+      // TODO(A3/A4): the SoundPlayer seam has no duration; was playSound.getDuration() * 1000
+      setTimeout(() => onSay('Workout complete'), SOUND_CUE_DURATION_MS)
     }
   }, [isTheLastOneComplete])
 

@@ -5,18 +5,18 @@ import { useNavigation } from '@react-navigation/native'
 import { useAppDispatch, useSettings, useWorkout } from './redux'
 import { workoutAC } from '../store/WorkoutReducer/WorkoutAC'
 import { AppNavigationType, SelectedExerciseType, SelectedWorkoutType, WorkoutType } from '../Utils/types'
-import { VIBRATION } from '../Utils/constants'
+import { SOUND_CUE_DURATION_MS, VIBRATION } from '../Utils/constants'
 import { plansAC } from '../store/PlansReducer/PlansAC'
 import useTTS from './useTTS'
-
-const Sound = require('react-native-sound')
+import { configureAudioSession, createSoundPlayer } from '../services/audio'
 
 const initialPlaying = {
   idx: 0,
   lap: 1,
   updated: Date.now(),
 }
-Sound.setCategory('Playback', true)
+// Was Sound.setCategory('Playback', true): playback mixed with other audio
+configureAudioSession({ duckOthers: false }).then()
 type PlayingType = typeof initialPlaying
 
 export default function usePlaying() {
@@ -42,10 +42,10 @@ export default function usePlaying() {
     () => playingWorkout.exercises.length === playing.idx + 1 && exercise.laps === playing.lap,
     [exercise.laps, playing, playingWorkout.exercises.length]
   )
-  const playSound = useMemo(() => new Sound(sound?.type, Sound.MAIN_BUNDLE), [])
+  const playSound = useMemo(() => createSoundPlayer(sound?.type), [])
 
   useEffect(() => {
-    playSound.setVolume(sound?.volume)
+    // TODO(A3): the SoundPlayer seam has no volume control; was playSound.setVolume(sound?.volume)
   }, [playSound])
 
   useEffect(() => {
@@ -138,7 +138,8 @@ export default function usePlaying() {
         if (!!sayName) onSay(sayName)
       } else {
         playSound.play()
-        if (!!sayName) setTimeout(() => onSay(sayName), playSound.getDuration() * 1000)
+        // TODO(A3/A4): the SoundPlayer seam has no duration; was playSound.getDuration() * 1000
+        if (!!sayName) setTimeout(() => onSay(sayName), SOUND_CUE_DURATION_MS)
       }
 
       if (!isLastLap) {

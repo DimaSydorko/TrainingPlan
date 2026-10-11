@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import Tts from 'react-native-tts'
+import { speak, stopSpeaking } from '../services/speech'
 import { useSettings } from './redux'
 
 export default function useTTS() {
@@ -9,16 +9,10 @@ export default function useTTS() {
 
   return useCallback(
     (textToSpeech: string) => {
-      Tts.stop()
-      Tts.speak(textToSpeech, {
-        iosVoiceId: 'com.apple.ttsbundle.Moira-compact',
-        rate: rate,
-        androidParams: {
-          KEY_PARAM_PAN: 1,
-          KEY_PARAM_VOLUME: volume,
-          KEY_PARAM_STREAM: 'STREAM_MUSIC',
-        },
-      })
+      stopSpeaking()
+      // TODO(A3): old call used iosVoiceId 'com.apple.ttsbundle.Moira-compact' and Android
+      // KEY_PARAM_PAN: 1, KEY_PARAM_STREAM: 'STREAM_MUSIC'
+      speak(textToSpeech, { rate: rate, volume: volume })
     },
     [volume, rate]
   )

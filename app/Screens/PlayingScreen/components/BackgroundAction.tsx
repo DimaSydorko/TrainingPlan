@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { memo, useEffect } from 'react'
-import BackgroundService from 'react-native-background-actions'
+import { startSession, stopSession, updateSession } from '../../../services/backgroundSession'
 import { usePlayTimerContext } from './PlayTimerProvider'
 import { useSettings } from '../../../Hooks/redux'
 
@@ -18,66 +18,38 @@ export default memo(function BackgroundAction({ taskTitle, taskDesc, taskName, d
 
   const newColor = color || colors.secondPrimary
 
-  const veryIntensiveTask = async taskDataArguments => {
-    const { delay } = taskDataArguments
-    await new Promise(async () => {
-      for (let i = 0; BackgroundService.isRunning(); i++) {
-        // console.log(i)
-        await new Promise(r => setTimeout(r, delay))
-      }
-    })
-  }
-
-  const options = {
-    taskName,
-    taskTitle,
-    taskDesc,
-    taskIcon: {
-      name: 'ic_launcher',
-      type: 'mipmap',
-    },
-    parameters: {
-      delay: 1000,
-    },
-    linkingURI: 'yourSchemeHere://chat/jane',
-    color: newColor,
-    ...(duration !== undefined
-      ? {
-          progressBar: {
-            value: 100,
-            max: 100,
-            indeterminate: false,
-          },
-        }
-      : {}),
-  }
-
+  // TODO(A4): the old react-native-background-actions task (taskName, mipmap ic_launcher icon,
+  // 1s keep-alive loop, linkingURI 'yourSchemeHere://chat/jane') moves into backgroundSession.ts.
   useEffect(() => {
-    BackgroundService.start(veryIntensiveTask, options).then()
+    startSession({
+      title: taskTitle,
+      description: taskDesc,
+      color: newColor,
+      ...(duration !== undefined ? { progress: { value: 100, max: 100 } } : {}),
+    }).then()
     return () => {
-      BackgroundService.stop().then()
+      stopSession().then()
     }
   }, [])
 
   useEffect(() => {
-    BackgroundService.updateNotification({ taskDesc }).then()
+    updateSession({ description: taskDesc }).then()
   }, [taskDesc])
 
   useEffect(() => {
-    BackgroundService.updateNotification({ taskTitle }).then()
+    updateSession({ title: taskTitle }).then()
   }, [taskTitle])
 
   useEffect(() => {
-    BackgroundService.updateNotification({ color: newColor }).then()
+    updateSession({ color: newColor }).then()
   }, [newColor])
 
   useEffect(() => {
     duration !== undefined &&
-      BackgroundService.updateNotification({
-        progressBar: {
+      updateSession({
+        progress: {
           value: playTimer,
           max: duration,
-          indeterminate: false,
         },
       }).then()
   }, [playTimer, duration])
