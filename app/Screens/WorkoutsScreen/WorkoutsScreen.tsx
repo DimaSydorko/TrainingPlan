@@ -2,12 +2,6 @@ import * as React from 'react'
 import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { TouchableOpacity, Vibration } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import {
-  NestableDraggableFlatList,
-  NestableScrollContainer,
-  RenderItemParams,
-  ScaleDecorator,
-} from 'react-native-draggable-flatlist'
 import { changeWorkoutsPosition, updateSelectedWorkout } from '../../store/WorkoutReducer/WorkoutSlice'
 import { plansAC } from '../../store/PlansReducer/PlansAC'
 import { workoutAC } from '../../store/WorkoutReducer/WorkoutAC'
@@ -17,8 +11,19 @@ import { useAppDispatch, useWorkout } from '../../Hooks/redux'
 import useWorkoutPlan from '../../Hooks/useWorkoutPlan'
 import { deepCompare } from '../../Utils'
 import { appScreen, QUERY_LIMIT, ScreenName, VIBRATION } from '../../Utils/constants'
-import { AppNavigationType, PlanType, WorkoutType } from '../../Utils/types'
-import { AddMoreButton, AppModal, ConfirmButton, GoBackSubmitModal, IconButton, MyTextInput } from '../../Common'
+import { PlanType, PlansNavigation, WorkoutType, WorkoutsNavigation } from '../../Utils/types'
+import {
+  AddMoreButton,
+  AppModal,
+  ConfirmButton,
+  DraggableItem,
+  DraggableList,
+  DraggableRenderItemParams,
+  DraggableScrollContainer,
+  GoBackSubmitModal,
+  IconButton,
+  MyTextInput,
+} from '../../Common'
 import ShareModal from '../../Components/ShareModal/ShareModal'
 import EditPlanWorkout from '../../Components/EditPlanWorkout/EditPlanWorkout'
 import CopyWorkoutsModal from '../../Components/CopyWorkoutsModal/CopyWorkoutsModal'
@@ -26,17 +31,19 @@ import WorkoutCard from './WorkoutCard'
 import { AppFooter, AppHeader, Card, FlexEnd, FlexStart, Page, TextHeader } from '../../Theme/Parents'
 import { icon } from '../../Theme/icons'
 import NoDataIcon from '../../Assets/icons/NoDataIcon'
+import { useAppInsets } from '../../Theme/insets'
 
 type PropsType = {
   isInPlan?: boolean
 }
 
 export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
-  const navigation = useNavigation<AppNavigationType>()
+  const navigation = useNavigation<PlansNavigation | WorkoutsNavigation>()
   const dispatch = useAppDispatch()
   const { selectedPlan, addWorkout, deleteWorkouts, copyWorkouts } = useWorkoutPlan()
   const { onToggleTabMenu, isTabMenu } = useContext(AppHelperContext)
   const workoutState = useWorkout()
+  const { footer } = useAppInsets()
   const [workouts, setWorkouts] = useState<WorkoutType[]>()
   const [selectedWorkoutsUids, setSelectedWorkoutsUids] = useState<string[]>([])
   const [planNameInput, setPlanNameInput] = useState<string>(selectedPlan?.name || '')
@@ -140,7 +147,9 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
         if (selectedWorkoutsUids.length === 1 && isInPlan) onSavePlan(false)
       } else {
         dispatch(updateSelectedWorkout(workout))
-        navigation.navigate(isInPlan ? ScreenName.WorkoutInPlan : ScreenName.Workout)
+        // Rendered by both the Plans stack (isInPlan) and the Workouts stack
+        if (isInPlan) (navigation as PlansNavigation).navigate(ScreenName.WorkoutInPlan)
+        else (navigation as WorkoutsNavigation).navigate(ScreenName.Workout)
       }
     },
     [isInPlan, isEditMode, onSavePlan, selectedWorkoutsUids.length]
@@ -160,8 +169,8 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
   )
 
   const renderItem = useCallback(
-    ({ item, drag, isActive }: RenderItemParams<WorkoutType>) => (
-      <ScaleDecorator>
+    ({ item, drag, isActive }: DraggableRenderItemParams<WorkoutType>) => (
+      <DraggableItem>
         <Card>
           <TouchableOpacity
             onLongPress={() => onWorkoutLongPress(item.uid, drag)}
@@ -171,7 +180,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
             <WorkoutCard workout={item} isSelected={selectedWorkoutsUids.includes(item.uid)} />
           </TouchableOpacity>
         </Card>
-      </ScaleDecorator>
+      </DraggableItem>
     ),
     [onWorkoutLongPress, onWorkoutPress, selectedWorkoutsUids]
   )
@@ -218,8 +227,8 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
           />
         )}
         {workouts?.length === 0 && <NoDataIcon />}
-        <NestableScrollContainer style={{ paddingBottom: appScreen.footer }}>
-          <NestableDraggableFlatList
+        <DraggableScrollContainer style={{ paddingBottom: footer }}>
+          <DraggableList
             data={workouts || []}
             renderItem={renderItem}
             keyExtractor={item => item.uid}
@@ -227,7 +236,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
               isInPlan ? setWorkouts(data) : dispatch(changeWorkoutsPosition(data.map(w => w.uid)))
             }
           />
-        </NestableScrollContainer>
+        </DraggableScrollContainer>
         {(isNewWorkoutModal || !!changeWorkout) && (
           <EditPlanWorkout
             isModal

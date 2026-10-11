@@ -2,22 +2,27 @@ import * as React from 'react'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import {
-  NestableDraggableFlatList,
-  NestableScrollContainer,
-  RenderItemParams,
-  ScaleDecorator,
-} from 'react-native-draggable-flatlist'
 import { useAppDispatch, useSettings, useUser, useWorkout } from '../../Hooks/redux'
 import { workoutAC } from '../../store/WorkoutReducer/WorkoutAC'
 import { plansAC } from '../../store/PlansReducer/PlansAC'
 import { AppHelperContext } from '../../Hooks/AppHelperProvider'
-import { AddMoreButton, AppModal, ConfirmButton, GoBackSubmitModal, MyTextInput, WorkoutDuration } from '../../Common'
+import {
+  AddMoreButton,
+  AppModal,
+  ConfirmButton,
+  DraggableItem,
+  DraggableList,
+  DraggableRenderItemParams,
+  DraggableScrollContainer,
+  GoBackSubmitModal,
+  MyTextInput,
+  WorkoutDuration,
+} from '../../Common'
 import Exercise from '../../Components/Exercise/Exercise'
 import EditExerciseModal from '../../Components/Exercise/ExerciseEditModal'
 import { deepCompare } from '../../Utils'
 import { appScreen, ScreenName } from '../../Utils/constants'
-import { AppNavigationType, ExerciseType, WorkoutType } from '../../Utils/types'
+import { ExerciseType, PlayableNavigation, WorkoutType } from '../../Utils/types'
 import {
   AppFooter,
   AppHeader,
@@ -30,14 +35,16 @@ import {
 import { icon } from '../../Theme/icons'
 import { theme } from '../../Theme/theme'
 import { COLORS_EXERCISE, colorsDark } from '../../Theme/colors'
+import { useAppInsets } from '../../Theme/insets'
 
 export default function WorkoutScreen() {
   const dispatch = useAppDispatch()
-  const navigation = useNavigation<AppNavigationType>()
+  const navigation = useNavigation<PlayableNavigation>()
   const { selectedWorkout } = useWorkout()
   const { colors } = useSettings()
   const { user } = useUser()
   const { onToggleTabMenu } = useContext(AppHelperContext)
+  const bars = useAppInsets()
   const [isEditMode, setIsEditMode] = useState(false)
   const [isNewExercise, setIsNewExercise] = useState(false)
   const [isSaveChangesModal, setIsSaveChangesModal] = useState(false)
@@ -128,10 +135,10 @@ export default function WorkoutScreen() {
   }, [onSaveRefuse])
 
   const renderItem = useCallback(
-    ({ item, drag, isActive, getIndex }: RenderItemParams<ExerciseType>) => {
+    ({ item, drag, isActive, getIndex }: DraggableRenderItemParams<ExerciseType>) => {
       const color = COLORS_EXERCISE[item?.colorIdx || 0][+isDarkTheme]
       return (
-        <ScaleDecorator>
+        <DraggableItem>
           <Card borderLeftColor={item.isVisible ? `${color}` : `${color}80`}>
             <TouchableOpacity onLongPress={drag} onPress={() => setChangeExercise(item)} disabled={isActive}>
               <Exercise
@@ -145,7 +152,7 @@ export default function WorkoutScreen() {
               />
             </TouchableOpacity>
           </Card>
-        </ScaleDecorator>
+        </DraggableItem>
       )
     },
     [isEditMode, onVisibilityToggle, onSaveExercise, isDarkTheme, onDeleteExercise]
@@ -168,14 +175,14 @@ export default function WorkoutScreen() {
           )}
           <Page scrollDisabled>
             <FlexCenterColumn style={{ paddingHorizontal: 8 }}>
-              <NestableScrollContainer
+              <DraggableScrollContainer
                 style={{
-                  height: appScreen.vh - appScreen.footer - appScreen.header,
-                  marginBottom: appScreen.footer,
+                  height: appScreen.vh - bars.footer - bars.header,
+                  marginBottom: bars.footer,
                 }}
               >
                 {isEditMode && !!workoutExercises.length ? (
-                  <NestableDraggableFlatList
+                  <DraggableList
                     renderItem={renderItem}
                     data={workoutExercises}
                     dragItemOverflow
@@ -201,7 +208,7 @@ export default function WorkoutScreen() {
                       })}
                   </>
                 )}
-              </NestableScrollContainer>
+              </DraggableScrollContainer>
             </FlexCenterColumn>
           </Page>
           <AddMoreButton
