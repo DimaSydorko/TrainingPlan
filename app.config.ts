@@ -44,8 +44,9 @@ function iosUrlSchemeFromClientId(iosClientId?: string): string | undefined {
   return 'com.googleusercontent.apps.' + id.slice(0, -suffix.length)
 }
 
-// Written by `eas init` (or set EAS_PROJECT_ID). Needed for EAS Build and remote app versions.
-const EAS_PROJECT_ID: string | undefined = process.env.EAS_PROJECT_ID || undefined
+// EAS project ID from `eas init` (not a secret). EAS can't write it into a dynamic config, so it's
+// hard-coded here. EAS_PROJECT_ID still overrides it, e.g. for a fork on another Expo account.
+const EAS_PROJECT_ID = process.env.EAS_PROJECT_ID || '6bc8e8ab-49fd-4cd2-8f0f-d4b522029833'
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   const variant = getVariant()
