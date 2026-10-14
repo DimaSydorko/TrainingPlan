@@ -66,7 +66,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   return {
     ...config,
     name: `Training Plan${nameSuffix}`,
-    slug: 'training-plan',
+    slug: 'training-coach', // must match the EAS project (expo.dev) the projectId belongs to
     // Replaces the template `yourSchemeHere` scheme of the bare project. Dev/preview get their own
     // scheme so deep links don't open the wrong installed variant.
     scheme: `trainingplan${idSuffix.replace('.', '-')}`,
