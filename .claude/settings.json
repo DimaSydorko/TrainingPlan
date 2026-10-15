@@ -1,0 +1,27 @@
+{
+    "permissions": {
+        "deny": [
+            "Read(./.env)",
+            "Read(./.env.*)",
+            "Read(*.pem)",
+            "Read(*.key)",
+            "Read(~/.ssh/**)"
+        ],
+        "allow": [
+            "Bash(yarn add:*)",
+            "Bash(yarn lint:*)",
+            "Bash(yarn test:*)",
+            "Bash(yarn build:*)",
+            "Bash(npx tsc:*)",
+            "Bash(npx eslint:*)",
+            "Bash(npm run *)",
+            "Bash(git log:*)",
+            "Bash(git diff:*)",
+            "Bash(git status:*)",
+            "Bash(git branch:*)",
+            "Bash(git stash list:*)",
+            "Bash(git show:*)",
+            "Bash(curl * https://gitlab.ci.lehrermarktplatz.de/api/v4/*)"
+        ]
+    }
+}
