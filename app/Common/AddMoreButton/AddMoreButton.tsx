@@ -14,6 +14,8 @@ interface AddMoreButtonType {
   testID?: string
 }
 
+//zustand
+
 export default function AddMoreButton({ onPress, icon, iconColor, color, style, testID }: AddMoreButtonType) {
   const { colors } = useSettings()
   const newIconColor = iconColor || colors.background
