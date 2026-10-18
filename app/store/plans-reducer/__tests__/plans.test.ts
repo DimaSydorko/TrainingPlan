@@ -1,7 +1,7 @@
 import reducer, { changePlansPosition, clearPlaneResults, selectPlan } from '../plans-slice'
 import { plansAC } from '../plans-ac'
 
-jest.mock('../../../utils/firebase', () => ({
+jest.mock('@utils/firebase', () => ({
   db: {},
   auth: {},
   rtdb: {},

@@ -38,10 +38,13 @@ const firebaseCompatPattern = {
 const baseRestrictions = { paths: removedLibraries, patterns: [...removedLibraryPatterns, firebaseCompatPattern] }
 const supabaseClientPatterns = [
   { group: ['@supabase/supabase-js', '@supabase/*'], message: 'Only app/lib/supabase and app/api talk to Supabase.' },
-  { group: ['**/lib/supabase/*', '**/lib/supabase'], message: 'Only app/api imports the Supabase client.' },
+  {
+    group: ['**/lib/supabase/*', '**/lib/supabase', '@lib/supabase', '@lib/supabase/*'],
+    message: 'Only app/api imports the Supabase client.',
+  },
 ]
 const apiLayerPattern = {
-  group: ['**/api/*', '**/api/**'],
+  group: ['**/api/*', '**/api/**', '@api', '@api/*'],
   message: 'Import the React Query hook from app/services/<entity> instead of the fetcher.',
 }
 const restrictImports = (...patterns) => [
@@ -63,6 +66,10 @@ module.exports = defineConfig([
   ]),
   expoConfig,
   prettierConfig,
+  {
+    // Resolve tsconfig `paths` (@store/…) for the import/* rules.
+    settings: { 'import/resolver': { typescript: { project: './tsconfig.json' }, node: true } },
+  },
   {
     rules: {
       'react-hooks/exhaustive-deps': 'warn',
@@ -107,7 +114,26 @@ module.exports = defineConfig([
           message: 'app/api is pure transport.',
         },
         {
-          group: ['**/services/*', '**/stores/*', '**/store/*', '**/screens/*', '**/components/*', '**/common/*'],
+          group: [
+            '**/services/*',
+            '**/stores/*',
+            '**/store/*',
+            '**/screens/*',
+            '**/components/*',
+            '**/common/*',
+            '@services',
+            '@services/*',
+            '@stores',
+            '@stores/*',
+            '@store',
+            '@store/*',
+            '@screens',
+            '@screens/*',
+            '@components',
+            '@components/*',
+            '@common',
+            '@common/*',
+          ],
           message: 'app/api must not depend on upper layers.',
         }
       ),
@@ -118,7 +144,17 @@ module.exports = defineConfig([
     files: ['app/services/**'],
     rules: {
       'no-restricted-imports': restrictImports(...supabaseClientPatterns, {
-        group: ['react-redux', 'zustand', 'zustand/*', '**/stores/*', '**/store/*'],
+        group: [
+          'react-redux',
+          'zustand',
+          'zustand/*',
+          '**/stores/*',
+          '**/store/*',
+          '@stores',
+          '@stores/*',
+          '@store',
+          '@store/*',
+        ],
         message: 'Hooks take inputs as arguments; never read a store.',
       }),
     },

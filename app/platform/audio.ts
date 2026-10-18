@@ -15,7 +15,7 @@ export type SoundPlayer = {
 
 // SoundType values are the mp3 file names (app/utils/constants.ts). Metro needs static requires.
 const SOUND_SOURCES: Record<SoundType, number> = {
-  [SoundType.Bell]: require('../assets/sounds/bell.mp3'),
+  [SoundType.Bell]: require('@assets/sounds/bell.mp3'),
   [SoundType.DigitalClock]: require('../assets/sounds/digital_clock.mp3'),
   [SoundType.DoubleDing]: require('../assets/sounds/double_ding.mp3'),
   [SoundType.HopBell]: require('../assets/sounds/hop_bell.mp3'),

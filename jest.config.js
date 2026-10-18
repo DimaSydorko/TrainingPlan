@@ -12,6 +12,11 @@ module.exports = {
   preset: 'jest-expo',
   roots: ['<rootDir>/__tests__', '<rootDir>/app'],
   testMatch: ['<rootDir>/__tests__/**/*.test.[jt]s?(x)', '<rootDir>/app/**/__tests__/**/*.test.[jt]s?(x)'],
+  // tsconfig.json `paths` (@store/…, @utils/…); Jest doesn't read tsconfig.
+  moduleNameMapper: {
+    '^@(assets|common|components|hooks|platform|routers|screens|store|theme|utils|lib|api|services|stores)(/.*)?$':
+      '<rootDir>/app/$1$2',
+  },
   setupFiles: ['<rootDir>/__tests__/setup/jest.setup.js'],
   setupFilesAfterEnv: ['<rootDir>/__tests__/setup/jest.setupAfterEnv.js'],
   // Expo's recommended pattern plus the untranspiled JS-only RN libraries this app uses.
