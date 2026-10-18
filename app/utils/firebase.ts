@@ -1,4 +1,4 @@
-// Firebase modular JS SDK (D2). Auth is persisted with AsyncStorage so the session survives restarts.
+// Firebase modular JS SDK. Auth is persisted with AsyncStorage so the session survives restarts.
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { FirebaseApp, FirebaseOptions, getApp, getApps, initializeApp } from 'firebase/app'
 import { Auth, getAuth, getReactNativePersistence, initializeAuth } from 'firebase/auth'

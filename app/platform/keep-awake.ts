@@ -1,4 +1,4 @@
-// Seam owned by A3 (docs/migration/README.md §6), implemented with expo-keep-awake.
+// Device seam implemented with expo-keep-awake. Keep the exported signatures stable.
 // Battery-saver mode is decided by the caller (PlayingScreen skips activation when
 // isSaveBatteryMode is on).
 import * as KeepAwake from 'expo-keep-awake'

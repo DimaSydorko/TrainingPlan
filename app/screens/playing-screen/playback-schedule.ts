@@ -1,4 +1,4 @@
-// Pure, timestamp-based workout schedule (A4, D3). No React, no native modules, so it can be unit
+// Pure, timestamp-based workout schedule. No React, no native modules, so it can be unit
 // tested in isolation (see __tests__/playbackSchedule.test.ts).
 //
 // A workout is flattened into segments, one per (exercise, lap). Each segment is a countdown of the

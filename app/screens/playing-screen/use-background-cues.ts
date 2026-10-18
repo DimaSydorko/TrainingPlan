@@ -1,4 +1,4 @@
-// Background side of the player (A4, D3). Replaces components/BackgroundAction.tsx
+// Background side of the player. Replaces components/BackgroundAction.tsx
 // (react-native-background-actions):
 // - asks for notification permission (with an explanation) when the player opens;
 // - keeps the ongoing "workout in progress" notification up to date (Android, not in battery-save

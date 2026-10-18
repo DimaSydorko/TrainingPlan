@@ -42,7 +42,7 @@ export const userAC = {
   }),
   signInWithGoogle: createAsyncThunk('user/signInWithGoogle', async (props, thunkAPI) => {
     try {
-      // hasPlayServices + signIn now live in the googleAuth seam (A2)
+      // hasPlayServices + signIn now live in the googleAuth seam
       const idToken = await getGoogleIdToken()
       const credential = GoogleAuthProvider.credential(idToken)
       const response = await signInWithCredential(auth, credential)
@@ -57,7 +57,7 @@ export const userAC = {
   }),
   signOut: createAsyncThunk('user/signOut', async (_, thunkAPI) => {
     try {
-      // revokeAccess + signOut now live in the googleAuth seam (A2). A Google failure (e.g. the user
+      // revokeAccess + signOut now live in the googleAuth seam. A Google failure (e.g. the user
       // signed in with email) must not keep the Firebase session alive.
       await signOutGoogle().catch(e => console.warn(`[auth] Google sign-out: ${errorMessage(e)}`))
       await firebaseSignOut(auth)

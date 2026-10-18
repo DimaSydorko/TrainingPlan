@@ -1,4 +1,4 @@
-// Seam owned by A3 (docs/migration/README.md §6), implemented with expo-speech.
+// Device seam implemented with expo-speech. Keep the exported signatures stable.
 // Rate and pitch arrive in the old react-native-tts units stored in Settings and are mapped
 // here (mediaUtils.legacyRateToExpo / legacyPitchToExpo), so saved settings sound the same.
 import * as Speech from 'expo-speech'

@@ -71,8 +71,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       'expo-status-bar',
       'expo-font',
       'expo-dev-client',
-      // expo-audio (A3): cue sounds only, no recording. Background playback is off: per D3 cues in the
-      // background come from expo-notifications (A4), and the session uses shouldPlayInBackground: false.
+      // expo-audio: cue sounds only, no recording. Background playback is off: cues in the
+      // background come from expo-notifications, and the session uses shouldPlayInBackground: false.
       // This keeps iOS UIBackgroundModes 'audio' and the Android mediaPlayback foreground service out.
       [
         'expo-audio',

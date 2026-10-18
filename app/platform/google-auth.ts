@@ -1,9 +1,9 @@
-// Seam owned by A2 (docs/migration/README.md §6).
+// Device seam. Keep the exported signatures stable.
 // Backed by @react-native-google-signin/google-signin (v16, "original" Google Sign-In API) with
-// its Expo config plugin in app.config.ts. Firebase uses the ID token (UserAC, A1).
+// its Expo config plugin in app.config.ts. Firebase uses the ID token (UserAC).
 //
 // Config comes from EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID (all platforms) and
-// EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID (iOS; we don't ship GoogleService-Info.plist, see D2).
+// EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID (iOS; we don't ship GoogleService-Info.plist).
 // The old offlineAccess / forceCodeForRefreshToken options were dropped: the app only needs the
 // ID token, and forceCodeForRefreshToken made Android show the consent screen on every sign-in.
 import { Platform } from 'react-native'

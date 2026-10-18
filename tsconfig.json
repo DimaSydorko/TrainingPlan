@@ -1,7 +1,7 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    // Path to `strict: true` is in docs/migration/TESTING.md ("TypeScript strictness roadmap").
+    // Path to `strict: true` is in docs/testing.md ("TypeScript strictness roadmap").
     // `strict` stays off; the strict-family flags below already pass and are enabled one by one.
     "strict": false,
     "alwaysStrict": true,

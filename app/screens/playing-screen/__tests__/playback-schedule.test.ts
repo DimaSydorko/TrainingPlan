@@ -14,8 +14,6 @@ import {
   upcomingBoundaries,
 } from '../playback-schedule'
 
-// Jest globals. Declared locally so `tsc` passes before A7 adds @types/jest; remove once it lands.
-
 const T0 = 1_700_000_000_000
 const s = (sec: number) => sec * 1000
 

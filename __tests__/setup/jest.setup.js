@@ -1,9 +1,9 @@
 /**
  * Runs before every test file (jest `setupFiles`). Registers module mocks for native modules and
- * backends that cannot run under Jest. See docs/migration/TESTING.md ("Unit tests") for the list and how to override them.
+ * backends that cannot run under Jest. See docs/testing.md ("Unit tests") for the list and how to override them.
  *
  * `jest.doMock` is used (not hoisted `jest.mock`) so a mock can be registered as virtual while its
- * package is not installed yet (expo-speech / expo-keep-awake land with A3, google-signin with A2),
+ * package is not installed yet,
  * and as a normal mock once it is.
  */
 function isInstalled(name) {
@@ -31,10 +31,10 @@ mockModule('expo-speech', () => require('./mocks/expo-speech'))
 mockModule('expo-keep-awake', () => require('./mocks/expo-keep-awake'))
 mockModule('expo-notifications', () => require('./mocks/expo-notifications'))
 
-// Google Sign-In (A2 re-installs the package).
+// Google Sign-In.
 mockModule('@react-native-google-signin/google-signin', () => require('./mocks/google-signin'))
 
-// Firebase JS SDK: compat entry points (Phase 0) and modular entry points (A1).
+// Firebase JS SDK: compat and modular entry points.
 const firebaseEntryPoints = [
   'firebase/compat/app',
   'firebase/compat/auth',
@@ -53,10 +53,10 @@ firebaseEntryPoints.forEach(name => {
   mockModule(name, () => require('./mocks/firebase').createStub(name))
 })
 
-// Keyboard controller (A5): the package's own Jest mock (its native module is not linked in Jest).
+// Keyboard controller: the package's own Jest mock (its native module is not linked in Jest).
 mockModule('react-native-keyboard-controller', () => require('react-native-keyboard-controller/jest'))
 
-// Safe-area context (A5 added SafeAreaProvider at the root): without the official mock the
+// Safe-area context (SafeAreaProvider wraps the root): without the official mock the
 // provider waits for native inset metrics and renders nothing.
 mockModule('react-native-safe-area-context', () => require('react-native-safe-area-context/jest/mock').default)
 

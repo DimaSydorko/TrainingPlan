@@ -1,4 +1,4 @@
-// Pure helpers for the media seams (audio.ts, speech.ts). Owned by A3.
+// Pure helpers for the media seams (audio.ts, speech.ts).
 // No Expo or React Native imports here, so the logic is unit-testable without native mocks.
 
 export function clamp(value: number, min: number, max: number): number {
@@ -52,8 +52,8 @@ export type AudioModeOutput = {
  * The audio session used by cue sounds and speech.
  * - playsInSilentMode: cues must be heard with the iOS silent switch on (old 'Playback' category).
  * - interruptionMode: mix with music, or duck it while a cue plays when the user enabled ducking.
- * - shouldPlayInBackground: false. Per D3 the workout keeps running from timestamps and cues while
- *   the app is in the background come from expo-notifications (A4), not from in-app audio.
+ * - shouldPlayInBackground: false. The workout keeps running from timestamps and cues while
+ *   the app is in the background come from expo-notifications, not from in-app audio.
  */
 export function buildAudioMode({ duckOthers }: AudioModeInput): AudioModeOutput {
   return {

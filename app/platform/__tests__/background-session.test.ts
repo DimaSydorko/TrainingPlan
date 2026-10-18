@@ -1,4 +1,4 @@
-// Pure helpers of the backgroundSession seam (A4). expo-notifications is mocked in __tests__/setup.
+// Pure helpers of the backgroundSession seam. expo-notifications is mocked in __tests__/setup.
 import { cueChannelId, cueSoundFile, formatClockTime } from '../background-session'
 import { SoundType } from '../../utils/constants'
 

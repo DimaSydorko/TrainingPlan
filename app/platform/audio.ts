@@ -1,4 +1,4 @@
-// Seam owned by A3 (docs/migration/README.md §6), implemented with expo-audio.
+// Device seam implemented with expo-audio. Keep the exported signatures stable.
 // Uses the imperative createAudioPlayer API because callers live outside components
 // (usePlaying keeps one player per playing screen). Every created player must be released.
 import { AudioPlayer, createAudioPlayer, setAudioModeAsync } from 'expo-audio'

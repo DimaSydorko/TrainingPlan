@@ -237,7 +237,7 @@ export default function usePlaying() {
   }, [])
 
   // ------------------------------------------------------------------------------------------
-  // Timestamp-based clock (D3). `playing` and `isPlaying` stay the source of truth for *where* the
+  // Timestamp-based clock. `playing` and `isPlaying` stay the source of truth for *where* the
   // player is; the clock tracks *when* the current segment started, so remaining time is derived
   // from Date.now() and survives the JS thread being suspended (locked screen / background).
   const isTheLastOneComplete = isWaitForSubmit && isTheLastOne
@@ -401,7 +401,7 @@ export default function usePlaying() {
     onReload,
     setCurrentRepeats,
     setCurrentWeight,
-    // Timestamp clock (A4)
+    // Timestamp clock
     remainingSec,
     clockVersion,
     timerSync,

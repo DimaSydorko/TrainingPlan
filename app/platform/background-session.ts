@@ -1,4 +1,4 @@
-// Seam owned by A4 (docs/migration/README.md §6), implemented with expo-notifications (D3).
+// Device seam implemented with expo-notifications. Keep the exported signatures stable.
 //
 // Replaces react-native-background-actions. Nothing here keeps JS running in the background: the
 // workout clock is timestamp based (app/screens/playing-screen/playback-schedule.ts) and re-syncs when
@@ -25,7 +25,7 @@ export type SessionInfo = {
   /** Kept for compatibility. Not rendered: a notification cannot be re-posted every second from a
    * suspended JS thread, so `endsAt` is shown instead. */
   progress?: { value: number; max: number }
-  /** Epoch ms when the current segment ends; null/undefined while paused (A4 addition) */
+  /** Epoch ms when the current segment ends; null/undefined while paused */
   endsAt?: number | null
 }
 

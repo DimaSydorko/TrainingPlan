@@ -1,6 +1,3 @@
-// Jest globals are provided at runtime by A7's jest-expo setup. They are declared here (module
-// scope, so they never clash with @types/jest) to keep `tsc --noEmit` green before that lands.
-
 import { buildPickerValues, clampIndex, indexForOffset, indexForValue } from '../picker-math'
 
 describe('SwipeSelector picker math', () => {

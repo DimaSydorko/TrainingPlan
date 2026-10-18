@@ -10,7 +10,7 @@ Mobile app (Android + iOS) for building training plans and workouts, playing the
 | Server data | Firebase + Redux thunks (`app/store`, `app/utils/firebase.ts`) | Supabase + React Query (`app/lib/supabase` → `app/api` → `app/services`) |
 | Client state | Redux Toolkit + redux-persist (`app/store`, `app/hooks/redux.ts`) | Zustand (`app/stores`), persist settings only |
 
-An entity lives in one backend only; migrating it deletes its Firebase + Redux code in the same change. Expo migration history: [docs/migration/STATUS.md](docs/migration/STATUS.md).
+An entity lives in one backend only; migrating it deletes its Firebase + Redux code in the same change. Expo migration history: git tag `archive/expo-migration-docs`.
 
 ## Quick start
 
@@ -21,8 +21,10 @@ cp .env.example .env         # fill in values; EXPO_PUBLIC_* is bundled into the
 npx expo run:android         # or run:ios — dev client build, Expo Go is not supported
 ```
 
-EAS profiles (`eas.json`): `development`, `development-simulator`, `preview`, `production`. Details: [docs/migration/BUILD.md](docs/migration/BUILD.md).
+EAS profiles (`eas.json`): `development`, `development-simulator`, `preview`, `production`. Details: [docs/build.md](docs/build.md).
 `android/` and `ios/` are generated (CNG) — never edit them; native config goes in `app.config.ts`.
+
+**Decisions:** background workout = timestamp timer + `expo-notifications` cues (no in-app audio while locked); React Navigation 7, no Expo Router yet; `admin/` is outside root lint, hooks and CI.
 
 ## Commands
 
@@ -60,7 +62,7 @@ app/
 __tests__/          Jest setup and app-level tests (unit tests sit next to code in __tests__/)
 e2e/                Maestro flows — rely on testID = `screen.element`
 admin/              separate web admin (MUI, own package.json) — not covered by root lint, hooks or CI
-docs/migration/     Expo migration plan, decisions, status, handoffs
+docs/               build (EAS, signing, Firebase), testing, release checklist
 .claude/            agent rules: contracts/, skills/, commands/, hooks/
 ```
 
@@ -108,7 +110,7 @@ Pattern `^#[0-9]+-[a-z0-9]+(-[a-z0-9]+){1,3}$`; `main`, `dev` and legacy `migrat
 
 - Unit: Jest (`jest-expo`) + React Native Testing Library 14 (async APIs). Tests next to the code in `__tests__/`.
 - E2E: Maestro flows in `e2e/` select elements by `testID`.
-- Device QA checklist: [docs/migration/DEVICE-TEST.md](docs/migration/DEVICE-TEST.md).
+- Setup, mocks, Maestro, manual plan: [docs/testing.md](docs/testing.md). Before a release: [docs/release-checklist.md](docs/release-checklist.md).
 
 ## Links
 

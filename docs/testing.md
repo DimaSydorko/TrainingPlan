@@ -1,38 +1,8 @@
-# Testing the Expo migration
+# Testing
 
-Owned by A7. This is the test plan A8 uses to sign off the migration (README §8): the automated checks, how the unit tests and E2E flows are set up, the TypeScript strictness roadmap, and a manual pass that someone new to the app can run from start to finish.
+Unit tests, the TypeScript strictness roadmap, Maestro E2E flows and the manual test plan. Release device checks and open questions: [release-checklist.md](release-checklist.md). Lint/format rules: `eslint.config.js`, `.prettierrc.js`.
 
-Contents:
-
-1. [Automated checks](#1-automated-checks)
-2. [Unit tests (Jest)](#2-unit-tests-jest)
-3. [Lint and formatting](#3-lint-and-formatting)
-4. [TypeScript strictness roadmap](#4-typescript-strictness-roadmap)
-5. [E2E flows (Maestro)](#5-e2e-flows-maestro)
-6. [Manual test plan](#6-manual-test-plan)
-7. [Recording results](#7-recording-results)
-
----
-
-## 1. Automated checks
-
-Run these from the repo root before every handoff and on every integration step. In the cloud container, prefix Expo commands with `EXPO_OFFLINE=1` (api.expo.dev is blocked there).
-
-| Check | Command | Must be |
-|---|---|---|
-| Types | `npx tsc --noEmit` | 0 errors |
-| Lint | `npx expo lint` (same as `npm run lint`) | 0 errors. Warnings are allowed but must not grow past the baseline in §3 |
-| Unit tests | `npm test` | all green |
-| Formatting | `npm run format:check` | informational until A8's Phase 2 Prettier pass, then clean |
-| Expo health | `npx expo-doctor` | no issues (two checks need network access) |
-| JS bundle | `npx expo export --platform android --output-dir /tmp/export-android` and the same with `ios` | bundles with no resolution errors |
-| Native projects | `npx expo prebuild --clean --no-install`, then delete `android/` and `ios/` | succeeds |
-
-CI (`.github/workflows/ci.yml`) runs tsc, lint, Jest, Prettier (non-blocking), expo-doctor (non-blocking) and both exports on pull requests to `migration/expo` and `main`.
-
----
-
-## 2. Unit tests (Jest)
+## 1. Unit tests (Jest)
 
 ### Layout
 
@@ -44,7 +14,7 @@ CI (`.github/workflows/ci.yml`) runs tsc, lint, Jest, Prettier (non-blocking), e
 | `__tests__/setup/mocks/*.js` | The mock implementations |
 | `__tests__/utils/` | `createTestStore`, `getInitialState`, `createBootstrappedPersistor`, `renderWithStore` |
 | `__tests__/*.test.ts(x)` | App-level tests: App smoke test, store persistence, mocks, helpers |
-| `app/**/__tests__/*.test.ts(x)` | Unit tests that live next to the code they test (each Phase 1 agent writes these inside its own paths) |
+| `app/**/__tests__/*.test.ts(x)` | Unit tests that live next to the code they test |
 
 Only files named `*.test.ts`, `*.test.tsx` or `*.test.js` are run. Other files inside `__tests__` folders (fixtures, helpers) are ignored by the runner.
 
@@ -65,9 +35,7 @@ Libraries: `jest-expo` 57, `jest` 29, `@testing-library/react-native` 14 (with i
 | `react-native-worklets` | the package's own `src/mock` | Required by Reanimated 4 |
 | `react-native-gesture-handler` | `react-native-gesture-handler/jestSetup` | Official setup |
 
-Packages that are not installed yet (expo-speech, expo-keep-awake, google-signin) are registered as virtual mocks and switch to normal mocks automatically once the package is installed.
-
-The Phase 0 seam stubs print `[stub] ...` warnings; the setup file hides only those, so real warnings (for example React Native deprecations) still show in test output.
+The setup file hides only `[stub] ...` warnings, so real warnings (for example React Native deprecations) still show in test output.
 
 ### Overriding a mock in one test
 
@@ -80,7 +48,7 @@ it('asks for permission when it was denied', async () => {
 })
 ```
 
-For data-layer tests, mock one level higher than Firebase, e.g. `jest.mock('../../Utils/firebase', () => ({ ... }))` or the specific modular functions your code calls (`jest.mock('firebase/firestore', () => ({ getDocs: jest.fn(), ... }))` in that test file overrides the global stub).
+For data-layer tests, mock one level higher than Firebase, e.g. `jest.mock('../../utils/firebase', () => ({ ... }))` or the specific modular functions your code calls (`jest.mock('firebase/firestore', () => ({ getDocs: jest.fn(), ... }))` in that test file overrides the global stub).
 
 ### Store helpers
 
@@ -94,50 +62,25 @@ const { store } = await renderWithStore(<SettingsScreen />, {
 
 `createTestStore` uses the real slice reducers without redux-persist. To test persistence itself, load the real `app/store` inside `jest.isolateModules` (see `__tests__/store.test.ts`).
 
-### Writing tests (all agents)
+### Writing tests
 
-- Put them in `__tests__` folders inside the paths you own, e.g. `app/services/__tests__/audio.test.ts`.
+- Put them in a `__tests__` folder next to the code, e.g. `app/platform/__tests__/media-utils.test.ts`.
 - Prefer testing pure functions (timers, formatting, reducers, mapping Firebase docs) over rendering whole screens.
-- Don't install Jest packages yourself; ask A7 (or A8 after Phase 1) if a mock is missing.
+- A missing native-module mock goes into `__tests__/setup/mocks/` and is registered in `jest.setup.js`.
 
 ---
 
-## 3. Lint and formatting
+## 2. TypeScript strictness roadmap
 
-`eslint.config.js` (flat config) = `eslint-config-expo` + `eslint-config-prettier` + project rules:
-
-- `react-hooks/exhaustive-deps`: **warn**.
-- `no-restricted-imports`: **error** for libraries removed by the migration: `react-native-sound`, `react-native-tts`, `react-native-keep-awake`, `react-native-background-actions`, `react-native-vector-icons` (and subpaths), `@expo/vector-icons` (deprecated in SDK 56; use `app/common/icon`), and `firebase/compat/*`.
-- The React Compiler rules that `eslint-plugin-react-hooks` 7 turns on as errors (`set-state-in-effect`, `use-memo`, `refs`, `purity`, ...) are **warnings** until the code is cleaned up. `react/jsx-key`, `react/display-name` and `react/no-unescaped-entities` are errors again (A8 fixed the violations in Phase 2), and the temporary `firebase/compat` / `@expo/vector-icons` exceptions are gone.
-- Test files may use `require()` (needed in `jest.mock` factories).
-
-Prettier keeps the existing `.prettierrc.js` style (no semicolons, single quotes, 120 columns). `npm run format` writes, `npm run format:check` checks `app/`, `__tests__/`, `e2e/` and root config files. ESLint does not report formatting.
-
-**After Phase 2 (A8, 2026-10-12):** `npx expo lint` = **0 errors, 86 warnings**; `npm run format:check` passes (blocking in CI).
-
-| Rule | Warnings |
-|---|---|
-| react-hooks/exhaustive-deps | 76 |
-| react-hooks/set-state-in-effect | 5 |
-| react-hooks/use-memo | 2 |
-| react-hooks/refs | 2 |
-| react-hooks/purity | 1 |
-
-(A7's Phase 1 baseline was 0 errors / 97 warnings.)
-
----
-
-## 4. TypeScript strictness roadmap
-
-`tsconfig.json` keeps `"strict": false` and enables strict-family flags one at a time. Error counts below were measured on A0's code (2026-10-11); re-measure after Phase 1 merges with `npx tsc --noEmit --<flag>`.
+`tsconfig.json` keeps `"strict": false` and enables strict-family flags one at a time. Error counts were measured on 2026-10-11 (file names from before the kebab-case rename); re-measure with `npx tsc --noEmit --<flag>`.
 
 | Stage | Flags | Errors today | Notes |
 |---|---|---|---|
-| 0 (done, A7) | `alwaysStrict`, `strictBindCallApply`, `noImplicitThis`, `strictBuiltinIteratorReturn`, `noFallthroughCasesInSwitch`, `forceConsistentCasingInFileNames` | 0 | Enabled in `tsconfig.json` |
-| 1 | `strictFunctionTypes` | 4 | `PublicationsRouter.tsx` (2), `WorkoutsScreen.tsx`, `MyPlansScreen.tsx`: navigator/screen component prop types. Do with A5's typed navigator work |
+| 0 (done) | `alwaysStrict`, `strictBindCallApply`, `noImplicitThis`, `strictBuiltinIteratorReturn`, `noFallthroughCasesInSwitch`, `forceConsistentCasingInFileNames` | 0 | Enabled in `tsconfig.json` |
+| 1 | `strictFunctionTypes` | 4 | `PublicationsRouter.tsx` (2), `WorkoutsScreen.tsx`, `MyPlansScreen.tsx`: navigator/screen component prop types |
 | 1 | `noImplicitReturns` | 2 | `UserAC.ts`, `WorkoutsScreen.tsx` |
 | 1 | `noImplicitOverride` | 2 | `common/my-switch/switch-lib.tsx` (class component) |
-| 1 | `useUnknownInCatchVariables` | 21 | All in `app/store/*/*AC.ts` `catch (e)` blocks. Do while A1 rewrites them for the modular API (`e instanceof FirebaseError ? e.message : String(e)`) |
+| 1 | `useUnknownInCatchVariables` | 21 | All in `app/store/*/*AC.ts` `catch (e)` blocks. Fix: `e instanceof FirebaseError ? e.message : String(e)` |
 | 2 | `noImplicitAny` | 29 | SwitchLib (9), SettingsScreen (5), Exercise (4), SwipeSelector (3), InfiniteScroll (3), PlansSlice (2), GoBackSubmitModal (2), usePlaying (1) |
 | 3 | `strictNullChecks` (brings `strictPropertyInitialization`, 0 extra) | 114 | The big one. Go folder by folder: `app/store` → `app/hooks` → `app/common` → `app/components` → `app/screens`. Biggest: MySwitch 20, Exercise 15, WorkoutsScreen 12, PublicationsReducer 10. Option: use `// @ts-expect-error TODO(strict)` per remaining line to flip the flag early and burn the list down |
 | 4 | `"strict": true` and delete the individual flags | 161 today in total | Only when stages 1–3 are at 0 |
@@ -149,9 +92,9 @@ Test code under `__tests__/` already compiles with `--strict`. Keep it that way.
 
 ---
 
-## 5. E2E flows (Maestro)
+## 3. E2E flows (Maestro)
 
-The flows live in `e2e/` and run against an installed **development or preview build** (not Expo Go). They only run after Phase 2, when the testIDs below exist.
+The flows live in `e2e/` and run against an installed **development or preview build** (not Expo Go).
 
 | Flow | What it checks |
 |---|---|
@@ -173,7 +116,7 @@ The flows live in `e2e/` and run against an installed **development or preview b
 ```bash
 export E2E_EMAIL='tester@example.com' E2E_PASSWORD='...'   # never commit these
 npm run e2e:android     # APP_ID=com.trainingplantogether_cli
-npm run e2e:ios         # APP_ID=com.trainingplantogether-cli (D1, pending Dmytro's confirmation)
+npm run e2e:ios         # APP_ID=com.trainingplantogether-cli (pending [release-checklist.md](release-checklist.md) Q1)
 # single flow:
 maestro test -e APP_ID=com.trainingplantogether_cli -e E2E_EMAIL="$E2E_EMAIL" -e E2E_PASSWORD="$E2E_PASSWORD" e2e/03-play-workout.yaml
 ```
@@ -182,43 +125,43 @@ Screenshots from `takeScreenshot` land in the current directory. `maestro studio
 
 ### testIDs the flows need
 
-Added by the owning agents (A7 adds them only after those agents have merged). Shared components need a `testID` prop passed through to their touchable/input.
+Shared components need a `testID` prop passed through to their touchable/input.
 
-| testID | Where | Owner |
-|---|---|---|
-| `login.email`, `login.password`, `login.submit` | `LoginScreen` inputs and "Log in" button (`MyTextInput` and `ConfirmButton` need a `testID` prop) | A5 |
-| `tab.plans`, `tab.workouts`, `tab.publications`, `tab.profile` | `AppRouter` tabs, via `tabBarButtonTestID` | A5 |
-| `workouts.add` | `WorkoutsScreen` `AddMoreButton` (needs a `testID` prop) | A5 |
-| `workouts.delete` | `WorkoutsScreen` edit-mode delete `IconButton` (needs a `testID` prop) | A5 |
-| `editPlanWorkout.name` | `EditPlanWorkout` name `MyTextInput` | A5 |
-| `appModal.confirm`, `appModal.cancel`, `appModal.refuse` | `AppModal` buttons | A5 |
-| `workout.nameInput`, `workout.fab`, `workout.save`, `workout.start` | `WorkoutScreen`: name input, the `AddMoreButton` (plus/edit), "Save workout", "Start Workout" | A5 |
-| `exerciseEdit.name`, `exerciseEdit.breakMinutes`, `exerciseEdit.breakSeconds` | `ExerciseEditModal` name input and the two `SwipeSelector`s (needs a `testID` prop) | A5 |
-| `profile.settings`, `profile.logout` | `ProfileScreen` icon buttons | A5 |
-| `settings.darkTheme` | `SettingsScreen` "Dark Theme" switch. `SettingsItem` passes it to `MySwitch`, and `MySwitch` must expose `accessibilityRole="switch"` and `accessibilityState={{ checked: value }}` so Maestro's `checked:` works | A3 (SettingsScreen/SettingsItem), A5 (MySwitch) |
-| `playing.screen` | `PlayingScreen` root view | A4 |
-| `playing.timer` | the timer `TouchableOpacity` | A4 |
-| `playing.play` / `playing.pause` | the centre footer `IconButton`: `testID={isPlaying ? 'playing.pause' : 'playing.play'}` | A4 |
-| `playing.previous`, `playing.next`, `playing.reload`, `playing.review` | the other footer buttons (not used yet, reserved) | A4 |
-| `playing.saveResult` | "Save Result" button | A4 |
+| testID | Where |
+|---|---|
+| `login.email`, `login.password`, `login.submit` | `LoginScreen` inputs and "Log in" button (`MyTextInput` and `ConfirmButton` need a `testID` prop) |
+| `tab.plans`, `tab.workouts`, `tab.publications`, `tab.profile` | `AppRouter` tabs, via `tabBarButtonTestID` |
+| `workouts.add` | `WorkoutsScreen` `AddMoreButton` (needs a `testID` prop) |
+| `workouts.delete` | `WorkoutsScreen` edit-mode delete `IconButton` (needs a `testID` prop) |
+| `editPlanWorkout.name` | `EditPlanWorkout` name `MyTextInput` |
+| `appModal.confirm`, `appModal.cancel`, `appModal.refuse` | `AppModal` buttons |
+| `workout.nameInput`, `workout.fab`, `workout.save`, `workout.start` | `WorkoutScreen`: name input, the `AddMoreButton` (plus/edit), "Save workout", "Start Workout" |
+| `exerciseEdit.name`, `exerciseEdit.breakMinutes`, `exerciseEdit.breakSeconds` | `ExerciseEditModal` name input and the two `SwipeSelector`s (needs a `testID` prop) |
+| `profile.settings`, `profile.logout` | `ProfileScreen` icon buttons |
+| `settings.darkTheme` | `SettingsScreen` "Dark Theme" switch. `SettingsItem` passes it to `MySwitch`, and `MySwitch` must expose `accessibilityRole="switch"` and `accessibilityState={{ checked: value }}` so Maestro's `checked:` works |
+| `playing.screen` | `PlayingScreen` root view |
+| `playing.timer` | the timer `TouchableOpacity` |
+| `playing.play` / `playing.pause` | the centre footer `IconButton`: `testID={isPlaying ? 'playing.pause' : 'playing.play'}` |
+| `playing.previous`, `playing.next`, `playing.reload`, `playing.review` | the other footer buttons (not used yet, reserved) |
+| `playing.saveResult` | "Save Result" button |
 
 ---
 
-## 6. Manual test plan
+## 4. Manual test plan
 
 Run the full pass on **one real Android device** (Android 13+; ideally also one older device on Android 10–12) and **one iOS device or simulator** (iOS 17+). Use a `preview` EAS build for the final sign-off; a development build is fine while fixing.
 
-### 6.0 Before you start
+### 4.0 Before you start
 
 - [ ] Build under test recorded (EAS build id or git sha, profile, platform, device model, OS version).
 - [ ] `.env` points to the Firebase project you mean to test (test project, or production with a test account).
 - [ ] Two test accounts ready: an email/password account and a Google account. Account B (any type) for publications.
 - [ ] Device volume up, not in silent mode (iOS ring/silent switch off), Do Not Disturb off.
-- [ ] For §6.9 (upgrade in place): the **old** Play Store / pre-migration build installed on a second device, with data, before installing the new one.
+- [ ] For §4.9 (upgrade in place): the **old** Play Store / pre-migration build installed on a second device, with data, before installing the new one.
 
 Mark each line pass / fail / n/a. On failure, note what you saw and attach a screenshot or screen recording.
 
-### 6.1 App start
+### 4.1 App start
 
 - [ ] Cold start shows the splash, then the login screen (signed out) or the tabs (signed in). No red box, no white screen.
 - [ ] App name "Training Plan" and the icon look right on the home screen.
@@ -226,7 +169,7 @@ Mark each line pass / fail / n/a. On failure, note what you saw and attach a scr
 - [ ] Background the app for 1 minute, return: same screen, no reload.
 - [ ] System dark mode on: status bar and system UI stay readable.
 
-### 6.2 Auth
+### 4.2 Auth
 
 - [ ] Login screen: E-mail and Password fields, "Log in" button, "Sign up" link. Google button shown in release builds.
 - [ ] Wrong password → error message under the header, button usable again.
@@ -239,7 +182,7 @@ Mark each line pass / fail / n/a. On failure, note what you saw and attach a scr
 - [ ] Profile → log out icon → "Are you sure?" → Yes → login screen. Relaunch → still signed out. Google account is signed out too (next Google login shows the picker).
 - [ ] Airplane mode on login screen → "Log in" disabled.
 
-### 6.3 Plans (My Plans tab)
+### 4.3 Plans (My Plans tab)
 
 - [ ] List loads the account's plans. Pull to refresh works.
 - [ ] Empty account shows the no-data illustration.
@@ -248,7 +191,7 @@ Mark each line pass / fail / n/a. On failure, note what you saw and attach a scr
 - [ ] Long-press a plan → selection mode; edit, copy, share and delete icons behave; delete asks for confirmation.
 - [ ] Leaving a plan with unsaved changes shows the "aren't saved" confirmation.
 
-### 6.4 Workouts (My Workouts tab)
+### 4.4 Workouts (My Workouts tab)
 
 - [ ] **Create**: "+" → name/labels/colour → Create → appears in the list.
 - [ ] **Open** an empty workout → opens in edit mode. Add exercise ("+"): name, break (min/sec wheels), laps, repeats, colour, image → Save. Save is disabled while break is 0:00.
@@ -261,7 +204,7 @@ Mark each line pass / fail / n/a. On failure, note what you saw and attach a scr
 - [ ] Back button with unsaved changes → "Changes in '…' workout aren't saved!" modal; Confirm discards, Cancel stays.
 - [ ] Exercise image picker opens and shows images (from Firebase storage); choosing one shows it on the card.
 
-### 6.5 Publications
+### 4.5 Publications
 
 - [ ] **Browse**: Publications tab loads a list; pull to refresh.
 - [ ] **Search by labels**: type a label → results filtered; clear → full list.
@@ -272,7 +215,7 @@ Mark each line pass / fail / n/a. On failure, note what you saw and attach a scr
 - [ ] **Delete** your own publication from Profile → confirmation → gone.
 - [ ] Offline: Publications tab shows the no-signal state, no endless spinner.
 
-### 6.6 Playing a workout
+### 4.6 Playing a workout
 
 Use a workout with at least 3 exercises: one with repeats/weight, one time-only, short breaks (10–20 s), 2 laps on one exercise.
 
@@ -288,7 +231,7 @@ Use a workout with at least 3 exercises: one with repeats/weight, one time-only,
 - [ ] Screen stays awake during play (wait longer than the device's auto-lock time without touching it). After leaving the playing screen, auto-lock works again.
 - [ ] Leave the playing screen mid-workout → confirmation; confirm → back on the workout, sound/speech stop.
 
-**Locked screen / background** (D3: timestamp timer + notifications)
+**Locked screen / background** (timestamp timer + notifications)
 - [ ] Start, then lock the phone for 2 minutes. Cues still arrive at the right times (notification and/or sound), and after unlocking the timer shows the correct remaining time, not where it was when locked.
 - [ ] Same with the app in the background (home button) instead of locked.
 - [ ] An ongoing notification (Android) shows the workout title/progress; tapping it opens the playing screen. It disappears when the workout ends or you leave the screen.
@@ -306,21 +249,21 @@ Use a workout with at least 3 exercises: one with repeats/weight, one time-only,
 - [ ] Settings → "Safe battery mode" on → theme switches to dark, workout still plays correctly.
 - [ ] Android system battery saver on (and, on Samsung/Xiaomi, the vendor's aggressive mode if available) → lock the screen for 2 minutes during a workout → cues still arrive (note any delay in seconds).
 
-### 6.7 Settings (Profile → gear icon)
+### 4.7 Settings (Profile → gear icon)
 
 - [ ] **Dark Theme** switch → whole app switches; persists after relaunch.
 - [ ] **Safe battery mode** → turns on dark theme; persists.
 - [ ] **Weight step** slider (1–10 kg) → used by the weight stepper while playing.
 - [ ] **Vibration** off → no vibration on cues or button long-press.
 - [ ] **Press for test speech** → says "Test speech" with the current volume/pitch/speed.
-- [ ] **Lowering other apps output level** → see 6.6 interruptions.
+- [ ] **Lowering other apps output level** → see 4.6 interruptions.
 - [ ] **Volume / Pitch / Speed** sliders → audible difference with test speech; values persist.
 - [ ] **Press for test sound** → plays the selected cue at the selected sound volume.
 - [ ] **Sound Volume** slider → test sound and in-workout cues follow it (0 = silent).
 - [ ] **Sound type** → picker lists bell, digital clock, double ding, hop bell; tapping one previews it; the choice is used during play and persists.
 - [ ] **Clear local storage** → settings back to defaults, results cleared; account stays signed in.
 
-### 6.8 Offline (NetInfo / no-signal state)
+### 4.8 Offline (NetInfo / no-signal state)
 
 - [ ] Start the app in airplane mode while signed in → tabs show cached data, an offline toast appears after ~1 s, no crash.
 - [ ] Profile and Publications show the no-signal illustration; logout icon hidden.
@@ -330,11 +273,11 @@ Use a workout with at least 3 exercises: one with repeats/weight, one time-only,
 - [ ] Edit a workout offline and save → behaviour is clear (error toast or saved locally); note which. Back online → state is consistent with Firebase.
 - [ ] Play a workout offline → works fully (sounds are bundled).
 
-### 6.9 Upgrade in place from the old build
+### 4.9 Upgrade in place from the old build
 
-The new build must install **over** the old one (same Android package `com.trainingplantogether_cli`, same signing key; see A2's keystore note) and keep users' data.
+The new build must install **over** the old one (same Android package `com.trainingplantogether_cli`, same signing key; see [build.md §4](build.md)) and keep users' data.
 
-- [ ] On a device with the old build and data (signed in, custom settings: dark theme, sound type, TTS values, a workout mid-way through results), install the new build over it (`adb install -r` or Play internal testing track). Install succeeds without "App not installed" (signature mismatch means the keystore is wrong — stop and tell A2/A8).
+- [ ] On a device with the old build and data (signed in, custom settings: dark theme, sound type, TTS values, a workout mid-way through results), install the new build over it (`adb install -r` or Play internal testing track). Install succeeds without "App not installed" (signature mismatch means the keystore is wrong — stop).
 - [ ] First launch: no crash. Settings (theme, sound type, volumes, TTS, vibration, weight step) are the same as before.
 - [ ] Workouts, plans and results are the same as before.
 - [ ] Sign-in state: note whether the user is still signed in. Expected: the old Firebase v8 auth session may not carry over (different persistence); if they are asked to sign in once, that is acceptable, but after signing in all their data must be there.
@@ -342,29 +285,9 @@ The new build must install **over** the old one (same Android package `com.train
 - [ ] No duplicate notifications left over from react-native-background-actions.
 - [ ] iOS: only applicable if an old iOS build was distributed (bundle id changed from the template placeholder, so it installs as a new app; note this).
 
-### 6.10 Release sanity (preview/production builds only)
+### 4.10 Release sanity (preview/production builds only)
 
-- [ ] Android permissions listed in system settings match what the app needs (no SYSTEM_ALERT_WINDOW or storage permissions unless A2 kept them on purpose).
+- [ ] Android permissions listed in system settings match what the app needs (no SYSTEM_ALERT_WINDOW or storage permissions).
 - [ ] No dev menu, no yellow box, no `[stub]` logs (`adb logcat | grep stub` shows nothing).
 - [ ] App size is reasonable compared with the old APK (note both numbers).
 - [ ] Crash-free for the whole manual pass.
-
----
-
-## 7. Recording results
-
-Copy this table into the PR or the handoff for each device:
-
-| Section | Android (device, OS, build) | iOS (device/sim, OS, build) | Notes |
-|---|---|---|---|
-| 6.1 App start | | | |
-| 6.2 Auth | | | |
-| 6.3 Plans | | | |
-| 6.4 Workouts | | | |
-| 6.5 Publications | | | |
-| 6.6 Playing | | | |
-| 6.7 Settings | | | |
-| 6.8 Offline | | | |
-| 6.9 Upgrade in place | | n/a unless distributed | |
-| 6.10 Release sanity | | | |
-| Maestro `e2e/` | | | |

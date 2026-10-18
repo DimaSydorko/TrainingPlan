@@ -160,7 +160,7 @@ export type ProfileNavigation = StackNavigationProp<ProfileStackParamList>
 
 /**
  * Navigation prop for screens that only need stack actions common to every stack
- * (goBack, setOptions, addListener). Kept for A4's PlayingScreen / usePlaying, which only call goBack().
+ * (goBack, setOptions, addListener). Kept for PlayingScreen / usePlaying, which only call goBack().
  * New code should use one of the navigator-specific types above.
  */
 export type AppNavigationType = StackNavigationProp<ParamListBase>

@@ -1,4 +1,4 @@
-// Seam owned by A5 (docs/migration/README.md §6).
+// Icon seam. Keep the exported signature stable.
 // Backed by @react-native-vector-icons/material-design-icons (the successor of the
 // MaterialCommunityIcons set from react-native-vector-icons 9). The `static` entry point is used:
 // the font is embedded at build time (config plugin on iOS, autolinked assets on Android), so icons

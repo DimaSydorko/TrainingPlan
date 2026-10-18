@@ -96,11 +96,11 @@ export enum SoundType {
   HopBell = 'hop_bell.mp3',
 }
 
-// Added by A0: delay between a cue sound and the following speech. The old code used
+// Delay between a cue sound and the following speech. The old code used
 // playSound.getDuration(). Now a fallback for SoundPlayer.durationMs while the sound is not loaded.
 export const SOUND_CUE_DURATION_MS = 1000
 
-// Added by A5: bottom tab route names (AppRouter). The values are the old tab names, kept unchanged.
+// Bottom tab route names (AppRouter). The values are the old tab names, kept unchanged.
 export enum TabName {
   Plans = 'All saved Plans',
   Workouts = 'All saved Workouts',

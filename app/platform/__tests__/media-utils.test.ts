@@ -9,8 +9,6 @@ import {
   VoiceLike,
 } from '../media-utils'
 
-// Jest globals. Declared locally so `tsc` passes before A7 adds @types/jest; remove once it lands.
-
 describe('clamp / normalizeVolume', () => {
   it('clamps into range and handles NaN', () => {
     expect(clamp(5, 0, 1)).toBe(1)

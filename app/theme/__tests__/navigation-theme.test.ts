@@ -2,9 +2,6 @@ import { DarkTheme, DefaultTheme } from '@react-navigation/native'
 import { buildNavigationTheme, isDarkColors, statusBarStyleFor } from '../navigation-theme'
 import { colorsDark, colorsLight } from '../colors'
 
-// Jest globals are provided at runtime by A7's jest-expo setup. They are declared here (module
-// scope, so they never clash with @types/jest) to keep `tsc --noEmit` green before that lands.
-
 describe('navigation theme', () => {
   it('detects the dark palette', () => {
     expect(isDarkColors(colorsDark)).toBe(true)

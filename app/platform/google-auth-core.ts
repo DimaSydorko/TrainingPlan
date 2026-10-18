@@ -1,4 +1,4 @@
-// Pure helpers behind the googleAuth seam (A2). No React Native or native-module imports here,
+// Pure helpers behind the googleAuth seam. No React Native or native-module imports here,
 // so this file can be unit-tested without mocks and imported from app.config.ts.
 
 export type GoogleAuthErrorCode =
@@ -29,7 +29,7 @@ export class GoogleAuthError extends Error {
 }
 
 /**
- * True when the error means "the user cancelled". Callers (UserAC, A1) should treat this as a
+ * True when the error means "the user cancelled". Callers (UserAC) should treat this as a
  * no-op and not show an error toast. Checks `code` rather than `instanceof` so it keeps working
  * across bundling or serialisation boundaries.
  */

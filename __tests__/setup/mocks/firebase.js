@@ -1,6 +1,6 @@
 /**
- * Firebase mock that works for both the compat (v8 namespaced) API that A0 left in
- * app/utils/firebase.ts and the modular API A1 is moving to. Every property access and every call
+ * Firebase mock that works for both the compat (v8 namespaced) API and
+ * the modular API. Every property access and every call
  * returns another chainable stub, so module-level code such as
  *   firebase.initializeApp(cfg); firebase.firestore().collection('x')
  *   initializeAuth(app, { persistence: getReactNativePersistence(AsyncStorage) })

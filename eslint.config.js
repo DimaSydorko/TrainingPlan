@@ -1,4 +1,4 @@
-// ESLint flat config (owned by A7). Run with `npx expo lint` or `npm run lint`.
+// ESLint flat config. Run with `npx expo lint` or `npm run lint`.
 // Formatting is Prettier's job (`npm run format:check`); eslint-config-prettier turns off the
 // stylistic rules that would fight it.
 const { defineConfig, globalIgnores } = require('eslint/config')
@@ -8,7 +8,7 @@ const globals = require('globals')
 const checkFile = require('eslint-plugin-check-file')
 
 // Libraries removed by the migration. Their replacements live behind the seams in app/platform and
-// app/common/icon (docs/migration/README.md §6).
+// app/common/icon.
 const removedLibraries = [
   { name: 'react-native-sound', message: 'Removed in the Expo migration. Use app/platform/audio.ts (expo-audio).' },
   { name: 'react-native-tts', message: 'Removed in the Expo migration. Use app/platform/speech.ts (expo-speech).' },
@@ -74,7 +74,7 @@ module.exports = defineConfig([
   },
   {
     // eslint-plugin-react-hooks 7 ships the React Compiler rules as errors in `recommended`. The app
-    // predates them; keep them visible as warnings until the code is cleaned up (see TESTING.md).
+    // predates them; keep them visible as warnings until the code is cleaned up.
     rules: {
       'react-hooks/set-state-in-effect': 'warn',
       'react-hooks/set-state-in-render': 'warn',
