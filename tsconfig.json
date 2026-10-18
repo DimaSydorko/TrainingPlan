@@ -10,7 +10,6 @@
     "strictBuiltinIteratorReturn": true,
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
-    // Cross-folder imports use @<folder>/…; keep in sync with jest.config.js moduleNameMapper.
     "paths": {
       "@assets": ["./app/assets"],
       "@assets/*": ["./app/assets/*"],

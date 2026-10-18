@@ -28,8 +28,7 @@
 -   Event handler functions `handle*` (`handlePress`), callback props `on*` (`onPress`). See
     [naming event handlers](https://jaketrent.com/post/naming-event-handlers-react/).
 -   English only in identifiers.
--   No comments that narrate what the code does — write expressive code. Comments explain _why_ (platform quirks,
-    migration constraints, workarounds) and are welcome there.
+-   No code comments (incl. JSDoc, TODO). Express intent through names and small functions.
 -   Called functions below calling functions. Keep functions small. No magic numbers.
 
 ### Types
@@ -63,7 +62,7 @@ style objects only for runtime values.
 ### Async patterns
 
 -   No `await` inside `for…of` loops for independent work — use `Promise.all(items.map(...))`.
--   For sequential work where order matters, a plain `for…of` with `await` is fine but add a comment why.
+-   For sequential work where order matters, a plain `for…of` with `await` is fine.
 -   No floating promises: `await` them, return them, or `.catch()` and report.
 -   Timers / subscriptions created in an effect are cleaned up in its return function.
 

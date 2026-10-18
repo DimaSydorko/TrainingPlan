@@ -18,7 +18,7 @@ Expo SDK 57 RN app (Android/iOS): plans, workouts, timer playback, AI integraton
 ## Rules (read the contract when touching that area)
 `.claude/contracts/`: `server-state.md` (Supabase/RQ/offline), `client-state.md`, `component.md`, `styles.md`, `code-style.md`, `constants.md`, `architecture.md`; reviews: `architecture-review-checklist.md`.
 - Styles: `StyleSheet` in `<name>.styles.ts`; colors from theme (light+dark); inline only runtime values.
-- Constants in co-located `<name>.constants.ts`. Handlers `handle*`, props `on*`. No `any`.
+- Constants in co-located `<name>.constants.ts`. Handlers `handle*`, props `on*`. No `any`. No code comments — self-explanatory names instead.
 - `testID` = `screen.element`, used by Maestro (`e2e/`) — don't rename.
 
 ## Verify
