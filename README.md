@@ -66,6 +66,8 @@ docs/               build (EAS, signing, Firebase), testing, release checklist
 .claude/            agent rules: contracts/, skills/, commands/, hooks/
 ```
 
+Imports: `@<folder>/…` across core folders (`@store/workout-reducer/workout-ac`), relative inside one folder; aliases in `tsconfig.json` `paths` + `jest.config.js`.
+
 Data flow (enforced by ESLint): `lib/supabase` → `api/<entity>` → `services/<entity>` → UI. Supabase only in `lib`/`api`; `api` only imported by `services`; services never import `stores`.
 
 ## I need to… → do this

@@ -30,7 +30,7 @@ RLS enabled + explicit policies on every table. UUID primary keys the client can
 `app/api/plans/mappers.ts`
 
 ```ts
-import type { Tables, TablesInsert } from '../../lib/supabase/database.types'
+import type { Tables, TablesInsert } from '@lib/supabase/database.types'
 import type { Plan } from './types'
 
 type PlanRow = Tables<'plans'>
@@ -56,7 +56,7 @@ export const toPlanInsert = (plan: Plan): TablesInsert<'plans'> => ({
 `app/api/plans/get-plans.ts`
 
 ```ts
-import { supabase } from '../../lib/supabase/client'
+import { supabase } from '@lib/supabase/client'
 import { PLAN_COLUMNS, PLANS_PAGE_SIZE, PLANS_TABLE } from './plans.constants'
 import { toPlan } from './mappers'
 import type { Plan, UserId } from './types'
@@ -107,8 +107,8 @@ Query: `app/services/plans/use-plans.ts`
 ```ts
 import { useInfiniteQuery } from '@tanstack/react-query'
 
-import { getPlans } from '../../api/plans/get-plans'
-import { PLANS_PAGE_SIZE } from '../../api/plans/plans.constants'
+import { getPlans } from '@api/plans/get-plans'
+import { PLANS_PAGE_SIZE } from '@api/plans/plans.constants'
 import { plansKeys } from './query-keys'
 import { PLANS_STALE_TIME_MS } from './plans.constants'
 

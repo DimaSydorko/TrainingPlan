@@ -5,7 +5,7 @@ Expo SDK 57 RN app (Android/iOS): plans, workouts, timer playback, AI integraton
 ## Migration (new code = target)
 - Server data: Firebase+Redux thunks → Supabase via React Query. Client state: Redux → Zustand (persist settings only).
 - No new Redux slices/thunks or Firestore calls. An entity lives in one backend only; migrating it deletes its Firebase+Redux code in the same change.
-- Files/folders kebab-case (ESLint `check-file`). `type` only, no `interface`/`I` prefix.
+- Files/folders kebab-case (ESLint `check-file`). Cross-folder imports `@<folder>/…` (tsconfig `paths`); relative only inside one core folder. `type` only, no `interface`/`I` prefix.
 - Skills: `firebase-to-supabase-react-query`, `redux-to-zustand-migration`.
 
 ## Layout

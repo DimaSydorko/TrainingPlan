@@ -8,7 +8,7 @@ Each hook pairs a **fetcher** in `app/api/<entity>/` (Supabase + mapping, no Rea
 `app/api/workouts/get-workout.ts`
 
 ```ts
-import { supabase } from '../../lib/supabase/client'
+import { supabase } from '@lib/supabase/client'
 import { toWorkout } from './mappers'
 import { WORKOUT_COLUMNS, WORKOUTS_TABLE } from './workouts.constants'
 import type { Workout, WorkoutId } from './types'
@@ -27,7 +27,7 @@ export const getWorkout = async (workoutId: WorkoutId): Promise<Workout> => {
 ```ts
 import { useQuery } from '@tanstack/react-query'
 
-import { getWorkout } from '../../api/workouts/get-workout'
+import { getWorkout } from '@api/workouts/get-workout'
 import { workoutsKeys } from './query-keys'
 import { WORKOUTS_STALE_TIME_MS } from './workouts.constants'
 
@@ -49,7 +49,7 @@ export default useWorkout
 ```ts
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { publishWorkout } from '../../api/publications/publish-workout'
+import { publishWorkout } from '@api/publications/publish-workout'
 import { workoutsKeys } from '../workouts/query-keys'
 import { publicationsKeys } from './query-keys'
 

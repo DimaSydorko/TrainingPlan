@@ -23,6 +23,8 @@
 -   Components in PascalCase. Constants in SCREAMING_SNAKE_CASE.
 -   **Files and folders: kebab-case** (`workout-card/workout-card.tsx`, `use-plans.ts`, `query-keys.ts`); ESLint
     `check-file` errors otherwise. Exempt: `__tests__/`, snake_case sound assets.
+-   **Imports:** another core folder → `@<folder>/…` (`@store/…`, `@utils/types`, `@common`); same core folder →
+    relative. Aliases: tsconfig `paths` + `moduleNameMapper` in `jest.config.js` — add a new core folder to both.
 -   Event handler functions `handle*` (`handlePress`), callback props `on*` (`onPress`). See
     [naming event handlers](https://jaketrent.com/post/naming-event-handlers-react/).
 -   English only in identifiers.

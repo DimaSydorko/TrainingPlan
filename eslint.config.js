@@ -35,7 +35,16 @@ const firebaseCompatPattern = {
 // Layer rules for the Supabase + React Query + Zustand target architecture (CLAUDE.md, .claude/contracts/server-state.md).
 // In flat config a later `no-restricted-imports` entry replaces the earlier one for matching files, so every
 // override repeats the base list.
-const baseRestrictions = { paths: removedLibraries, patterns: [...removedLibraryPatterns, firebaseCompatPattern] }
+// Cross-folder imports go through tsconfig `paths` (@store/…). components/screens are not listed: screens
+// have their own private components/ folder, so a relative `../components` can be legitimate.
+const relativeCoreFolderPattern = {
+  regex: '^(\\.\\./)+(assets|common|hooks|platform|routers|store|theme|utils|lib|api|services|stores)(/|$)',
+  message: 'Cross-folder import: use @<folder>/… instead of a relative path.',
+}
+const baseRestrictions = {
+  paths: removedLibraries,
+  patterns: [...removedLibraryPatterns, firebaseCompatPattern, relativeCoreFolderPattern],
+}
 const supabaseClientPatterns = [
   { group: ['@supabase/supabase-js', '@supabase/*'], message: 'Only app/lib/supabase and app/api talk to Supabase.' },
   {

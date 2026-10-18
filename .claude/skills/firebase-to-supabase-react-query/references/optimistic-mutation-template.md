@@ -8,7 +8,7 @@ Online-only actions use the invalidate template in `hook-templates.md`.
 `app/api/workouts/save-workout.ts`
 
 ```ts
-import { supabase } from '../../lib/supabase/client'
+import { supabase } from '@lib/supabase/client'
 import { toWorkoutUpsert } from './mappers'
 import { WORKOUTS_TABLE } from './workouts.constants'
 import type { Workout } from './types'
@@ -37,8 +37,8 @@ queryClient.setMutationDefaults(workoutsMutationKeys.save, { mutationFn: saveWor
 ```ts
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import type { SaveWorkoutArgs } from '../../api/workouts/save-workout'
-import type { Workout } from '../../api/workouts/types'
+import type { SaveWorkoutArgs } from '@api/workouts/save-workout'
+import type { Workout } from '@api/workouts/types'
 import { workoutsKeys, workoutsMutationKeys } from './query-keys'
 
 type UseSaveWorkoutArgs = { userId: UserId }
