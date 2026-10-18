@@ -1,6 +1,6 @@
 # TrainingPlan
 
-Expo SDK 57 RN app (Android/iOS): plans, workouts, timer playback, publications.
+Expo SDK 57 RN app (Android/iOS): plans, workouts, timer playback, AI integraton.
 
 ## Migration (new code = target)
 - Server data: Firebase+Redux thunks → Supabase via React Query. Client state: Redux → Zustand (persist settings only).
@@ -21,8 +21,6 @@ Expo SDK 57 RN app (Android/iOS): plans, workouts, timer playback, publications.
 - Constants in co-located `<name>.constants.ts`. Handlers `handle*`, props `on*`. No `any`.
 - `testID` = `screen.element`, used by Maestro (`e2e/`) — don't rename.
 
-## Tests
-Every new util/component/fetcher/hook/store and bug fix gets tests in a sibling `__tests__/*.test.ts(x)`. RNTL 14 is async (`await render`). Native mocks: `__tests__/setup/`.
-
 ## Verify
+Before every `git commit` run `/pre-commit` (review → tests → checks); a hook blocks commits without a fresh pass. Never write `.claude/.pre-commit-ok` yourself. Husky re-checks staged files.
 `npx tsc --noEmit && npm run lint && npm test` (lint: 0 errors, warnings must not grow).

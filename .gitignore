@@ -109,3 +109,6 @@ expo-env.d.ts
 # Env files (commit .env.example only)
 .env
 .env*.local
+
+# /pre-commit pass marker (Claude Code hook)
+.claude/.pre-commit-ok
