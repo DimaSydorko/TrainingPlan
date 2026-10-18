@@ -47,7 +47,7 @@ Test on Android 14+ **and** an older Android if you can, plus an iPhone or simul
 - [ ] **Keep awake.** Playing screen with "Safe battery mode" off: screen stays on; on: sleeps normally; after leaving the player, sleeps normally. (A3)
 - [ ] **Navigation.** Login ↔ Sign up several times (Registration's "Log in" returns to the same Login; hardware back from Login leaves the app). Every tab's stack down to Playing and back. Profile → tap one of your own publications: opens inside Profile (new). Switching tabs keeps each stack. (A5)
 - [ ] **Unsaved-changes guard.** Edit a workout, then header back, Android back and iOS swipe back: one alert each; "YES" leaves after one alert. Same for editing a plan. (A5)
-- [ ] **Drag to reorder** on My Plans, My Workouts, a plan's workouts and a workout's exercises: order persists after reopening and restarting. If dragging fails, swap the implementation in `app/Common/DraggableList/DraggableList.tsx`. (A5)
+- [ ] **Drag to reorder** on My Plans, My Workouts, a plan's workouts and a workout's exercises: order persists after reopening and restarting. If dragging fails, swap the implementation in `app/common/draggable-list/draggable-list.tsx`. (A5)
 - [ ] **Edge-to-edge** (Android 15+ with gesture and 3-button navigation, iPhone with notch/Dynamic Island): headers below the status bar, tab bar above the nav bar, "Save workout"/"Start Workout" footer and + button clear the nav bar, the offline toast is below the status bar, the edit toolbars line up with the header. **Playing screen:** header below the status bar, controls above the nav bar / home indicator, the review list fits between them (A8 change). Modals sized from screen height (image selector, colour picker, share, copy) aren't too tall. (A5, A8)
 - [ ] **Publications.** Publish a workout and a plan; scroll past 2 pages (20+ items); filter by label; copy someone else's publication twice (no crash, your uid once in `downloads`). (A1)
 - [ ] **Copy workouts** into My Workouts (no target plan): no crash, copies get new ids (A8 fixed a frozen-state crash). (A1, A8)
@@ -61,7 +61,7 @@ Test on Android 14+ **and** an older Android if you can, plus an iPhone or simul
 - [ ] **Themes:** light/dark and battery saver: every screen, header, tab bar, modal and push/pop background follow the palette; status bar icons readable; no white flash in dark mode. Check the Android 3-button nav bar scrim over the tab bar (Q10). (A5)
 - [ ] **No player leaks:** enter/leave the Playing screen 10 times, then `require('./app/services/audio').getLivePlayerCount()` in the debugger is 0 (or 1 right after a preview). No `[audio]` warnings. (A3)
 - [ ] **Toasts** close cleanly (LayoutAnimation is only partly supported on the New Architecture; worst case no animation). (A5)
-- [ ] **Firestore long polling:** if lists spin forever on some network, switch to `experimentalForceLongPolling: true` in `app/Utils/firebase.ts` and note the device/network. (A1)
+- [ ] **Firestore long polling:** if lists spin forever on some network, switch to `experimentalForceLongPolling: true` in `app/utils/firebase.ts` and note the device/network. (A1)
 
 ---
 
@@ -79,6 +79,6 @@ Test on Android 14+ **and** an older Android if you can, plus an iPhone or simul
 | Q8 | **Voice picker.** Add a Settings entry to choose the TTS voice? The speech service already supports it | no picker (best English voice is chosen automatically) | Settings slice, SettingsScreen |
 | Q9 | **Notification permission timing.** The prompt appears the first time the player opens, after a short explanation. Keep that, or ask earlier (e.g. after login)? | first player open | `useBackgroundCues` / `backgroundSession` |
 | Q10 | **iOS Live Activity.** iOS has no ongoing "workout in progress" notification (Android has). A Live Activity would need a native widget target: separate project? | not planned | iOS only |
-| Q11 | **Android nav bar scrim.** If the system contrast scrim over the tab bar looks wrong in 3-button mode, add `expo-navigation-bar` (`enforceContrast: false`, style per theme)? | OS default scrim | `app/App.tsx`, `app.config.ts` |
+| Q11 | **Android nav bar scrim.** If the system contrast scrim over the tab bar looks wrong in 3-button mode, add `expo-navigation-bar` (`enforceContrast: false`, style per theme)? | OS default scrim | `app/app.tsx`, `app.config.ts` |
 | Q12 | **strictNullChecks.** Turning it on (114 errors today, across every area) would remove the Navigation 7 workarounds (explicit navigator `id`s, hand-typed `beforeRemove`). Schedule it after the release? | after release | `tsconfig.json`, all of `app/` |
 | Q13 | **Firebase test account.** Which Firebase project and accounts should testing and Maestro use? Flow 02 writes and 05 deletes workouts, so not a personal account. Ideally an email/password account plus a Google account, and a second account for publications | none: needed for P0 auth/data tests and Maestro | `.env`, `E2E_EMAIL` / `E2E_PASSWORD` |

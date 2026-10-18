@@ -7,10 +7,10 @@ Implement the audio, speech, and keep-awake seams with Expo modules, and make su
 `migration/a3-media` (worktree `../tp-a3-media`)
 
 ## Owns
-`app/services/audio.ts`, `app/services/speech.ts`, `app/services/keepAwake.ts`, `app/Hooks/useTTS.tsx`, `app/Hooks/AppHelperProvider.tsx`, `app/Components/AppSoundPicker/**`, `app/Screens/SettingsScreen/**`, `app/Assets/sounds/**`
+`app/services/audio.ts`, `app/services/speech.ts`, `app/services/keepAwake.ts`, `app/hooks/use-tts.tsx`, `app/hooks/app-helper-provider.tsx`, `app/components/app-sound-picker/**`, `app/screens/settings-screen/**`, `app/assets/sounds/**`
 
 ## Context
-- Sounds: `bell.mp3`, `digital_clock.mp3`, `double_ding.mp3`, `hop_bell.mp3` (A0 moved them to `app/Assets/sounds/`). The old code loaded them by name from `Sound.MAIN_BUNDLE` using `SoundType` values. Find the enum in `app/Utils/constants.ts` or `types.ts`.
+- Sounds: `bell.mp3`, `digital_clock.mp3`, `double_ding.mp3`, `hop_bell.mp3` (A0 moved them to `app/assets/sounds/`). The old code loaded them by name from `Sound.MAIN_BUNDLE` using `SoundType` values. Find the enum in `app/utils/constants.ts` or `types.ts`.
 - The old code called `Sound.setCategory('Playback', true)`, meaning iOS playback mixed with other audio.
 - The old TTS used `iosVoiceId: 'com.apple.ttsbundle.Moira-compact'` and, on Android, `KEY_PARAM_VOLUME` with `STREAM_MUSIC`, `setDefaultRate`, `setDefaultPitch`, and `setDucking`.
 

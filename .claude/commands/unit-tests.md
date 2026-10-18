@@ -6,11 +6,11 @@ allowed-tools: Read, Write, Edit, Grep, Glob, Bash(git status:*), Bash(git diff:
 
 Scope (`$ARGUMENTS`): empty → uncommitted changes (`git diff HEAD` + untracked); `--staged`; `<branch>` (`<branch>...HEAD`); or files.
 
-1. Collect changed files in `app/` (skip `__tests__/`, `*.d.ts`, `Assets/`, `database.types.ts`).
+1. Collect changed files in `app/` (skip `__tests__/`, `*.d.ts`, `assets/`, `database.types.ts`).
 2. Classify: logic changed → test; only types/styles/constants/imports/renames → skip; bug fix → regression test (ask for one sentence if the bug is unclear).
 3. Test file = sibling `__tests__/<name>.test.ts(x)` (root `__tests__/` for app-level). If it exists, add only missing cases.
 4. Cover every new branch, early return, error path and variant in the diff (`npx jest <test> --coverage --collectCoverageFrom=<src>` if unsure).
-5. Write in the style of the nearest existing test (e.g. `app/Screens/PlayingScreen/__tests__/playbackSchedule.test.ts`, `__tests__/App.test.tsx`). For `app/api`, `app/services`, `app/stores` read `.claude/skills/firebase-to-supabase-react-query/references/test-templates.md`.
+5. Write in the style of the nearest existing test (e.g. `app/screens/playing-screen/__tests__/playback-schedule.test.ts`, `__tests__/app.test.tsx`). For `app/api`, `app/services`, `app/stores` read `.claude/skills/firebase-to-supabase-react-query/references/test-templates.md`.
 6. Run `npx jest <test files>`; fix wrong tests. **Never edit source to make a test pass** — report a suspected bug.
 7. `npx prettier --write` the test files.
 

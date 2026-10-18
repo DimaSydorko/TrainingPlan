@@ -25,7 +25,7 @@ RLS enabled + explicit policies on every table. UUID primary keys the client can
 
 ## Step 2 — Domain type and mapper — `app/api/<entity>/`
 
-`app/api/plans/types.ts` holds the domain type (or reuse the existing one from `app/Utils/types.ts`).
+`app/api/plans/types.ts` holds the domain type (or reuse the existing one from `app/utils/types.ts`).
 
 `app/api/plans/mappers.ts`
 

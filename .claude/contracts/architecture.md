@@ -3,8 +3,8 @@
 Before you add code, understand what already exists, where it belongs, and how far a change ripples.
 
 **Organizing idea — blast radius.** Every edit to a _shared surface_ ripples to every importer. The shared surfaces
-are: `app/Common/**`, `app/Components/**`, `app/Theme/**`, `app/Hooks/**`, `app/Utils/**`, `app/platform/**`,
-`app/lib/**`, `app/api/**`, `app/services/**`, `app/stores/**`, legacy `app/store/**`, `app/Routers/**` (plus
+are: `app/common/**`, `app/components/**`, `app/theme/**`, `app/hooks/**`, `app/utils/**`, `app/platform/**`,
+`app/lib/**`, `app/api/**`, `app/services/**`, `app/stores/**`, legacy `app/store/**`, `app/routers/**` (plus
 `ScreenName` and the param lists), `app.config.ts`, and the Jest setup in `__tests__/setup/**`. A change there is
 never "just one file".
 
@@ -12,7 +12,7 @@ Lower-level rules live in their own contracts and are not repeated here:
 
 | Concern                                                    | Contract                           |
 | ---------------------------------------------------------- | ---------------------------------- |
-| Formatting, naming, types, `Common/` vs `Components/`      | `code-style.md`                    |
+| Formatting, naming, types, `common/` vs `components/`      | `code-style.md`                    |
 | `StyleSheet`, theme colors, dynamic styles                 | `styles.md`                        |
 | Component placement, tiers, **reuse-before-create**        | `component.md`                     |
 | Co-located constants                                       | `constants.md`                     |
@@ -26,11 +26,11 @@ Lower-level rules live in their own contracts and are not repeated here:
 
 Run this checklist _before_ the first line, every time:
 
--   [ ] **Search before create.** `rg -i "<concept>" app/Common app/Components app/Hooks app/Utils app/Theme app/platform app/services app/stores`.
+-   [ ] **Search before create.** `rg -i "<concept>" app/common app/components app/hooks app/utils app/theme app/platform app/services app/stores`.
         If an existing unit renders the same primary element and ≤1 new optional prop covers your case, **extend
         it**; create a new one only when you'd add ≥2 behavioral props or branch its JSX. (A _behavioral prop_
         changes what renders or how it behaves, not just text/style. Detail: `component.md` → Reuse Before Create.)
--   [ ] **Reuse the wrapper.** If `app/Common` has a wrapper (`Icon`, `AppModal`, `ConfirmButton`, `MyTextInput`,
+-   [ ] **Reuse the wrapper.** If `app/common` has a wrapper (`Icon`, `AppModal`, `ConfirmButton`, `MyTextInput`,
         `MySwitch`, `Toast`, `DraggableList`, `AppImage`, …), never import the underlying library primitive.
 -   [ ] **Respect the layers.** Supabase calls live in `app/api/<entity>/`; React Query hooks live in
         `app/services/<entity>/` and wrap those fetchers; screens and components consume the hooks and never import
@@ -47,7 +47,7 @@ Run this checklist _before_ the first line, every time:
 ### DRY — one piece of knowledge, one home
 
 -   A literal (table name, storage key, threshold, label, sound file, timing value) appearing in **≥2 files** moves
-    to one `*.constants.ts` / `app/Utils/constants.ts` home.
+    to one `*.constants.ts` / `app/utils/constants.ts` home.
 -   Never inline a Supabase query or a string-array query key in a component — import the hook; hooks use the
     entity key factory (`server-state.md`).
 -   Apply the **rule of three** and deduplicate only knowledge that _must change together_. Coincidental
@@ -77,11 +77,11 @@ Each cross-cutting concern has exactly **one home**. Calling it inline in a leaf
 | React Query client, persister, managers  | `app/lib/query-client.ts` (`onlineManager` ← NetInfo, `focusManager` ← AppState)           |
 | Network status in UI                     | one source (today `settingsReducer.internet`; target: a hook over `onlineManager`) — no ad-hoc `NetInfo.fetch()` in screens |
 | Device APIs (audio, speech, keep-awake, notifications, Google sign-in) | `app/platform/*`                                             |
-| Theme colors / typography                | `app/Theme/*` + the settings hook                                                          |
-| Icons                                    | `app/Common/Icon` + `app/Theme/icons.ts`                                                   |
-| Error / status toasts                    | `NotificationHandler` + `Common/Toast` (today fed by Redux `error` fields; target: React Query `QueryCache`/`MutationCache` `onError` → a toast store) — no per-screen toast implementations |
+| Theme colors / typography                | `app/theme/*` + the settings hook                                                          |
+| Icons                                    | `app/common/icon` + `app/theme/icons.ts`                                                   |
+| Error / status toasts                    | `NotificationHandler` + `common/toast` (today fed by Redux `error` fields; target: React Query `QueryCache`/`MutationCache` `onError` → a toast store) — no per-screen toast implementations |
 | Auth ("who is signed in?")               | one session seam (today `useUser()`; target: a session hook over Supabase Auth)            |
-| Navigation names and params              | `ScreenName` + param lists in `app/Utils/types.ts` — no string screen names                |
+| Navigation names and params              | `ScreenName` + param lists in `app/utils/types.ts` — no string screen names                |
 | Native configuration                     | `app.config.ts` / config plugins — never `android/` or `ios/`                              |
 
 ---
@@ -109,7 +109,7 @@ Adding behavior should not edit a shared component in a way that breaks existing
 | widened union member                 | changed default value / rendered element / testID         |
 | a `children` slot                    | inline `if/else` over `variant` inside the shared component |
 
--   Never fork a `Common/` component (no `PrimaryConfirmButton` beside `ConfirmButton`) — extend it with a prop.
+-   Never fork a `common/` component (no `PrimaryConfirmButton` beside `ConfirmButton`) — extend it with a prop.
 -   Never edit a shared fetcher/hook/util to satisfy one caller.
 -   ≥3 behavioral boolean props already present → refactor to a `mode` union or slots before adding a 4th.
 -   `testID`s are a public contract with the Maestro flows in `e2e/` — changing one is a breaking change.
@@ -121,7 +121,7 @@ Adding behavior should not edit a shared component in a way that breaks existing
 The `app/api/<entity>/` fetcher is the **anti-corruption layer**: it owns the table/RPC name, the generated row
 type, and the mapping to a clean domain type. Database shapes must not leak past it.
 
--   Every fetcher returns a **mapped domain type** (camelCase, app types from `app/Utils/types.ts` or the entity's
+-   Every fetcher returns a **mapped domain type** (camelCase, app types from `app/utils/types.ts` or the entity's
     `types.ts`) — never a raw `Tables<'plans'>` row.
 -   Components, screens, hooks and stores never reference snake_case columns (`owner_id`, `created_at`).
 -   `app/api/<entity>/` and `app/services/<entity>/` are named after the **data domain** (`plans`, `workouts`,
@@ -145,4 +145,4 @@ Server state belongs to React Query; fetch once, fetch guarded. **Full rules are
 ### Reuse before create
 
 **Full rule and the wrapper map are in `component.md` → Reuse Before Create.** The hard rule: if an
-`app/Common` wrapper exists, never import the library equivalent directly.
+`app/common` wrapper exists, never import the library equivalent directly.

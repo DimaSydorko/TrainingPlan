@@ -1,6 +1,6 @@
 ---
 name: components
-description: Create a new React Native component or modify an existing one in this app, following the component, styles and constants contracts (kebab-case files, type-only props, StyleSheet in <name>.styles.ts, theme colors, Common/ wrappers first). Use when the user asks to add, build, split or refactor a component or screen.
+description: Create a new React Native component or modify an existing one in this app, following the component, styles and constants contracts (kebab-case files, type-only props, StyleSheet in <name>.styles.ts, theme colors, common/ wrappers first). Use when the user asks to add, build, split or refactor a component or screen.
 ---
 
 # Create or modify a component
@@ -11,14 +11,14 @@ description: Create a new React Native component or modify an existing one in th
 ## Step 1 — Search before create
 
 ```bash
-rg -i "<concept>" app/Common app/Components app/Screens app/Hooks
+rg -i "<concept>" app/common app/components app/screens app/hooks
 ```
 
 Extend an existing component with an optional prop if that covers the case (component.md → Reuse Before Create).
 
 ## Step 2 — Placement and tier
 
-Pick the folder (`Common/`, `Components/`, `Screens/<Screen>/components/`) and the tier (Minimal / Standard /
+Pick the folder (`common/`, `components/`, `screens/<screen-name>/components/`) and the tier (Minimal / Standard /
 Complex) from `component.md`. New folders and files are kebab-case.
 
 ## Step 3 — Templates
@@ -79,7 +79,7 @@ export default StyleSheet.create({
 ## Step 4 — Data
 
 -   Presentational components get data via props.
--   Containers (screens, `Components/`) get server data from `app/services/<entity>` hooks and UI state from
+-   Containers (screens, `components/`) get server data from `app/services/<entity>` hooks and UI state from
     `app/stores` — not from new Redux selectors. Legacy screens that still use `useAppSelector` may keep it until
     their entity is migrated.
 -   Theme colors: `useSettings().colors` today; the settings store selector after the Zustand migration.

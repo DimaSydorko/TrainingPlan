@@ -5,14 +5,14 @@ Expo SDK 57 RN app (Android/iOS): plans, workouts, timer playback, AI integraton
 ## Migration (new code = target)
 - Server data: Firebase+Redux thunks → Supabase via React Query. Client state: Redux → Zustand (persist settings only).
 - No new Redux slices/thunks or Firestore calls. An entity lives in one backend only; migrating it deletes its Firebase+Redux code in the same change.
-- New files/folders kebab-case (don't rename existing PascalCase ones in passing). `type` only, no `interface`/`I` prefix.
+- Files/folders kebab-case (ESLint `check-file`). `type` only, no `interface`/`I` prefix.
 - Skills: `firebase-to-supabase-react-query`, `redux-to-zustand-migration`.
 
 ## Layout
 - Target: `app/lib/supabase` (client, generated types) → `app/api/<entity>` (fetchers, row→domain) → `app/services/<entity>` (RQ hooks, `query-keys.ts`) → UI. Zustand in `app/stores`. ESLint enforces layers.
-- Legacy: Redux `app/store`, hooks `app/Hooks/redux.ts`; Firebase `app/Utils/firebase.ts`. Keep redux-persist key `root`.
-- Device APIs only via `app/platform/*`; icons via `app/Common/Icon`; reuse `app/Common` wrappers.
-- Navigation: `app/Routers`, `ScreenName` + param lists in `app/Utils`.
+- Legacy: Redux `app/store`, hooks `app/hooks/redux.ts`; Firebase `app/utils/firebase.ts`. Keep redux-persist key `root`.
+- Device APIs only via `app/platform/*`; icons via `app/common/icon`; reuse `app/common` wrappers.
+- Navigation: `app/routers`, `ScreenName` + param lists in `app/utils`.
 - Never edit `android/`/`ios/` (CNG) — use `app.config.ts`. Never read `.env*`.
 
 ## Rules (read the contract when touching that area)

@@ -2,11 +2,10 @@
 
 ### Placement
 
--   `app/Common/<component-name>/` — generic reusable UI (no domain knowledge)
--   `app/Components/<component-name>/` — reusable component that knows about plans/workouts/exercises/publications
--   `app/Screens/<Screen>/components/<component-name>/` — component private to one screen
--   `app/Screens/<screen-name>/` — a new screen (kebab-case folder for new screens; existing screens keep their
-    PascalCase folder)
+-   `app/common/<component-name>/` — generic reusable UI (no domain knowledge)
+-   `app/components/<component-name>/` — reusable component that knows about plans/workouts/exercises/publications
+-   `app/screens/<screen-name>/components/<component-name>/` — component private to one screen
+-   `app/screens/<screen-name>/` — a new screen
 
 ### Complexity tiers
 
@@ -62,7 +61,7 @@ See `styles.md`: `StyleSheet.create` in `<name>.styles.ts`, theme colors, inline
 
 -   Declare hooks and derived values at the top of the function body
 -   Early `return null` for "nothing to render" — no nested ternaries in JSX
--   Presentational components take data via props; containers (screens, `Components/`) call hooks from
+-   Presentational components take data via props; containers (screens, `components/`) call hooks from
     `app/services` / stores and pass data down
 -   Wrap list items rendered in `FlatList` with `memo` and pass stable callbacks (`useCallback`)
 -   Keep components small; extract sections into `components/` when they grow
@@ -75,7 +74,7 @@ See `styles.md`: `StyleSheet.create` in `<name>.styles.ts`, theme colors, inline
 Before writing any component, hook, type or constant, search for an existing one:
 
 ```bash
-rg -i "<concept>" app/Common app/Components app/Hooks app/Utils app/Theme app/platform app/services app/stores
+rg -i "<concept>" app/common app/components app/hooks app/utils app/theme app/platform app/services app/stores
 ```
 
 If it renders the same primary element and ≤1 new optional prop would cover you, **extend it with a prop** — do
@@ -86,14 +85,14 @@ branch its JSX.
 
 | Never import                                         | Always import                                |
 | ---------------------------------------------------- | -------------------------------------------- |
-| `@react-native-vector-icons/*`, `@expo/vector-icons` | `app/Common/Icon/Icon` (ESLint-enforced)     |
-| React Native `Modal`                                 | `app/Common/AppModal/AppModal`               |
-| React Native `Switch`                                | `app/Common/MySwitch/MySwitch`               |
-| React Native `TextInput` (for form fields)           | `app/Common/MyTextInput/MyTextInput`         |
-| `react-native-draggable-flatlist`                    | `app/Common/DraggableList/DraggableList`     |
+| `@react-native-vector-icons/*`, `@expo/vector-icons` | `app/common/icon/icon` (ESLint-enforced)     |
+| React Native `Modal`                                 | `app/common/app-modal/app-modal`               |
+| React Native `Switch`                                | `app/common/my-switch/my-switch`               |
+| React Native `TextInput` (for form fields)           | `app/common/my-text-input/my-text-input`         |
+| `react-native-draggable-flatlist`                    | `app/common/draggable-list/draggable-list`     |
 | `expo-audio`, `expo-speech`, `expo-keep-awake`, `expo-notifications`, `@react-native-google-signin/*` | the matching `app/platform/*` seam |
 
-Verify with `rg "from '@react-native-vector-icons|from 'expo-audio|from 'expo-speech" app --glob '!app/platform/**' --glob '!app/Common/Icon/**'`
+Verify with `rg "from '@react-native-vector-icons|from 'expo-audio|from 'expo-speech" app --glob '!app/platform/**' --glob '!app/common/icon/**'`
 — it must add zero new hits.
 
 ### Extend with a prop — never fork a near-duplicate

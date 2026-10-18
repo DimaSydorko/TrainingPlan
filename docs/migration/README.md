@@ -18,13 +18,13 @@ This is the master plan for moving **TrainingPlan** from bare React Native 0.68 
 | State | RTK 1.8, react-redux 7, redux-persist 6 | RTK 2, react-redux 9, redux-persist 6 on AsyncStorage |
 | Backend | Firebase JS 8.2.2, namespaced API | Latest Firebase JS SDK, modular API, auth persisted with `getReactNativePersistence(AsyncStorage)` |
 | Google auth | `@react-native-google-signin/google-signin` v8 | Latest version, using its Expo config plugin |
-| Sound | react-native-sound, mp3s in `android/res/raw` | `expo-audio`, mp3s in `app/Assets/sounds` |
+| Sound | react-native-sound, mp3s in `android/res/raw` | `expo-audio`, mp3s in `app/assets/sounds` |
 | Text-to-speech | react-native-tts | `expo-speech` |
 | Keep screen awake | react-native-keep-awake | `expo-keep-awake` |
 | Background workout | react-native-background-actions (Android foreground service) | Timer based on timestamps, plus `expo-notifications` for cues (see D3) |
 | Animation and gestures | Reanimated 2.8, gesture-handler 2.1 | Reanimated 4 + `react-native-worklets`, gesture-handler as installed by Expo |
 | Icons | react-native-vector-icons 9 | `@react-native-vector-icons/material-design-icons` (`@expo/vector-icons` was deprecated in SDK 56) |
-| Config and secrets | `app/Utils/constants.local.ts` (gitignored) | `EXPO_PUBLIC_*` env vars in `.env` (gitignored), `.env.example` committed |
+| Config and secrets | `app/utils/constants.local.ts` (gitignored) | `EXPO_PUBLIC_*` env vars in `.env` (gitignored), `.env.example` committed |
 | Tests and lint | Jest 26, one placeholder test, Prettier | `jest-expo` + React Native Testing Library, `eslint-config-expo`, Prettier, Maestro E2E flows |
 | Admin panel | CRA 5, React 18, MUI 5, Firebase 8 | Vite, React 19, MUI current, latest Firebase modular, React Router current (optional, D5) |
 
@@ -110,11 +110,11 @@ To keep merges painless, every path belongs to exactly one Phase 1 agent. If you
 
 | Path | Owner |
 |---|---|
-| `app/Utils/firebase.ts`, `app/store/**`, `app/Hooks/redux.ts` | A1 |
-| `app.config.ts`, `eas.json`, `.env.example`, `app/services/googleAuth.ts`, `app/Screens/LoginScreen/AppGoogleSignInButton.tsx` | A2 |
-| `app/services/audio.ts`, `app/services/speech.ts`, `app/services/keepAwake.ts`, `app/Hooks/useTTS.tsx`, `app/Hooks/AppHelperProvider.tsx`, `app/Components/AppSoundPicker/**`, `app/Screens/SettingsScreen/**`, `app/Assets/sounds/**` | A3 |
-| `app/services/backgroundSession.ts`, `app/Hooks/usePlaying.tsx`, `app/Screens/PlayingScreen/**` | A4 |
-| `app/Routers/**`, `app/Common/**`, `app/Theme/**`, `app/Utils/types.ts` (navigation types), `app/Components/**` except `AppSoundPicker` (incl. `NotificationHandler`, which is the in-app error/offline toaster), all other `app/Screens/**`, `app/App.tsx` | A5 |
+| `app/utils/firebase.ts`, `app/store/**`, `app/hooks/redux.ts` | A1 |
+| `app.config.ts`, `eas.json`, `.env.example`, `app/services/googleAuth.ts`, `app/screens/login-screen/app-google-sign-in-button.tsx` | A2 |
+| `app/services/audio.ts`, `app/services/speech.ts`, `app/services/keepAwake.ts`, `app/hooks/use-tts.tsx`, `app/hooks/app-helper-provider.tsx`, `app/components/app-sound-picker/**`, `app/screens/settings-screen/**`, `app/assets/sounds/**` | A3 |
+| `app/services/backgroundSession.ts`, `app/hooks/use-playing.tsx`, `app/screens/playing-screen/**` | A4 |
+| `app/routers/**`, `app/common/**`, `app/theme/**`, `app/utils/types.ts` (navigation types), `app/components/**` except `AppSoundPicker` (incl. `NotificationHandler`, which is the in-app error/offline toaster), all other `app/screens/**`, `app/app.tsx` | A5 |
 | `admin/**` | A6 |
 | `__tests__/**`, `e2e/**`, `jest.config.js`, `eslint.config.js`, `.prettierrc.js`, `docs/migration/TESTING.md` | A7 |
 | `docs/migration/STATUS.md`, `docs/migration/DECISIONS.md`, merge commits on `migration/expo` | A8 |
@@ -123,7 +123,7 @@ Shared files have extra rules:
 
 - **`package.json` and `package-lock.json`**: add or remove dependencies only through `npx expo install` or `npm`. Never edit by hand. On a lock conflict, A8 takes one side and runs `npm install` again; it never merges the lock file by hand.
 - **`app.config.ts`**: A0 declares every expected plugin up front. Other agents only change their own plugin's options. If you need a new plugin or permission, ask A2 in your handoff, or add it in one clearly commented block.
-- **`app/Utils/constants.ts`**: append only.
+- **`app/utils/constants.ts`**: append only.
 - **Formatting**: nobody reformats files they otherwise wouldn't touch. A8 runs one repo-wide Prettier/ESLint `--fix` pass as the **last** commit of Phase 2.
 
 ---
@@ -166,7 +166,7 @@ export function configureGoogleSignIn(): void
 export function getGoogleIdToken(): Promise<string>     // throws on cancel/failure
 export function signOutGoogle(): Promise<void>
 
-// app/Common/Icon/Icon.tsx          (A5)
+// app/common/icon/icon.tsx          (A5)
 export function Icon(props: { name: string; size?: number; color?: string; style?: StyleProp<TextStyle> }): JSX.Element
 ```
 

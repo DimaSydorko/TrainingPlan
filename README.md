@@ -7,9 +7,8 @@ Mobile app (Android + iOS) for building training plans and workouts, playing the
 
 | Concern | Legacy (don't extend) | Target (use for new code) |
 |---|---|---|
-| Server data | Firebase + Redux thunks (`app/store`, `app/Utils/firebase.ts`) | Supabase + React Query (`app/lib/supabase` → `app/api` → `app/services`) |
-| Client state | Redux Toolkit + redux-persist (`app/store`, `app/Hooks/redux.ts`) | Zustand (`app/stores`), persist settings only |
-| File names | PascalCase folders | kebab-case for new files/folders (don't rename old ones in passing) |
+| Server data | Firebase + Redux thunks (`app/store`, `app/utils/firebase.ts`) | Supabase + React Query (`app/lib/supabase` → `app/api` → `app/services`) |
+| Client state | Redux Toolkit + redux-persist (`app/store`, `app/hooks/redux.ts`) | Zustand (`app/stores`), persist settings only |
 
 An entity lives in one backend only; migrating it deletes its Firebase + Redux code in the same change. Expo migration history: [docs/migration/STATUS.md](docs/migration/STATUS.md).
 
@@ -45,14 +44,14 @@ CI (`.github/workflows/ci.yml`) runs tsc, lint, jest, prettier, expo-doctor and 
 
 ```
 app/
-  App.tsx           entry
-  Screens/          one folder per screen; Components/ feature components; Common/ shared wrappers (reuse first)
-  Common/Icon       the only way to render icons
-  Routers/          React Navigation stacks/tabs
-  Utils/            ScreenName/TabName (constants.ts), route param lists (types.ts); firebase.ts = legacy
-  Theme/            colors (light + dark), theme, icons, insets
+  app.tsx           entry
+  screens/          one folder per screen; components/ feature components; common/ shared wrappers (reuse first)
+  common/icon       the only way to render icons
+  routers/          React Navigation stacks/tabs
+  utils/            ScreenName/TabName (constants.ts), route param lists (types.ts); firebase.ts = legacy
+  theme/            colors (light + dark), theme, icons, insets
   platform/         the only place that touches device APIs (audio, speech, keep-awake, background, Google auth, media)
-  Hooks/            hooks; redux.ts = legacy typed Redux hooks
+  hooks/            hooks; redux.ts = legacy typed Redux hooks
   store/            LEGACY Redux slices + Firestore sync (redux-persist key `root`, keep it)
   lib/supabase      TARGET Supabase client + generated types
   api/<entity>      TARGET fetchers + row→domain mappers
@@ -73,12 +72,12 @@ Rules live in [`.claude/contracts/`](.claude/contracts) — read the one for the
 
 | Task | Where / how | Read |
 |---|---|---|
-| New or changed component/screen | `app/Screens`, `app/Components`; reuse `app/Common` | skill `components`; `component.md`, `styles.md`, `constants.md` |
+| New or changed component/screen | `app/screens`, `app/components`; reuse `app/common` | skill `components`; `component.md`, `styles.md`, `constants.md` |
 | New server query/mutation | `app/api/<entity>` + `app/services/<entity>` | skill `services`; `server-state.md` |
 | Move an entity off Firebase | delete its Firebase + Redux code in the same change | skill `firebase-to-supabase-react-query` |
 | Client/UI state | Zustand in `app/stores` | skill `redux-to-zustand-migration`; `client-state.md` |
 | Device API (audio, speech, notifications…) | use or extend `app/platform/*` (e.g. `audio.ts`, `speech.ts`) | `architecture.md` |
-| New route | `app/Routers` + `ScreenName` and param list in `app/Utils` | `architecture.md` |
+| New route | `app/routers` + `ScreenName` and param list in `app/utils` | `architecture.md` |
 | Native config / permissions | `app.config.ts` (config plugins) | — |
 | Review a change | — | `architecture-review-checklist.md` |
 

@@ -7,10 +7,10 @@ Get Google Sign-In working under Expo, own `app.config.ts`, and set up EAS so an
 `migration/a2-auth` (worktree `../tp-a2-auth`)
 
 ## Owns
-`app.config.ts`, `eas.json`, `.env.example`, `app/services/googleAuth.ts`, `app/Screens/LoginScreen/AppGoogleSignInButton.tsx`
+`app.config.ts`, `eas.json`, `.env.example`, `app/services/googleAuth.ts`, `app/screens/login-screen/app-google-sign-in-button.tsx`
 
 ## Do not touch
-`app/store/UserReducer/UserAC.ts` (A1 owns it and calls your seam).
+`app/store/user-reducer/user-ac.ts` (A1 owns it and calls your seam).
 
 ## Tasks
 1. **Google Sign-In**

@@ -7,7 +7,7 @@ Make the workout player (the timer, laps, rest periods, and cues) **accurate whi
 `migration/a4-playback` (worktree `../tp-a4-playback`)
 
 ## Owns
-`app/services/backgroundSession.ts`, `app/Hooks/usePlaying.tsx`, `app/Screens/PlayingScreen/**`
+`app/services/backgroundSession.ts`, `app/hooks/use-playing.tsx`, `app/screens/playing-screen/**`
 
 ## Depends on
 - A3's services. Build against the stubs, then rebase on A3 for full testing.

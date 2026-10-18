@@ -130,16 +130,16 @@ module.exports = defineConfig([
     rules: { 'no-restricted-imports': restrictImports(...supabaseClientPatterns, apiLayerPattern) },
   },
   {
-    // kebab-case paths (docs: claude/kebab-case-rename-plan). __tests__ is Jest's convention.
+    // kebab-case paths. __tests__ is Jest's convention.
     files: ['app/**', '__tests__/**'],
     plugins: { 'check-file': checkFile },
     rules: {
       'check-file/folder-naming-convention': [
-        'warn',
+        'error',
         { 'app/**/!(__tests__)/': 'KEBAB_CASE', '__tests__/**/!(__tests__)/': 'KEBAB_CASE' },
       ],
       'check-file/filename-naming-convention': [
-        'warn',
+        'error',
         { '{app,__tests__}/**/*.{ts,tsx,js}': 'KEBAB_CASE' },
         { ignoreMiddleExtensions: true },
       ],

@@ -22,17 +22,17 @@ git diff --name-only HEAD          # uncommitted
 
 | Shared surface             | Path glob                                                    | Why it is high-radius                                       |
 | -------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------- |
-| Generic UI                 | `app/Common/**`                                              | used by most screens; `testID`s used by Maestro             |
-| Business components        | `app/Components/**`                                          | shared across plan/workout/publication flows                |
-| Theme                      | `app/Theme/**`                                               | every rendered pixel, both themes                           |
-| Hooks / providers          | `app/Hooks/**`                                               | `redux.ts`, `AppHelperProvider`, `usePlaying` are app-wide  |
-| Utils, constants, types    | `app/Utils/**`                                               | `ScreenName`, param lists, shared types                     |
+| Generic UI                 | `app/common/**`                                              | used by most screens; `testID`s used by Maestro             |
+| Business components        | `app/components/**`                                          | shared across plan/workout/publication flows                |
+| Theme                      | `app/theme/**`                                               | every rendered pixel, both themes                           |
+| Hooks / providers          | `app/hooks/**`                                               | `redux.ts`, `AppHelperProvider`, `usePlaying` are app-wide  |
+| Utils, constants, types    | `app/utils/**`                                               | `ScreenName`, param lists, shared types                     |
 | Device seams               | `app/platform/**`                                            | audio/speech/notifications/Google sign-in for the whole app |
 | Supabase / RQ client       | `app/lib/**`                                                 | 100% of server traffic, offline behavior, auth session      |
 | Fetchers                   | `app/api/**`                                                 | a mapping change ripples to every hook above it             |
 | React Query hooks / keys   | `app/services/**`                                            | key or option change ripples to every consumer              |
 | Stores                     | `app/stores/**`, legacy `app/store/**`                       | global state; persisted shapes affect existing installs     |
-| Navigation                 | `app/Routers/**`                                             | every screen transition and deep link                       |
+| Navigation                 | `app/routers/**`                                             | every screen transition and deep link                       |
 | Native config              | `app.config.ts`, `eas.json`, `package.json` deps             | needs a new build; can break store builds                   |
 | Database                   | `supabase/migrations/**`                                     | RLS and schema for all users; irreversible once applied     |
 | Test setup                 | `__tests__/setup/**`                                         | every test file                                             |
@@ -43,7 +43,7 @@ Everything else (one screen's own files, a screen-local hook/store) is **screen-
 
 ```bash
 rg -l "from '.*/<dir>/<FileStem>'" app      # e.g. rg -l "from '.*/ConfirmButton/ConfirmButton'" app
-rg -l "<ExportName>" app                    # barrel imports via app/Common/index.ts
+rg -l "<ExportName>" app                    # barrel imports via app/common/index.ts
 rg -l "use<Entity>|<entity>Keys\." app      # React Query entity
 rg -l "use<Name>Store" app                  # Zustand store
 rg -l "state\.<slice>Reducer|use<Slice>\(" app   # legacy Redux slice
@@ -58,13 +58,13 @@ Attach the importer list (or its count + the screens it spans) to the review not
 | **local**  | only screen-local files changed                                                            | normal per-principle review                                                |
 | **module** | shared file changed, importers within one router tree                                      | review + name the tree                                                     |
 | **shared** | shared file changed, importers span ≥2 router trees                                        | list consumers; verify additive (OCP); a test per affected path            |
-| **global** | `app/lib`, `App.tsx`, a persisted store shape, `Theme/colors.ts`, `app.config.ts`, a migration with RLS, or a top-fan-in `Common` component | require explicit additive-only justification; block on missing regression test |
+| **global** | `app/lib`, `app.tsx`, a persisted store shape, `theme/colors.ts`, `app.config.ts`, a migration with RLS, or a top-fan-in `Common` component | require explicit additive-only justification; block on missing regression test |
 
 #### Step 5 — Boundary integrity
 
--   Imports reaching into another screen's internals: `rg "from '.*Screens/<Other>/components" app`.
+-   Imports reaching into another screen's internals: `rg "from '.*screens/<Other>/components" app`.
 -   Layer violations — read lint output, don't trust the exit code: `npm run lint 2>&1 | rg "no-restricted-imports"`.
--   Native packages imported outside `app/platform` / `app/Common/Icon`.
+-   Native packages imported outside `app/platform` / `app/common/icon`.
 
 #### Step 6 — Server-state propagation
 
@@ -109,7 +109,7 @@ previous build, use it, upgrade, and confirm data survives. Run the relevant Mae
 -   🟠 `NetInfo.fetch()` / `AppState` listeners for online/focus logic in screens instead of the managers.
 -   🟠 Per-screen error toast implementation instead of the shared toast flow.
 -   🟠 String screen names instead of `ScreenName`.
--   🟡 Hardcoded color or font size in a component (`rg "#[0-9a-fA-F]{3,8}'" app --glob '!app/Theme/**'`).
+-   🟡 Hardcoded color or font size in a component (`rg "#[0-9a-fA-F]{3,8}'" app --glob '!app/theme/**'`).
 
 #### Primitive Obsession — `architecture.md`
 
@@ -119,7 +119,7 @@ previous build, use it, upgrade, and confirm data survives. Run the relevant Mae
 
 #### OCP — `architecture.md`
 
--   🔴 Fork of a `Common/` component.
+-   🔴 Fork of a `common/` component.
 -   🟠 New required prop / changed default / renamed `testID` on a shared component.
 -   🟠 Added `variant` branch inside a shared component instead of a `Record` map.
 -   🟡 ≥3 behavioral booleans and a 4th added.
@@ -164,7 +164,7 @@ previous build, use it, upgrade, and confirm data survives. Run the relevant Mae
 -   🔴 New Firestore call or new Redux slice/thunk.
 -   🔴 Entity read or written through both Firebase and Supabase.
 -   🟠 Existing folder renamed in the same commit as a behavior change.
--   🟠 New `interface` / `I` prefix / PascalCase file in new code.
+-   🟠 New `interface` / `I` prefix / non-kebab-case file/folder.
 
 ---
 

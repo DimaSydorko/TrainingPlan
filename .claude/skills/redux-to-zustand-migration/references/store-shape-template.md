@@ -79,4 +79,4 @@ export const useThemeColors = () => useSettingsStore(state => (state.themeName =
 -   `type`, no `I` prefix; single quotes, no semicolons; no `any`.
 -   App-wide stores always have `reset()`.
 -   Components read with selectors: `useWorkoutsUiStore(s => s.selectedWorkoutId)`; several fields → `useShallow`.
--   Screen-local stores live in `app/Screens/<Screen>/stores/` and usually need no `reset()`.
+-   Screen-local stores live in `app/screens/<screen-name>/stores/` and usually need no `reset()`.

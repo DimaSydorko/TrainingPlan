@@ -14,7 +14,7 @@ Review ALL code you just wrote or modified against the rules below (full rules: 
 
 -   [ ] External/library imports first, then local imports
 -   [ ] No unused imports
--   [ ] No native/library primitive where a `Common/` or `platform/` wrapper exists
+-   [ ] No native/library primitive where a `common/` or `platform/` wrapper exists
 -   [ ] Layers respected: no `@supabase/supabase-js` / `app/lib/supabase` / `app/api` outside their allowed layers;
         no new `react-redux` or `firebase` usage
 

@@ -64,8 +64,8 @@ Never create or switch branches yourself.
 
 ## Final cleanup (after every slice is gone)
 
-See `references/redux-removal-checklist.md`: remove `Provider`/`PersistGate` from `App.tsx`, `app/store/`,
-`app/Hooks/redux.ts`, `__tests__/utils/testStore.ts` + `renderWithStore`, the packages, and finally the
+See `references/redux-removal-checklist.md`: remove `Provider`/`PersistGate` from `app.tsx`, `app/store/`,
+`app/hooks/redux.ts`, `__tests__/utils/test-store.ts` + `renderWithStore`, the packages, and finally the
 `persist:root` key (one release after the hand-over shipped).
 
 ## Final step — QA note (mandatory)

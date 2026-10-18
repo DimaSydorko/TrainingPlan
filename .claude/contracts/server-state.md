@@ -13,7 +13,7 @@ Server state flows through these layers, top-down. Each layer imports only from 
 
 | Layer                         | Path                                                       | Owns                                                                                                   | Forbidden                                                   |
 | ----------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
-| Consumer hooks (optional)     | `app/Screens/<Screen>/hooks/use-*.ts`                      | Screen-specific composition/derivation over a shared hook                                              | Redefining query keys; calling Supabase; reading `app/api`  |
+| Consumer hooks (optional)     | `app/screens/<screen-name>/hooks/use-*.ts`                      | Screen-specific composition/derivation over a shared hook                                              | Redefining query keys; calling Supabase; reading `app/api`  |
 | Shared React Query hooks      | `app/services/<entity>/use-*.ts` + `query-keys.ts`         | `useQuery` / `useMutation`, query options, key factory, invalidation, optimistic updates, realtime → invalidate | Supabase client import; row types; store reads        |
 | Fetchers (anti-corruption)    | `app/api/<entity>/<operation>.ts` (+ `types.ts`, `mappers.ts`) | The Supabase query/RPC, error → throw, row ↔ domain mapping                                          | React Query, React, stores, navigation                      |
 | Client                        | `app/lib/supabase/client.ts`, `database.types.ts`          | The one `createClient<Database>()` instance and the generated types                                    | Feature code                                                |
@@ -189,7 +189,7 @@ only **invalidates** (or patches) the entity's keys; it never writes to a store.
 ### Auth
 
 -   Supabase Auth is the session source. Email/password via `supabase.auth.signInWithPassword` / `signUp`; Google
-    via `getGoogleIdToken()` from `app/platform/googleAuth.ts` → `supabase.auth.signInWithIdToken({ provider:
+    via `getGoogleIdToken()` from `app/platform/google-auth.ts` → `supabase.auth.signInWithIdToken({ provider:
     'google', token })`.
 -   Auth calls live in `app/api/auth/`; the session is exposed through one hook (`app/services/auth/use-session.ts`)
     driven by `onAuthStateChange`.
@@ -198,7 +198,7 @@ only **invalidates** (or patches) the entity's keys; it never writes to a store.
 
 ### Legacy Firebase (until removed)
 
--   Firestore/Auth calls exist only in `app/Utils/firebase.ts`, `app/store/firestore.ts`, `app/store/sync.ts` and the
+-   Firestore/Auth calls exist only in `app/utils/firebase.ts`, `app/store/firestore.ts`, `app/store/sync.ts` and the
     `app/store/**/*AC.ts` thunks. **Do not add new ones.** Modular API only (`firebase/compat` is ESLint-blocked).
 -   When an entity moves to Supabase, delete its Firestore code, its thunks and its Redux data in the same change;
     never dual-write or read from both.

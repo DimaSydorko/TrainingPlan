@@ -47,7 +47,7 @@ Do not assume A. **Never create or switch branches yourself** — ask the user.
 -   [ ] `app/lib/query-client.ts`: `QueryClient` defaults (`gcTime` 24 h, queries `networkMode: 'offlineFirst'`,
         `retry` sane), `onlineManager` ← NetInfo, `focusManager` ← AppState, `QueryCache`/`MutationCache`
         `onError` → toast, AsyncStorage persister
--   [ ] `App.tsx`: `PersistQueryClientProvider` with `onSuccess={() => queryClient.resumePausedMutations()}` —
+-   [ ] `app.tsx`: `PersistQueryClientProvider` with `onSuccess={() => queryClient.resumePausedMutations()}` —
         inside the existing Redux providers for now
 -   [ ] Jest: mock for `app/lib/supabase/client` in `__tests__/setup/mocks/`, a `createTestQueryClient()` +
         `renderWithQueryClient` util in `__tests__/utils/`
@@ -57,7 +57,7 @@ Do not assume A. **Never create or switch branches yourself** — ask the user.
 ## Per-entity checkpoint
 
 1. **Inventory.** List every Firestore read/write for the entity (`rg "<collection>Collection|<Entity>AC|<entity>Reducer" app`),
-   the Redux fields holding its data, and every screen reading them (`use<Entity>()` from `app/Hooks/redux.ts`).
+   the Redux fields holding its data, and every screen reading them (`use<Entity>()` from `app/hooks/redux.ts`).
 2. **Schema.** Migration with table, `updated_at` trigger, RLS + policies; regenerate types.
 3. **Data migration.** A one-off script outside the app (`scripts/migrate-<entity>.ts`, run with the service-role
    key from the developer's machine, never bundled) copies Firestore docs into the table, mapping Firebase uids to
@@ -78,7 +78,7 @@ Do not assume A. **Never create or switch branches yourself** — ask the user.
 
 ## Auth checkpoint
 
--   `app/api/auth/` (sign in/up with password, Google via `signInWithIdToken` + `app/platform/googleAuth.ts`,
+-   `app/api/auth/` (sign in/up with password, Google via `signInWithIdToken` + `app/platform/google-auth.ts`,
     sign out), `app/services/auth/use-session.ts` over `onAuthStateChange`.
 -   User migration: export Firebase Auth users and import them into Supabase (Google users relink by email). Users
     with email/password may need a password reset — confirm the approach with the user before implementing.

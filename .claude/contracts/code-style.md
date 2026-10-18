@@ -21,8 +21,8 @@
 -   One lexicon per concept — don't mix `fetch`, `load`, `get` for the same operation. Fetchers in `app/api` are
     `get*` / `create*` / `update*` / `delete*`; React Query hooks are `use*`.
 -   Components in PascalCase. Constants in SCREAMING_SNAKE_CASE.
--   **Files and folders: kebab-case for all new code** (`workout-card/workout-card.tsx`, `use-plans.ts`,
-    `query-keys.ts`). Existing PascalCase folders/files stay until a dedicated rename commit.
+-   **Files and folders: kebab-case** (`workout-card/workout-card.tsx`, `use-plans.ts`, `query-keys.ts`); ESLint
+    `check-file` errors otherwise. Exempt: `__tests__/`, snake_case sound assets.
 -   Event handler functions `handle*` (`handlePress`), callback props `on*` (`onPress`). See
     [naming event handlers](https://jaketrent.com/post/naming-event-handlers-react/).
 -   English only in identifiers.
@@ -70,12 +70,12 @@ style objects only for runtime values.
 -   Decompose and decouple — smaller components are easier to extend, test and understand.
 -   Boy scout rule — leave the place cleaner than you found it (but keep unrelated refactors out of the diff).
 
-### Component usage — `Common/` and `Components/` first
+### Component usage — `common/` and `components/` first
 
-**Hard rule: if `app/Common` has a component that covers the use case, never import the underlying library
+**Hard rule: if `app/common` has a component that covers the use case, never import the underlying library
 primitive directly.**
 
-#### `app/Common/` — generic building blocks (no business logic)
+#### `app/common/` — generic building blocks (no business logic)
 
 | Component            | Use instead of / for                                                        |
 | -------------------- | --------------------------------------------------------------------------- |
@@ -98,9 +98,9 @@ primitive directly.**
 | `Timer`              | countdown display                                                           |
 | `TapBar`             | segmented tabs                                                              |
 
-Text and layout wrappers live in `app/Theme/Parents.tsx` (`Page`, themed text).
+Text and layout wrappers live in `app/theme/parents.tsx` (`Page`, themed text).
 
-#### `app/Components/` — business-aware reusable components
+#### `app/components/` — business-aware reusable components
 
 `Exercise`, `EditPlanWorkout`, `Publication`, `ShareModal`, `CopyWorkoutsModal`, `ImageSelector`,
 `AppColorPicker`, `AppSoundPicker`, `WorkoutDuration`, `UserImage`, `NotificationHandler`. They may use hooks from
@@ -109,12 +109,12 @@ Text and layout wrappers live in `app/Theme/Parents.tsx` (`Page`, themed text).
 #### Import style
 
 -   New code imports components directly from their file (`../../Common/Icon/Icon`, `../workout-card/workout-card`).
--   Do not add new entries to the legacy barrels (`app/Common/index.ts`, `app/Screens/index.ts`). Existing barrel
+-   Do not add new entries to the legacy barrels (`app/common/index.ts`, `app/screens/index.ts`). Existing barrel
     imports may stay.
 
 #### Where does a new component go?
 
--   **`app/Common/`**: generic UI with no domain knowledge.
--   **`app/Components/`**: reusable and knows about plans/workouts/exercises/publications.
--   **Screen-private**: `app/Screens/<Screen>/components/<component-name>/`.
+-   **`app/common/`**: generic UI with no domain knowledge.
+-   **`app/components/`**: reusable and knows about plans/workouts/exercises/publications.
+-   **Screen-private**: `app/screens/<screen-name>/components/<component-name>/`.
 -   If nothing covers 70%+ of the use case, create a new component. Never create a near-duplicate.

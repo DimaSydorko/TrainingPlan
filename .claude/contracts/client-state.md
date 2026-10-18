@@ -3,7 +3,7 @@
 Zustand holds **client/UI state only**. If a value comes from the backend, it belongs in React Query
 (`server-state.md`), not in a store.
 
-> **Migration status.** Client state is still in Redux (`app/store/**`, read via `app/Hooks/redux.ts`). New features
+> **Migration status.** Client state is still in Redux (`app/store/**`, read via `app/hooks/redux.ts`). New features
 > use Zustand. Existing slices move with the `redux-to-zustand-migration` skill, after their server data has moved
 > to React Query.
 
@@ -25,7 +25,7 @@ persisting the whole palette.
 | Scope        | Location                                         | Holds                                              |
 | ------------ | ------------------------------------------------ | -------------------------------------------------- |
 | App-wide     | `app/stores/<name>/use-<name>-store.ts`          | settings, session UI, playback, toasts             |
-| Screen-local | `app/Screens/<Screen>/stores/use-<name>-store.ts`| one screen's UI state (filters, draft, edit mode)  |
+| Screen-local | `app/screens/<screen-name>/stores/use-<name>-store.ts`| one screen's UI state (filters, draft, edit mode)  |
 
 Prefer plain `useState` when the state never leaves one component.
 

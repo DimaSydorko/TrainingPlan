@@ -76,5 +76,5 @@ export default usePublishWorkout
 -   Hook inputs are arguments; never read a store inside.
 -   `enabled` for every nullable input.
 -   `staleTime` from `stale-time-rubric.md`, stored in the entity's `*.constants.ts`.
--   Default home is `app/services/<entity>/`. A screen-local hook (`app/Screens/<Screen>/hooks/`) only adds
+-   Default home is `app/services/<entity>/`. A screen-local hook (`app/screens/<screen-name>/hooks/`) only adds
     composition on top; it never re-declares a query or key.

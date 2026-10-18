@@ -107,7 +107,7 @@ const { store } = await renderWithStore(<SettingsScreen />, {
 `eslint.config.js` (flat config) = `eslint-config-expo` + `eslint-config-prettier` + project rules:
 
 - `react-hooks/exhaustive-deps`: **warn**.
-- `no-restricted-imports`: **error** for libraries removed by the migration: `react-native-sound`, `react-native-tts`, `react-native-keep-awake`, `react-native-background-actions`, `react-native-vector-icons` (and subpaths), `@expo/vector-icons` (deprecated in SDK 56; use `app/Common/Icon`), and `firebase/compat/*`.
+- `no-restricted-imports`: **error** for libraries removed by the migration: `react-native-sound`, `react-native-tts`, `react-native-keep-awake`, `react-native-background-actions`, `react-native-vector-icons` (and subpaths), `@expo/vector-icons` (deprecated in SDK 56; use `app/common/icon`), and `firebase/compat/*`.
 - The React Compiler rules that `eslint-plugin-react-hooks` 7 turns on as errors (`set-state-in-effect`, `use-memo`, `refs`, `purity`, ...) are **warnings** until the code is cleaned up. `react/jsx-key`, `react/display-name` and `react/no-unescaped-entities` are errors again (A8 fixed the violations in Phase 2), and the temporary `firebase/compat` / `@expo/vector-icons` exceptions are gone.
 - Test files may use `require()` (needed in `jest.mock` factories).
 
@@ -136,10 +136,10 @@ Prettier keeps the existing `.prettierrc.js` style (no semicolons, single quotes
 | 0 (done, A7) | `alwaysStrict`, `strictBindCallApply`, `noImplicitThis`, `strictBuiltinIteratorReturn`, `noFallthroughCasesInSwitch`, `forceConsistentCasingInFileNames` | 0 | Enabled in `tsconfig.json` |
 | 1 | `strictFunctionTypes` | 4 | `PublicationsRouter.tsx` (2), `WorkoutsScreen.tsx`, `MyPlansScreen.tsx`: navigator/screen component prop types. Do with A5's typed navigator work |
 | 1 | `noImplicitReturns` | 2 | `UserAC.ts`, `WorkoutsScreen.tsx` |
-| 1 | `noImplicitOverride` | 2 | `Common/MySwitch/SwitchLib.tsx` (class component) |
+| 1 | `noImplicitOverride` | 2 | `common/my-switch/switch-lib.tsx` (class component) |
 | 1 | `useUnknownInCatchVariables` | 21 | All in `app/store/*/*AC.ts` `catch (e)` blocks. Do while A1 rewrites them for the modular API (`e instanceof FirebaseError ? e.message : String(e)`) |
 | 2 | `noImplicitAny` | 29 | SwitchLib (9), SettingsScreen (5), Exercise (4), SwipeSelector (3), InfiniteScroll (3), PlansSlice (2), GoBackSubmitModal (2), usePlaying (1) |
-| 3 | `strictNullChecks` (brings `strictPropertyInitialization`, 0 extra) | 114 | The big one. Go folder by folder: `app/store` → `app/Hooks` → `app/Common` → `app/Components` → `app/Screens`. Biggest: MySwitch 20, Exercise 15, WorkoutsScreen 12, PublicationsReducer 10. Option: use `// @ts-expect-error TODO(strict)` per remaining line to flip the flag early and burn the list down |
+| 3 | `strictNullChecks` (brings `strictPropertyInitialization`, 0 extra) | 114 | The big one. Go folder by folder: `app/store` → `app/hooks` → `app/common` → `app/components` → `app/screens`. Biggest: MySwitch 20, Exercise 15, WorkoutsScreen 12, PublicationsReducer 10. Option: use `// @ts-expect-error TODO(strict)` per remaining line to flip the flag early and burn the list down |
 | 4 | `"strict": true` and delete the individual flags | 161 today in total | Only when stages 1–3 are at 0 |
 | 5 (optional) | `noUncheckedIndexedAccess` | +33 on top of strictNullChecks | Worth it for the playback index maths (`exercises[idx]`) |
 | — | `noUnusedLocals` / `noUnusedParameters` | 71 / 5 | Not recommended: ESLint's `@typescript-eslint/no-unused-vars` already reports these as warnings without blocking the build |

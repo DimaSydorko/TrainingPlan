@@ -7,7 +7,7 @@ Move the data layer from the Firebase compat shim to the **modular Firebase JS S
 `migration/a1-data` (worktree `../tp-a1-data`), created from `migration/expo` after A0 has merged.
 
 ## Owns
-`app/Utils/firebase.ts`, `app/store/**`, `app/Hooks/redux.ts`
+`app/utils/firebase.ts`, `app/store/**`, `app/hooks/redux.ts`
 
 ## Do not touch
 Screens and components. If a selector or action signature has to change, keep a compatible export, or update the caller with a minimal edit and list it in your handoff.
@@ -27,7 +27,7 @@ Screens and components. If a selector or action signature has to change, keep a 
 3. **Auth** in `UserAC.ts`: email sign-up and sign-in, sign-out, and `onAuthStateChanged`. For Google sign-in, call `getGoogleIdToken()` from `app/services/googleAuth.ts` (A2's seam), then `signInWithCredential(auth, GoogleAuthProvider.credential(idToken))`. On sign-out, call `signOutGoogle()`.
 4. **Redux**
    - RTK 2 migration: switch `createSlice` `extraReducers` from the object form to builder callbacks (the object form was removed), and convert `configureStore` middleware to the callback form.
-   - react-redux 9: replace typed hooks with `useDispatch.withTypes<AppDispatch>()` / `useSelector.withTypes<RootState>()` in `app/Hooks/redux.ts`.
+   - react-redux 9: replace typed hooks with `useDispatch.withTypes<AppDispatch>()` / `useSelector.withTypes<RootState>()` in `app/hooks/redux.ts`.
    - redux-persist: keep the **same persist `key`, `version`, and whitelist** so stored state rehydrates. If the shape has to change, add a `migrate` step and a version bump. Configure the serializable-check ignore list for persist actions.
 5. **Remove** the compat imports and any leftover `firebase` namespace usage. Confirm with `grep -r "firebase/compat\|from 'firebase'" app`, which should return nothing.
 6. **Tests**, using A7's Jest setup once it's merged, or a local one meanwhile: write reducer unit tests for each slice, and thunk tests with the Firebase modules mocked, covering at least the plan and workout save/load paths.
