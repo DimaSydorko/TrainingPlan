@@ -12,10 +12,11 @@
     "prebuild": "expo prebuild --clean",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "format": "prettier --write \"app/**/*.{js,ts,tsx}\" \"__tests__/**/*.{js,ts,tsx}\" \"e2e/**/*.yaml\" \"*.{js,ts}\"",
-    "format:check": "prettier --check \"app/**/*.{js,ts,tsx}\" \"__tests__/**/*.{js,ts,tsx}\" \"e2e/**/*.yaml\" \"*.{js,ts}\"",
+    "format": "prettier --write \"app/**/*.{js,ts,tsx}\" \"e2e/**/*.yaml\" \"*.{js,ts}\"",
+    "format:check": "prettier --check \"app/**/*.{js,ts,tsx}\" \"e2e/**/*.yaml\" \"*.{js,ts}\"",
     "e2e:android": "maestro test -e APP_ID=com.trainingplantogether_cli -e E2E_EMAIL=\"$E2E_EMAIL\" -e E2E_PASSWORD=\"$E2E_PASSWORD\" e2e/",
-    "e2e:ios": "maestro test -e APP_ID=com.trainingplantogether-cli -e E2E_EMAIL=\"$E2E_EMAIL\" -e E2E_PASSWORD=\"$E2E_PASSWORD\" e2e/"
+    "e2e:ios": "maestro test -e APP_ID=com.trainingplantogether-cli -e E2E_EMAIL=\"$E2E_EMAIL\" -e E2E_PASSWORD=\"$E2E_PASSWORD\" e2e/",
+    "prepare": "husky || true"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
@@ -68,6 +69,9 @@
     "eslint": "^9.39.5",
     "eslint-config-expo": "~57.0.2",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^3.10.1",
+    "eslint-plugin-check-file": "^3.3.2",
+    "husky": "^9.1.7",
     "jest": "^29.7.0",
     "jest-expo": "~57.0.5",
     "prettier": "^2.6.2",

@@ -1,6 +1,6 @@
-# Maestro workspace config (owned by A7). Run from the repo root:
+# Maestro workspace config. Run from the repo root:
 #   maestro test -e APP_ID=com.trainingplantogether_cli -e E2E_EMAIL=... -e E2E_PASSWORD=... e2e/
-# iOS: APP_ID=com.trainingplantogether-cli (see DECISIONS.md D1). Full instructions: docs/migration/TESTING.md.
+# iOS: APP_ID=com.trainingplantogether-cli (bundle ID still open, docs/release-checklist.md Q1). Full instructions: docs/testing.md.
 # Flows need a development or preview build installed on the device/emulator/simulator and a
 # Firebase test account. Never commit credentials.
 flows:

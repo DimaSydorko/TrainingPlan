@@ -1,4 +1,4 @@
-# Mobile app checks (owned by A7). The admin panel (admin/) is not covered here.
+# Mobile app checks. The admin panel (admin/) is not covered here.
 name: CI
 
 on:
@@ -39,7 +39,7 @@ jobs:
         run: npm run format:check
 
       # TODO: drop continue-on-error once the React Native Directory check passes. It may still flag
-      # react-native-draggable-flatlist and react-native-countdown-circle-timer (see STATUS.md).
+      # react-native-draggable-flatlist and react-native-countdown-circle-timer.
       - name: expo-doctor
         run: npx expo-doctor
         continue-on-error: true

@@ -1,0 +1,24 @@
+# Mechanical checks on staged files. The AI review/test-writing lives in the /pre-commit Claude command.
+# Skip once with: git commit --no-verify   (or HUSKY=0 git commit)
+
+files=$(git diff --cached --name-only --diff-filter=ACMR -- '*.ts' '*.tsx' '*.js' ':!admin/**' ':!android/**' ':!ios/**')
+
+if [ -z "$files" ]; then
+  echo "pre-commit: no staged .ts/.tsx/.js files, skipping checks"
+  exit 0
+fi
+
+echo "pre-commit: type check"
+npx tsc --noEmit || exit 1
+
+echo "pre-commit: lint (staged)"
+echo "$files" | xargs npx eslint --no-warn-ignored || exit 1
+
+echo "pre-commit: prettier (staged)"
+echo "$files" | xargs npx prettier --check || {
+  echo "Run: npx prettier --write <files> (or npm run format)"
+  exit 1
+}
+
+echo "pre-commit: related tests"
+echo "$files" | xargs npx jest --bail --findRelatedTests --passWithNoTests || exit 1

@@ -1,6 +1,6 @@
 // Small Firestore helpers shared by the thunks.
 import { CollectionReference, DocumentData, doc, writeBatch } from 'firebase/firestore'
-import { db } from '../Utils/firebase'
+import { db } from '@utils/firebase'
 import { splitUid, Syncable } from './sync'
 
 // Firestore allows 500 writes per batch.

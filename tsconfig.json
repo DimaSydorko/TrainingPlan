@@ -1,7 +1,7 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    // Path to `strict: true` is in docs/migration/TESTING.md ("TypeScript strictness roadmap").
+    // Path to `strict: true` is in docs/testing.md ("TypeScript strictness roadmap").
     // `strict` stays off; the strict-family flags below already pass and are enabled one by one.
     "strict": false,
     "alwaysStrict": true,
@@ -9,7 +9,37 @@
     "noImplicitThis": true,
     "strictBuiltinIteratorReturn": true,
     "noFallthroughCasesInSwitch": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@assets": ["./app/assets"],
+      "@assets/*": ["./app/assets/*"],
+      "@common": ["./app/common"],
+      "@common/*": ["./app/common/*"],
+      "@components": ["./app/components"],
+      "@components/*": ["./app/components/*"],
+      "@hooks": ["./app/hooks"],
+      "@hooks/*": ["./app/hooks/*"],
+      "@platform": ["./app/platform"],
+      "@platform/*": ["./app/platform/*"],
+      "@routers": ["./app/routers"],
+      "@routers/*": ["./app/routers/*"],
+      "@screens": ["./app/screens"],
+      "@screens/*": ["./app/screens/*"],
+      "@store": ["./app/store"],
+      "@store/*": ["./app/store/*"],
+      "@theme": ["./app/theme"],
+      "@theme/*": ["./app/theme/*"],
+      "@utils": ["./app/utils"],
+      "@utils/*": ["./app/utils/*"],
+      "@lib": ["./app/lib"],
+      "@lib/*": ["./app/lib/*"],
+      "@api": ["./app/api"],
+      "@api/*": ["./app/api/*"],
+      "@services": ["./app/services"],
+      "@services/*": ["./app/services/*"],
+      "@stores": ["./app/stores"],
+      "@stores/*": ["./app/stores/*"]
+    }
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "admin"]
