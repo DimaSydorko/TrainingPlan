@@ -14,7 +14,8 @@ Run `git $ARGUMENTS` and show the output. Ask before anything destructive (`rese
 ## `/git commit`
 
 1. **Check state.** `git status --short` and `git branch --show-current`. Nothing to commit → say so and stop.
-   On `main` → ask whether to commit there or create a branch first (suggest a name); wait for the answer.
+   On `main`/`dev` → ask whether to commit there or create a branch first; for a branch ask the Trello card id and
+   suggest `'#<id>-<2-4-kebab-words>'` (always quoted); wait for the answer.
 2. **Pre-commit.** Follow `.claude/commands/pre-commit.md` on all uncommitted changes (review → write tests → run
    tests → record the pass). If it ends with "Ready to commit: no", stop and show what blocks the commit.
 3. **Stage.** If something is already staged, commit only that and list what stays unstaged. If nothing is staged,

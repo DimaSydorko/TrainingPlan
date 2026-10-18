@@ -4,6 +4,7 @@
 files=$(git diff --cached --name-only --diff-filter=ACMR -- '*.ts' '*.tsx' '*.js' ':!admin/**' ':!android/**' ':!ios/**')
 
 if [ -z "$files" ]; then
+  echo "pre-commit: no staged .ts/.tsx/.js files, skipping checks"
   exit 0
 fi
 

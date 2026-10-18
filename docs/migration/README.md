@@ -2,7 +2,7 @@
 
 This is the master plan for moving **TrainingPlan** from bare React Native 0.68 to **Expo SDK 57** and a current library stack. Several agents do the work in parallel, each in its own git worktree. Every agent reads this file first and then its own brief in `agents/`.
 
-> Status: planning. Decisions D1–D6 below must be answered by Dmytro before Phase 1 starts.
+> Status: see [STATUS.md](STATUS.md). This file is the original plan and is kept for history.
 
 ---
 

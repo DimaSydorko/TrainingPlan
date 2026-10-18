@@ -1,0 +1,10 @@
+# Warns (never blocks) when the branch name doesn't follow '#<trello-id>-<2-4-kebab-words>'.
+branch=$(git branch --show-current)
+case "$branch" in
+  main|dev|migration/*|"") exit 0 ;;
+esac
+if ! printf '%s' "$branch" | grep -Eq '^#[0-9]+-[a-z0-9]+(-[a-z0-9]+){1,3}$'; then
+  echo "pre-push: warning: branch '$branch' should be '#<trello-id>-<2-4-kebab-words>', e.g. '#12-readme-for-llms'"
+  echo "pre-push: rename with: git branch -m '#<id>-<words>'"
+fi
+exit 0

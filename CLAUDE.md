@@ -22,5 +22,6 @@ Expo SDK 57 RN app (Android/iOS): plans, workouts, timer playback, AI integraton
 - `testID` = `screen.element`, used by Maestro (`e2e/`) — don't rename.
 
 ## Verify
+Branch `'#<trello-id>-<2-4-kebab-words>'` (quote it: `#` starts a shell comment). PRs → `main`.
 Before every `git commit` run `/pre-commit` (review → tests → checks); a hook blocks commits without a fresh pass. Never write `.claude/.pre-commit-ok` yourself. Husky re-checks staged files.
 `npx tsc --noEmit && npm run lint && npm test` (lint: 0 errors, warnings must not grow).
