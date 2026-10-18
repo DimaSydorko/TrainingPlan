@@ -5,7 +5,7 @@ Before you add code, understand what already exists, where it belongs, and how f
 **Organizing idea — blast radius.** Every edit to a _shared surface_ ripples to every importer. The shared surfaces
 are: `app/common/**`, `app/components/**`, `app/theme/**`, `app/hooks/**`, `app/utils/**`, `app/platform/**`,
 `app/lib/**`, `app/api/**`, `app/services/**`, `app/stores/**`, legacy `app/store/**`, `app/routers/**` (plus
-`ScreenName` and the param lists), `app.config.ts`, and the Jest setup in `__tests__/setup/**`. A change there is
+`ScreenName` and the param lists), `app.config.ts`, and the Jest setup in `app/__tests__/setup/**`. A change there is
 never "just one file".
 
 Lower-level rules live in their own contracts and are not repeated here:

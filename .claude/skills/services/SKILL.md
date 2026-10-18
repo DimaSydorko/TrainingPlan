@@ -137,10 +137,10 @@ Online-only mutation (publish, copy publication): invalidate on success; the scr
 
 ## Step 6 — Tests
 
--   `app/api/plans/__tests__/mappers.test.ts` — row ↔ domain both ways, nullable columns.
--   `app/api/plans/__tests__/get-plans.test.ts` — mock `../../../lib/supabase/client`; success maps rows, `error`
+-   `app/__tests__/api/plans/mappers.test.ts` — row ↔ domain both ways, nullable columns.
+-   `app/__tests__/api/plans/get-plans.test.ts` — mock `@lib/supabase/client`; success maps rows, `error`
     throws.
--   `app/services/plans/__tests__/use-plans.test.tsx` — `renderHook` with a fresh `QueryClient`
+-   `app/__tests__/services/plans/use-plans.test.tsx` — `renderHook` with a fresh `QueryClient`
     (`retry: false`) wrapper; mock the fetcher module; assert data, `enabled` gating, and invalidation/rollback for
     mutations.
 

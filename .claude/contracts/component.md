@@ -13,7 +13,7 @@
 | ------------ | --------------------------------------------------- | ------------------------------------------------------------------------------- |
 | **Minimal**  | Pure presentational, no own styles                  | `component-name.tsx`                                                            |
 | **Standard** | Has styles; optionally constants/helpers            | `component-name.tsx` + `component-name.styles.ts` (+ `component-name.constants.ts`) |
-| **Complex**  | Has sub-components, contexts or co-located hooks    | Standard files + `components/`, `hooks/`, `__tests__/` subfolders               |
+| **Complex**  | Has sub-components, contexts or co-located hooks    | Standard files + `components/`, `hooks/` subfolders                             |
 
 ### Naming
 

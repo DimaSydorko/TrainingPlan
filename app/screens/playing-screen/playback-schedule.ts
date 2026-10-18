@@ -1,5 +1,5 @@
 // Pure, timestamp-based workout schedule. No React, no native modules, so it can be unit
-// tested in isolation (see __tests__/playbackSchedule.test.ts).
+// tested in isolation (see app/__tests__/screens/playing-screen/playback-schedule.test.ts).
 //
 // A workout is flattened into segments, one per (exercise, lap). Each segment is a countdown of the
 // exercise's `breakTimeInSec`. When a segment's countdown ends the player moves to the next segment:

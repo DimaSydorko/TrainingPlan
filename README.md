@@ -59,7 +59,7 @@ app/
   api/<entity>      TARGET fetchers + row→domain mappers
   services/<entity> TARGET React Query hooks + query-keys.ts
   stores/<name>     TARGET Zustand stores
-__tests__/          Jest setup and app-level tests (unit tests sit next to code in __tests__/)
+  __tests__/        all tests: Jest setup, utils, app-level tests; unit tests mirror app/ paths
 e2e/                Maestro flows — rely on testID = `screen.element`
 admin/              separate web admin (MUI, own package.json) — not covered by root lint, hooks or CI
 docs/               build (EAS, signing, Firebase), testing, release checklist
@@ -110,7 +110,7 @@ Pattern `^#[0-9]+-[a-z0-9]+(-[a-z0-9]+){1,3}$`; `main`, `dev` and legacy `migrat
 
 ## Testing
 
-- Unit: Jest (`jest-expo`) + React Native Testing Library 14 (async APIs). Tests next to the code in `__tests__/`.
+- Unit: Jest (`jest-expo`) + React Native Testing Library 14 (async APIs). All tests in `app/__tests__/`, mirroring the `app/` paths they test.
 - E2E: Maestro flows in `e2e/` select elements by `testID`.
 - Setup, mocks, Maestro, manual plan: [docs/testing.md](docs/testing.md). Before a release: [docs/release-checklist.md](docs/release-checklist.md).
 

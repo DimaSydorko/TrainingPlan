@@ -86,13 +86,14 @@ export default StyleSheet.create({
 
 ## Step 5 — Tests
 
-`workout-card/__tests__/workout-card.test.tsx` — a render test and an interaction test (see `/unit-tests`).
+`app/__tests__/components/workout-card/workout-card.test.tsx` — a render test and an interaction test (see `/unit-tests`).
 
 ```tsx
 import { screen, userEvent } from '@testing-library/react-native'
 
-import { renderWithStore } from '../../../../__tests__/utils/render'
-import WorkoutCard from '../workout-card'
+import WorkoutCard from '@components/workout-card/workout-card'
+
+import { renderWithStore } from '../../utils/render'
 
 describe('WorkoutCard', () => {
   it('calls onPress when tapped', async () => {

@@ -171,32 +171,29 @@ module.exports = defineConfig([
   {
     // Everything above the data layer: screens, components, hooks, stores, routers.
     files: ['app/**'],
-    ignores: ['app/api/**', 'app/services/**', 'app/lib/**', 'app/**/__tests__/**'],
+    ignores: ['app/api/**', 'app/services/**', 'app/lib/**', 'app/__tests__/**'],
     rules: { 'no-restricted-imports': restrictImports(...supabaseClientPatterns, apiLayerPattern) },
   },
   {
     // kebab-case paths. __tests__ is Jest's convention.
-    files: ['app/**', '__tests__/**'],
+    files: ['app/**'],
     plugins: { 'check-file': checkFile },
     rules: {
-      'check-file/folder-naming-convention': [
-        'error',
-        { 'app/**/!(__tests__)/': 'KEBAB_CASE', '__tests__/**/!(__tests__)/': 'KEBAB_CASE' },
-      ],
+      'check-file/folder-naming-convention': ['error', { 'app/**/': 'KEBAB_CASE' }, { ignoreWords: ['__tests__'] }],
       'check-file/filename-naming-convention': [
         'error',
-        { '{app,__tests__}/**/*.{ts,tsx,js}': 'KEBAB_CASE' },
+        { 'app/**/*.{ts,tsx,js}': 'KEBAB_CASE' },
         { ignoreMiddleExtensions: true },
       ],
     },
   },
   {
     // Node-side files: Jest/ESLint/Babel/Metro config and Jest setup.
-    files: ['*.config.js', '.prettierrc.js', '__tests__/setup/**'],
+    files: ['*.config.js', '.prettierrc.js', 'app/__tests__/setup/**'],
     languageOptions: { globals: { ...globals.node } },
   },
   {
-    files: ['__tests__/**', 'app/**/__tests__/**'],
+    files: ['app/__tests__/**'],
     languageOptions: { globals: { ...globals.jest, ...globals.node } },
     // require() is idiomatic inside jest.mock factories and jest.isolateModules.
     rules: { '@typescript-eslint/no-require-imports': 'off' },

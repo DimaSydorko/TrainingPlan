@@ -32,7 +32,7 @@ Ignore: `package-lock.json`, `yarn.lock`, `docs/**`, `app/lib/supabase/database.
     - components / screens → DRY, SRP, OCP, Separation of concerns (`component.md`, `styles.md`)
     - always → Primitive obsession, Migration hygiene, and the `.claude/commands/code-style.md` checklist on the
       changed lines
-4. Check missing tests: changed logic without a matching `__tests__/*.test.ts(x)` change → 🟠.
+4. Check missing tests: changed logic without a matching `app/__tests__/<mirrored path>/*.test.ts(x)` change → 🟠.
 5. Report only problems in changed lines or caused by them. No praise, no restating the diff.
 
 ## Output (exactly this shape)

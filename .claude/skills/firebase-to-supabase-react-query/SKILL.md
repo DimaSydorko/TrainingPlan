@@ -49,8 +49,8 @@ Do not assume A. **Never create or switch branches yourself** — ask the user.
         `onError` → toast, AsyncStorage persister
 -   [ ] `app.tsx`: `PersistQueryClientProvider` with `onSuccess={() => queryClient.resumePausedMutations()}` —
         inside the existing Redux providers for now
--   [ ] Jest: mock for `app/lib/supabase/client` in `__tests__/setup/mocks/`, a `createTestQueryClient()` +
-        `renderWithQueryClient` util in `__tests__/utils/`
+-   [ ] Jest: mock for `app/lib/supabase/client` in `app/__tests__/setup/mocks/`, a `createTestQueryClient()` +
+        `renderWithQueryClient` util in `app/__tests__/utils/`
 -   [ ] ESLint layer rules active (`eslint.config.js`)
 -   [ ] `npx tsc --noEmit`, `npm run lint`, `npm test`, `npx expo export` pass; no Firebase/Redux code removed
 

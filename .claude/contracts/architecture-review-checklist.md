@@ -35,7 +35,7 @@ git diff --name-only HEAD          # uncommitted
 | Navigation                 | `app/routers/**`                                             | every screen transition and deep link                       |
 | Native config              | `app.config.ts`, `eas.json`, `package.json` deps             | needs a new build; can break store builds                   |
 | Database                   | `supabase/migrations/**`                                     | RLS and schema for all users; irreversible once applied     |
-| Test setup                 | `__tests__/setup/**`                                         | every test file                                             |
+| Test setup                 | `app/__tests__/setup/**`                                     | every test file                                             |
 
 Everything else (one screen's own files, a screen-local hook/store) is **screen-local**.
 

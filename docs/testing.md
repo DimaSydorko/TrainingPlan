@@ -9,14 +9,14 @@ Unit tests, the TypeScript strictness roadmap, Maestro E2E flows and the manual 
 | Path | What |
 |---|---|
 | `jest.config.js` | `preset: 'jest-expo'`, test locations, transform allow-list, setup files |
-| `__tests__/setup/jest.setup.js` | Registers the module mocks below (runs before each test file) |
-| `__tests__/setup/jest.setupAfterEnv.js` | Reanimated 4 test setup |
-| `__tests__/setup/mocks/*.js` | The mock implementations |
-| `__tests__/utils/` | `createTestStore`, `getInitialState`, `createBootstrappedPersistor`, `renderWithStore` |
-| `__tests__/*.test.ts(x)` | App-level tests: App smoke test, store persistence, mocks, helpers |
-| `app/**/__tests__/*.test.ts(x)` | Unit tests that live next to the code they test |
+| `app/__tests__/setup/jest.setup.js` | Registers the module mocks below (runs before each test file) |
+| `app/__tests__/setup/jest.setupAfterEnv.js` | Reanimated 4 test setup |
+| `app/__tests__/setup/mocks/*.js` | The mock implementations |
+| `app/__tests__/utils/` | `createTestStore`, `getInitialState`, `createBootstrappedPersistor`, `renderWithStore` |
+| `app/__tests__/*.test.ts(x)` | App-level tests: App smoke test, store persistence, mocks, helpers |
+| `app/__tests__/<path>/*.test.ts(x)` | Unit tests, in a mirror of the `app/` path they test (`app/__tests__/platform/` tests `app/platform/`) |
 
-Only files named `*.test.ts`, `*.test.tsx` or `*.test.js` are run. Other files inside `__tests__` folders (fixtures, helpers) are ignored by the runner.
+Only files named `*.test.ts`, `*.test.tsx` or `*.test.js` are run. Other files inside `app/__tests__/` (setup, utils, fixtures) are ignored by the runner.
 
 Libraries: `jest-expo` 57, `jest` 29, `@testing-library/react-native` 14 (with its `test-renderer` peer). RNTL 14 is **async**: `await render(...)`, `await fireEvent.press(...)`, `await userEvent.press(...)`. Its matchers (`toBeOnTheScreen`, `toHaveTextContent`, ...) are available as soon as a test imports anything from `@testing-library/react-native`.
 
@@ -53,20 +53,21 @@ For data-layer tests, mock one level higher than Firebase, e.g. `jest.mock('@uti
 ### Store helpers
 
 ```tsx
-import { renderWithStore } from '../../../__tests__/utils/render'
+// in app/__tests__/screens/settings-screen/
+import { renderWithStore } from '../../utils/render'
 
 const { store } = await renderWithStore(<SettingsScreen />, {
   preloadedState: { settingsReducer: { isVibration: false } }, // deep-merged over the slices' initial state
 })
 ```
 
-`createTestStore` uses the real slice reducers without redux-persist. To test persistence itself, load the real `app/store` inside `jest.isolateModules` (see `__tests__/store.test.ts`).
+`createTestStore` uses the real slice reducers without redux-persist. To test persistence itself, load the real `app/store` inside `jest.isolateModules` (see `app/__tests__/store.test.ts`).
 
 ### Writing tests
 
-- Put them in a `__tests__` folder next to the code, e.g. `app/platform/__tests__/media-utils.test.ts`.
+- Put them in `app/__tests__/` under the same path as the code, e.g. `app/platform/media-utils.ts` → `app/__tests__/platform/media-utils.test.ts`. Import the code under test via `@<folder>/…`; test helpers via a relative path.
 - Prefer testing pure functions (timers, formatting, reducers, mapping Firebase docs) over rendering whole screens.
-- A missing native-module mock goes into `__tests__/setup/mocks/` and is registered in `jest.setup.js`.
+- A missing native-module mock goes into `app/__tests__/setup/mocks/` and is registered in `jest.setup.js`.
 
 ---
 
@@ -88,7 +89,7 @@ const { store } = await renderWithStore(<SettingsScreen />, {
 | — | `noUnusedLocals` / `noUnusedParameters` | 71 / 5 | Not recommended: ESLint's `@typescript-eslint/no-unused-vars` already reports these as warnings without blocking the build |
 | — | `exactOptionalPropertyTypes` | 132 | Not recommended: noisy with React Native style types |
 
-Test code under `__tests__/` already compiles with `--strict`. Keep it that way.
+Test code in `app/__tests__/` already compiles with `--strict`. Keep it that way.
 
 ---
 

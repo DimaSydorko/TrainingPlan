@@ -22,7 +22,7 @@
     `get*` / `create*` / `update*` / `delete*`; React Query hooks are `use*`.
 -   Components in PascalCase. Constants in SCREAMING_SNAKE_CASE.
 -   **Files and folders: kebab-case** (`workout-card/workout-card.tsx`, `use-plans.ts`, `query-keys.ts`); ESLint
-    `check-file` errors otherwise. Exempt: `__tests__/`, snake_case sound assets.
+    `check-file` errors otherwise. Exempt: `__tests__/` folder names, snake_case sound assets.
 -   **Imports:** another core folder → `@<folder>/…` (`@store/…`, `@utils/types`, `@common`); same core folder →
     relative. Aliases: tsconfig `paths` + `moduleNameMapper` in `jest.config.js` — add a new core folder to both.
 -   Event handler functions `handle*` (`handlePress`), callback props `on*` (`onPress`). See
