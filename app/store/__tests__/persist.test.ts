@@ -1,5 +1,5 @@
 // Guards the redux-persist config: changing it would drop the state stored by the pre-migration app.
-jest.mock('../../Utils/firebase', () => ({ auth: {}, db: {}, rtdb: {} }))
+jest.mock('../../utils/firebase', () => ({ auth: {}, db: {}, rtdb: {} }))
 jest.mock('firebase/auth', () => ({ onAuthStateChanged: jest.fn(() => () => {}) }))
 jest.mock('firebase/firestore', () => ({}))
 jest.mock('firebase/database', () => ({}))

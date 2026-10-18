@@ -1,0 +1,87 @@
+import * as React from 'react'
+import { memo, useEffect, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+import Slider from '@react-native-community/slider'
+import { useSettings } from '../../hooks/redux'
+import { Divider, FlexSpaceBetween, TextOrdinary, TextSecondary } from '../../theme/parents'
+import { appScreen } from '../../utils/constants'
+import { MySwitch } from '../../common'
+
+interface IProps {
+  label: string
+  valueSwitch?: boolean
+  onToggleSwitch?: () => void
+  valueSlider?: number
+  sliderStep?: number
+  sliderMaxValue?: number
+  sliderMinValue?: number
+  sliderValueType?: string
+  onSliderChange?: (v: number) => void
+  /** Passed to the switch (E2E selectors) */
+  testID?: string
+}
+
+export default memo(function SettingsItem({
+  label,
+  valueSwitch,
+  onToggleSwitch,
+  valueSlider = 0,
+  sliderStep = 0.25,
+  sliderMaxValue = 1,
+  sliderMinValue = 0,
+  sliderValueType = '',
+  onSliderChange,
+  testID,
+}: IProps) {
+  const { colors } = useSettings()
+  const [valSlider, setValSlider] = useState<number>(valueSlider)
+
+  useEffect(() => {
+    setValSlider(p => (p !== valueSlider ? valueSlider : p))
+  }, [valueSlider])
+
+  return (
+    <View style={styles.container}>
+      <FlexSpaceBetween style={styles.content}>
+        <TextOrdinary style={{ width: appScreen.vw - 100 }}>{label}</TextOrdinary>
+        {!!onToggleSwitch && <MySwitch value={valueSwitch} onValueChange={onToggleSwitch} testID={testID} />}
+        {!!onSliderChange && (
+          <TextSecondary>
+            {valSlider}
+            {sliderValueType}
+          </TextSecondary>
+        )}
+      </FlexSpaceBetween>
+      {!!onSliderChange && (
+        <Slider
+          value={valSlider}
+          minimumValue={sliderMinValue}
+          step={sliderStep}
+          maximumValue={sliderMaxValue}
+          onValueChange={v => setValSlider(Math.round(v * 100) / 100)}
+          style={styles.slider}
+          thumbTintColor={colors.secondPrimary}
+          maximumTrackTintColor={colors.disabled}
+          minimumTrackTintColor={colors.secondPrimary}
+          // The native slider (community/slider 5) does not deliver responder events reliably
+          onSlidingComplete={v => onSliderChange(Math.round(v * 100) / 100)}
+        />
+      )}
+      <Divider width={1} color={`${colors.black}40`} />
+    </View>
+  )
+})
+
+const styles = StyleSheet.create({
+  container: {
+    width: appScreen.vw,
+  },
+  content: {
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+  },
+  slider: {
+    marginBottom: 10,
+    marginHorizontal: 2,
+  },
+})

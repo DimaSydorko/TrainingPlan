@@ -2,8 +2,8 @@
 // Uses the imperative createAudioPlayer API because callers live outside components
 // (usePlaying keeps one player per playing screen). Every created player must be released.
 import { AudioPlayer, createAudioPlayer, setAudioModeAsync } from 'expo-audio'
-import { SoundType } from '../Utils/constants'
-import { buildAudioMode, durationToMs, normalizeVolume } from './mediaUtils'
+import { SoundType } from '../utils/constants'
+import { buildAudioMode, durationToMs, normalizeVolume } from './media-utils'
 
 export type SoundPlayer = {
   play(): void
@@ -13,17 +13,17 @@ export type SoundPlayer = {
   readonly durationMs?: number
 }
 
-// SoundType values are the mp3 file names (app/Utils/constants.ts). Metro needs static requires.
+// SoundType values are the mp3 file names (app/utils/constants.ts). Metro needs static requires.
 const SOUND_SOURCES: Record<SoundType, number> = {
-  [SoundType.Bell]: require('../Assets/sounds/bell.mp3'),
-  [SoundType.DigitalClock]: require('../Assets/sounds/digital_clock.mp3'),
-  [SoundType.DoubleDing]: require('../Assets/sounds/double_ding.mp3'),
-  [SoundType.HopBell]: require('../Assets/sounds/hop_bell.mp3'),
+  [SoundType.Bell]: require('../assets/sounds/bell.mp3'),
+  [SoundType.DigitalClock]: require('../assets/sounds/digital_clock.mp3'),
+  [SoundType.DoubleDing]: require('../assets/sounds/double_ding.mp3'),
+  [SoundType.HopBell]: require('../assets/sounds/hop_bell.mp3'),
 }
 // 20 s of digital silence. Played (inaudibly) while speech is spoken with ducking on, so that
 // expo-audio takes audio focus (Android) / activates the duckOthers session (iOS). expo-speech
 // has no ducking of its own. See beginDucking().
-const SILENCE_SOURCE: number = require('../Assets/sounds/silence.mp3')
+const SILENCE_SOURCE: number = require('../assets/sounds/silence.mp3')
 
 function sourceFor(type: SoundType | undefined): number {
   return (type && SOUND_SOURCES[type]) || SOUND_SOURCES[SoundType.Bell]

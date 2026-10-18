@@ -3,7 +3,7 @@
 // here (mediaUtils.legacyRateToExpo / legacyPitchToExpo), so saved settings sound the same.
 import * as Speech from 'expo-speech'
 import { beginDucking, configureAudioSession } from './audio'
-import { legacyPitchToExpo, legacyRateToExpo, normalizeVolume, pickBestVoice } from './mediaUtils'
+import { legacyPitchToExpo, legacyRateToExpo, normalizeVolume, pickBestVoice } from './media-utils'
 
 type Defaults = { rate?: number; pitch?: number; duck: boolean; voice?: string }
 const defaults: Defaults = { duck: false }

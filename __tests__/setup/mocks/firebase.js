@@ -1,6 +1,6 @@
 /**
  * Firebase mock that works for both the compat (v8 namespaced) API that A0 left in
- * app/Utils/firebase.ts and the modular API A1 is moving to. Every property access and every call
+ * app/utils/firebase.ts and the modular API A1 is moving to. Every property access and every call
  * returns another chainable stub, so module-level code such as
  *   firebase.initializeApp(cfg); firebase.firestore().collection('x')
  *   initializeAuth(app, { persistence: getReactNativePersistence(AsyncStorage) })
@@ -12,7 +12,7 @@
  * Callbacks passed in are never invoked and iterating a stub yields nothing.
  *
  * Tests that need real behaviour should mock at a higher level in the test file, e.g.
- * `jest.mock('../../Utils/firebase')` or spy on the thunk under test.
+ * `jest.mock('../../utils/firebase')` or spy on the thunk under test.
  */
 function createStub(path, thenable = false) {
   const children = new Map()

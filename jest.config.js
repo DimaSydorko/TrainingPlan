@@ -19,6 +19,6 @@ module.exports = {
     'node_modules/(?!((jest-)?react-native|@react-native(-community)?|@react-native-async-storage|@react-native-google-signin|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|react-redux|redux|reselect|redux-persist|@reduxjs/toolkit|immer|nanoid|firebase|@firebase/.*))',
   ],
   modulePathIgnorePatterns: ['<rootDir>/admin/', '<rootDir>/android/', '<rootDir>/ios/', '<rootDir>/dist/'],
-  collectCoverageFrom: ['app/**/*.{ts,tsx}', '!app/**/__tests__/**', '!app/**/*.d.ts', '!app/Assets/**'],
+  collectCoverageFrom: ['app/**/*.{ts,tsx}', '!app/**/__tests__/**', '!app/**/*.d.ts', '!app/assets/**'],
   clearMocks: true,
 }

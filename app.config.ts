@@ -47,7 +47,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     scheme: `trainingplan${idSuffix.replace('.', '-')}`,
     version: pkg.version,
     orientation: 'portrait',
-    icon: './app/Assets/icons/Icon.png',
+    icon: './app/assets/icons/icon.png',
     userInterfaceStyle: 'automatic',
     ios: {
       bundleIdentifier: IOS_BUNDLE_ID + idSuffix,
@@ -56,13 +56,10 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     android: {
       package: ANDROID_PACKAGE + idSuffix,
       adaptiveIcon: {
-        foregroundImage: './app/Assets/icons/Icon.png',
+        foregroundImage: './app/assets/icons/icon.png',
         backgroundColor: '#3DDC84',
       },
-      permissions: [
-        'VIBRATE',
-        'POST_NOTIFICATIONS',
-      ],
+      permissions: ['VIBRATE', 'POST_NOTIFICATIONS'],
       blockedPermissions: [
         'android.permission.READ_EXTERNAL_STORAGE',
         'android.permission.WRITE_EXTERNAL_STORAGE',
@@ -90,14 +87,14 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         {
           color: '#3c8739',
           sounds: [
-            './app/Assets/sounds/bell.mp3',
-            './app/Assets/sounds/digital_clock.mp3',
-            './app/Assets/sounds/double_ding.mp3',
-            './app/Assets/sounds/hop_bell.mp3',
-            './app/Screens/PlayingScreen/notificationSounds/bell_cue.caf',
-            './app/Screens/PlayingScreen/notificationSounds/digital_clock_cue.caf',
-            './app/Screens/PlayingScreen/notificationSounds/double_ding_cue.caf',
-            './app/Screens/PlayingScreen/notificationSounds/hop_bell_cue.caf',
+            './app/assets/sounds/bell.mp3',
+            './app/assets/sounds/digital_clock.mp3',
+            './app/assets/sounds/double_ding.mp3',
+            './app/assets/sounds/hop_bell.mp3',
+            './app/screens/playing-screen/notification-sounds/bell_cue.caf',
+            './app/screens/playing-screen/notification-sounds/digital_clock_cue.caf',
+            './app/screens/playing-screen/notification-sounds/double_ding_cue.caf',
+            './app/screens/playing-screen/notification-sounds/hop_bell_cue.caf',
           ],
         },
       ],

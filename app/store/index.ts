@@ -1,12 +1,12 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
-import userReducer from './UserReducer/UserSlice'
-import plansReducer from './PlansReducer/PlansSlice'
-import workoutReducer from './WorkoutReducer/WorkoutSlice'
-import settingsReducer from './SettingsReducer/SettingsSlice'
-import publicationsReducer from './PublicationsReducer/PublicationsSlice'
-import { listenToAuthChanges } from './UserReducer/authListener'
+import userReducer from './user-reducer/user-slice'
+import plansReducer from './plans-reducer/plans-slice'
+import workoutReducer from './workout-reducer/workout-slice'
+import settingsReducer from './settings-reducer/settings-slice'
+import publicationsReducer from './publications-reducer/publications-slice'
+import { listenToAuthChanges } from './user-reducer/auth-listener'
 
 const rootReducer = combineReducers({
   userReducer,

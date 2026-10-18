@@ -8,24 +8,24 @@ const globals = require('globals')
 const checkFile = require('eslint-plugin-check-file')
 
 // Libraries removed by the migration. Their replacements live behind the seams in app/platform and
-// app/Common/Icon (docs/migration/README.md §6).
+// app/common/icon (docs/migration/README.md §6).
 const removedLibraries = [
   { name: 'react-native-sound', message: 'Removed in the Expo migration. Use app/platform/audio.ts (expo-audio).' },
   { name: 'react-native-tts', message: 'Removed in the Expo migration. Use app/platform/speech.ts (expo-speech).' },
   {
     name: 'react-native-keep-awake',
-    message: 'Removed in the Expo migration. Use app/platform/keepAwake.ts (expo-keep-awake).',
+    message: 'Removed in the Expo migration. Use app/platform/keep-awake.ts (expo-keep-awake).',
   },
   {
     name: 'react-native-background-actions',
-    message: 'Removed in the Expo migration. Use app/platform/backgroundSession.ts.',
+    message: 'Removed in the Expo migration. Use app/platform/background-session.ts.',
   },
-  { name: 'react-native-vector-icons', message: 'Removed in the Expo migration. Use app/Common/Icon.' },
-  { name: '@expo/vector-icons', message: 'Deprecated since SDK 56. Use app/Common/Icon.' },
+  { name: 'react-native-vector-icons', message: 'Removed in the Expo migration. Use app/common/icon.' },
+  { name: '@expo/vector-icons', message: 'Deprecated since SDK 56. Use app/common/icon.' },
 ]
 const removedLibraryPatterns = [
-  { group: ['react-native-vector-icons/*'], message: 'Removed in the Expo migration. Use app/Common/Icon.' },
-  { group: ['@expo/vector-icons/*'], message: 'Deprecated since SDK 56. Use app/Common/Icon.' },
+  { group: ['react-native-vector-icons/*'], message: 'Removed in the Expo migration. Use app/common/icon.' },
+  { group: ['@expo/vector-icons/*'], message: 'Deprecated since SDK 56. Use app/common/icon.' },
 ]
 const firebaseCompatPattern = {
   group: ['firebase/compat', 'firebase/compat/*'],
@@ -107,7 +107,7 @@ module.exports = defineConfig([
           message: 'app/api is pure transport.',
         },
         {
-          group: ['**/services/*', '**/stores/*', '**/store/*', '**/Screens/*', '**/Components/*', '**/Common/*'],
+          group: ['**/services/*', '**/stores/*', '**/store/*', '**/screens/*', '**/components/*', '**/common/*'],
           message: 'app/api must not depend on upper layers.',
         }
       ),
