@@ -1,4 +1,4 @@
-import type { IconName } from '../common/icon/icon'
+import type { IconName } from '@common/icon/icon'
 
 export const icon = {
   edit: 'pencil-outline',

@@ -1,6 +1,6 @@
 // Pure helpers for keeping the persisted Redux user in step with the Firebase Auth session.
 import type { User } from 'firebase/auth'
-import { UserType } from '../../utils/types'
+import { UserType } from '@utils/types'
 
 type AuthUserLike = Pick<User, 'uid' | 'displayName' | 'photoURL' | 'email'>
 

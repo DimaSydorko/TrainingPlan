@@ -16,7 +16,7 @@
 //   short explanation first.
 import { Alert, AppState, Platform } from 'react-native'
 import * as Notifications from 'expo-notifications'
-import { SoundType } from '../utils/constants'
+import { SoundType } from '@utils/constants'
 
 export type SessionInfo = {
   title: string

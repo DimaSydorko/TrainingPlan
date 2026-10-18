@@ -1,6 +1,6 @@
 import { TextStyle, ViewStyle } from 'react-native'
 import { StackNavigationOptions } from '@react-navigation/stack'
-import { appScreen } from '../utils/constants'
+import { appScreen } from '@utils/constants'
 
 const headerStyle: ViewStyle = {
   height: appScreen.header,

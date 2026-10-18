@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { TouchableOpacity, ViewStyle } from 'react-native'
 import { Icon } from '../icon/icon'
-import { useSettings } from '../../hooks/redux'
+import { useSettings } from '@hooks/redux'
 import styles from './styles'
-import { useAppInsets } from '../../theme/insets'
+import { useAppInsets } from '@theme/insets'
 
 interface AddMoreButtonType {
   onPress: () => void

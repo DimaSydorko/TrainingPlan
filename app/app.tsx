@@ -8,11 +8,11 @@ import { StatusBar } from 'expo-status-bar'
 import * as SystemUI from 'expo-system-ui'
 import { PersistGate } from 'redux-persist/integration/react'
 import { decode, encode } from 'base-64'
-import { persistedStore, store } from './store'
-import AppHelperProvider from './hooks/app-helper-provider'
-import { useSettings } from './hooks/redux'
-import AuthRouter from './routers/auth-router'
-import { statusBarStyleFor } from './theme/navigation-theme'
+import { persistedStore, store } from '@store'
+import AppHelperProvider from '@hooks/app-helper-provider'
+import { useSettings } from '@hooks/redux'
+import AuthRouter from '@routers/auth-router'
+import { statusBarStyleFor } from '@theme/navigation-theme'
 
 if (!globalThis.btoa) globalThis.btoa = encode
 if (!globalThis.atob) globalThis.atob = decode

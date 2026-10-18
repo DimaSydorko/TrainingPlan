@@ -2,7 +2,7 @@ import * as React from 'react'
 import { memo, useEffect, useRef } from 'react'
 import { Alert, BackHandler, View } from 'react-native'
 import { EventArg, NavigationAction, useNavigation } from '@react-navigation/native'
-import { AppNavigationType } from '../../utils/types'
+import { AppNavigationType } from '@utils/types'
 
 interface IGoBackSubmitModal {
   title?: string

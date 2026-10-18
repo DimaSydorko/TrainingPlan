@@ -1,15 +1,15 @@
 import * as React from 'react'
 import { memo, useCallback, useState } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
-import { Icon } from '../../common/icon/icon'
+import { Icon } from '@common/icon/icon'
 
-import { usePlans, useSettings } from '../../hooks/redux'
-import { AppModal } from '../../common'
-import { PlanType } from '../../utils/types'
-import { Card, TextHeader, TextSecondary } from '../../theme/parents'
-import { icon } from '../../theme/icons'
+import { usePlans, useSettings } from '@hooks/redux'
+import { AppModal } from '@common'
+import { PlanType } from '@utils/types'
+import { Card, TextHeader, TextSecondary } from '@theme/parents'
+import { icon } from '@theme/icons'
 import styles from './styles'
-import { COLORS_EXERCISE, colorsDark } from '../../theme/colors'
+import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
 
 interface PropsType {
   isOpen: boolean

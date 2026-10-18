@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { memo, ReactNode } from 'react'
 import { StyleSheet } from 'react-native'
-import { useSettings } from '../../hooks/redux'
-import { FlexSpaceBetween, TextHeader } from '../../theme/parents'
+import { useSettings } from '@hooks/redux'
+import { FlexSpaceBetween, TextHeader } from '@theme/parents'
 import { IconButton } from '../index'
-import { appScreen } from '../../utils/constants'
-import { SetStateType } from '../../utils/types'
-import { icon } from '../../theme/icons'
+import { appScreen } from '@utils/constants'
+import { SetStateType } from '@utils/types'
+import { icon } from '@theme/icons'
 
 interface ButtonCounterType {
   value: number

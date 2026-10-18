@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { appScreen } from '../../utils/constants'
+import { appScreen } from '@utils/constants'
 import { SvgXml } from 'react-native-svg'
-import { FlexCenter } from '../../theme/parents'
-import { useSettings } from '../../hooks/redux'
+import { FlexCenter } from '@theme/parents'
+import { useSettings } from '@hooks/redux'
 
 export default function EmptySearchIcon() {
   const { colors } = useSettings()

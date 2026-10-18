@@ -1,7 +1,7 @@
 /** Checks the shared test helpers in __tests__/utils. */
 import { Text } from 'react-native'
 import { screen } from '@testing-library/react-native'
-import { useSettings, useUser } from '../app/hooks/redux'
+import { useSettings, useUser } from '@hooks/redux'
 import { renderWithStore } from './utils/render'
 import { getInitialState } from './utils/test-store'
 

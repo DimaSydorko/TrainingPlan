@@ -1,6 +1,6 @@
 import { endAt, limit, orderBy, QueryConstraint, startAt, where, WhereFilterOp } from 'firebase/firestore'
-import { PUBLICATION_QUERY_LIMIT } from '../../utils/constants'
-import { PublicType } from '../../utils/types'
+import { PUBLICATION_QUERY_LIMIT } from '@utils/constants'
+import { PublicType } from '@utils/types'
 
 export const PUBLICATIONS_ORDER_FIELD = 'lastUpdated'
 

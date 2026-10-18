@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { memo } from 'react'
 import { View } from 'react-native'
-import { useSettings } from '../../../hooks/redux'
-import { Timer } from '../../../common'
+import { useSettings } from '@hooks/redux'
+import { Timer } from '@common'
 import { usePlayTimerContext } from './play-timer-provider'
-import { secondsToMinSec } from '../../../components/workout-duration/workout-duration'
-import { theme } from '../../../theme/theme'
-import { FlexSpaceBetween, TextHeader, TextSecondary } from '../../../theme/parents'
+import { secondsToMinSec } from '@components/workout-duration/workout-duration'
+import { theme } from '@theme/theme'
+import { FlexSpaceBetween, TextHeader, TextSecondary } from '@theme/parents'
 import styles from '../styles'
 
 interface IProps {

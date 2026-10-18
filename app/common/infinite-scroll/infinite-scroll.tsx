@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, RefreshControl, ScrollView } from 'react-native'
-import { useSettings } from '../../hooks/redux'
-import { appScreen } from '../../utils/constants'
+import { useSettings } from '@hooks/redux'
+import { appScreen } from '@utils/constants'
 
 interface IProps {
   children: React.ReactNode

@@ -48,7 +48,7 @@ it('asks for permission when it was denied', async () => {
 })
 ```
 
-For data-layer tests, mock one level higher than Firebase, e.g. `jest.mock('../../utils/firebase', () => ({ ... }))` or the specific modular functions your code calls (`jest.mock('firebase/firestore', () => ({ getDocs: jest.fn(), ... }))` in that test file overrides the global stub).
+For data-layer tests, mock one level higher than Firebase, e.g. `jest.mock('@utils/firebase', () => ({ ... }))` or the specific modular functions your code calls (`jest.mock('firebase/firestore', () => ({ getDocs: jest.fn(), ... }))` in that test file overrides the global stub).
 
 ### Store helpers
 

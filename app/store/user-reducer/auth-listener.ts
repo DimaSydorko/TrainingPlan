@@ -1,5 +1,5 @@
 import { onAuthStateChanged, Unsubscribe } from 'firebase/auth'
-import { auth } from '../../utils/firebase'
+import { auth } from '@utils/firebase'
 import type { AppStore } from '../index'
 import { resolveAuthChange } from './auth-state'
 import { authUserChanged, sessionEnded } from './user-slice'

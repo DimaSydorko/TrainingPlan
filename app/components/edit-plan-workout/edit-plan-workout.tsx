@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { memo, useCallback, useMemo, useState } from 'react'
-import { defaultPlan, defaultWorkout } from '../../utils/constants'
-import { PlanType, WorkoutType } from '../../utils/types'
-import { AppColorPicker, AppModal, LabelsInput, MyTextInput } from '../../common'
-import { FlexCenterColumn } from '../../theme/parents'
+import { defaultPlan, defaultWorkout } from '@utils/constants'
+import { PlanType, WorkoutType } from '@utils/types'
+import { AppColorPicker, AppModal, LabelsInput, MyTextInput } from '@common'
+import { FlexCenterColumn } from '@theme/parents'
 
 interface IEditPlanWorkout {
   isModal: boolean

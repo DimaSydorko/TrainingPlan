@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FlatList, ListRenderItemInfo, NativeScrollEvent, NativeSyntheticEvent, Text, View } from 'react-native'
-import { useSettings } from '../../hooks/redux'
+import { useSettings } from '@hooks/redux'
 import { buildPickerValues, indexForOffset, indexForValue } from './picker-math'
 
 // Replaces react-native-scroll-picker-wheel (unmaintained since 2021, needs undeclared prop-types,

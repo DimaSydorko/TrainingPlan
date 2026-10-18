@@ -12,7 +12,7 @@
  * Callbacks passed in are never invoked and iterating a stub yields nothing.
  *
  * Tests that need real behaviour should mock at a higher level in the test file, e.g.
- * `jest.mock('../../utils/firebase')` or spy on the thunk under test.
+ * `jest.mock('@utils/firebase')` or spy on the thunk under test.
  */
 function createStub(path, thenable = false) {
   const children = new Map()

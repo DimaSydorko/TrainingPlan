@@ -5,7 +5,7 @@
 import * as React from 'react'
 import { Provider } from 'react-redux'
 import { render } from '@testing-library/react-native'
-import type { RootState } from '../../app/store'
+import type { RootState } from '@store'
 import { createTestStore, TestStore } from './test-store'
 
 type Options = { store?: TestStore; preloadedState?: Parameters<typeof createTestStore>[0] }

@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { memo, useEffect, useState } from 'react'
-import { useAppDispatch, usePlans, usePublications, useSettings, useWorkout } from '../../hooks/redux'
-import { errorPlansClear } from '../../store/plans-reducer/plans-slice'
-import { errorWorkoutClear } from '../../store/workout-reducer/workout-slice'
-import { errorPublicationClear } from '../../store/publications-reducer/publications-slice'
-import { Toast, Toaster } from '../../common'
-import { icon } from '../../theme/icons'
+import { useAppDispatch, usePlans, usePublications, useSettings, useWorkout } from '@hooks/redux'
+import { errorPlansClear } from '@store/plans-reducer/plans-slice'
+import { errorWorkoutClear } from '@store/workout-reducer/workout-slice'
+import { errorPublicationClear } from '@store/publications-reducer/publications-slice'
+import { Toast, Toaster } from '@common'
+import { icon } from '@theme/icons'
 import { LayoutAnimation } from 'react-native'
 
 export default memo(function NotificationHandler() {

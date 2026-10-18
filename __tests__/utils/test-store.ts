@@ -4,13 +4,13 @@
  * specific state (e.g. a logged-in user or a dark theme).
  */
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import userReducer from '../../app/store/user-reducer/user-slice'
-import plansReducer from '../../app/store/plans-reducer/plans-slice'
-import workoutReducer from '../../app/store/workout-reducer/workout-slice'
-import settingsReducer from '../../app/store/settings-reducer/settings-slice'
-import publicationsReducer from '../../app/store/publications-reducer/publications-slice'
+import userReducer from '@store/user-reducer/user-slice'
+import plansReducer from '@store/plans-reducer/plans-slice'
+import workoutReducer from '@store/workout-reducer/workout-slice'
+import settingsReducer from '@store/settings-reducer/settings-slice'
+import publicationsReducer from '@store/publications-reducer/publications-slice'
 import type { Persistor } from 'redux-persist'
-import type { RootState } from '../../app/store'
+import type { RootState } from '@store'
 
 export const testRootReducer = combineReducers({
   userReducer,

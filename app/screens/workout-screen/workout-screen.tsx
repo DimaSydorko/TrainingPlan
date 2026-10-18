@@ -2,10 +2,10 @@ import * as React from 'react'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { useAppDispatch, useSettings, useUser, useWorkout } from '../../hooks/redux'
-import { workoutAC } from '../../store/workout-reducer/workout-ac'
-import { plansAC } from '../../store/plans-reducer/plans-ac'
-import { AppHelperContext } from '../../hooks/app-helper-provider'
+import { useAppDispatch, useSettings, useUser, useWorkout } from '@hooks/redux'
+import { workoutAC } from '@store/workout-reducer/workout-ac'
+import { plansAC } from '@store/plans-reducer/plans-ac'
+import { AppHelperContext } from '@hooks/app-helper-provider'
 import {
   AddMoreButton,
   AppModal,
@@ -17,25 +17,17 @@ import {
   GoBackSubmitModal,
   MyTextInput,
   WorkoutDuration,
-} from '../../common'
-import Exercise from '../../components/exercise/exercise'
-import EditExerciseModal from '../../components/exercise/exercise-edit-modal'
-import { deepCompare } from '../../utils'
-import { appScreen, ScreenName } from '../../utils/constants'
-import { ExerciseType, PlayableNavigation, WorkoutType } from '../../utils/types'
-import {
-  AppFooter,
-  AppHeader,
-  Card,
-  FlexCenterColumn,
-  FlexSpaceBetween,
-  Page,
-  TextSecondary,
-} from '../../theme/parents'
-import { icon } from '../../theme/icons'
-import { theme } from '../../theme/theme'
-import { COLORS_EXERCISE, colorsDark } from '../../theme/colors'
-import { useAppInsets } from '../../theme/insets'
+} from '@common'
+import Exercise from '@components/exercise/exercise'
+import EditExerciseModal from '@components/exercise/exercise-edit-modal'
+import { deepCompare } from '@utils'
+import { appScreen, ScreenName } from '@utils/constants'
+import { ExerciseType, PlayableNavigation, WorkoutType } from '@utils/types'
+import { AppFooter, AppHeader, Card, FlexCenterColumn, FlexSpaceBetween, Page, TextSecondary } from '@theme/parents'
+import { icon } from '@theme/icons'
+import { theme } from '@theme/theme'
+import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
+import { useAppInsets } from '@theme/insets'
 
 export default function WorkoutScreen() {
   const dispatch = useAppDispatch()

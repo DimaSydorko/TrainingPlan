@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { DeleteWorkoutReducerType, GetWorkoutsReducerType, workoutAC } from './workout-ac'
-import { SelectedWorkoutType, StoredExerciseImage, WorkoutType } from '../../utils/types'
+import { SelectedWorkoutType, StoredExerciseImage, WorkoutType } from '@utils/types'
 
 export interface WorkoutSliceType {
   workouts: WorkoutType[]

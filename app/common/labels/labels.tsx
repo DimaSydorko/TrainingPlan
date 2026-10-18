@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { ViewStyle } from 'react-native'
-import { useSettings } from '../../hooks/redux'
-import { FlexStart, TextSecondary } from '../../theme/parents'
+import { useSettings } from '@hooks/redux'
+import { FlexStart, TextSecondary } from '@theme/parents'
 
 interface IProps {
   labels: string[]

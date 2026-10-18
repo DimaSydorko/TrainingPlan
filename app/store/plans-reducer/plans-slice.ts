@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { DeletePlanReducerType, GetPlanReducerType, plansAC } from './plans-ac'
-import { PlanType } from '../../utils/types'
+import { PlanType } from '@utils/types'
 
 export interface PlansSliceType {
   plans: PlanType[]

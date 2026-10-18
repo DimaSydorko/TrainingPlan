@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 import { useAppDispatch, usePlans } from './redux'
-import { PlanType, WorkoutType } from '../utils/types'
-import { workoutAC } from '../store/workout-reducer/workout-ac'
-import { plansAC } from '../store/plans-reducer/plans-ac'
-import { nanoid } from '../utils'
+import { PlanType, WorkoutType } from '@utils/types'
+import { workoutAC } from '@store/workout-reducer/workout-ac'
+import { plansAC } from '@store/plans-reducer/plans-ac'
+import { nanoid } from '@utils'
 
 export default function useWorkoutPlan() {
   const dispatch = useAppDispatch()

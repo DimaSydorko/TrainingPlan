@@ -5,7 +5,7 @@
 import { render, screen } from '@testing-library/react-native'
 import App from '../app/app'
 
-jest.mock('../app/store', () => {
+jest.mock('@store', () => {
   const { createTestStore, createBootstrappedPersistor } = require('./utils/test-store')
   const store = createTestStore({ settingsReducer: { internet: { isOnline: true, lastBeOline: 0 } } })
   return { __esModule: true, store, persistedStore: createBootstrappedPersistor(), setupStore: createTestStore }

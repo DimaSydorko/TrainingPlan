@@ -1,6 +1,6 @@
 // Pure helpers of the backgroundSession seam. expo-notifications is mocked in __tests__/setup.
 import { cueChannelId, cueSoundFile, formatClockTime } from '../background-session'
-import { SoundType } from '../../utils/constants'
+import { SoundType } from '@utils/constants'
 
 describe('backgroundSession helpers', () => {
   it('builds one Android channel id per (sound, vibration) pair', () => {

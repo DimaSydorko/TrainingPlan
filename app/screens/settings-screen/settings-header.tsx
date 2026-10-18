@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { memo, ReactNode } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { TextSecondary } from '../../theme/parents'
-import { appScreen } from '../../utils/constants'
+import { TextSecondary } from '@theme/parents'
+import { appScreen } from '@utils/constants'
 
 interface IProps {
   label: string

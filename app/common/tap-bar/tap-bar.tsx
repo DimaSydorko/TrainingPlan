@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { useSettings } from '../../hooks/redux'
-import { TextHeader } from '../../theme/parents'
+import { useSettings } from '@hooks/redux'
+import { TextHeader } from '@theme/parents'
 
 const styles = StyleSheet.create({
   container: {

@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { memo, useCallback, useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import { AppModal } from '../../common'
-import { COLORS_EXERCISE, colorsDark } from '../../theme/colors'
-import { useSettings } from '../../hooks/redux'
+import { AppModal } from '@common'
+import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
+import { useSettings } from '@hooks/redux'
 import styles from './styles'
 
 interface IAppColorPicker {

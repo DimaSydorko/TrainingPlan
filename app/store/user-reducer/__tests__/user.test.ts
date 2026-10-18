@@ -1,7 +1,7 @@
 import reducer, { authUserChanged, errorUserClear, sessionEnded } from '../user-slice'
 import { userAC } from '../user-ac'
 
-jest.mock('../../../utils/firebase', () => ({
+jest.mock('@utils/firebase', () => ({
   auth: { name: 'auth' },
   db: {},
   rtdb: {},
@@ -25,7 +25,7 @@ jest.mock('firebase/firestore', () => ({
 }))
 jest.mock('firebase/database', () => ({}))
 jest.mock('@react-native-community/netinfo', () => ({ fetch: jest.fn() }))
-jest.mock('../../../platform/google-auth', () => ({
+jest.mock('@platform/google-auth', () => ({
   getGoogleIdToken: jest.fn(),
   signOutGoogle: jest.fn(() => Promise.resolve()),
   isGoogleSignInCancelled: jest.fn(e => e?.code === 'cancelled'),
@@ -33,7 +33,7 @@ jest.mock('../../../platform/google-auth', () => ({
 
 const fbAuth = jest.requireMock('firebase/auth')
 const firestore = jest.requireMock('firebase/firestore')
-const google = jest.requireMock('../../../platform/google-auth')
+const google = jest.requireMock('@platform/google-auth')
 
 const fbUser = { uid: 'u1', displayName: 'Ann', photoURL: null, email: 'a@b.c' }
 const user = { uid: 'u1', displayName: 'Ann', photoURL: null, email: 'a@b.c' }

@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { memo, useState } from 'react'
 import { View } from 'react-native'
-import { Icon } from '../../common/icon/icon'
-import { AppModal, Labels } from '../../common'
-import { useSettings } from '../../hooks/redux'
-import { FlexSpaceBetween, TextHeader, TextSecondary } from '../../theme/parents'
-import { PlanType } from '../../utils/types'
-import { icon } from '../../theme/icons'
+import { Icon } from '@common/icon/icon'
+import { AppModal, Labels } from '@common'
+import { useSettings } from '@hooks/redux'
+import { FlexSpaceBetween, TextHeader, TextSecondary } from '@theme/parents'
+import { PlanType } from '@utils/types'
+import { icon } from '@theme/icons'
 
 interface IPlanCard {
   plan: PlanType

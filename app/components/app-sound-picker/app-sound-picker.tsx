@@ -1,15 +1,15 @@
 import * as React from 'react'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
-import { previewSound } from '../../platform/audio'
+import { previewSound } from '@platform/audio'
 
-import { useAppDispatch, useSettings } from '../../hooks/redux'
-import { onSoundTypeChange } from '../../store/settings-reducer/settings-slice'
-import { AppModal } from '../../common'
-import { getSoundText } from '../../utils'
-import { SetStateType } from '../../utils/types'
-import { SoundType } from '../../utils/constants'
-import { FlexCenterColumn, TextHeader } from '../../theme/parents'
+import { useAppDispatch, useSettings } from '@hooks/redux'
+import { onSoundTypeChange } from '@store/settings-reducer/settings-slice'
+import { AppModal } from '@common'
+import { getSoundText } from '@utils'
+import { SetStateType } from '@utils/types'
+import { SoundType } from '@utils/constants'
+import { FlexCenterColumn, TextHeader } from '@theme/parents'
 
 // The old code switched to Sound.setCategory('Alarm') here so previews were heard with the silent
 // switch on. The shared session from audio.ts already plays in silent mode, so no category change.

@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { memo, useCallback, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
-import { previewSound } from '../../platform/audio'
+import { previewSound } from '@platform/audio'
 
-import { useAppDispatch, useSettings } from '../../hooks/redux'
+import { useAppDispatch, useSettings } from '@hooks/redux'
 import {
   clearSettings,
   onBatteryModeChange,
@@ -15,20 +15,20 @@ import {
   onTtsVolumeChange,
   onVibrationToggle,
   onWorkoutWeightStepChange,
-} from '../../store/settings-reducer/settings-slice'
-import { clearWorkoutResults } from '../../store/workout-reducer/workout-slice'
-import { clearPublicationResults } from '../../store/publications-reducer/publications-slice'
-import { clearPlaneResults } from '../../store/plans-reducer/plans-slice'
-import useTTS from '../../hooks/use-tts'
-import { ConfirmButton } from '../../common'
-import AppSoundPicker from '../../components/app-sound-picker/app-sound-picker'
-import { FlexCenter, Page, TextHeader } from '../../theme/parents'
-import { colorsDark, colorsLight } from '../../theme/colors'
+} from '@store/settings-reducer/settings-slice'
+import { clearWorkoutResults } from '@store/workout-reducer/workout-slice'
+import { clearPublicationResults } from '@store/publications-reducer/publications-slice'
+import { clearPlaneResults } from '@store/plans-reducer/plans-slice'
+import useTTS from '@hooks/use-tts'
+import { ConfirmButton } from '@common'
+import AppSoundPicker from '@components/app-sound-picker/app-sound-picker'
+import { FlexCenter, Page, TextHeader } from '@theme/parents'
+import { colorsDark, colorsLight } from '@theme/colors'
 
 import SettingsItem from './settings-item'
 import SettingsHeader from './settings-header'
-import { getSoundText } from '../../utils'
-import { SoundType } from '../../utils/constants'
+import { getSoundText } from '@utils'
+import { SoundType } from '@utils/constants'
 
 export default memo(function SettingsScreen() {
   const dispatch = useAppDispatch()

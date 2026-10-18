@@ -2,8 +2,8 @@ import * as React from 'react'
 import { ReactNode } from 'react'
 import { Modal, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native'
 import { ConfirmButton } from '../index'
-import { useSettings } from '../../hooks/redux'
-import { FlexCenter, FlexEnd, FlexStart, TextHeader, TextSecondary } from '../../theme/parents'
+import { useSettings } from '@hooks/redux'
+import { FlexCenter, FlexEnd, FlexStart, TextHeader, TextSecondary } from '@theme/parents'
 import styles from './styles'
 
 interface AppModalType {

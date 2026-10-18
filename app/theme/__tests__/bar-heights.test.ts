@@ -1,5 +1,5 @@
 import { getBarHeights } from '../bar-heights'
-import { appScreen } from '../../utils/constants'
+import { appScreen } from '@utils/constants'
 
 describe('getBarHeights', () => {
   it('keeps the old bar heights without insets', () => {

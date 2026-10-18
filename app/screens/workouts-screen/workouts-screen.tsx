@@ -2,16 +2,16 @@ import * as React from 'react'
 import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { TouchableOpacity, Vibration } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { changeWorkoutsPosition, updateSelectedWorkout } from '../../store/workout-reducer/workout-slice'
-import { plansAC } from '../../store/plans-reducer/plans-ac'
+import { changeWorkoutsPosition, updateSelectedWorkout } from '@store/workout-reducer/workout-slice'
+import { plansAC } from '@store/plans-reducer/plans-ac'
 import { workoutAC } from '@store/workout-reducer/workout-ac'
-import { publicationsAC } from '../../store/publications-reducer/publications-ac'
-import { AppHelperContext } from '../../hooks/app-helper-provider'
-import { useAppDispatch, useWorkout } from '../../hooks/redux'
-import useWorkoutPlan from '../../hooks/use-workout-plan'
-import { deepCompare } from '../../utils'
-import { QUERY_LIMIT, ScreenName, VIBRATION } from '../../utils/constants'
-import { PlanType, PlansNavigation, WorkoutType, WorkoutsNavigation } from '../../utils/types'
+import { publicationsAC } from '@store/publications-reducer/publications-ac'
+import { AppHelperContext } from '@hooks/app-helper-provider'
+import { useAppDispatch, useWorkout } from '@hooks/redux'
+import useWorkoutPlan from '@hooks/use-workout-plan'
+import { deepCompare } from '@utils'
+import { QUERY_LIMIT, ScreenName, VIBRATION } from '@utils/constants'
+import { PlanType, PlansNavigation, WorkoutType, WorkoutsNavigation } from '@utils/types'
 import {
   AddMoreButton,
   AppModal,
@@ -23,15 +23,15 @@ import {
   GoBackSubmitModal,
   IconButton,
   MyTextInput,
-} from '../../common'
-import ShareModal from '../../components/share-modal/share-modal'
-import EditPlanWorkout from '../../components/edit-plan-workout/edit-plan-workout'
-import CopyWorkoutsModal from '../../components/copy-workouts-modal/copy-workouts-modal'
+} from '@common'
+import ShareModal from '@components/share-modal/share-modal'
+import EditPlanWorkout from '@components/edit-plan-workout/edit-plan-workout'
+import CopyWorkoutsModal from '@components/copy-workouts-modal/copy-workouts-modal'
 import WorkoutCard from './workout-card'
-import { AppFooter, AppHeader, Card, FlexEnd, FlexStart, Page, TextHeader } from '../../theme/parents'
-import { icon } from '../../theme/icons'
-import NoDataIcon from '../../assets/icons/no-data-icon'
-import { useAppInsets } from '../../theme/insets'
+import { AppFooter, AppHeader, Card, FlexEnd, FlexStart, Page, TextHeader } from '@theme/parents'
+import { icon } from '@theme/icons'
+import NoDataIcon from '@assets/icons/no-data-icon'
+import { useAppInsets } from '@theme/insets'
 
 type PropsType = {
   isInPlan?: boolean

@@ -3,12 +3,12 @@ import { AppState, Vibration } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import { useAppDispatch, useSettings, useWorkout } from './redux'
-import { workoutAC } from '../store/workout-reducer/workout-ac'
-import { AppNavigationType, SelectedExerciseType, SelectedWorkoutType, WorkoutType } from '../utils/types'
-import { SOUND_CUE_DURATION_MS, VIBRATION } from '../utils/constants'
-import { plansAC } from '../store/plans-reducer/plans-ac'
+import { workoutAC } from '@store/workout-reducer/workout-ac'
+import { AppNavigationType, SelectedExerciseType, SelectedWorkoutType, WorkoutType } from '@utils/types'
+import { SOUND_CUE_DURATION_MS, VIBRATION } from '@utils/constants'
+import { plansAC } from '@store/plans-reducer/plans-ac'
 import useTTS from './use-tts'
-import { createSoundPlayer, SoundPlayer } from '../platform/audio'
+import { createSoundPlayer, SoundPlayer } from '@platform/audio'
 import {
   advance,
   buildSegments,
@@ -20,7 +20,7 @@ import {
   resumeClock,
   Segment,
   segmentEndsAt,
-} from '../screens/playing-screen/playback-schedule'
+} from '@screens/playing-screen/playback-schedule'
 
 // Foreground tick for the UI. The clock itself is timestamp based (playbackSchedule.ts), so the
 // interval only decides how quickly the display and cues react; it never counts time.

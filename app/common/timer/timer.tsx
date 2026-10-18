@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { useEffect, useState } from 'react'
-import { useSettings } from '../../hooks/redux'
-import { TextSecondary } from '../../theme/parents'
-import { secondsToMinSec } from '../../components/workout-duration/workout-duration'
+import { useSettings } from '@hooks/redux'
+import { TextSecondary } from '@theme/parents'
+import { secondsToMinSec } from '@components/workout-duration/workout-duration'
 
 interface ITimer {
   isRevers?: boolean

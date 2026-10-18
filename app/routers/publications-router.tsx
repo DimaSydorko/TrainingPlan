@@ -1,14 +1,14 @@
 import * as React from 'react'
 import { memo, useEffect } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import { useAppDispatch, useSettings } from '../hooks/redux'
-import { ScreenName } from '../utils/constants'
-import { useScreenOptions } from '../theme/parents'
-import { PublicationsScreen } from '../screens'
-import { publicationsAC } from '../store/publications-reducer/publications-ac'
-import PublicationPlan from '../screens/publications-screen/publication-plan'
-import PublicationWorkout from '../screens/publications-screen/publication-workout'
-import { PublicationsStackParamList } from '../utils/types'
+import { useAppDispatch, useSettings } from '@hooks/redux'
+import { ScreenName } from '@utils/constants'
+import { useScreenOptions } from '@theme/parents'
+import { PublicationsScreen } from '@screens'
+import { publicationsAC } from '@store/publications-reducer/publications-ac'
+import PublicationPlan from '@screens/publications-screen/publication-plan'
+import PublicationWorkout from '@screens/publications-screen/publication-workout'
+import { PublicationsStackParamList } from '@utils/types'
 
 const Stack = createStackNavigator<PublicationsStackParamList, 'PublicationsStack'>()
 

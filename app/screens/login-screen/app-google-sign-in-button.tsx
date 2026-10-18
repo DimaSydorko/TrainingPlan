@@ -2,9 +2,9 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { memo, useEffect } from 'react'
 import { GoogleSigninButton } from '@react-native-google-signin/google-signin'
-import { configureGoogleSignIn } from '../../platform/google-auth'
-import { userAC } from '../../store/user-reducer/user-ac'
-import { useAppDispatch } from '../../hooks/redux'
+import { configureGoogleSignIn } from '@platform/google-auth'
+import { userAC } from '@store/user-reducer/user-ac'
+import { useAppDispatch } from '@hooks/redux'
 
 interface IProps {
   disabled?: boolean

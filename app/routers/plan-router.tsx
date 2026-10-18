@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { memo } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import { usePlans, useUser, useWorkout } from '../hooks/redux'
-import { MyPlansScreen, PlayingScreen, WorkoutScreen, WorkoutsScreen } from '../screens'
-import { useScreenOptions } from '../theme/parents'
-import { Loading } from '../common'
-import { ScreenName } from '../utils/constants'
-import { PlansStackParamList } from '../utils/types'
+import { usePlans, useUser, useWorkout } from '@hooks/redux'
+import { MyPlansScreen, PlayingScreen, WorkoutScreen, WorkoutsScreen } from '@screens'
+import { useScreenOptions } from '@theme/parents'
+import { Loading } from '@common'
+import { ScreenName } from '@utils/constants'
+import { PlansStackParamList } from '@utils/types'
 
 const Stack = createStackNavigator<PlansStackParamList, 'PlansStack'>()
 

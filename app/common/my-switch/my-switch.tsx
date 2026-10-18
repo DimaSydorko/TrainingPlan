@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { SwitchLib } from './switch-lib'
-import { useSettings } from '../../hooks/redux'
+import { useSettings } from '@hooks/redux'
 import { Vibration } from 'react-native'
-import { VIBRATION } from '../../utils/constants'
+import { VIBRATION } from '@utils/constants'
 
 interface MySwitchType {
   value: boolean

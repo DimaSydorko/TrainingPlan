@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native'
-import { useSettings } from '../../hooks/redux'
-import { colorsFixed } from '../../theme/colors'
+import { useSettings } from '@hooks/redux'
+import { colorsFixed } from '@theme/colors'
 import styles from './styles'
-import { appScreen } from '../../utils/constants'
+import { appScreen } from '@utils/constants'
 
 interface ConfirmButtonType {
   header: string

@@ -14,8 +14,8 @@ import {
   startSession,
   stopSession,
   updateSession,
-} from '../../platform/background-session'
-import { SoundType } from '../../utils/constants'
+} from '@platform/background-session'
+import { SoundType } from '@utils/constants'
 import { buildCues, Clock, Segment, segmentEndsAt, upcomingBoundaries } from './playback-schedule'
 
 // iOS keeps at most 64 pending local notifications per app; stay well below

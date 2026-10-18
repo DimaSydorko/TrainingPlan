@@ -1,6 +1,6 @@
 // Only the pure spec is tested; keep the real SDK out of the test.
 import { publicationsQuerySpec } from '../publications-query'
-import { PUBLICATION_QUERY_LIMIT } from '../../../utils/constants'
+import { PUBLICATION_QUERY_LIMIT } from '@utils/constants'
 
 jest.mock('firebase/firestore', () => ({}))
 

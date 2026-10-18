@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { SvgXml } from 'react-native-svg'
-import { appScreen } from '../../utils/constants'
-import { FlexCenter } from '../../theme/parents'
-import { useSettings } from '../../hooks/redux'
+import { appScreen } from '@utils/constants'
+import { FlexCenter } from '@theme/parents'
+import { useSettings } from '@hooks/redux'
 
 export default function NoDataIcon() {
   const { colors } = useSettings()

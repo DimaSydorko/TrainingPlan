@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
-import { TextOrdinary } from '../../theme/parents'
-import { useSettings } from '../../hooks/redux'
+import { TextOrdinary } from '@theme/parents'
+import { useSettings } from '@hooks/redux'
 
 interface ExerciseResultsType {
   weight: number

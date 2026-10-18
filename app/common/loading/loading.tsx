@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
-import { useSettings } from '../../hooks/redux'
+import { useSettings } from '@hooks/redux'
 
 const styles = StyleSheet.create({
   bg: {

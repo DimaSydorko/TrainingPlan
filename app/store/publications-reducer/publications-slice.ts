@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { LikeToggleType, publicationsAC } from './publications-ac'
-import { PublicType } from '../../utils/types'
+import { PublicType } from '@utils/types'
 
 export interface PublicationsSliceType {
   publications: PublicType[]

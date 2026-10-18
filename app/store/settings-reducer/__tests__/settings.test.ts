@@ -8,8 +8,8 @@ import reducer, {
   onTtsRateChange,
   onVibrationToggle,
 } from '../settings-slice'
-import { colorsDark } from '../../../theme/colors'
-import { SoundType } from '../../../utils/constants'
+import { colorsDark } from '@theme/colors'
+import { SoundType } from '@utils/constants'
 
 const initial = () => reducer(undefined, { type: '@@init' })
 

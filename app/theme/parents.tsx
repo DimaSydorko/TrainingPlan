@@ -2,10 +2,10 @@ import * as React from 'react'
 import { ReactNode } from 'react'
 import { ScrollView, StyleProp, Text, TextProps, TextStyle, View, ViewStyle } from 'react-native'
 import { StackNavigationOptions } from '@react-navigation/stack'
-import { useSettings } from '../hooks/redux'
+import { useSettings } from '@hooks/redux'
 import { theme } from './theme'
 import { colorsFixed } from './colors'
-import { appScreen } from '../utils/constants'
+import { appScreen } from '@utils/constants'
 import { useAppInsets } from './insets'
 
 interface ParentProps {

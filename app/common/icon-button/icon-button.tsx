@@ -2,8 +2,8 @@ import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { TouchableOpacity, Vibration, ViewStyle } from 'react-native'
 import { Icon } from '../icon/icon'
-import { useSettings } from '../../hooks/redux'
-import { VIBRATION } from '../../utils/constants'
+import { useSettings } from '@hooks/redux'
+import { VIBRATION } from '@utils/constants'
 
 interface IconButtonType {
   iconName: string

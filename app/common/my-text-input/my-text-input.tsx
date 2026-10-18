@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { TextInput, TextStyle, View, TextInputProps } from 'react-native'
-import { useSettings } from '../../hooks/redux'
+import { useSettings } from '@hooks/redux'
 import { IconButton } from '../index'
-import { icon } from '../../theme/icons'
+import { icon } from '@theme/icons'
 import styles from './styles'
 
 interface MyTextInputType {

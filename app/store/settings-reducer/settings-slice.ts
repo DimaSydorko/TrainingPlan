@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { ColorsType } from '../../utils/types'
-import { colorsDark, colorsLight } from '../../theme/colors'
-import { SoundType } from '../../utils/constants'
+import { ColorsType } from '@utils/types'
+import { colorsDark, colorsLight } from '@theme/colors'
+import { SoundType } from '@utils/constants'
 
 export interface SettingsSliceType {
   colors: ColorsType

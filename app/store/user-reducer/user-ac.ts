@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { getGoogleIdToken, isGoogleSignInCancelled, signOutGoogle } from '../../platform/google-auth'
+import { getGoogleIdToken, isGoogleSignInCancelled, signOutGoogle } from '@platform/google-auth'
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -9,10 +9,10 @@ import {
   updateProfile,
 } from 'firebase/auth'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
-import { auth, usersDataCollection } from '../../utils/firebase'
+import { auth, usersDataCollection } from '@utils/firebase'
 import { errorMessage } from '../sync'
 import { toUserType } from './auth-state'
-import { UserDataType } from '../../utils/types'
+import { UserDataType } from '@utils/types'
 import { initialUserData } from './user-slice'
 import { clearWorkoutResults } from '../workout-reducer/workout-slice'
 import { clearPlaneResults } from '../plans-reducer/plans-slice'

@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { memo } from 'react'
-import { Icon } from '../../common/icon/icon'
-import { FlexStart, TextSecondary } from '../../theme/parents'
-import { ExerciseType } from '../../utils/types'
-import { useSettings } from '../../hooks/redux'
-import { getWorkoutDuration } from '../../utils'
-import { icon } from '../../theme/icons'
+import { Icon } from '@common/icon/icon'
+import { FlexStart, TextSecondary } from '@theme/parents'
+import { ExerciseType } from '@utils/types'
+import { useSettings } from '@hooks/redux'
+import { getWorkoutDuration } from '@utils'
+import { icon } from '@theme/icons'
 
 interface WorkoutDurationType {
   exercises: ExerciseType[]

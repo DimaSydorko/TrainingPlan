@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { memo } from 'react'
 import { Image, StyleSheet } from 'react-native'
-import { useSettings } from '../../hooks/redux'
-import { getUserInitials } from '../../utils'
-import { FlexCenter, TextHeader } from '../../theme/parents'
-import { COLORS_EXERCISE, colorsDark } from '../../theme/colors'
+import { useSettings } from '@hooks/redux'
+import { getUserInitials } from '@utils'
+import { FlexCenter, TextHeader } from '@theme/parents'
+import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
 
 function stringToInt(str: string) {
   let res = 0

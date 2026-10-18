@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { appScreen } from '../../utils/constants'
+import { appScreen } from '@utils/constants'
 
 export default StyleSheet.create({
   page: {

@@ -1,7 +1,7 @@
 import reducer, { clearPublicationResults } from '../publications-slice'
 import { publicationsAC } from '../publications-ac'
 
-jest.mock('../../../utils/firebase', () => ({
+jest.mock('@utils/firebase', () => ({
   db: {},
   auth: {},
   rtdb: {},

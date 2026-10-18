@@ -2,11 +2,11 @@ import * as React from 'react'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { TouchableOpacity, Vibration } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { changePlansPosition, selectPlan } from '../../store/plans-reducer/plans-slice'
-import { plansAC } from '../../store/plans-reducer/plans-ac'
-import { publicationsAC } from '../../store/publications-reducer/publications-ac'
-import { useAppDispatch, usePlans, useSettings } from '../../hooks/redux'
-import { AppHeader, Card, FlexEnd, FlexStart, Page, TextHeader } from '../../theme/parents'
+import { changePlansPosition, selectPlan } from '@store/plans-reducer/plans-slice'
+import { plansAC } from '@store/plans-reducer/plans-ac'
+import { publicationsAC } from '@store/publications-reducer/publications-ac'
+import { useAppDispatch, usePlans, useSettings } from '@hooks/redux'
+import { AppHeader, Card, FlexEnd, FlexStart, Page, TextHeader } from '@theme/parents'
 import {
   AddMoreButton,
   AppModal,
@@ -15,15 +15,15 @@ import {
   DraggableRenderItemParams,
   DraggableScrollContainer,
   IconButton,
-} from '../../common'
-import EditPlanWorkout from '../../components/edit-plan-workout/edit-plan-workout'
+} from '@common'
+import EditPlanWorkout from '@components/edit-plan-workout/edit-plan-workout'
 import PlanCard from './plan-card'
-import { QUERY_LIMIT, ScreenName, VIBRATION } from '../../utils/constants'
-import { PlanType, PlansNavigation } from '../../utils/types'
-import { icon } from '../../theme/icons'
-import ShareModal from '../../components/share-modal/share-modal'
-import { COLORS_EXERCISE, colorsDark } from '../../theme/colors'
-import NoDataIcon from '../../assets/icons/no-data-icon'
+import { QUERY_LIMIT, ScreenName, VIBRATION } from '@utils/constants'
+import { PlanType, PlansNavigation } from '@utils/types'
+import { icon } from '@theme/icons'
+import ShareModal from '@components/share-modal/share-modal'
+import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
+import NoDataIcon from '@assets/icons/no-data-icon'
 
 export default memo(function MyPlansScreen() {
   const navigation = useNavigation<PlansNavigation>()

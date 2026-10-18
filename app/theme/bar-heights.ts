@@ -1,4 +1,4 @@
-import { appScreen } from '../utils/constants'
+import { appScreen } from '@utils/constants'
 
 export type BarHeights = {
   /** Stack header height including the status bar inset (the header draws behind the status bar). */

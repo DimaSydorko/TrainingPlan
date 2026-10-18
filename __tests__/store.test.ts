@@ -14,9 +14,9 @@ function serialize(state: Record<string, unknown>) {
 }
 
 async function loadStore() {
-  let mod: typeof import('../app/store')
+  let mod: typeof import('@store')
   jest.isolateModules(() => {
-    mod = require('../app/store')
+    mod = require('@store')
   })
   const { store, persistedStore } = mod!
   await new Promise<void>(resolve => {

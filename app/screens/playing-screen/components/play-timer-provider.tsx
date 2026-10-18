@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { createContext, ReactNode, useContext, useState } from 'react'
-import { SetStateType } from '../../../utils/types'
+import { SetStateType } from '@utils/types'
 
 function usePlayTimer() {
   const [playTimer, setPlayTimer] = useState<number>(0)

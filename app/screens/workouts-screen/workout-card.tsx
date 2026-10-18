@@ -1,13 +1,13 @@
 import * as React from 'react'
 import { memo } from 'react'
 import { View } from 'react-native'
-import { Icon } from '../../common/icon/icon'
-import { useSettings } from '../../hooks/redux'
-import { Labels, WorkoutDuration } from '../../common'
-import { FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '../../theme/parents'
-import { WorkoutType } from '../../utils/types'
-import { icon } from '../../theme/icons'
-import { COLORS_EXERCISE, colorsDark } from '../../theme/colors'
+import { Icon } from '@common/icon/icon'
+import { useSettings } from '@hooks/redux'
+import { Labels, WorkoutDuration } from '@common'
+import { FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '@theme/parents'
+import { WorkoutType } from '@utils/types'
+import { icon } from '@theme/icons'
+import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
 
 interface IWorkoutCard {
   workout: WorkoutType

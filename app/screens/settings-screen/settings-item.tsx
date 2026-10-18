@@ -2,10 +2,10 @@ import * as React from 'react'
 import { memo, useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import Slider from '@react-native-community/slider'
-import { useSettings } from '../../hooks/redux'
-import { Divider, FlexSpaceBetween, TextOrdinary, TextSecondary } from '../../theme/parents'
-import { appScreen } from '../../utils/constants'
-import { MySwitch } from '../../common'
+import { useSettings } from '@hooks/redux'
+import { Divider, FlexSpaceBetween, TextOrdinary, TextSecondary } from '@theme/parents'
+import { appScreen } from '@utils/constants'
+import { MySwitch } from '@common'
 
 interface IProps {
   label: string

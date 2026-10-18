@@ -1,7 +1,7 @@
 import reducer, { clearWorkoutResults, updateSelectedWorkout } from '../workout-slice'
 import { workoutAC } from '../workout-ac'
 
-jest.mock('../../../utils/firebase', () => ({
+jest.mock('@utils/firebase', () => ({
   db: {},
   auth: {},
   rtdb: { name: 'rtdb' },
