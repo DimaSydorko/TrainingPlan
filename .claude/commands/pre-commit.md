@@ -10,7 +10,7 @@ Run the pre-commit pipeline on `$ARGUMENTS` (default: all uncommitted changes). 
     - Any 🔴 → show the report and **stop**. Ask the user to fix them (or to say "continue anyway").
     - 🟠 → show them and continue.
     - 🟡 → ask for confirmation and apply confirmed fixes before step 2.
-2. **Write tests** — follow `.claude/commands/write-tests.md` with the same scope.
+2. **Write tests** — follow `.claude/commands/unit-tests.md` with the same scope.
 3. **Run tests** — follow `.claude/commands/run-tests.md`.
 4. **Record the pass** — only if there are no 🔴 left (or the user said "continue anyway") and every check is ✅,
    run `sh .claude/hooks/fingerprint.sh > .claude/.pre-commit-ok` as the very last step (after all fixes). The
