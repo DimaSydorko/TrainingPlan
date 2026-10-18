@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { speak, stopSpeaking } from '../services/speech'
+import { speak, stopSpeaking } from '../platform/speech'
 import { useSettings } from './redux'
 
 export default function useTTS() {

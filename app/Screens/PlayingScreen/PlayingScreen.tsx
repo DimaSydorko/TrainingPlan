@@ -3,7 +3,7 @@ import { memo, useCallback, useEffect, useState } from 'react'
 import { LayoutAnimation, TouchableOpacity, View } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import { useNavigation } from '@react-navigation/native'
-import { activateKeepAwake, deactivateKeepAwake } from '../../services/keepAwake'
+import { activateKeepAwake, deactivateKeepAwake } from '../../platform/keepAwake'
 
 import usePlaying, { cueDelayMs } from '../../Hooks/usePlaying'
 import { appScreen } from '../../Utils/constants'

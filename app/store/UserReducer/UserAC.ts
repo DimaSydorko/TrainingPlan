@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { getGoogleIdToken, isGoogleSignInCancelled, signOutGoogle } from '../../services/googleAuth'
+import { getGoogleIdToken, isGoogleSignInCancelled, signOutGoogle } from '../../platform/googleAuth'
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,

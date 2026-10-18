@@ -3,7 +3,7 @@
  *
  * - Preset: jest-expo (iOS/Android-like RN environment, babel-preset-expo transform).
  * - Tests live in `__tests__/**` at the repo root and in `__tests__` folders next to the code they
- *   test inside `app/` (e.g. `app/services/__tests__/audio.test.ts`). Only `*.test.ts(x)` /
+ *   test inside `app/` (e.g. `app/platform/__tests__/audio.test.ts`). Only `*.test.ts(x)` /
  *   `*.test.js` files are tests; other files in `__tests__` (setup, utils, fixtures) are helpers.
  * - Native modules are mocked once in `__tests__/setup/` (see docs/migration/TESTING.md).
  */

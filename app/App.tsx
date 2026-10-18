@@ -17,12 +17,10 @@ import { statusBarStyleFor } from './Theme/navigationTheme'
 if (!globalThis.btoa) globalThis.btoa = encode
 if (!globalThis.atob) globalThis.atob = decode
 
-/** Applies the app palette (chosen in Settings, not the system theme) to the root view and system UI. */
 function ThemedRoot({ children }: { children: ReactNode }) {
   const { colors } = useSettings()
 
   useEffect(() => {
-    // Root view colour shows behind screens during transitions and around the keyboard
     SystemUI.setBackgroundColorAsync(colors.background).catch(() => null)
   }, [colors.background])
 

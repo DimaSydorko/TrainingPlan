@@ -14,7 +14,7 @@ import {
   startSession,
   stopSession,
   updateSession,
-} from '../../services/backgroundSession'
+} from '../../platform/backgroundSession'
 import { SoundType } from '../../Utils/constants'
 import { buildCues, Clock, Segment, segmentEndsAt, upcomingBoundaries } from './playbackSchedule'
 

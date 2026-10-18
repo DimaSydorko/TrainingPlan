@@ -6,18 +6,18 @@ const expoConfig = require('eslint-config-expo/flat')
 const prettierConfig = require('eslint-config-prettier/flat')
 const globals = require('globals')
 
-// Libraries removed by the migration. Their replacements live behind the seams in app/services and
+// Libraries removed by the migration. Their replacements live behind the seams in app/platform and
 // app/Common/Icon (docs/migration/README.md §6).
 const removedLibraries = [
-  { name: 'react-native-sound', message: 'Removed in the Expo migration. Use app/services/audio.ts (expo-audio).' },
-  { name: 'react-native-tts', message: 'Removed in the Expo migration. Use app/services/speech.ts (expo-speech).' },
+  { name: 'react-native-sound', message: 'Removed in the Expo migration. Use app/platform/audio.ts (expo-audio).' },
+  { name: 'react-native-tts', message: 'Removed in the Expo migration. Use app/platform/speech.ts (expo-speech).' },
   {
     name: 'react-native-keep-awake',
-    message: 'Removed in the Expo migration. Use app/services/keepAwake.ts (expo-keep-awake).',
+    message: 'Removed in the Expo migration. Use app/platform/keepAwake.ts (expo-keep-awake).',
   },
   {
     name: 'react-native-background-actions',
-    message: 'Removed in the Expo migration. Use app/services/backgroundSession.ts.',
+    message: 'Removed in the Expo migration. Use app/platform/backgroundSession.ts.',
   },
   { name: 'react-native-vector-icons', message: 'Removed in the Expo migration. Use app/Common/Icon.' },
   { name: '@expo/vector-icons', message: 'Deprecated since SDK 56. Use app/Common/Icon.' },
@@ -30,6 +30,23 @@ const firebaseCompatPattern = {
   group: ['firebase/compat', 'firebase/compat/*'],
   message: 'Use the modular Firebase API (firebase/app, firebase/auth, firebase/firestore, ...).',
 }
+
+// Layer rules for the Supabase + React Query + Zustand target architecture (CLAUDE.md, .claude/contracts/server-state.md).
+// In flat config a later `no-restricted-imports` entry replaces the earlier one for matching files, so every
+// override repeats the base list.
+const baseRestrictions = { paths: removedLibraries, patterns: [...removedLibraryPatterns, firebaseCompatPattern] }
+const supabaseClientPatterns = [
+  { group: ['@supabase/supabase-js', '@supabase/*'], message: 'Only app/lib/supabase and app/api talk to Supabase.' },
+  { group: ['**/lib/supabase/*', '**/lib/supabase'], message: 'Only app/api imports the Supabase client.' },
+]
+const apiLayerPattern = {
+  group: ['**/api/*', '**/api/**'],
+  message: 'Import the React Query hook from app/services/<entity> instead of the fetcher.',
+}
+const restrictImports = (...patterns) => [
+  'error',
+  { paths: baseRestrictions.paths, patterns: [...baseRestrictions.patterns, ...patterns] },
+]
 
 module.exports = defineConfig([
   globalIgnores([
@@ -73,6 +90,43 @@ module.exports = defineConfig([
       'react-hooks/config': 'warn',
       'react-hooks/gating': 'warn',
     },
+  },
+  {
+    // New code uses `type`; existing interfaces are converted when touched (code-style.md).
+    files: ['app/**/*.ts', 'app/**/*.tsx'],
+    rules: { '@typescript-eslint/consistent-type-definitions': ['warn', 'type'] },
+  },
+  {
+    // Fetchers: pure Supabase transport + mapping.
+    files: ['app/api/**'],
+    rules: {
+      'no-restricted-imports': restrictImports(
+        {
+          group: ['@tanstack/*', 'react', 'react-native', 'react-redux', 'zustand', 'zustand/*'],
+          message: 'app/api is pure transport.',
+        },
+        {
+          group: ['**/services/*', '**/stores/*', '**/store/*', '**/Screens/*', '**/Components/*', '**/Common/*'],
+          message: 'app/api must not depend on upper layers.',
+        }
+      ),
+    },
+  },
+  {
+    // React Query hooks: wrap fetchers, never the Supabase client; no store reads.
+    files: ['app/services/**'],
+    rules: {
+      'no-restricted-imports': restrictImports(...supabaseClientPatterns, {
+        group: ['react-redux', 'zustand', 'zustand/*', '**/stores/*', '**/store/*'],
+        message: 'Hooks take inputs as arguments; never read a store.',
+      }),
+    },
+  },
+  {
+    // Everything above the data layer: screens, components, hooks, stores, routers.
+    files: ['app/**'],
+    ignores: ['app/api/**', 'app/services/**', 'app/lib/**', 'app/**/__tests__/**'],
+    rules: { 'no-restricted-imports': restrictImports(...supabaseClientPatterns, apiLayerPattern) },
   },
   {
     // Node-side files: Jest/ESLint/Babel/Metro config and Jest setup.

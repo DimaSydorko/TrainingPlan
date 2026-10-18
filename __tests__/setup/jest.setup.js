@@ -25,7 +25,7 @@ mockModule('@react-native-async-storage/async-storage', () =>
 )
 mockModule('@react-native-community/netinfo', () => require('@react-native-community/netinfo/jest/netinfo-mock.js'))
 
-// Expo native modules used behind the app/services seams.
+// Expo native modules used behind the app/platform seams.
 mockModule('expo-audio', () => require('./mocks/expo-audio'))
 mockModule('expo-speech', () => require('./mocks/expo-speech'))
 mockModule('expo-keep-awake', () => require('./mocks/expo-keep-awake'))

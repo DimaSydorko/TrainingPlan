@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { memo, useCallback, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
-import { previewSound } from '../../services/audio'
+import { previewSound } from '../../platform/audio'
 
 import { useAppDispatch, useSettings } from '../../Hooks/redux'
 import {

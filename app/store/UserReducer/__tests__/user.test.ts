@@ -25,7 +25,7 @@ jest.mock('firebase/firestore', () => ({
 }))
 jest.mock('firebase/database', () => ({}))
 jest.mock('@react-native-community/netinfo', () => ({ fetch: jest.fn() }))
-jest.mock('../../../services/googleAuth', () => ({
+jest.mock('../../../platform/googleAuth', () => ({
   getGoogleIdToken: jest.fn(),
   signOutGoogle: jest.fn(() => Promise.resolve()),
   isGoogleSignInCancelled: jest.fn(e => e?.code === 'cancelled'),
@@ -33,7 +33,7 @@ jest.mock('../../../services/googleAuth', () => ({
 
 const fbAuth = jest.requireMock('firebase/auth')
 const firestore = jest.requireMock('firebase/firestore')
-const google = jest.requireMock('../../../services/googleAuth')
+const google = jest.requireMock('../../../platform/googleAuth')
 
 const fbUser = { uid: 'u1', displayName: 'Ann', photoURL: null, email: 'a@b.c' }
 const user = { uid: 'u1', displayName: 'Ann', photoURL: null, email: 'a@b.c' }

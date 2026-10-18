@@ -2,7 +2,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { memo, useEffect } from 'react'
 import { GoogleSigninButton } from '@react-native-google-signin/google-signin'
-import { configureGoogleSignIn } from '../../services/googleAuth'
+import { configureGoogleSignIn } from '../../platform/googleAuth'
 import { userAC } from '../../store/UserReducer/UserAC'
 import { useAppDispatch } from '../../Hooks/redux'
 

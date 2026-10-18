@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { createContext, ReactNode, useCallback, useEffect, useState } from 'react'
-import { setSpeechDefaults } from '../services/speech'
+import { setSpeechDefaults } from '../platform/speech'
 import { useSettings } from './redux'
 
 function useAppHelper() {

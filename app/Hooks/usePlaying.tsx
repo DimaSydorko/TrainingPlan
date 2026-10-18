@@ -8,7 +8,7 @@ import { AppNavigationType, SelectedExerciseType, SelectedWorkoutType, WorkoutTy
 import { SOUND_CUE_DURATION_MS, VIBRATION } from '../Utils/constants'
 import { plansAC } from '../store/PlansReducer/PlansAC'
 import useTTS from './useTTS'
-import { createSoundPlayer, SoundPlayer } from '../services/audio'
+import { createSoundPlayer, SoundPlayer } from '../platform/audio'
 import {
   advance,
   buildSegments,
