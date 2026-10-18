@@ -5,6 +5,7 @@ const { defineConfig, globalIgnores } = require('eslint/config')
 const expoConfig = require('eslint-config-expo/flat')
 const prettierConfig = require('eslint-config-prettier/flat')
 const globals = require('globals')
+const checkFile = require('eslint-plugin-check-file')
 
 // Libraries removed by the migration. Their replacements live behind the seams in app/platform and
 // app/Common/Icon (docs/migration/README.md §6).
@@ -127,6 +128,22 @@ module.exports = defineConfig([
     files: ['app/**'],
     ignores: ['app/api/**', 'app/services/**', 'app/lib/**', 'app/**/__tests__/**'],
     rules: { 'no-restricted-imports': restrictImports(...supabaseClientPatterns, apiLayerPattern) },
+  },
+  {
+    // kebab-case paths (docs: claude/kebab-case-rename-plan). __tests__ is Jest's convention.
+    files: ['app/**', '__tests__/**'],
+    plugins: { 'check-file': checkFile },
+    rules: {
+      'check-file/folder-naming-convention': [
+        'warn',
+        { 'app/**/!(__tests__)/': 'KEBAB_CASE', '__tests__/**/!(__tests__)/': 'KEBAB_CASE' },
+      ],
+      'check-file/filename-naming-convention': [
+        'warn',
+        { '{app,__tests__}/**/*.{ts,tsx,js}': 'KEBAB_CASE' },
+        { ignoreMiddleExtensions: true },
+      ],
+    },
   },
   {
     // Node-side files: Jest/ESLint/Babel/Metro config and Jest setup.
