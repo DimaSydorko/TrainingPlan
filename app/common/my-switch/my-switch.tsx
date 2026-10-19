@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { SwitchLib } from './switch-lib'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
+import { useSettingsStore } from '@stores/settings/use-settings-store'
 import { Vibration } from 'react-native'
 import { VIBRATION } from '@utils/constants'
 
@@ -14,7 +15,8 @@ interface MySwitchType {
 }
 
 export default function MySwitch({ value, disabled, disableVibration, onValueChange, color, testID }: MySwitchType) {
-  const { colors, isVibration } = useSettings()
+  const { colors } = useAppTheme()
+  const isVibration = useSettingsStore(state => state.isVibration)
   const newColor = color || colors.secondPrimary
 
   const onSwitch = () => {

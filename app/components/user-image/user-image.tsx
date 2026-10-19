@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { memo } from 'react'
 import { Image, StyleSheet } from 'react-native'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { getUserInitials } from '@utils'
 import { FlexCenter, TextHeader } from '@theme/parents'
-import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
+import { COLORS_EXERCISE } from '@theme/colors'
 
 function stringToInt(str: string) {
   let res = 0
@@ -24,13 +24,12 @@ interface IProps {
 }
 
 export default memo(function UserImage({ name = '', photoUrl }: IProps) {
-  const { colors } = useSettings()
-  const isDarkTheme = colors.primary === colorsDark.primary
+  const { colors, isDark } = useAppTheme()
 
   return photoUrl ? (
     <Image source={{ uri: photoUrl }} style={[styles.profileImage, { borderColor: colors.black }]} />
   ) : (
-    <FlexCenter style={[styles.profileImage, { backgroundColor: getColorFromName(name, isDarkTheme), opacity: 0.5 }]}>
+    <FlexCenter style={[styles.profileImage, { backgroundColor: getColorFromName(name, isDark), opacity: 0.5 }]}>
       <TextHeader style={{ fontSize: 32 }}>{getUserInitials(name)}</TextHeader>
     </FlexCenter>
   )

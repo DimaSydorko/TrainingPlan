@@ -2,7 +2,9 @@ import * as React from 'react'
 import { useState } from 'react'
 import { Text, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
-import { useAppDispatch, useSettings, useUser } from '@hooks/redux'
+import { useAppDispatch, useUser } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
+import { useIsOnline } from '@stores/network/use-network-store'
 import { userAC } from '@store/user-reducer/user-ac'
 import { useNavigation } from '@react-navigation/native'
 import { FUTURE_FLAG, ScreenName } from '@utils/constants'
@@ -14,7 +16,8 @@ import { AuthNavigation } from '@utils/types'
 
 export default function RegistrationScreen() {
   const dispatch = useAppDispatch()
-  const { colors, internet } = useSettings()
+  const { colors } = useAppTheme()
+  const isOnline = useIsOnline()
   const { error, isLoading } = useUser()
   const navigation = useNavigation<AuthNavigation>()
   const [inputData, setInputData] = useState({ fullName: '', email: '', password: '', confirmPassword: '' })
@@ -70,8 +73,8 @@ export default function RegistrationScreen() {
           onChangeText={confirmPassword => setInputData({ ...inputData, confirmPassword })}
           placeholder='Confirm Password'
         />
-        <ConfirmButton disabled={isLoading || !internet.isOnline} onPress={onRegister} header='Create account' />
-        {!FUTURE_FLAG.IS_DEV && <AppGoogleSignInButton disabled={!internet.isOnline} />}
+        <ConfirmButton disabled={isLoading || !isOnline} onPress={onRegister} header='Create account' />
+        {!FUTURE_FLAG.IS_DEV && <AppGoogleSignInButton disabled={!isOnline} />}
         <FlexCenterColumn style={theme.margin.top20}>
           <TextOrdinary>
             Already got an account?{' '}

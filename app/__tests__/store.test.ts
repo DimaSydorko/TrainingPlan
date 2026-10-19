@@ -48,7 +48,6 @@ describe('store persistence', () => {
     const { store } = await loadStore()
     const state = store.getState()
     expect(state.userReducer?.user).toBeNull()
-    expect(state.settingsReducer?.sound.type).toBeDefined()
     expect(state.plansReducer).toBeDefined()
     expect(state.workoutReducer).toBeDefined()
     expect(state.publicationsReducer).toBeDefined()
@@ -59,7 +58,7 @@ describe('store persistence', () => {
       PERSIST_KEY,
       serialize({
         userReducer: { user: { uid: 'old-user' }, data: null, isLoading: false, error: '' },
-        settingsReducer: { isVibration: false },
+        workoutReducer: { sortedWorkoutUids: ['w1'] },
         _persist: { version: -1, rehydrated: true },
       })
     )
@@ -67,17 +66,17 @@ describe('store persistence', () => {
     const { store } = await loadStore()
     const state = store.getState()
     expect(state.userReducer?.user).toEqual({ uid: 'old-user' })
-    expect(state.settingsReducer?.isVibration).toBe(false)
+    expect(state.workoutReducer?.sortedWorkoutUids).toEqual(['w1'])
   })
 
   it('writes state changes back to AsyncStorage', async () => {
     const { store, persistedStore } = await loadStore()
-    store.dispatch({ type: 'settings/onVibrationToggle' })
+    store.dispatch({ type: 'plans/changeWorkoutsPosition', payload: ['w2'] })
     await persistedStore.flush()
 
     const raw = await AsyncStorage.getItem(PERSIST_KEY)
     expect(raw).not.toBeNull()
-    const settings = JSON.parse(JSON.parse(raw!).settingsReducer)
-    expect(settings.isVibration).toBe(false)
+    const workout = JSON.parse(JSON.parse(raw!).workoutReducer)
+    expect(workout.sortedWorkoutUids).toEqual(['w2'])
   })
 })

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
 import { TextOrdinary } from '@theme/parents'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 
 interface ExerciseResultsType {
   weight: number
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
 })
 
 export default function Approach({ weight, repeats, isPrevious = true }: ExerciseResultsType) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const color = isPrevious ? colors.text : colors.primary
   return (
     <View style={styles.container}>

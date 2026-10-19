@@ -2,8 +2,8 @@ import * as React from 'react'
 import { memo, useCallback, useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { AppModal } from '@common'
-import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
-import { useSettings } from '@hooks/redux'
+import { COLORS_EXERCISE } from '@theme/colors'
+import { useAppTheme } from '@theme/use-app-theme'
 import styles from './styles'
 
 interface IAppColorPicker {
@@ -12,11 +12,10 @@ interface IAppColorPicker {
 }
 
 export default memo(function AppColorPicker({ value, onChange }: IAppColorPicker) {
-  const { colors } = useSettings()
+  const { colors, isDark } = useAppTheme()
   const [isModal, setIsModal] = useState(false)
   const [colorIdx, setColorIdx] = useState<number>()
-  const isDarkTheme = colors.primary === colorsDark.primary
-  const color = COLORS_EXERCISE[colorIdx === undefined ? value : colorIdx][+isDarkTheme]
+  const color = COLORS_EXERCISE[colorIdx === undefined ? value : colorIdx][+isDark]
 
   const onSubmit = useCallback(() => {
     if (colorIdx !== undefined) onChange(colorIdx)
@@ -45,7 +44,7 @@ export default memo(function AppColorPicker({ value, onChange }: IAppColorPicker
           {COLORS_EXERCISE.map((colors, idx) => (
             <TouchableOpacity
               key={idx}
-              style={[styles.colorSelect, { backgroundColor: colors[+isDarkTheme] }]}
+              style={[styles.colorSelect, { backgroundColor: colors[+isDark] }]}
               onPress={() => setColorIdx(idx)}
             />
           ))}

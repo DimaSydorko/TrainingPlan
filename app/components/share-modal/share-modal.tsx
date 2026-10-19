@@ -2,10 +2,10 @@ import * as React from 'react'
 import { memo } from 'react'
 import { ScrollView } from 'react-native'
 
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { AppModal } from '@common'
 import { PlanType, WorkoutType } from '@utils/types'
-import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
+import { COLORS_EXERCISE } from '@theme/colors'
 import WorkoutCard from '@screens/workouts-screen/workout-card'
 import { Card, TextOrdinary } from '@theme/parents'
 import Exercise from '../exercise/exercise'
@@ -20,8 +20,7 @@ interface PropsType {
 }
 
 export default memo(function ShareModal({ onClose, isOpen, onShare, workout, plan }: PropsType) {
-  const { colors } = useSettings()
-  const isDarkTheme = colors.primary === colorsDark.primary
+  const { colors, isDark } = useAppTheme()
   const isPlan = !!plan && !workout
   const isEmpty = isPlan ? !plan?.workouts?.length : !workout?.exercises?.length
   return (
@@ -41,7 +40,7 @@ export default memo(function ShareModal({ onClose, isOpen, onShare, workout, pla
               </Card>
             ))
           : workout?.exercises?.map(ex => {
-              const color = COLORS_EXERCISE[ex?.colorIdx || 0][+isDarkTheme]
+              const color = COLORS_EXERCISE[ex?.colorIdx || 0][+isDark]
               return (
                 <Card key={ex.uid} style={styles.card}>
                   <Exercise isPublic isInModal exercise={ex} color={color} />

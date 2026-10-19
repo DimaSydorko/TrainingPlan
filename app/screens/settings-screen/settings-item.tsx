@@ -2,7 +2,7 @@ import * as React from 'react'
 import { memo, useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import Slider from '@react-native-community/slider'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { Divider, FlexSpaceBetween, TextOrdinary, TextSecondary } from '@theme/parents'
 import { appScreen } from '@utils/constants'
 import { MySwitch } from '@common'
@@ -33,7 +33,7 @@ export default memo(function SettingsItem({
   onSliderChange,
   testID,
 }: IProps) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const [valSlider, setValSlider] = useState<number>(valueSlider)
 
   useEffect(() => {

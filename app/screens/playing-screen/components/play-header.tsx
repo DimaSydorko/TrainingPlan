@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { memo } from 'react'
 import { View } from 'react-native'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { Timer } from '@common'
 import { usePlayTimerContext } from './play-timer-provider'
 import { secondsToMinSec } from '@components/workout-duration/workout-duration'
@@ -18,7 +18,7 @@ interface IProps {
 
 export default memo(function PlayHeader({ playingLap, exerciseLaps, workoutDurationTime }: IProps) {
   const { playTimer } = usePlayTimerContext()
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const time = workoutDurationTime + playTimer
   return (
     <View style={[theme.containers.headerStyle, styles.header]}>

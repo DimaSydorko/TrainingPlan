@@ -1,15 +1,15 @@
 import * as React from 'react'
 import { createContext, ReactNode, useCallback, useEffect, useState } from 'react'
 import { setSpeechDefaults } from '@platform/speech'
-import { useSettings } from './redux'
+import { useSettingsStore } from '@stores/settings/use-settings-store'
 
 function useAppHelper() {
   const [isTabMenu, setIsTabMenu] = useState<boolean>(true)
   const [savedUids, setSavedUids] = useState<string[]>([])
 
-  const {
-    tts: { isDucking, pitch, rate },
-  } = useSettings()
+  const isDucking = useSettingsStore(state => state.tts.isDucking)
+  const pitch = useSettingsStore(state => state.tts.pitch)
+  const rate = useSettingsStore(state => state.tts.rate)
 
   useEffect(() => {
     setSpeechDefaults({ rate })

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 import { Icon } from '../icon/icon'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { IconButton } from '../index'
 import { appScreen } from '@utils/constants'
 import { FlexSpaceBetween, TextOrdinary } from '@theme/parents'
@@ -42,7 +42,7 @@ export default React.memo(function Toast({
   pressAfterTime,
   iconName = '',
 }: ToastType) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
 
   useEffect(() => {
     if (pressAfterTime) {

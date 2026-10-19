@@ -3,7 +3,9 @@ import { useState } from 'react'
 import { Text, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
-import { useAppDispatch, useSettings, useUser } from '@hooks/redux'
+import { useAppDispatch, useUser } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
+import { useIsOnline } from '@stores/network/use-network-store'
 import { userAC } from '@store/user-reducer/user-ac'
 import { FUTURE_FLAG, ScreenName } from '@utils/constants'
 import { ConfirmButton, MyTextInput } from '@common'
@@ -17,7 +19,8 @@ export default function LoginScreen() {
   const { error, isLoading } = useUser()
   const [inputData, setInputData] = useState({ email: '', password: '' })
   const navigation = useNavigation<AuthNavigation>()
-  const { colors, internet } = useSettings()
+  const { colors } = useAppTheme()
+  const isOnline = useIsOnline()
 
   const onFooterLinkPress = () => {
     navigation.navigate(ScreenName.Registration)
@@ -48,13 +51,8 @@ export default function LoginScreen() {
             testID='login.password'
           />
         </FlexCenterColumn>
-        <ConfirmButton
-          disabled={isLoading || !internet.isOnline}
-          onPress={onLoginPress}
-          header='Log in'
-          testID='login.submit'
-        />
-        {!FUTURE_FLAG.IS_DEV && <AppGoogleSignInButton disabled={!internet.isOnline} />}
+        <ConfirmButton disabled={isLoading || !isOnline} onPress={onLoginPress} header='Log in' testID='login.submit' />
+        {!FUTURE_FLAG.IS_DEV && <AppGoogleSignInButton disabled={!isOnline} />}
         <FlexCenterColumn style={theme.margin.top20}>
           <TextOrdinary>
             Don&apos;t have an account?{' '}

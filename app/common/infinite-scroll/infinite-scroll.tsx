@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, RefreshControl, ScrollView } from 'react-native'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { appScreen } from '@utils/constants'
 
 interface IProps {
@@ -18,7 +18,7 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
 export default function InfiniteScroll({ children, isLoading = false, onScrollToBottom, onRefresh }: IProps) {
   const [isRefreshLoading, setIsRefreshLoading] = useState<boolean>(false)
   const [isDelay, setIsDelay] = useState<boolean>(false)
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
 
   useEffect(() => {
     if (!isLoading) setIsRefreshLoading(p => (p ? false : p))

@@ -3,7 +3,8 @@ import { memo, useCallback, useContext, useState } from 'react'
 import { View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { publicationsAC } from '@store/publications-reducer/publications-ac'
-import { useAppDispatch, useSettings, useUser } from '@hooks/redux'
+import { useAppDispatch, useUser } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { AppHelperContext } from '@hooks/app-helper-provider'
 import { AppNavigationType, PublicType } from '@utils/types'
 import { FlexEnd, TextSecondary } from '@theme/parents'
@@ -18,7 +19,7 @@ interface IProps {
 export default memo(function PublicButtons({ publication, isOpenedScreen = false }: IProps) {
   const dispatch = useAppDispatch()
   const { addSavedUids, savedUids } = useContext(AppHelperContext)
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const { user } = useUser()
   const navigation = useNavigation<AppNavigationType>()
   const isOwner = publication.ownerUid === (user?.uid || '')

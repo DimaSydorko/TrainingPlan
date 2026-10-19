@@ -3,8 +3,8 @@ import { memo, useCallback, useEffect, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { previewSound } from '@platform/audio'
 
-import { useAppDispatch, useSettings } from '@hooks/redux'
-import { onSoundTypeChange } from '@store/settings-reducer/settings-slice'
+import { useAppTheme } from '@theme/use-app-theme'
+import { useSettingsStore } from '@stores/settings/use-settings-store'
 import { AppModal } from '@common'
 import { getSoundText } from '@utils'
 import { SetStateType } from '@utils/types'
@@ -20,8 +20,9 @@ type PropsT = {
 }
 
 export default memo(function AppSoundPicker({ isOpen, setIsOpen }: PropsT) {
-  const dispatch = useAppDispatch()
-  const { sound, colors } = useSettings()
+  const { colors } = useAppTheme()
+  const sound = useSettingsStore(state => state.sound)
+  const setStoredSoundType = useSettingsStore(state => state.setSoundType)
   const [soundType, setSoundType] = useState<SoundType>(sound?.type || SoundType.Bell)
   const [isPressing, setIsPressing] = useState<boolean>(false)
 
@@ -32,7 +33,7 @@ export default memo(function AppSoundPicker({ isOpen, setIsOpen }: PropsT) {
   }, [soundType, isPressing])
 
   const onConfirm = useCallback(() => {
-    if (soundType !== sound?.type) dispatch(onSoundTypeChange(soundType))
+    if (soundType !== sound?.type) setStoredSoundType(soundType)
     setIsOpen(false)
   }, [soundType])
 

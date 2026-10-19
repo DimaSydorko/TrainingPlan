@@ -2,7 +2,8 @@ import * as React from 'react'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { useAppDispatch, useSettings, useUser, useWorkout } from '@hooks/redux'
+import { useAppDispatch, useUser, useWorkout } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { workoutAC } from '@store/workout-reducer/workout-ac'
 import { plansAC } from '@store/plans-reducer/plans-ac'
 import { AppHelperContext } from '@hooks/app-helper-provider'
@@ -26,14 +27,14 @@ import { ExerciseType, PlayableNavigation, WorkoutType } from '@utils/types'
 import { AppFooter, AppHeader, Card, FlexCenterColumn, FlexSpaceBetween, Page, TextSecondary } from '@theme/parents'
 import { icon } from '@theme/icons'
 import { theme } from '@theme/theme'
-import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
+import { COLORS_EXERCISE } from '@theme/colors'
 import { useAppInsets } from '@theme/insets'
 
 export default function WorkoutScreen() {
   const dispatch = useAppDispatch()
   const navigation = useNavigation<PlayableNavigation>()
   const { selectedWorkout } = useWorkout()
-  const { colors } = useSettings()
+  const { colors, isDark } = useAppTheme()
   const { user } = useUser()
   const { onToggleTabMenu } = useContext(AppHelperContext)
   const bars = useAppInsets()
@@ -45,7 +46,6 @@ export default function WorkoutScreen() {
   const [workoutExercises, setWorkoutExercises] = useState<ExerciseType[] | null>(null)
   const [changeExercise, setChangeExercise] = useState<ExerciseType | null>(null)
   const isEmpty = !workoutExercises?.filter(ex => ex.isVisible)?.length
-  const isDarkTheme = colors.primary === colorsDark.primary
 
   const changedWorkout: WorkoutType = useMemo(
     () => ({
@@ -128,7 +128,7 @@ export default function WorkoutScreen() {
 
   const renderItem = useCallback(
     ({ item, drag, isActive, getIndex }: DraggableRenderItemParams<ExerciseType>) => {
-      const color = COLORS_EXERCISE[item?.colorIdx || 0][+isDarkTheme]
+      const color = COLORS_EXERCISE[item?.colorIdx || 0][+isDark]
       return (
         <DraggableItem>
           <Card borderLeftColor={item.isVisible ? `${color}` : `${color}80`}>
@@ -147,7 +147,7 @@ export default function WorkoutScreen() {
         </DraggableItem>
       )
     },
-    [isEditMode, onVisibilityToggle, onSaveExercise, isDarkTheme, onDeleteExercise]
+    [isEditMode, onVisibilityToggle, onSaveExercise, isDark, onDeleteExercise]
   )
 
   return (
@@ -192,7 +192,7 @@ export default function WorkoutScreen() {
                     {workoutExercises
                       ?.filter(ex => ex.isVisible)
                       ?.map(exercise => {
-                        const color = COLORS_EXERCISE[exercise?.colorIdx || 0][+isDarkTheme]
+                        const color = COLORS_EXERCISE[exercise?.colorIdx || 0][+isDark]
                         return (
                           <Card key={exercise.uid} borderLeftColor={color}>
                             <Exercise exercise={exercise} color={color} />

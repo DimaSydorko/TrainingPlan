@@ -2,10 +2,10 @@ import * as React from 'react'
 import { SvgXml } from 'react-native-svg'
 import { appScreen } from '@utils/constants'
 import { FlexCenter } from '@theme/parents'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 
 export default function NoDataIcon() {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const xml = `<svg xmlns='http://www.w3.org/2000/svg'
       data-name='Layer 1'
       width=${appScreen.vw - 50}

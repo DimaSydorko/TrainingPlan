@@ -1,21 +1,11 @@
 import * as React from 'react'
 import { memo, useCallback, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
+import { useShallow } from 'zustand/react/shallow'
 import { previewSound } from '@platform/audio'
 
-import { useAppDispatch, useSettings } from '@hooks/redux'
-import {
-  clearSettings,
-  onBatteryModeChange,
-  onSoundVolumeChange,
-  onThemeChange,
-  onTtsDuckingToggle,
-  onTtsPitchChange,
-  onTtsRateChange,
-  onTtsVolumeChange,
-  onVibrationToggle,
-  onWorkoutWeightStepChange,
-} from '@store/settings-reducer/settings-slice'
+import { useAppDispatch } from '@hooks/redux'
+import { useSettingsStore } from '@stores/settings/use-settings-store'
 import { clearWorkoutResults } from '@store/workout-reducer/workout-slice'
 import { clearPublicationResults } from '@store/publications-reducer/publications-slice'
 import { clearPlaneResults } from '@store/plans-reducer/plans-slice'
@@ -23,7 +13,8 @@ import useTTS from '@hooks/use-tts'
 import { ConfirmButton } from '@common'
 import AppSoundPicker from '@components/app-sound-picker/app-sound-picker'
 import { FlexCenter, Page, TextHeader } from '@theme/parents'
-import { colorsDark, colorsLight } from '@theme/colors'
+import { useAppTheme } from '@theme/use-app-theme'
+import { THEME_MODE } from '@theme/themes.constants'
 
 import SettingsItem from './settings-item'
 import SettingsHeader from './settings-header'
@@ -33,44 +24,96 @@ import { SoundType } from '@utils/constants'
 export default memo(function SettingsScreen() {
   const dispatch = useAppDispatch()
   const onSay = useTTS()
-  const { colors, isVibration, tts, workout, sound, isSaveBatteryMode } = useSettings()
+  const { colors, isDark, name: themeName } = useAppTheme()
+  const { themeMode, isVibration, tts, workout, sound, isSaveBatteryMode } = useSettingsStore(
+    useShallow(({ themeMode, isVibration, tts, workout, sound, isSaveBatteryMode }) => ({
+      themeMode,
+      isVibration,
+      tts,
+      workout,
+      sound,
+      isSaveBatteryMode,
+    }))
+  )
+  const {
+    setThemeMode,
+    toggleVibration,
+    toggleTtsDucking,
+    toggleSaveBatteryMode,
+    setTtsVolume,
+    setTtsPitch,
+    setTtsRate,
+    setWeightStep,
+    setSoundVolume,
+    reset: resetSettings,
+  } = useSettingsStore(
+    useShallow(
+      ({
+        setThemeMode,
+        toggleVibration,
+        toggleTtsDucking,
+        toggleSaveBatteryMode,
+        setTtsVolume,
+        setTtsPitch,
+        setTtsRate,
+        setWeightStep,
+        setSoundVolume,
+        reset,
+      }) => ({
+        setThemeMode,
+        toggleVibration,
+        toggleTtsDucking,
+        toggleSaveBatteryMode,
+        setTtsVolume,
+        setTtsPitch,
+        setTtsRate,
+        setWeightStep,
+        setSoundVolume,
+        reset,
+      })
+    )
+  )
   const [isSoundModal, setIsSoundModal] = useState<boolean>(false)
 
-  const isDarkTheme = colors.primary === colorsDark.primary
+  const isSystemTheme = themeMode === THEME_MODE.SYSTEM
 
-  const onThemeToggle = useCallback(
-    () => dispatch(onThemeChange(isDarkTheme ? colorsLight : colorsDark)),
-    [isDarkTheme]
+  const handleDarkThemeToggle = useCallback(
+    () => setThemeMode(isDark ? THEME_MODE.LIGHT : THEME_MODE.DARK),
+    [isDark, setThemeMode]
   )
-  const onVibration = useCallback(() => dispatch(onVibrationToggle()), [])
-  const onDuckingToggle = useCallback(() => dispatch(onTtsDuckingToggle()), [])
-  const onBatteryModeToggle = useCallback(() => dispatch(onBatteryModeChange()), [])
-  const onTtsVolume = useCallback(value => dispatch(onTtsVolumeChange(value)), [])
-  const onTtsPitch = useCallback(value => dispatch(onTtsPitchChange(value)), [])
-  const onTtsRate = useCallback(value => dispatch(onTtsRateChange(value)), [])
-  const onWorkoutWeightStep = useCallback(value => dispatch(onWorkoutWeightStepChange(value)), [])
-  const onSoundVolume = useCallback(value => {
-    dispatch(onSoundVolumeChange(value))
-  }, [])
+  const handleSystemThemeToggle = useCallback(
+    () => setThemeMode(isSystemTheme ? themeName : THEME_MODE.SYSTEM),
+    [isSystemTheme, themeName, setThemeMode]
+  )
 
   const clearAll = useCallback(() => {
     dispatch(clearWorkoutResults())
     dispatch(clearPlaneResults())
     dispatch(clearPublicationResults())
-    dispatch(clearSettings())
-  }, [])
+    resetSettings()
+  }, [dispatch, resetSettings])
 
   return (
     <Page>
       <SettingsHeader label={'Colors'} />
       <SettingsItem
         label={'Dark Theme'}
-        valueSwitch={isDarkTheme}
-        onToggleSwitch={onThemeToggle}
+        valueSwitch={isDark}
+        onToggleSwitch={handleDarkThemeToggle}
         testID='settings.darkTheme'
       />
+      <SettingsItem
+        label={'Follow system theme'}
+        valueSwitch={isSystemTheme}
+        onToggleSwitch={handleSystemThemeToggle}
+        testID='settings.systemTheme'
+      />
       <SettingsHeader label={'Performance'} />
-      <SettingsItem label={'Safe battery mode'} valueSwitch={isSaveBatteryMode} onToggleSwitch={onBatteryModeToggle} />
+      <SettingsItem
+        label={'Safe battery mode'}
+        valueSwitch={isSaveBatteryMode}
+        onToggleSwitch={toggleSaveBatteryMode}
+      />
       <SettingsHeader label={'Workout'} />
       <SettingsItem
         label={'Weight step'}
@@ -79,10 +122,10 @@ export default memo(function SettingsScreen() {
         sliderMaxValue={10}
         sliderStep={1}
         sliderValueType={' kg'}
-        onSliderChange={onWorkoutWeightStep}
+        onSliderChange={setWeightStep}
       />
       <SettingsHeader label={'Sound \\ Notifications'} />
-      <SettingsItem label={'Vibration'} valueSwitch={isVibration} onToggleSwitch={onVibration} />
+      <SettingsItem label={'Vibration'} valueSwitch={isVibration} onToggleSwitch={toggleVibration} />
       <SettingsHeader label={'Speaking'}>
         <FlexCenter>
           <TouchableOpacity onPress={() => onSay('Test speech')}>
@@ -93,16 +136,16 @@ export default memo(function SettingsScreen() {
       <SettingsItem
         label={'Lowering other apps output level'}
         valueSwitch={tts.isDucking}
-        onToggleSwitch={onDuckingToggle}
+        onToggleSwitch={toggleTtsDucking}
       />
-      <SettingsItem label={'Volume'} valueSlider={tts.volume} sliderStep={0.1} onSliderChange={onTtsVolume} />
+      <SettingsItem label={'Volume'} valueSlider={tts.volume} sliderStep={0.1} onSliderChange={setTtsVolume} />
       <SettingsItem
         label={'Pitch'}
         valueSlider={tts.pitch}
         sliderMinValue={0.5}
         sliderMaxValue={2}
         sliderStep={0.1}
-        onSliderChange={onTtsPitch}
+        onSliderChange={setTtsPitch}
       />
       <SettingsItem
         label={'Speed'}
@@ -110,7 +153,7 @@ export default memo(function SettingsScreen() {
         sliderStep={0.05}
         sliderMinValue={0.1}
         sliderMaxValue={0.9}
-        onSliderChange={onTtsRate}
+        onSliderChange={setTtsRate}
       />
       <SettingsHeader label={'Sound'}>
         <FlexCenter>
@@ -125,7 +168,7 @@ export default memo(function SettingsScreen() {
         sliderMinValue={0}
         sliderMaxValue={1}
         sliderStep={0.1}
-        onSliderChange={onSoundVolume}
+        onSliderChange={setSoundVolume}
       />
       <TouchableOpacity onPress={() => setIsSoundModal(true)}>
         <TextHeader color={colors.black} style={{ marginHorizontal: 16, marginVertical: 6 }}>

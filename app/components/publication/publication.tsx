@@ -2,13 +2,13 @@ import * as React from 'react'
 import { memo } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { Labels, WorkoutDuration } from '@common'
 import { Card, FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '@theme/parents'
 import { PublicType, PublicationsNavigation } from '@utils/types'
 import { appScreen, ScreenName } from '@utils/constants'
 import PublicButtons from './public-buttons'
-import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
+import { COLORS_EXERCISE } from '@theme/colors'
 
 interface IProps {
   publication: PublicType
@@ -16,10 +16,9 @@ interface IProps {
 
 export default memo(function Publication({ publication }: IProps) {
   const navigation = useNavigation<PublicationsNavigation>()
-  const { colors } = useSettings()
+  const { colors, isDark } = useAppTheme()
   const isPlan = !!publication?.workouts && !publication?.exercises
-  const isDarkTheme = colors.primary === colorsDark.primary
-  const color = COLORS_EXERCISE[publication?.colorIdx === undefined ? 3 : publication?.colorIdx][+isDarkTheme]
+  const color = COLORS_EXERCISE[publication?.colorIdx === undefined ? 3 : publication?.colorIdx][+isDark]
 
   const onPress = () => {
     if (isPlan) navigation.navigate(ScreenName.PublicationPlan, { publication })

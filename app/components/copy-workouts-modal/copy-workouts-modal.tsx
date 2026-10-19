@@ -3,13 +3,14 @@ import { memo, useCallback, useState } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 import { Icon } from '@common/icon/icon'
 
-import { usePlans, useSettings } from '@hooks/redux'
+import { usePlans } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { AppModal } from '@common'
 import { PlanType } from '@utils/types'
 import { Card, TextHeader, TextSecondary } from '@theme/parents'
 import { icon } from '@theme/icons'
 import styles from './styles'
-import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
+import { COLORS_EXERCISE } from '@theme/colors'
 
 interface PropsType {
   isOpen: boolean
@@ -20,9 +21,8 @@ interface PropsType {
 
 export default memo(function CopyWorkoutsModal({ onClose, onCopy, isOpen, isInPlan }: PropsType) {
   const { plans, selectedPlan } = usePlans()
-  const { colors } = useSettings()
+  const { colors, isDark } = useAppTheme()
   const [selectedIdx, setSelectedIdx] = useState<number | undefined>(undefined)
-  const isDarkTheme = colors.primary === colorsDark.primary
 
   const onConfirmCopy = useCallback(() => {
     setSelectedIdx(undefined)
@@ -58,7 +58,7 @@ export default memo(function CopyWorkoutsModal({ onClose, onCopy, isOpen, isInPl
         ) : null}
         {plans.map((plan, idx) => {
           const isCurrent = isInPlan ? selectedPlan.uid === plan.uid : false
-          const color = COLORS_EXERCISE[plan?.colorIdx === undefined ? 3 : plan?.colorIdx][+isDarkTheme]
+          const color = COLORS_EXERCISE[plan?.colorIdx === undefined ? 3 : plan?.colorIdx][+isDark]
           return isCurrent ? null : (
             <TouchableOpacity key={plan.uid} onPress={() => setSelectedIdx(idx)}>
               <Card style={[styles.plan, { borderLeftColor: color, borderLeftWidth: 3 }]}>

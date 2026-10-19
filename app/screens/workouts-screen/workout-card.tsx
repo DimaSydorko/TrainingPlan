@@ -2,12 +2,12 @@ import * as React from 'react'
 import { memo } from 'react'
 import { View } from 'react-native'
 import { Icon } from '@common/icon/icon'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { Labels, WorkoutDuration } from '@common'
 import { FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '@theme/parents'
 import { WorkoutType } from '@utils/types'
 import { icon } from '@theme/icons'
-import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
+import { COLORS_EXERCISE } from '@theme/colors'
 
 interface IWorkoutCard {
   workout: WorkoutType
@@ -15,9 +15,8 @@ interface IWorkoutCard {
 }
 
 export default memo(function WorkoutCard({ workout, isSelected = false }: IWorkoutCard) {
-  const { colors } = useSettings()
-  const isDarkTheme = colors.primary === colorsDark.primary
-  const color = COLORS_EXERCISE[workout?.colorIdx === undefined ? 3 : workout?.colorIdx][+isDarkTheme]
+  const { colors, isDark } = useAppTheme()
+  const color = COLORS_EXERCISE[workout?.colorIdx === undefined ? 3 : workout?.colorIdx][+isDark]
 
   return (
     <>

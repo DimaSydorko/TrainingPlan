@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FlatList, ListRenderItemInfo, NativeScrollEvent, NativeSyntheticEvent, Text, View } from 'react-native'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { buildPickerValues, indexForOffset, indexForValue } from './picker-math'
 
 // Replaces react-native-scroll-picker-wheel (unmaintained since 2021, needs undeclared prop-types,
@@ -27,7 +27,7 @@ export default memo(function SwipeSelector({
   maxValue = 60,
   testID,
 }: SwipeSelectorType) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const values = useMemo(() => buildPickerValues(maxValue, step), [maxValue, step])
   const valueIndex = indexForValue(value, step, values.length)
   const listRef = useRef<FlatList<number>>(null)

@@ -5,7 +5,8 @@ import { useNavigation } from '@react-navigation/native'
 import { changePlansPosition, selectPlan } from '@store/plans-reducer/plans-slice'
 import { plansAC } from '@store/plans-reducer/plans-ac'
 import { publicationsAC } from '@store/publications-reducer/publications-ac'
-import { useAppDispatch, usePlans, useSettings } from '@hooks/redux'
+import { useAppDispatch, usePlans } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { AppHeader, Card, FlexEnd, FlexStart, Page, TextHeader } from '@theme/parents'
 import {
   AddMoreButton,
@@ -22,21 +23,20 @@ import { QUERY_LIMIT, ScreenName, VIBRATION } from '@utils/constants'
 import { PlanType, PlansNavigation } from '@utils/types'
 import { icon } from '@theme/icons'
 import ShareModal from '@components/share-modal/share-modal'
-import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
+import { COLORS_EXERCISE } from '@theme/colors'
 import NoDataIcon from '@assets/icons/no-data-icon'
 
 export default memo(function MyPlansScreen() {
   const navigation = useNavigation<PlansNavigation>()
   const dispatch = useAppDispatch()
   const statePlans = usePlans()
-  const { colors } = useSettings()
+  const { colors, isDark } = useAppTheme()
   const [selectedPlanUids, setSelectedPlanUids] = useState<string[]>([])
   const [isNewPlanModal, setIsNewPlanModal] = useState(false)
   const [isDeleteModal, setIsDeleteModal] = useState(false)
   const [isShareModal, setIsShareModal] = useState(false)
   const [changePlan, setChangePlan] = useState<PlanType | null>(null)
   const isEditMode = !!selectedPlanUids.length
-  const isDarkTheme = colors.primary === colorsDark.primary
   const plans = statePlans.plans
     ?.slice()
     ?.sort((a, b) => (statePlans.sortedPlanUids.indexOf(a.uid) || 0) - statePlans.sortedPlanUids.indexOf(b.uid) || 0)
@@ -76,7 +76,7 @@ export default memo(function MyPlansScreen() {
   }, [selectedFirst])
 
   const renderItem = ({ item, drag, isActive }: DraggableRenderItemParams<PlanType>) => {
-    const color = COLORS_EXERCISE[item?.colorIdx === undefined ? 3 : item?.colorIdx][+isDarkTheme]
+    const color = COLORS_EXERCISE[item?.colorIdx === undefined ? 3 : item?.colorIdx][+isDark]
     return (
       <DraggableItem>
         <Card borderLeftColor={color}>

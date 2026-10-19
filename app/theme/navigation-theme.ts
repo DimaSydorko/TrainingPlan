@@ -1,19 +1,9 @@
 import { DarkTheme, DefaultTheme, Theme } from '@react-navigation/native'
-import { ColorsType } from '@utils/types'
-import { colorsDark } from './colors'
+import { AppTheme } from './themes'
 
-/**
- * The app keeps its palette (light or dark) in the settings slice instead of a theme name.
- * The dark palette is the only one whose primary colour is colorsDark.primary; screens already
- * use this check (`colors.primary === colorsDark.primary`).
- */
-export function isDarkColors(colors: Pick<ColorsType, 'primary'>): boolean {
-  return colors.primary === colorsDark.primary
-}
+export function buildNavigationTheme({ isDark, colors }: AppTheme): Theme {
+  const base = isDark ? DarkTheme : DefaultTheme
 
-/** React Navigation theme built from the app palette, so stack cards, headers and tab bars match. */
-export function buildNavigationTheme(colors: ColorsType): Theme {
-  const base = isDarkColors(colors) ? DarkTheme : DefaultTheme
   return {
     ...base,
     colors: {
@@ -27,7 +17,6 @@ export function buildNavigationTheme(colors: ColorsType): Theme {
   }
 }
 
-/** expo-status-bar style: light text on the dark palette, dark text on the light one. */
-export function statusBarStyleFor(colors: Pick<ColorsType, 'primary'>): 'light' | 'dark' {
-  return isDarkColors(colors) ? 'light' : 'dark'
+export function statusBarStyleFor({ isDark }: Pick<AppTheme, 'isDark'>): 'light' | 'dark' {
+  return isDark ? 'light' : 'dark'
 }

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { TouchableOpacity, ViewStyle } from 'react-native'
 import { Icon } from '../icon/icon'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import styles from './styles'
 import { useAppInsets } from '@theme/insets'
 
@@ -17,7 +17,7 @@ interface AddMoreButtonType {
 //zustand
 
 export default function AddMoreButton({ onPress, icon, iconColor, color, style, testID }: AddMoreButtonType) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const newIconColor = iconColor || colors.background
   const newColor = color || colors.primary
   // Sits above the tab bar / AppFooter, which grow by the navigation bar inset (edge-to-edge)

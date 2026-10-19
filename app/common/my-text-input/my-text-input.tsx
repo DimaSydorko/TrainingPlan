@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { TextInput, TextStyle, View, TextInputProps } from 'react-native'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { IconButton } from '../index'
 import { icon } from '@theme/icons'
 import styles from './styles'
@@ -18,7 +18,7 @@ export default function MyTextInput({
   type = 'ordinary',
   ...props
 }: MyTextInputType & TextInputProps) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const isPasswordEnter = secureTextEntry !== undefined
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(isPasswordEnter ? !secureTextEntry : true)
   return (

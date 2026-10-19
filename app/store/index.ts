@@ -4,15 +4,15 @@ import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, R
 import userReducer from './user-reducer/user-slice'
 import plansReducer from './plans-reducer/plans-slice'
 import workoutReducer from './workout-reducer/workout-slice'
-import settingsReducer from './settings-reducer/settings-slice'
 import publicationsReducer from './publications-reducer/publications-slice'
 import { listenToAuthChanges } from './user-reducer/auth-listener'
+import { legacySettingsReducer } from './legacy-settings-reducer'
 
 const rootReducer = combineReducers({
   userReducer,
   plansReducer,
   workoutReducer,
-  settingsReducer,
+  settingsReducer: legacySettingsReducer,
   publicationsReducer,
 })
 

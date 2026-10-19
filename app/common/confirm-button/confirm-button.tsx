@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { colorsFixed } from '@theme/colors'
 import styles from './styles'
 import { appScreen } from '@utils/constants'
@@ -26,7 +26,7 @@ export default function ConfirmButton({
   disabled = false,
   testID,
 }: ConfirmButtonType) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const newColor = color || colors.primary
   return (
     <TouchableOpacity

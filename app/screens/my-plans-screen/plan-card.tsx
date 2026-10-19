@@ -3,7 +3,7 @@ import { memo, useState } from 'react'
 import { View } from 'react-native'
 import { Icon } from '@common/icon/icon'
 import { AppModal, Labels } from '@common'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { FlexSpaceBetween, TextHeader, TextSecondary } from '@theme/parents'
 import { PlanType } from '@utils/types'
 import { icon } from '@theme/icons'
@@ -17,7 +17,7 @@ interface IPlanCard {
 
 export default memo(function PlanCard({ plan, isSelected, onDelete, color }: IPlanCard) {
   const [isDeleteModal, setIsDeleteModal] = useState(false)
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
 
   return (
     <>

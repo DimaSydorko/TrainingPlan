@@ -2,11 +2,11 @@ import * as React from 'react'
 import { memo, useEffect, useRef } from 'react'
 import { ScrollView, View } from 'react-native'
 
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { SelectedWorkoutType } from '@utils/types'
 import Exercise from '@components/exercise/exercise'
 import { ConfirmButton } from '@common'
-import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
+import { COLORS_EXERCISE } from '@theme/colors'
 import { Card } from '@theme/parents'
 import { useAppInsets } from '@theme/insets'
 import styles from './styles'
@@ -26,11 +26,10 @@ export default memo(function PlayingReview({
   isTheLastOneComplete,
   onSaveResult,
 }: IProps) {
-  const { colors } = useSettings()
+  const { colors, isDark } = useAppTheme()
   // Sits between the playing header and footer, both of which grow by the system bar insets
   const { top, bottom } = useAppInsets()
   const scrollRef = useRef<ScrollView>(null)
-  const isDarkTheme = colors.primary === colorsDark.primary
 
   useEffect(() => {
     if (isTheLastOneComplete) {
@@ -62,7 +61,7 @@ export default memo(function PlayingReview({
               ]}
             >
               <Exercise
-                color={COLORS_EXERCISE[exercise?.colorIdx || 0][+isDarkTheme]}
+                color={COLORS_EXERCISE[exercise?.colorIdx || 0][+isDark]}
                 key={exercise.uid}
                 exercise={exercise}
                 playingExerciseLap={

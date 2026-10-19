@@ -1,7 +1,9 @@
 import * as React from 'react'
 import { useCallback, useState } from 'react'
 import { View } from 'react-native'
-import { useAppDispatch, usePublications, useSettings } from '@hooks/redux'
+import { useAppDispatch, usePublications } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
+import { useIsOnline } from '@stores/network/use-network-store'
 import { publicationsAC } from '@store/publications-reducer/publications-ac'
 import { InfiniteScroll, LabelsInput } from '@common'
 import Publication from '@components/publication/publication'
@@ -13,9 +15,9 @@ import { theme } from '@theme/theme'
 
 export default function PublicationsScreen() {
   const dispatch = useAppDispatch()
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const { publications, isLoading } = usePublications()
-  const { internet } = useSettings()
+  const isOnline = useIsOnline()
   const [labels, setLabels] = useState<string[]>([])
   const [prevSearch, setPrevSearch] = useState<string[]>([])
 
@@ -41,7 +43,7 @@ export default function PublicationsScreen() {
 
   return (
     <View style={[theme.containers.centerColumn, { backgroundColor: colors.background }]}>
-      {internet.isOnline ? (
+      {isOnline ? (
         <InfiniteScroll
           isLoading={isLoading}
           onRefresh={() => dispatch(publicationsAC.get({ labels }))}

@@ -1,7 +1,9 @@
 import * as React from 'react'
 import { memo, useCallback, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { useAppDispatch, usePublications, useSettings, useUser } from '@hooks/redux'
+import { useAppDispatch, usePublications, useUser } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
+import { useIsOnline } from '@stores/network/use-network-store'
 import { publicationsAC } from '@store/publications-reducer/publications-ac'
 import { userAC } from '@store/user-reducer/user-ac'
 import UserImage from '@components/user-image/user-image'
@@ -17,26 +19,27 @@ import NoSignalIcon from '@assets/icons/no-signal-icon'
 export default memo(function ProfileScreen() {
   const navigation = useNavigation<ProfileNavigation>()
   const dispatch = useAppDispatch()
-  const { colors, internet } = useSettings()
+  const { colors } = useAppTheme()
+  const isOnline = useIsOnline()
   const { user } = useUser()
   const { userPublications, isLoading } = usePublications()
   const [isLogoutModal, setIsLogoutModal] = useState(false)
 
   const getNextChunk = useCallback(() => {
-    if (internet.isOnline && userPublications.length >= PUBLICATION_QUERY_LIMIT) {
+    if (isOnline && userPublications.length >= PUBLICATION_QUERY_LIMIT) {
       const lastVisible = userPublications[userPublications.length - 1]
       dispatch(publicationsAC.get({ lastVisible, isYours: true }))
     }
-  }, [userPublications[userPublications.length - 1], internet.isOnline])
+  }, [userPublications[userPublications.length - 1], isOnline])
 
   return (
     <InfiniteScroll
       isLoading={isLoading}
-      onRefresh={internet.isOnline ? () => dispatch(publicationsAC.get({ isYours: true })) : undefined}
+      onRefresh={isOnline ? () => dispatch(publicationsAC.get({ isYours: true })) : undefined}
       onScrollToBottom={getNextChunk}
     >
       <FlexEnd>
-        {internet.isOnline && (
+        {isOnline && (
           <IconButton
             iconName={icon.logout}
             testID='profile.logout'
@@ -61,7 +64,7 @@ export default memo(function ProfileScreen() {
         <TextSecondary>{user?.email}</TextSecondary>
       </FlexCenterColumn>
       <FlexCenterColumn>
-        {internet.isOnline ? (
+        {isOnline ? (
           userPublications.map(publication => <Publication key={publication.uid} publication={publication} />)
         ) : (
           <NoSignalIcon height={appScreen.vw} />

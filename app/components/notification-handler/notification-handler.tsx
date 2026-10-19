@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { memo, useEffect, useState } from 'react'
-import { useAppDispatch, usePlans, usePublications, useSettings, useWorkout } from '@hooks/redux'
+import { useAppDispatch, usePlans, usePublications, useWorkout } from '@hooks/redux'
+import { useIsOnline } from '@stores/network/use-network-store'
 import { errorPlansClear } from '@store/plans-reducer/plans-slice'
 import { errorWorkoutClear } from '@store/workout-reducer/workout-slice'
 import { errorPublicationClear } from '@store/publications-reducer/publications-slice'
@@ -13,14 +14,14 @@ export default memo(function NotificationHandler() {
   const plans = usePlans()
   const workout = useWorkout()
   const publications = usePublications()
-  const { internet } = useSettings()
+  const isOnline = useIsOnline()
   const [isInternetInfo, setIsInternetInfo] = useState<boolean>(false)
 
   useEffect(() => {
     // for first loading
-    if (internet.isOnline) setIsInternetInfo(false)
+    if (isOnline) setIsInternetInfo(false)
     else setTimeout(() => setIsInternetInfo(true), 1000)
-  }, [internet.isOnline])
+  }, [isOnline])
 
   return (
     <Toaster
@@ -58,7 +59,7 @@ export default memo(function NotificationHandler() {
             pressAfterTime={16000}
           />
         ),
-        isInternetInfo && !internet.isOnline && (
+        isInternetInfo && !isOnline && (
           <Toast
             variant='info'
             iconName={icon.wifiOff}

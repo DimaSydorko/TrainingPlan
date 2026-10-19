@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { memo, ReactNode } from 'react'
 import { StyleSheet } from 'react-native'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { FlexSpaceBetween, TextHeader } from '@theme/parents'
 import { IconButton } from '../index'
 import { appScreen } from '@utils/constants'
@@ -29,7 +29,7 @@ export default memo(function ButtonCounter({
   extraWidth = 0,
   children,
 }: ButtonCounterType) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const buttonColor = color || colors.textSecondary
 
   return (

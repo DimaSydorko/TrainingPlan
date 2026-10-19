@@ -8,13 +8,14 @@ import { activateKeepAwake, deactivateKeepAwake } from '@platform/keep-awake'
 import usePlaying, { cueDelayMs } from '@hooks/use-playing'
 import { appScreen } from '@utils/constants'
 import useTTS from '@hooks/use-tts'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
+import { useSettingsStore } from '@stores/settings/use-settings-store'
 import { getWorkoutDuration } from '@utils'
 import { AppNavigationType } from '@utils/types'
 import { AppImage, ConfirmButton, GoBackSubmitModal, IconButton } from '@common'
 import { secondsToMinSec } from '@components/workout-duration/workout-duration'
 import { FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '@theme/parents'
-import { COLORS_EXERCISE, colorsDark, colorsFixed } from '@theme/colors'
+import { COLORS_EXERCISE, colorsFixed } from '@theme/colors'
 import { theme } from '@theme/theme'
 import { icon } from '@theme/icons'
 import { useAppInsets } from '@theme/insets'
@@ -27,7 +28,11 @@ import styles from './styles'
 import useBackgroundCues from './use-background-cues'
 
 export default memo(function PlayingScreen() {
-  const { colors, workout, isSaveBatteryMode, sound, isVibration } = useSettings()
+  const { colors, isDark } = useAppTheme()
+  const workout = useSettingsStore(state => state.workout)
+  const isSaveBatteryMode = useSettingsStore(state => state.isSaveBatteryMode)
+  const sound = useSettingsStore(state => state.sound)
+  const isVibration = useSettingsStore(state => state.isVibration)
   const onSay = useTTS()
   const navigation = useNavigation<AppNavigationType>()
   // Edge-to-edge: keep the header below the status bar and the controls above the navigation bar
@@ -60,9 +65,7 @@ export default memo(function PlayingScreen() {
   const [isWorkoutReview, setIsWorkoutReview] = useState<boolean>(false)
   const [isSubmitGoBack, setIsSubmitGoBack] = useState<boolean>(false)
   const [isInvisibleTimerCircle, setIsInvisibleTimerCircle] = useState<boolean>(false)
-
-  const isDarkTheme = colors.primary === colorsDark.primary
-  const color = COLORS_EXERCISE[exercise?.colorIdx || 0][+isDarkTheme]
+  const color = COLORS_EXERCISE[exercise?.colorIdx || 0][+isDark]
   const isTheLastOneComplete = isWaitForSubmit && isTheLastOne
 
   const weightDiff = currentWeight - approach?.weight || 0
@@ -158,7 +161,7 @@ export default memo(function PlayingScreen() {
               <TextSecondary center>Next up</TextSecondary>
               {!!exerciseNext ? (
                 <>
-                  <TextSecondary center color={COLORS_EXERCISE[exerciseNext?.colorIdx || 0][+isDarkTheme]}>
+                  <TextSecondary center color={COLORS_EXERCISE[exerciseNext?.colorIdx || 0][+isDark]}>
                     {exerciseNext.name}
                   </TextSecondary>
                   <TextSecondary center>

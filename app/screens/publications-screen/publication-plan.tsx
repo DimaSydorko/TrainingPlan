@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useEffect } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import PublicButtons from '@components/publication/public-buttons'
 import { PublicationScreensParamList, WorkoutType } from '@utils/types'
 import { appScreen, ScreenName } from '@utils/constants'
@@ -12,7 +12,7 @@ import WorkoutCard from '../workouts-screen/workout-card'
 type PropsType = StackScreenProps<PublicationScreensParamList, ScreenName.PublicationPlan>
 
 export default function PublicationPlan({ route, navigation }: PropsType) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const { name, workouts, ownerName } = route.params.publication
 
   useEffect(() => {

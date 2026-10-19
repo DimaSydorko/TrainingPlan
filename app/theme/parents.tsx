@@ -2,7 +2,7 @@ import * as React from 'react'
 import { ReactNode } from 'react'
 import { ScrollView, StyleProp, Text, TextProps, TextStyle, View, ViewStyle } from 'react-native'
 import { StackNavigationOptions } from '@react-navigation/stack'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from './use-app-theme'
 import { theme } from './theme'
 import { colorsFixed } from './colors'
 import { appScreen } from '@utils/constants'
@@ -28,7 +28,7 @@ interface IPage {
 }
 
 export const Page = ({ children, style, scrollDisabled = false }: ParentProps & IPage) => {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   // The stack header already covers the top inset; the bottom padding keeps content above the
   // absolutely positioned tab bar, which is taller by the navigation bar inset (edge-to-edge).
   const { footer } = useAppInsets()
@@ -40,7 +40,7 @@ export const Page = ({ children, style, scrollDisabled = false }: ParentProps & 
 }
 
 export const TextSecondary = ({ children, color, center = false, style, ...props }: TextParentProps & IText) => {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const newColors = color || colors.textSecondary
   return (
     <Text
@@ -60,7 +60,7 @@ export const TextSecondary = ({ children, color, center = false, style, ...props
 }
 
 export const TextHeader = ({ children, color, center = false, style, ...props }: TextParentProps & IText) => {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const newColors = color || colors.text
   return (
     <Text
@@ -80,7 +80,7 @@ export const TextHeader = ({ children, color, center = false, style, ...props }:
 }
 
 export const TextOrdinary = ({ children, color, center = false, style, ...props }: TextParentProps & IText) => {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const newColors = color || colors.text
   return (
     <Text
@@ -125,7 +125,7 @@ export const Divider = ({
   color = '',
   width = 2,
 }: ParentProps & { color?: string; isDashed?: boolean; width?: number }) => {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   return (
     <View
       style={[
@@ -142,7 +142,7 @@ export const Divider = ({
 }
 
 export const Card = ({ children, style, borderLeftColor }: ParentProps & { borderLeftColor?: string }) => {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   return (
     <View
       style={[
@@ -167,7 +167,7 @@ export const Card = ({ children, style, borderLeftColor }: ParentProps & { borde
 }
 
 export const AppHeader = ({ children, style }: ParentProps) => {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   return (
     <View
       style={[
@@ -194,7 +194,7 @@ export const AppHeader = ({ children, style }: ParentProps) => {
 }
 
 export const AppFooter = ({ children, style }: ParentProps) => {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const { bottom } = useAppInsets()
   return (
     <View
@@ -225,7 +225,7 @@ export const AppFooter = ({ children, style }: ParentProps) => {
 }
 
 export const useScreenOptions = (): StackNavigationOptions => {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   // The header height includes the status bar inset (React Navigation draws it behind the bar),
   // so the visible part keeps the old 40dp height on edge-to-edge Android and notched iPhones.
   const { header } = useAppInsets()

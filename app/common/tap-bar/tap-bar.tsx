@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { TextHeader } from '@theme/parents'
 
 const styles = StyleSheet.create({
@@ -21,7 +21,7 @@ interface ITapBar {
 }
 
 export default function TapBar({ values, currentValue, onChange }: ITapBar) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
 
   return (
     <View style={styles.container}>

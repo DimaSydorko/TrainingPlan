@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ViewStyle } from 'react-native'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { FlexStart, TextSecondary } from '@theme/parents'
 
 interface IProps {
@@ -9,7 +9,7 @@ interface IProps {
 }
 
 export default function Labels({ style, labels }: IProps) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   return (
     <FlexStart style={[{ flexWrap: 'wrap' }, style]}>
       {labels

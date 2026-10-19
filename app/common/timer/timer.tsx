@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useEffect, useState } from 'react'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { TextSecondary } from '@theme/parents'
 import { secondsToMinSec } from '@components/workout-duration/workout-duration'
 
@@ -11,7 +11,7 @@ interface ITimer {
 }
 
 export default function Timer({ value = 0, isPaused, isRevers = false }: ITimer) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const [secondsCountDown, setSecondsCountDown] = useState<number>(value || 0)
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { Keyboard, View } from 'react-native'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { AppColorPicker, AppModal, ButtonCounter, IconButton, MyTextInput, SwipeSelector } from '@common'
 import ImageSelector from '../image-selector/image-selector'
 import { defaultApproach, defaultExercise } from '@utils/constants'
@@ -19,7 +19,7 @@ interface IEditExerciseModal {
 }
 
 export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onClose }: IEditExerciseModal) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const isNewExercise = useMemo(() => !exercise, [exercise])
   const initialEx = useMemo(() => {
     return isNewExercise ? { ...defaultExercise, uid: nanoid() } : exercise

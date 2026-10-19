@@ -2,10 +2,10 @@ import * as React from 'react'
 import { appScreen } from '@utils/constants'
 import { SvgXml } from 'react-native-svg'
 import { FlexCenter } from '@theme/parents'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 
 export default function NoSignalIcon({ size = appScreen.vw, height = appScreen.vh - appScreen.header * 5 }) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const xml = `<svg
       xmlns='http://www.w3.org/2000/svg'
       data-name='Layer 1'

@@ -3,7 +3,7 @@ import { memo } from 'react'
 import { Icon } from '@common/icon/icon'
 import { FlexStart, TextSecondary } from '@theme/parents'
 import { ExerciseType } from '@utils/types'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { getWorkoutDuration } from '@utils'
 import { icon } from '@theme/icons'
 
@@ -36,7 +36,7 @@ export const secondsToMinSec = (time: number, isWords = true, isHours = false) =
 }
 
 export default memo(function WorkoutDuration({ exercises }: WorkoutDurationType) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const time = getWorkoutDuration(exercises)
   return (
     <FlexStart>

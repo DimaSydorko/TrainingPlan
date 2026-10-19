@@ -4,7 +4,9 @@ import { Text } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Icon } from '@common/icon/icon'
 
-import { useAppDispatch, useSettings } from '@hooks/redux'
+import { useAppDispatch } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
+import { useIsOnline } from '@stores/network/use-network-store'
 import { AppHelperContext } from '@hooks/app-helper-provider'
 import { workoutAC } from '@store/workout-reducer/workout-ac'
 import { plansAC } from '@store/plans-reducer/plans-ac'
@@ -62,16 +64,17 @@ const tabs = [
 export default function AppRouter() {
   const { isTabMenu } = useContext(AppHelperContext)
   const dispatch = useAppDispatch()
-  const { colors, internet } = useSettings()
+  const { colors } = useAppTheme()
+  const isOnline = useIsOnline()
   const { bottom, footer } = useAppInsets()
 
   useEffect(() => {
-    if (internet.isOnline) {
+    if (isOnline) {
       dispatch(workoutAC.getWorkouts())
       dispatch(plansAC.getPlans())
       dispatch(workoutAC.getExerciseImages())
     }
-  }, [internet.isOnline])
+  }, [isOnline])
 
   return (
     <>

@@ -3,8 +3,9 @@ import { useEffect, useMemo } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import NetInfo from '@react-native-community/netinfo'
-import { onInternetConnectionChange } from '@store/settings-reducer/settings-slice'
-import { useAppDispatch, useSettings, useUser } from '@hooks/redux'
+import { useUser } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
+import { useNetworkStore } from '@stores/network/use-network-store'
 import AppRouter from './app-router'
 import { LoginScreen, RegistrationScreen } from '@screens'
 import { useScreenOptions } from '@theme/parents'
@@ -20,17 +21,17 @@ const Stack = createStackNavigator<AuthStackParamList, 'AuthStack'>()
 
 export default function AuthRouter() {
   const options = useScreenOptions()
-  const dispatch = useAppDispatch()
   const { user } = useUser()
-  const { colors } = useSettings()
-  const navigationTheme = useMemo(() => buildNavigationTheme(colors), [colors])
+  const appTheme = useAppTheme()
+  const setIsOnline = useNetworkStore(state => state.setIsOnline)
+  const navigationTheme = useMemo(() => buildNavigationTheme(appTheme), [appTheme])
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
-      dispatch(onInternetConnectionChange(!!state.isConnected))
+      setIsOnline(!!state.isConnected)
     })
     return () => unsubscribe()
-  }, [])
+  }, [setIsOnline])
 
   return (
     <NavigationContainer theme={navigationTheme}>

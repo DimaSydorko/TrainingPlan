@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 
 const styles = StyleSheet.create({
   bg: {
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
 })
 
 export default function Loading() {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   return (
     <View style={[styles.bg, { backgroundColor: colors.background }]}>
       <ActivityIndicator size='large' color={colors.secondPrimary} />

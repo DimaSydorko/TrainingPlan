@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useCallback, useState } from 'react'
 import { View, ViewStyle } from 'react-native'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { FlexStart, TextSecondary } from '@theme/parents'
 import { icon } from '@theme/icons'
 import { SetStateType } from '@utils/types'
@@ -19,7 +19,7 @@ const MAX_LABELS_COUNT = 6
 const MAX_LABEL_LENGTH = 16
 
 export default function LabelsInput({ setLabels, style, labels, onWriteLabel }: IProps) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const [editLabelIdx, setEditLabelIdx] = useState<number>(labels?.length || 0)
 
   const onNextLabel = useCallback(() => {
