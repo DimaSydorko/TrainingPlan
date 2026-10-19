@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { memo } from 'react'
 import { Icon } from '@common/icon/icon'
-import { FlexStart, TextSecondary } from '@theme/parents'
+import AppText from '@common/app-text/app-text'
+import Stack from '@common/stack/stack'
 import { ExerciseType } from '@utils/types'
 import { useAppTheme } from '@theme/use-app-theme'
 import { getWorkoutDuration } from '@utils'
@@ -39,9 +40,11 @@ export default memo(function WorkoutDuration({ exercises }: WorkoutDurationType)
   const { colors } = useAppTheme()
   const time = getWorkoutDuration(exercises)
   return (
-    <FlexStart>
+    <Stack preset='start'>
       <Icon name={icon.timer} size={18} color={colors.textSecondary} />
-      <TextSecondary>{secondsToMinSec(time)}</TextSecondary>
-    </FlexStart>
+      <AppText variant='caption' tone='secondary'>
+        {secondsToMinSec(time)}
+      </AppText>
+    </Stack>
   )
 })

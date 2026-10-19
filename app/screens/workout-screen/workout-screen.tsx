@@ -24,20 +24,25 @@ import EditExerciseModal from '@components/exercise/exercise-edit-modal'
 import { deepCompare } from '@utils'
 import { ScreenName } from '@utils/constants'
 import { ExerciseType, PlayableNavigation, WorkoutType } from '@utils/types'
-import { AppFooter, AppHeader, Card, FlexCenterColumn, FlexSpaceBetween, Page, TextSecondary } from '@theme/parents'
+import AppFooter from '@common/app-footer/app-footer'
+import AppHeader from '@common/app-header/app-header'
+import Card from '@common/card/card'
+import Stack from '@common/stack/stack'
+import Screen from '@common/screen/screen'
+import AppText from '@common/app-text/app-text'
 import { icon } from '@theme/icons'
-import { theme } from '@theme/theme'
 import { getExerciseColor } from '@theme/tokens'
 import { useAppInsets } from '@theme/insets'
 import { BAR_HEIGHT } from '@theme/bar-heights.constants'
 import { LAYOUT_GUTTER } from '@theme/layout.constants'
 import { useScreen } from '@platform/screen'
+import styles from './workout-screen.styles'
 
 export default function WorkoutScreen() {
   const dispatch = useAppDispatch()
   const navigation = useNavigation<PlayableNavigation>()
   const { selectedWorkout } = useWorkout()
-  const { colors, isDark } = useAppTheme()
+  const { isDark } = useAppTheme()
   const { user } = useUser()
   const { onToggleTabMenu } = useContext(AppHelperContext)
   const bars = useAppInsets()
@@ -170,8 +175,8 @@ export default function WorkoutScreen() {
               />
             </AppHeader>
           )}
-          <Page scrollDisabled>
-            <FlexCenterColumn style={{ paddingHorizontal: 8 }}>
+          <Screen scrollDisabled>
+            <Stack preset='centerColumn' style={styles.content}>
               <DraggableScrollContainer
                 style={{
                   height: screen.height - bars.footer - bars.header,
@@ -190,11 +195,15 @@ export default function WorkoutScreen() {
                   />
                 ) : (
                   <>
-                    <FlexSpaceBetween
-                      style={[theme.containers.secondHeader, { width: screen.width - LAYOUT_GUTTER.SECOND_HEADER }]}
+                    <Stack
+                      preset='secondHeader'
+                      direction='row'
+                      justify='between'
+                      align='center'
+                      style={{ width: screen.width - LAYOUT_GUTTER.SECOND_HEADER }}
                     >
                       <WorkoutDuration exercises={selectedWorkout?.exercises} />
-                    </FlexSpaceBetween>
+                    </Stack>
                     {workoutExercises
                       ?.filter(ex => ex.isVisible)
                       ?.map(exercise => {
@@ -208,8 +217,8 @@ export default function WorkoutScreen() {
                   </>
                 )}
               </DraggableScrollContainer>
-            </FlexCenterColumn>
-          </Page>
+            </Stack>
+          </Screen>
           <AddMoreButton
             icon={isEditMode ? icon.plus : icon.edit}
             testID='workout.fab'
@@ -253,9 +262,11 @@ export default function WorkoutScreen() {
           )}
         </>
       ) : (
-        <Page>
-          <TextSecondary>Error try reload page</TextSecondary>
-        </Page>
+        <Screen>
+          <AppText variant='caption' tone='secondary'>
+            Error try reload page
+          </AppText>
+        </Screen>
       )}
     </>
   )

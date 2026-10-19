@@ -12,12 +12,15 @@ import { clearPlaneResults } from '@store/plans-reducer/plans-slice'
 import useTTS from '@hooks/use-tts'
 import { ConfirmButton } from '@common'
 import AppSoundPicker from '@components/app-sound-picker/app-sound-picker'
-import { FlexCenter, Page, TextHeader } from '@theme/parents'
+import Stack from '@common/stack/stack'
+import Screen from '@common/screen/screen'
+import AppText from '@common/app-text/app-text'
 import { useAppTheme } from '@theme/use-app-theme'
 import { THEME_MODE } from '@theme/themes.constants'
 
 import SettingsItem from './settings-item'
 import SettingsHeader from './settings-header'
+import styles from './settings-screen.styles'
 import { getSoundText } from '@utils'
 import { SoundType } from '@utils/constants'
 
@@ -94,7 +97,7 @@ export default memo(function SettingsScreen() {
   }, [dispatch, resetSettings])
 
   return (
-    <Page>
+    <Screen>
       <SettingsHeader label={'Colors'} />
       <SettingsItem
         label={'Dark Theme'}
@@ -127,11 +130,13 @@ export default memo(function SettingsScreen() {
       <SettingsHeader label={'Sound \\ Notifications'} />
       <SettingsItem label={'Vibration'} valueSwitch={isVibration} onToggleSwitch={toggleVibration} />
       <SettingsHeader label={'Speaking'}>
-        <FlexCenter>
+        <Stack preset='center'>
           <TouchableOpacity onPress={() => onSay('Test speech')}>
-            <TextHeader color={colors.primary}>Press for test speech</TextHeader>
+            <AppText variant='title' color={colors.primary}>
+              Press for test speech
+            </AppText>
           </TouchableOpacity>
-        </FlexCenter>
+        </Stack>
       </SettingsHeader>
       <SettingsItem
         label={'Lowering other apps output level'}
@@ -156,11 +161,13 @@ export default memo(function SettingsScreen() {
         onSliderChange={setTtsRate}
       />
       <SettingsHeader label={'Sound'}>
-        <FlexCenter>
+        <Stack preset='center'>
           <TouchableOpacity onPress={() => previewSound(sound?.type || SoundType.Bell, { volume: sound?.volume })}>
-            <TextHeader color={colors.primary}>Press for test sound</TextHeader>
+            <AppText variant='title' color={colors.primary}>
+              Press for test sound
+            </AppText>
           </TouchableOpacity>
-        </FlexCenter>
+        </Stack>
       </SettingsHeader>
       <SettingsItem
         label={'Sound Volume'}
@@ -171,9 +178,12 @@ export default memo(function SettingsScreen() {
         onSliderChange={setSoundVolume}
       />
       <TouchableOpacity onPress={() => setIsSoundModal(true)}>
-        <TextHeader color={colors.inverse} style={{ marginHorizontal: 16, marginVertical: 6 }}>
-          Sound type: <TextHeader color={colors.accent}>{getSoundText(sound?.type || SoundType.Bell)}</TextHeader>
-        </TextHeader>
+        <AppText variant='title' tone='inverse' style={styles.soundType}>
+          Sound type:{' '}
+          <AppText variant='title' tone='accent'>
+            {getSoundText(sound?.type || SoundType.Bell)}
+          </AppText>
+        </AppText>
       </TouchableOpacity>
       <ConfirmButton
         header={'Clear local storage'}
@@ -182,6 +192,6 @@ export default memo(function SettingsScreen() {
         onPress={clearAll}
       />
       <AppSoundPicker isOpen={isSoundModal} setIsOpen={setIsSoundModal} />
-    </Page>
+    </Screen>
   )
 })

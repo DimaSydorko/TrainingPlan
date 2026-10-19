@@ -3,7 +3,7 @@ import { memo, useCallback, useMemo, useState } from 'react'
 import { defaultPlan, defaultWorkout } from '@utils/constants'
 import { PlanType, WorkoutType } from '@utils/types'
 import { AppColorPicker, AppModal, LabelsInput, MyTextInput } from '@common'
-import { FlexCenterColumn } from '@theme/parents'
+import Stack from '@common/stack/stack'
 
 interface IEditPlanWorkout {
   isModal: boolean
@@ -45,7 +45,7 @@ export default memo(function EditPlanWorkout({ onSubmit, type, isModal, onClose,
       onClose={onCloseModal}
       extraPlaceLeft={<AppColorPicker value={colorIdx} onChange={setColorIdx} />}
     >
-      <FlexCenterColumn>
+      <Stack preset='centerColumn'>
         <MyTextInput
           placeholder={`${type} name`}
           onChangeText={setName}
@@ -54,7 +54,7 @@ export default memo(function EditPlanWorkout({ onSubmit, type, isModal, onClose,
           testID='editPlanWorkout.name'
         />
         <LabelsInput labels={labels} setLabels={setLabels} />
-      </FlexCenterColumn>
+      </Stack>
     </AppModal>
   )
 })

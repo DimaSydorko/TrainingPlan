@@ -4,7 +4,9 @@ import { TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useAppTheme } from '@theme/use-app-theme'
 import { Labels, WorkoutDuration } from '@common'
-import { Card, FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '@theme/parents'
+import AppText from '@common/app-text/app-text'
+import Card from '@common/card/card'
+import Stack from '@common/stack/stack'
 import { PublicType, PublicationsNavigation } from '@utils/types'
 import { ScreenName } from '@utils/constants'
 import { useScreen } from '@platform/screen'
@@ -18,7 +20,7 @@ interface IProps {
 
 export default memo(function Publication({ publication }: IProps) {
   const navigation = useNavigation<PublicationsNavigation>()
-  const { colors, isDark } = useAppTheme()
+  const { isDark } = useAppTheme()
   const { width } = useScreen()
   const isPlan = !!publication?.workouts && !publication?.exercises
   const color = getExerciseColor(publication?.colorIdx === undefined ? 3 : publication?.colorIdx, isDark)
@@ -32,22 +34,30 @@ export default memo(function Publication({ publication }: IProps) {
     <>
       <TouchableOpacity onPress={onPress} style={{ marginHorizontal: 10 }}>
         <Card borderLeftColor={isPlan ? color : undefined}>
-          <TextHeader color={color}>{publication.name}</TextHeader>
-          <FlexSpaceBetween>
+          <AppText variant='title' color={color}>
+            {publication.name}
+          </AppText>
+          <Stack preset='spaceBetween'>
             <View>
               {isPlan ? (
-                <TextSecondary>{publication.workouts.length} Workouts</TextSecondary>
+                <AppText variant='caption' tone='secondary'>
+                  {publication.workouts.length} Workouts
+                </AppText>
               ) : (
-                <FlexStart>
-                  <TextSecondary>{publication.exercises.length} Exercises</TextSecondary>
+                <Stack preset='start'>
+                  <AppText variant='caption' tone='secondary'>
+                    {publication.exercises.length} Exercises
+                  </AppText>
                   <WorkoutDuration exercises={publication.exercises} />
-                </FlexStart>
+                </Stack>
               )}
               <Labels labels={publication.labels} style={{ width: width - LABELS_GUTTER }} />
-              <TextSecondary color={colors.inverse}>By {publication.ownerName}</TextSecondary>
+              <AppText variant='caption' tone='inverse'>
+                By {publication.ownerName}
+              </AppText>
             </View>
             <PublicButtons publication={publication} />
-          </FlexSpaceBetween>
+          </Stack>
         </Card>
       </TouchableOpacity>
     </>

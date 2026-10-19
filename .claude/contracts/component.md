@@ -42,9 +42,9 @@
 import { useState } from 'react'
 import { Pressable, View } from 'react-native'
 
-import { useSettings } from '../../Hooks/redux'
-import { TextHeader } from '../../Theme/Parents'
-import { Icon } from '../../Common/Icon/Icon'
+import AppText from '@common/app-text/app-text'
+import { Icon } from '@common/icon/icon'
+import { useThemeColors } from '@theme/use-app-theme'
 import { WORKOUT_CARD_ICON_SIZE } from './workout-card.constants'
 import styles from './workout-card.styles'
 ```

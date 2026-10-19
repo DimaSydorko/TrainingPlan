@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { ViewStyle } from 'react-native'
 import { useAppTheme } from '@theme/use-app-theme'
-import { FlexStart, TextSecondary } from '@theme/parents'
+import AppText from '../app-text/app-text'
+import Stack from '../stack/stack'
 
 interface IProps {
   labels: string[]
@@ -11,14 +12,14 @@ interface IProps {
 export default function Labels({ style, labels }: IProps) {
   const { colors } = useAppTheme()
   return (
-    <FlexStart style={[{ flexWrap: 'wrap' }, style]}>
+    <Stack preset='start' style={[{ flexWrap: 'wrap' }, style]}>
       {labels
         .filter(l => !!l)
         .map((label, idx) => (
-          <TextSecondary key={idx} color={colors.accent + 'A0'}>
+          <AppText variant='caption' key={idx} color={colors.accent + 'A0'}>
             #{label}{' '}
-          </TextSecondary>
+          </AppText>
         ))}
-    </FlexStart>
+    </Stack>
   )
 }

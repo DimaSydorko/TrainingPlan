@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { useCallback, useState } from 'react'
-import { View } from 'react-native'
 import { useAppDispatch, usePublications } from '@hooks/redux'
 import { useAppTheme } from '@theme/use-app-theme'
 import { useIsOnline } from '@stores/network/use-network-store'
@@ -11,7 +10,7 @@ import { deepCompare } from '@utils'
 import { PUBLICATION_QUERY_LIMIT } from '@utils/constants'
 import NoSignalIcon from '@assets/icons/no-signal-icon'
 import EmptySearchIcon from '@assets/icons/empty-search-icon'
-import { theme } from '@theme/theme'
+import Stack from '@common/stack/stack'
 
 export default function PublicationsScreen() {
   const dispatch = useAppDispatch()
@@ -42,7 +41,7 @@ export default function PublicationsScreen() {
   }, [publications[publications.length - 1]])
 
   return (
-    <View style={[theme.containers.centerColumn, { backgroundColor: colors.background }]}>
+    <Stack preset='centerColumn' style={{ backgroundColor: colors.background }}>
       {isOnline ? (
         <InfiniteScroll
           isLoading={isLoading}
@@ -64,6 +63,6 @@ export default function PublicationsScreen() {
       ) : (
         <NoSignalIcon />
       )}
-    </View>
+    </Stack>
   )
 }

@@ -1,0 +1,1 @@
+export const CARD_ACCENT_BORDER_WIDTH = 6

@@ -13,12 +13,12 @@ export const fontWeight = {
 } as const satisfies Record<string, TextStyle['fontWeight']>
 
 export const typography = {
-  title: { fontSize: fontSize.lg, fontWeight: fontWeight.bold, lineHeight: 23 },
-  body: { fontSize: fontSize.lg, fontWeight: fontWeight.medium, lineHeight: 23 },
-  bodyStrong: { fontSize: fontSize.lg, fontWeight: fontWeight.bold, lineHeight: 23 },
-  caption: { fontSize: fontSize.sm, fontWeight: fontWeight.semibold, lineHeight: 18 },
-  link: { fontSize: fontSize.md, fontWeight: fontWeight.bold, lineHeight: 21 },
-} as const satisfies Record<string, Pick<TextStyle, 'fontSize' | 'fontWeight' | 'lineHeight'>>
+  title: { fontSize: fontSize.lg, fontWeight: fontWeight.bold },
+  body: { fontSize: fontSize.lg, fontWeight: fontWeight.medium },
+  bodyStrong: { fontSize: fontSize.lg, fontWeight: fontWeight.bold },
+  caption: { fontSize: fontSize.sm, fontWeight: fontWeight.semibold },
+  link: { fontSize: fontSize.md, fontWeight: fontWeight.bold },
+} as const satisfies Record<string, Pick<TextStyle, 'fontSize' | 'fontWeight'>>
 
 export type FontSizeToken = keyof typeof fontSize
 

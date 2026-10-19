@@ -1,6 +1,11 @@
+import { renderHook } from '@testing-library/react-native'
 import { DarkTheme, DefaultTheme } from '@react-navigation/native'
-import { buildNavigationTheme, statusBarStyleFor } from '@theme/navigation-theme'
+import { BAR_HEIGHT } from '@theme/bar-heights.constants'
+import { buildNavigationTheme, statusBarStyleFor, useScreenOptions } from '@theme/navigation-theme'
 import { darkColors, lightColors, themes } from '@theme/themes'
+import { THEME_MODE } from '@theme/themes.constants'
+import { useSettingsStore } from '@stores/settings/use-settings-store'
+import { resetTestStores } from '../utils/reset-test-stores'
 
 describe('navigation theme', () => {
   it('builds a light theme from the light app theme', () => {
@@ -27,5 +32,32 @@ describe('navigation theme', () => {
   it('picks a readable status bar style', () => {
     expect(statusBarStyleFor(themes.dark)).toBe('light')
     expect(statusBarStyleFor(themes.light)).toBe('dark')
+  })
+})
+
+describe('useScreenOptions', () => {
+  beforeEach(() => {
+    resetTestStores()
+    useSettingsStore.setState({ themeMode: THEME_MODE.DARK })
+  })
+
+  it('builds the stack header options from the active theme', async () => {
+    const { result } = await renderHook(() => useScreenOptions())
+
+    expect(result.current).toEqual({
+      headerTitleAlign: 'center',
+      headerTitleStyle: { fontWeight: 'bold' },
+      headerTintColor: darkColors.textPrimary,
+      headerStyle: {
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        shadowOffset: { width: 4, height: 2 },
+        elevation: 4,
+        backgroundColor: darkColors.surfaceElevated,
+        shadowColor: darkColors.shadow,
+        height: BAR_HEIGHT.HEADER,
+      },
+      cardStyle: { backgroundColor: darkColors.background },
+    })
   })
 })

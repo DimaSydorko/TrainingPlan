@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { BAR_HEIGHT } from '@theme/bar-heights.constants'
+import { HEADER_BAR_STYLE } from '@theme/navigation-theme.constants'
 import { radius } from '@theme/tokens'
 
 export default StyleSheet.create({
@@ -12,6 +13,7 @@ export default StyleSheet.create({
     left: 0,
   },
   header: {
+    ...HEADER_BAR_STYLE,
     paddingHorizontal: 15,
     paddingVertical: 15,
     width: '100%',
@@ -47,5 +49,14 @@ export default StyleSheet.create({
   },
   timerContent: {
     justifyContent: 'center',
+  },
+  exerciseName: {
+    fontSize: 24,
+  },
+  remainingTime: {
+    fontSize: 22,
+  },
+  controls: {
+    width: '50%',
   },
 })

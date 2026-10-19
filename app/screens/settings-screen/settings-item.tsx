@@ -3,7 +3,9 @@ import { memo, useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import Slider from '@react-native-community/slider'
 import { useAppTheme } from '@theme/use-app-theme'
-import { Divider, FlexSpaceBetween, TextOrdinary, TextSecondary } from '@theme/parents'
+import Divider from '@common/divider/divider'
+import Stack from '@common/stack/stack'
+import AppText from '@common/app-text/app-text'
 import { useScreen } from '@platform/screen'
 import { MySwitch } from '@common'
 import { SETTINGS_LABEL_GUTTER } from './settings-item.constants'
@@ -45,16 +47,16 @@ export default memo(function SettingsItem({
 
   return (
     <View style={{ width }}>
-      <FlexSpaceBetween style={styles.content}>
-        <TextOrdinary style={{ width: width - SETTINGS_LABEL_GUTTER }}>{label}</TextOrdinary>
+      <Stack preset='spaceBetween' style={styles.content}>
+        <AppText style={{ width: width - SETTINGS_LABEL_GUTTER }}>{label}</AppText>
         {!!onToggleSwitch && <MySwitch value={valueSwitch} onValueChange={onToggleSwitch} testID={testID} />}
         {!!onSliderChange && (
-          <TextSecondary>
+          <AppText variant='caption' tone='secondary'>
             {valSlider}
             {sliderValueType}
-          </TextSecondary>
+          </AppText>
         )}
-      </FlexSpaceBetween>
+      </Stack>
       {!!onSliderChange && (
         <Slider
           value={valSlider}

@@ -7,7 +7,8 @@ import { useAppTheme } from '@theme/use-app-theme'
 import { useScreen } from '@platform/screen'
 import { AppImage, AppModal, TapBar } from '@common'
 import { ExerciseImageFilterType } from '@utils/types'
-import { FlexCenterColumn, TextSecondary } from '@theme/parents'
+import AppText from '@common/app-text/app-text'
+import Stack from '@common/stack/stack'
 import { icon } from '@theme/icons'
 import styles from './styles'
 import { IMAGE_LIST_RESERVED_HEIGHT } from './image-selector.constants'
@@ -44,7 +45,7 @@ export default function ImageSelector({ onSubmit, value = '' }: IImageSelector) 
         isOpen={isModal}
         header={'Select Image for Exercise'}
       >
-        <FlexCenterColumn>
+        <Stack preset='centerColumn'>
           <View style={styles.selectedContainer}>
             {selected ? (
               <View style={[styles.image, styles.imageC, { borderWidth: 4, borderColor: colors.primary }]}>
@@ -76,12 +77,14 @@ export default function ImageSelector({ onSubmit, value = '' }: IImageSelector) 
                   style={styles.imageCard}
                 >
                   <AppImage src={item.downloadUrl} size={60} />
-                  <TextSecondary numberOfLines={1}>{item.fileName}</TextSecondary>
+                  <AppText variant='caption' tone='secondary' numberOfLines={1}>
+                    {item.fileName}
+                  </AppText>
                 </TouchableOpacity>
               </>
             )}
           />
-        </FlexCenterColumn>
+        </Stack>
       </AppModal>
     </>
   )

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
-import { TextOrdinary } from '@theme/parents'
+import AppText from '@common/app-text/app-text'
 import { useAppTheme } from '@theme/use-app-theme'
 
 interface ExerciseResultsType {
@@ -31,16 +31,14 @@ export default function Approach({ weight, repeats, isPrevious = true }: Exercis
   const color = isPrevious ? colors.textPrimary : colors.primary
   return (
     <View style={styles.container}>
-      <TextOrdinary color={color} style={styles.textCurrPrev}>{`\u2022  ${
-        isPrevious ? 'previous' : 'current'
-      }`}</TextOrdinary>
-      <TextOrdinary color={color} style={styles.textRepWeight}>
+      <AppText color={color} style={styles.textCurrPrev}>{`\u2022  ${isPrevious ? 'previous' : 'current'}`}</AppText>
+      <AppText color={color} style={styles.textRepWeight}>
         {repeats}
-      </TextOrdinary>
+      </AppText>
       {!!weight && (
-        <TextOrdinary color={color} style={styles.textRepWeight}>
+        <AppText color={color} style={styles.textRepWeight}>
           {weight} kg
-        </TextOrdinary>
+        </AppText>
       )}
     </View>
   )

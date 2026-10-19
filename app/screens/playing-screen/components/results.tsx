@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { FlexSpaceBetween, TextHeader } from '@theme/parents'
+import Stack from '@common/stack/stack'
+import AppText from '@common/app-text/app-text'
 import { ButtonCounter } from '@common'
 import { useAppTheme } from '@theme/use-app-theme'
 import { SetStateType } from '@utils/types'
@@ -17,8 +18,8 @@ interface ResultsI {
 export default function Results({ onChange, type, value, color, diff, step, repeats }: ResultsI) {
   const { colors } = useAppTheme()
   return (
-    <FlexSpaceBetween>
-      <TextHeader color={colors.textPrimary}>{type === 'repeats' ? 'Repeats' : 'Weight'}</TextHeader>
+    <Stack preset='spaceBetween'>
+      <AppText variant='title'>{type === 'repeats' ? 'Repeats' : 'Weight'}</AppText>
       <ButtonCounter
         value={value}
         step={step}
@@ -28,11 +29,11 @@ export default function Results({ onChange, type, value, color, diff, step, repe
         onChange={onChange}
       >
         {diff !== 0 && (
-          <TextHeader color={`${diff > 0 ? colors.primary : colors.accent}A0`}>
+          <AppText variant='title' color={`${diff > 0 ? colors.primary : colors.accent}A0`}>
             {` ${diff > 0 ? '+' : ''}${diff}`}
-          </TextHeader>
+          </AppText>
         )}
       </ButtonCounter>
-    </FlexSpaceBetween>
+    </Stack>
   )
 }

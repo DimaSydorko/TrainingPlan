@@ -4,7 +4,9 @@ import { View, ViewStyle } from 'react-native'
 import { nanoid } from '@utils'
 import { AppImage, AppModal, IconButton } from '@common'
 import { secondsToMinSec } from '../workout-duration/workout-duration'
-import { Divider, FlexEnd, FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '@theme/parents'
+import AppText from '@common/app-text/app-text'
+import Divider from '@common/divider/divider'
+import Stack from '@common/stack/stack'
 import { ExerciseType, SelectedExerciseType } from '@utils/types'
 import { useScreen } from '@platform/screen'
 import { icon } from '@theme/icons'
@@ -73,11 +75,16 @@ export default memo(function Exercise({
       {isEdit ? (
         <>
           {isImage && <AppImage src={exercise.imageUrl} size={IMG_SIZE} style={styles.imageContainer} />}
-          <FlexSpaceBetween style={containerStyle}>
-            <TextHeader color={isVisible ? color : `${color}80`} numberOfLines={1} style={{ width: editNameWidth }}>
+          <Stack preset='spaceBetween' style={containerStyle}>
+            <AppText
+              variant='title'
+              color={isVisible ? color : `${color}80`}
+              numberOfLines={1}
+              style={{ width: editNameWidth }}
+            >
               {exercise.name}
-            </TextHeader>
-            <FlexEnd style={{ width: 100 }}>
+            </AppText>
+            <Stack preset='end' style={styles.editActions}>
               {onDelete && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}
               {onCopy && <IconButton iconName={icon.copy} onPress={copy} style={styles.iconButton} />}
               {onVisibilityToggle && (
@@ -87,10 +94,10 @@ export default memo(function Exercise({
                   style={styles.iconButton}
                 />
               )}
-            </FlexEnd>
-          </FlexSpaceBetween>
-          <FlexSpaceBetween style={containerStyle}>
-            <TextSecondary>
+            </Stack>
+          </Stack>
+          <Stack preset='spaceBetween' style={containerStyle}>
+            <AppText variant='caption' tone='secondary'>
               {exercise.approaches.length ? `${exercise.approaches.length} laps` : ''}
               {exercise.laps ? ` ${exercise.repeats} rep` : ''}
               {exercise.approaches.length
@@ -98,30 +105,42 @@ export default memo(function Exercise({
                   ? ` ${exercise.approaches[0].weight} kg`
                   : ''
                 : ''}
-            </TextSecondary>
+            </AppText>
             {!!exercise.breakTimeInSec && (
-              <TextSecondary>Break: {secondsToMinSec(exercise.breakTimeInSec)}</TextSecondary>
+              <AppText variant='caption' tone='secondary'>
+                Break: {secondsToMinSec(exercise.breakTimeInSec)}
+              </AppText>
             )}
-          </FlexSpaceBetween>
+          </Stack>
         </>
       ) : (
         <>
-          <FlexStart>
+          <Stack preset='start'>
             {isImage && <AppImage src={exercise.imageUrl} size={IMG_SIZE} style={{ marginLeft: -10 }} />}
             <View>
-              <TextHeader color={color} numberOfLines={1} style={{ width: nameWidth }}>
+              <AppText variant='title' color={color} numberOfLines={1} style={{ width: nameWidth }}>
                 {exercise.name}
-              </TextHeader>
-              <FlexSpaceBetween style={{ width: detailsWidth }}>
+              </AppText>
+              <Stack preset='spaceBetween' style={{ width: detailsWidth }}>
                 {!!exercise.breakTimeInSec && (
-                  <TextSecondary style={{ width: 150 }} ellipsizeMode='tail' numberOfLines={1}>
+                  <AppText
+                    variant='caption'
+                    tone='secondary'
+                    style={styles.breakTime}
+                    ellipsizeMode='tail'
+                    numberOfLines={1}
+                  >
                     Break: {secondsToMinSec(exercise.breakTimeInSec)}
-                  </TextSecondary>
+                  </AppText>
                 )}
-                {isPublic && <TextSecondary>Laps: {exercise.laps}</TextSecondary>}
-              </FlexSpaceBetween>
+                {isPublic && (
+                  <AppText variant='caption' tone='secondary'>
+                    Laps: {exercise.laps}
+                  </AppText>
+                )}
+              </Stack>
             </View>
-          </FlexStart>
+          </Stack>
           {!isPublic && (
             <View style={styles.approaches}>
               {exercise.approaches?.map((approach, idx) => {

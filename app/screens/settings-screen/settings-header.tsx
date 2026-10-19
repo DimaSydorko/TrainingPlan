@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { memo, ReactNode } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { TextSecondary } from '@theme/parents'
+import AppText from '@common/app-text/app-text'
 import { useScreen } from '@platform/screen'
 import { spacing } from '@theme/tokens'
 
@@ -15,7 +15,9 @@ export default memo(function SettingsHeader({ label, children }: IProps) {
 
   return (
     <View style={{ width }}>
-      <TextSecondary style={styles.label}>{label}</TextSecondary>
+      <AppText variant='caption' tone='secondary' style={styles.label}>
+        {label}
+      </AppText>
       {children}
     </View>
   )

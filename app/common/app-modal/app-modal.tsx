@@ -3,7 +3,8 @@ import { ReactNode } from 'react'
 import { Modal, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native'
 import { ConfirmButton } from '../index'
 import { useAppTheme } from '@theme/use-app-theme'
-import { FlexCenter, FlexEnd, FlexStart, TextHeader, TextSecondary } from '@theme/parents'
+import AppText from '../app-text/app-text'
+import Stack from '../stack/stack'
 import { useScreen } from '@platform/screen'
 import styles from './styles'
 import { MODAL_GUTTER } from './app-modal.constants'
@@ -48,20 +49,34 @@ export default function AppModal({
   const buttonStyle: ViewStyle = !onRefuse ? { width: '40%' } : { marginHorizontal: 6, width: '30%' }
   return (
     <Modal animationType='fade' transparent={true} visible={isOpen} onTouchStart={onClose} onRequestClose={onClose}>
-      <FlexCenter style={styles.modal}>
+      <Stack preset='center' style={styles.modal}>
         <View
           style={[styles.container, { width: width - MODAL_GUTTER }, { backgroundColor: colors.background }, style]}
         >
-          <FlexCenter>
-            {!!extraPlaceLeft && <FlexStart style={styles.extraPlaceLeft}>{extraPlaceLeft}</FlexStart>}
-            <TextHeader style={headerStyle}>{header}</TextHeader>
-            {!!extraPlaceRight && <FlexEnd style={styles.extraPlaceRight}>{extraPlaceRight}</FlexEnd>}
-          </FlexCenter>
-          <FlexCenter style={styles.content}>
-            {text && <TextSecondary style={styles.text}>{text}</TextSecondary>}
+          <Stack preset='center'>
+            {!!extraPlaceLeft && (
+              <Stack preset='start' style={styles.extraPlaceLeft}>
+                {extraPlaceLeft}
+              </Stack>
+            )}
+            <AppText variant='title' style={headerStyle}>
+              {header}
+            </AppText>
+            {!!extraPlaceRight && (
+              <Stack preset='end' style={styles.extraPlaceRight}>
+                {extraPlaceRight}
+              </Stack>
+            )}
+          </Stack>
+          <Stack preset='center' style={styles.content}>
+            {text && (
+              <AppText variant='caption' tone='secondary' style={styles.text}>
+                {text}
+              </AppText>
+            )}
             {children}
-          </FlexCenter>
-          <FlexCenter>
+          </Stack>
+          <Stack preset='center'>
             <ConfirmButton
               header={'Cancel'}
               color={colors.disabled}
@@ -92,10 +107,10 @@ export default function AppModal({
                 !disableAutoClose && onClose()
               }}
             />
-          </FlexCenter>
+          </Stack>
         </View>
         <TouchableOpacity onPress={onClose} style={[styles.emptySpace, { backgroundColor: `${colors.inverse}40` }]} />
-      </FlexCenter>
+      </Stack>
     </Modal>
   )
 }

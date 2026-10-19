@@ -1,12 +1,11 @@
 import * as React from 'react'
 import { memo } from 'react'
 import { View } from 'react-native'
-import { useAppTheme } from '@theme/use-app-theme'
 import { Timer } from '@common'
 import { usePlayTimerContext } from './play-timer-provider'
 import { secondsToMinSec } from '@components/workout-duration/workout-duration'
-import { theme } from '@theme/theme'
-import { FlexSpaceBetween, TextHeader, TextSecondary } from '@theme/parents'
+import Stack from '@common/stack/stack'
+import AppText from '@common/app-text/app-text'
 import styles from '../styles'
 
 interface IProps {
@@ -18,17 +17,16 @@ interface IProps {
 
 export default memo(function PlayHeader({ playingLap, exerciseLaps, workoutDurationTime }: IProps) {
   const { playTimer } = usePlayTimerContext()
-  const { colors } = useAppTheme()
   const time = workoutDurationTime + playTimer
   return (
-    <View style={[theme.containers.headerStyle, styles.header]}>
-      <FlexSpaceBetween>
+    <View style={styles.header}>
+      <Stack preset='spaceBetween'>
         <Timer />
-        <TextHeader>
+        <AppText variant='title'>
           Laps {playingLap}/{exerciseLaps}
-        </TextHeader>
-        <TextSecondary color={colors.textPrimary}>{secondsToMinSec(time > 0 ? time : 0, false, true)}</TextSecondary>
-      </FlexSpaceBetween>
+        </AppText>
+        <AppText variant='caption'>{secondsToMinSec(time > 0 ? time : 0, false, true)}</AppText>
+      </Stack>
     </View>
   )
 })

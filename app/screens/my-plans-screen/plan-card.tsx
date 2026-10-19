@@ -4,7 +4,8 @@ import { View } from 'react-native'
 import { Icon } from '@common/icon/icon'
 import { AppModal, Labels } from '@common'
 import { useAppTheme } from '@theme/use-app-theme'
-import { FlexSpaceBetween, TextHeader, TextSecondary } from '@theme/parents'
+import Stack from '@common/stack/stack'
+import AppText from '@common/app-text/app-text'
 import { PlanType } from '@utils/types'
 import { icon } from '@theme/icons'
 
@@ -29,13 +30,17 @@ export default memo(function PlanCard({ plan, isSelected, onDelete, color }: IPl
           style={{ position: 'absolute', left: -12, top: -12 }}
         />
       )}
-      <FlexSpaceBetween>
+      <Stack preset='spaceBetween'>
         <View>
-          <TextHeader color={color}>{plan.name}</TextHeader>
-          <TextSecondary>{plan?.workouts?.length || 0} Workouts</TextSecondary>
+          <AppText variant='title' color={color}>
+            {plan.name}
+          </AppText>
+          <AppText variant='caption' tone='secondary'>
+            {plan?.workouts?.length || 0} Workouts
+          </AppText>
           <Labels labels={plan.labels} />
         </View>
-      </FlexSpaceBetween>
+      </Stack>
       <AppModal
         isWarning
         header='Delete plan'

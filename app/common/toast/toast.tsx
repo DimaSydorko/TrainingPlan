@@ -6,11 +6,11 @@ import { useAppTheme } from '@theme/use-app-theme'
 import { IconButton } from '../index'
 import { useScreen } from '@platform/screen'
 import { BAR_HEIGHT } from '@theme/bar-heights.constants'
-import { FlexSpaceBetween, TextOrdinary } from '@theme/parents'
+import AppText from '../app-text/app-text'
+import Stack from '../stack/stack'
 import { icon } from '@theme/icons'
-import { theme } from '@theme/theme'
 import { MESSAGE_GUTTER } from './toast.constants'
-import { spacing } from '@theme/tokens'
+import { shadow, spacing } from '@theme/tokens'
 
 const styles = StyleSheet.create({
   container: {
@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1.5,
     borderLeftWidth: 1.5,
     borderRightWidth: 1.5,
+    ...shadow.card,
   },
 })
 
@@ -56,7 +57,8 @@ export default React.memo(function Toast({
   const _icon = iconName ? iconName : variant === 'error' ? icon.serverRemove : icon.alertCircleOutline
 
   return (
-    <FlexSpaceBetween
+    <Stack
+      preset='spaceBetween'
       style={[
         styles.container,
         variant === 'error' && {
@@ -68,19 +70,18 @@ export default React.memo(function Toast({
         {
           borderColor: colors.staticBlack,
         },
-        theme.view.shadow,
       ]}
     >
       <Icon name={_icon} color={colors.staticWhite} size={36} />
-      <TextOrdinary
+      <AppText
         ellipsizeMode='tail'
         numberOfLines={1}
         style={{ width: width - MESSAGE_GUTTER }}
         color={colors.staticWhite}
       >
         {message}
-      </TextOrdinary>
+      </AppText>
       <IconButton iconName={icon.close} size={36} color={colors.staticWhite} onPress={onPress} />
-    </FlexSpaceBetween>
+    </Stack>
   )
 })

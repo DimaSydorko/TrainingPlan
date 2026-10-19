@@ -2,7 +2,8 @@ import * as React from 'react'
 import { useCallback, useState } from 'react'
 import { View, ViewStyle } from 'react-native'
 import { useAppTheme } from '@theme/use-app-theme'
-import { FlexStart, TextSecondary } from '@theme/parents'
+import AppText from '../app-text/app-text'
+import Stack from '../stack/stack'
 import { icon } from '@theme/icons'
 import { SetStateType } from '@utils/types'
 import { IconButton, MyTextInput } from '../index'
@@ -65,11 +66,17 @@ export default function LabelsInput({ setLabels, style, labels, onWriteLabel }: 
 
   return (
     <View style={[styles.container, style]}>
-      <FlexStart style={styles.labels}>
+      <Stack preset='start' style={styles.labels}>
         {labels.map((label, idx) =>
           label ? (
-            <FlexStart key={`${idx}-${label}`} style={[styles.labelText, { backgroundColor: `${colors.accent}40` }]}>
-              <TextSecondary style={{ color: colors.accent }}>{label}</TextSecondary>
+            <Stack
+              preset='start'
+              key={`${idx}-${label}`}
+              style={[styles.labelText, { backgroundColor: `${colors.accent}40` }]}
+            >
+              <AppText variant='caption' tone='accent'>
+                {label}
+              </AppText>
               <IconButton
                 iconName={icon.close}
                 margin={2}
@@ -78,10 +85,10 @@ export default function LabelsInput({ setLabels, style, labels, onWriteLabel }: 
                 color={colors.accent}
                 size={18}
               />
-            </FlexStart>
+            </Stack>
           ) : null
         )}
-      </FlexStart>
+      </Stack>
       <MyTextInput
         type='secondary'
         autoCapitalize='none'

@@ -2,7 +2,8 @@ import * as React from 'react'
 import { memo, ReactNode } from 'react'
 import { StyleSheet } from 'react-native'
 import { useAppTheme } from '@theme/use-app-theme'
-import { FlexSpaceBetween, TextHeader } from '@theme/parents'
+import AppText from '../app-text/app-text'
+import Stack from '../stack/stack'
 import { IconButton } from '../index'
 import { useScreen } from '@platform/screen'
 import { SetStateType } from '@utils/types'
@@ -35,7 +36,8 @@ export default memo(function ButtonCounter({
   const buttonColor = color || colors.textSecondary
 
   return (
-    <FlexSpaceBetween
+    <Stack
+      preset='spaceBetween'
       style={[styles.container, { width: (width - COUNTER_ROW_GUTTER) / COUNTERS_PER_ROW + extraWidth }]}
     >
       <IconButton
@@ -47,11 +49,11 @@ export default memo(function ButtonCounter({
         isRepeatOnLongPress
         onPress={() => onChange(p => (p > minValue ? p - step : p))}
       />
-      <TextHeader color={color || colors.accent}>
+      <AppText variant='title' color={color || colors.accent}>
         {value}
         {dataType}
         {children}
-      </TextHeader>
+      </AppText>
       <IconButton
         size={28}
         isRepeatOnLongPress
@@ -60,7 +62,7 @@ export default memo(function ButtonCounter({
         style={[styles.button, { borderColor: buttonColor }]}
         onPress={() => onChange(p => p + step)}
       />
-    </FlexSpaceBetween>
+    </Stack>
   )
 })
 

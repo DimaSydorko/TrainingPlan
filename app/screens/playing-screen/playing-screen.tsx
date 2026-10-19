@@ -14,9 +14,9 @@ import { getWorkoutDuration } from '@utils'
 import { AppNavigationType } from '@utils/types'
 import { AppImage, ConfirmButton, GoBackSubmitModal, IconButton } from '@common'
 import { secondsToMinSec } from '@components/workout-duration/workout-duration'
-import { FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '@theme/parents'
+import Stack from '@common/stack/stack'
+import AppText from '@common/app-text/app-text'
 import { getExerciseColor } from '@theme/tokens'
-import { theme } from '@theme/theme'
 import { icon } from '@theme/icons'
 import { useAppInsets } from '@theme/insets'
 
@@ -146,9 +146,10 @@ export default memo(function PlayingScreen() {
   }, [setIsWorkoutReview])
 
   return (
-    <View
+    <Stack
+      preset='centerColumn'
       testID='playing.screen'
-      style={[theme.containers.centerColumn, styles.page, { backgroundColor: colors.background, paddingTop: top }]}
+      style={[styles.page, { backgroundColor: colors.background, paddingTop: top }]}
     >
       <PlayHeader
         isPlaying={isPlaying}
@@ -157,25 +158,31 @@ export default memo(function PlayingScreen() {
         workoutDurationTime={workoutDurationTime}
       />
 
-      <FlexCenterColumn>
+      <Stack preset='centerColumn'>
         <View style={styles.nextExercise}>
           {!isTheLastOneComplete && (
             <>
-              <TextSecondary center>Next up</TextSecondary>
+              <AppText variant='caption' tone='secondary' align='center'>
+                Next up
+              </AppText>
               {!!exerciseNext ? (
                 <>
-                  <TextSecondary center color={getExerciseColor(exerciseNext?.colorIdx || 0, isDark)}>
+                  <AppText
+                    variant='caption'
+                    align='center'
+                    color={getExerciseColor(exerciseNext?.colorIdx || 0, isDark)}
+                  >
                     {exerciseNext.name}
-                  </TextSecondary>
-                  <TextSecondary center>
+                  </AppText>
+                  <AppText variant='caption' tone='secondary' align='center'>
                     Laps {exerciseNext.laps}
                     {!!exerciseNext.approaches[0]?.weight && `    Weight ${exerciseNext.approaches[0]?.weight} kg`}
-                  </TextSecondary>
+                  </AppText>
                 </>
               ) : (
-                <TextSecondary center color={colors.accent}>
+                <AppText variant='caption' tone='accent' align='center'>
                   Finish
-                </TextSecondary>
+                </AppText>
               )}
             </>
           )}
@@ -199,18 +206,26 @@ export default memo(function PlayingScreen() {
             size={width - PLAYING_GUTTER.TIMER}
           >
             {() => (
-              <FlexCenterColumn
+              <Stack
+                preset='centerColumn'
                 style={[styles.timerContent, { maxWidth: timerContentMaxSize, maxHeight: timerContentMaxSize }]}
               >
                 {!!exercise.imageUrl && <AppImage size={100} src={exercise.imageUrl} />}
-                <TextHeader center color={color} style={{ fontSize: 24 }} ellipsizeMode='tail' numberOfLines={2}>
+                <AppText
+                  variant='title'
+                  align='center'
+                  color={color}
+                  style={styles.exerciseName}
+                  ellipsizeMode='tail'
+                  numberOfLines={2}
+                >
                   {exercise.name}
-                </TextHeader>
-                <TextHeader color={colors.textPrimary} style={{ fontSize: 22 }}>
+                </AppText>
+                <AppText variant='title' style={styles.remainingTime}>
                   {secondsToMinSec(displayRemainingSec, false)}
-                </TextHeader>
+                </AppText>
                 <TimeObserver time={displayRemainingSec} />
-              </FlexCenterColumn>
+              </Stack>
             )}
           </CountdownCircleTimer>
         </TouchableOpacity>
@@ -243,9 +258,10 @@ export default memo(function PlayingScreen() {
             testID='playing.saveResult'
           />
         )}
-      </FlexCenterColumn>
+      </Stack>
 
-      <FlexSpaceBetween
+      <Stack
+        preset='spaceBetween'
         style={[
           styles.footer,
           {
@@ -263,7 +279,7 @@ export default memo(function PlayingScreen() {
           color={colors.inverse}
           size={35}
         />
-        <FlexSpaceBetween style={{ width: '50%' }}>
+        <Stack preset='spaceBetween' style={styles.controls}>
           <IconButton
             onPress={onPrevious}
             testID='playing.previous'
@@ -288,7 +304,7 @@ export default memo(function PlayingScreen() {
             color={colors.inverse}
             size={35}
           />
-        </FlexSpaceBetween>
+        </Stack>
         <IconButton
           onPress={onReload}
           iconName={icon.restart}
@@ -296,7 +312,7 @@ export default memo(function PlayingScreen() {
           size={35}
           testID='playing.reload'
         />
-      </FlexSpaceBetween>
+      </Stack>
       {isWorkoutReview && (
         <PlayingReview
           playingWorkout={playingWorkout}
@@ -307,6 +323,6 @@ export default memo(function PlayingScreen() {
         />
       )}
       {!isSubmitGoBack && <GoBackSubmitModal text={'Current results will be lost!'} onConfirm={onGoBack} />}
-    </View>
+    </Stack>
   )
 })

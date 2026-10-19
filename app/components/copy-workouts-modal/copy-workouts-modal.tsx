@@ -7,7 +7,8 @@ import { usePlans } from '@hooks/redux'
 import { useAppTheme } from '@theme/use-app-theme'
 import { AppModal } from '@common'
 import { PlanType } from '@utils/types'
-import { Card, TextHeader, TextSecondary } from '@theme/parents'
+import AppText from '@common/app-text/app-text'
+import Card from '@common/card/card'
 import { icon } from '@theme/icons'
 import { useScreen } from '@platform/screen'
 import { BAR_HEIGHT } from '@theme/bar-heights.constants'
@@ -56,9 +57,9 @@ export default memo(function CopyWorkoutsModal({ onClose, onCopy, isOpen, isInPl
               {selectedIdx === -1 && (
                 <Icon name={icon.checkCircle} color={colors.primary} size={16} style={styles.selectedIcon} />
               )}
-              <TextHeader color={colors.accent} numberOfLines={1} style={textHeaderStyle} ellipsizeMode='tail'>
+              <AppText variant='title' tone='accent' numberOfLines={1} style={textHeaderStyle} ellipsizeMode='tail'>
                 My workouts
-              </TextHeader>
+              </AppText>
             </Card>
           </TouchableOpacity>
         ) : null}
@@ -71,10 +72,12 @@ export default memo(function CopyWorkoutsModal({ onClose, onCopy, isOpen, isInPl
                 {idx === selectedIdx && (
                   <Icon name={icon.checkCircle} color={colors.primary} size={16} style={styles.selectedIcon} />
                 )}
-                <TextHeader color={color} numberOfLines={1} style={textHeaderStyle} ellipsizeMode='tail'>
+                <AppText variant='title' color={color} numberOfLines={1} style={textHeaderStyle} ellipsizeMode='tail'>
                   {plan.name}
-                </TextHeader>
-                <TextSecondary>Workouts: {plan?.workouts?.length || 0}</TextSecondary>
+                </AppText>
+                <AppText variant='caption' tone='secondary'>
+                  Workouts: {plan?.workouts?.length || 0}
+                </AppText>
               </Card>
             </TouchableOpacity>
           )

@@ -99,7 +99,7 @@ primitive directly.**
 | `Timer`              | countdown display                                                           |
 | `TapBar`             | segmented tabs                                                              |
 
-Text and layout wrappers live in `app/theme/parents.tsx` (`Page`, themed text).
+Text/layout primitives: `AppText`, `Stack`, `Screen`, `Card`, `Divider`, `AppHeader`, `AppFooter`.
 
 #### `app/components/` — business-aware reusable components
 

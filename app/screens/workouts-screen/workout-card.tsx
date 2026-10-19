@@ -4,7 +4,8 @@ import { View } from 'react-native'
 import { Icon } from '@common/icon/icon'
 import { useAppTheme } from '@theme/use-app-theme'
 import { Labels, WorkoutDuration } from '@common'
-import { FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '@theme/parents'
+import Stack from '@common/stack/stack'
+import AppText from '@common/app-text/app-text'
 import { WorkoutType } from '@utils/types'
 import { icon } from '@theme/icons'
 import { getExerciseColor } from '@theme/tokens'
@@ -28,16 +29,20 @@ export default memo(function WorkoutCard({ workout, isSelected = false }: IWorko
           style={{ position: 'absolute', left: -12, top: -12 }}
         />
       )}
-      <FlexSpaceBetween>
+      <Stack preset='spaceBetween'>
         <View>
-          <TextHeader color={color}>{workout.name}</TextHeader>
-          <FlexStart>
-            <TextSecondary>{workout?.exercises?.length || 0} Exercises</TextSecondary>
+          <AppText variant='title' color={color}>
+            {workout.name}
+          </AppText>
+          <Stack preset='start'>
+            <AppText variant='caption' tone='secondary'>
+              {workout?.exercises?.length || 0} Exercises
+            </AppText>
             <WorkoutDuration exercises={workout.exercises} />
-          </FlexStart>
+          </Stack>
           <Labels labels={workout.labels} />
         </View>
-      </FlexSpaceBetween>
+      </Stack>
     </>
   )
 })

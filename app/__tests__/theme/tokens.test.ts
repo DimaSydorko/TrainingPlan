@@ -7,6 +7,7 @@ import {
   getExerciseColorPair,
   palette,
   radius,
+  shadow,
   spacing,
   typography,
 } from '@theme/tokens'
@@ -120,5 +121,12 @@ describe('scales', () => {
     expect(typography.body).toMatchObject({ fontSize: 18, fontWeight: '500' })
     expect(typography.caption).toMatchObject({ fontSize: 14, fontWeight: '600' })
     expect(typography.link).toMatchObject({ fontSize: 16, fontWeight: '700' })
+  })
+
+  it('keeps the legacy shadow values', () => {
+    const legacyShadow = { shadowOpacity: 0.1, shadowRadius: 5, shadowOffset: { width: 4, height: 2 } }
+
+    expect(shadow.card).toEqual({ ...legacyShadow, elevation: 3 })
+    expect(shadow.bar).toEqual({ ...legacyShadow, elevation: 4 })
   })
 })

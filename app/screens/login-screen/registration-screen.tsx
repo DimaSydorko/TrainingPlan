@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useState } from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 import { useAppDispatch, useUser } from '@hooks/redux'
 import { useAppTheme } from '@theme/use-app-theme'
@@ -9,9 +9,10 @@ import { userAC } from '@store/user-reducer/user-ac'
 import { useNavigation } from '@react-navigation/native'
 import { FUTURE_FLAG, ScreenName } from '@utils/constants'
 import { ConfirmButton, MyTextInput } from '@common'
-import { FlexCenterColumn, TextHeader, TextOrdinary } from '@theme/parents'
-import { theme } from '@theme/theme'
+import Stack from '@common/stack/stack'
+import AppText from '@common/app-text/app-text'
 import AppGoogleSignInButton from './app-google-sign-in-button'
+import styles from './registration-screen.styles'
 import { AuthNavigation } from '@utils/types'
 
 export default function RegistrationScreen() {
@@ -50,7 +51,7 @@ export default function RegistrationScreen() {
         keyboardShouldPersistTaps='always'
         bottomOffset={20}
       >
-        <TextHeader>{error}</TextHeader>
+        <AppText variant='title'>{error}</AppText>
         <MyTextInput
           value={inputData.fullName}
           onChangeText={fullName => setInputData({ ...inputData, fullName })}
@@ -75,14 +76,14 @@ export default function RegistrationScreen() {
         />
         <ConfirmButton disabled={isLoading || !isOnline} onPress={onRegister} header='Create account' />
         {!FUTURE_FLAG.IS_DEV && <AppGoogleSignInButton disabled={!isOnline} />}
-        <FlexCenterColumn style={theme.margin.top20}>
-          <TextOrdinary>
+        <Stack preset='centerColumn' style={styles.footer}>
+          <AppText>
             Already got an account?{' '}
-            <Text onPress={onFooterLinkPress} style={[theme.text.link, { color: colors.primary }]}>
+            <AppText variant='link' color={colors.primary} onPress={onFooterLinkPress}>
               Log in
-            </Text>
-          </TextOrdinary>
-        </FlexCenterColumn>
+            </AppText>
+          </AppText>
+        </Stack>
       </KeyboardAwareScrollView>
     </View>
   )

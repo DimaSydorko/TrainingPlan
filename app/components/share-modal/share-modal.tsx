@@ -7,7 +7,8 @@ import { AppModal } from '@common'
 import { PlanType, WorkoutType } from '@utils/types'
 import { getExerciseColor } from '@theme/tokens'
 import WorkoutCard from '@screens/workouts-screen/workout-card'
-import { Card, TextOrdinary } from '@theme/parents'
+import AppText from '@common/app-text/app-text'
+import Card from '@common/card/card'
 import Exercise from '../exercise/exercise'
 import { useScreen } from '@platform/screen'
 import { BAR_HEIGHT } from '@theme/bar-heights.constants'
@@ -23,7 +24,7 @@ interface PropsType {
 }
 
 export default memo(function ShareModal({ onClose, isOpen, onShare, workout, plan }: PropsType) {
-  const { colors, isDark } = useAppTheme()
+  const { isDark } = useAppTheme()
   const isPlan = !!plan && !workout
   const isEmpty = isPlan ? !plan?.workouts?.length : !workout?.exercises?.length
   const { height } = useScreen()
@@ -53,9 +54,9 @@ export default memo(function ShareModal({ onClose, isOpen, onShare, workout, pla
               )
             })}
         {isEmpty && (
-          <TextOrdinary center color={colors.accent}>
+          <AppText tone='accent' align='center'>
             You can&apos;t share empty {isPlan ? 'Plan' : 'Workout'}!
-          </TextOrdinary>
+          </AppText>
         )}
       </ScrollView>
     </AppModal>

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { useAppTheme } from '@theme/use-app-theme'
-import { TextHeader } from '@theme/parents'
+import AppText from '../app-text/app-text'
 
 const styles = StyleSheet.create({
   container: {
@@ -36,9 +36,9 @@ export default function TapBar({ values, currentValue, onChange }: ITapBar) {
             backgroundColor: value === currentValue ? `${colors.accent}40` : `${colors.inverse}10`,
           }}
         >
-          <TextHeader color={value === currentValue ? colors.accent : colors.textSecondary} center>
+          <AppText variant='title' color={value === currentValue ? colors.accent : colors.textSecondary} align='center'>
             {value}
-          </TextHeader>
+          </AppText>
         </TouchableOpacity>
       ))}
     </View>

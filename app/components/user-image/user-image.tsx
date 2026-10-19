@@ -3,7 +3,8 @@ import { memo } from 'react'
 import { Image, StyleSheet } from 'react-native'
 import { useAppTheme } from '@theme/use-app-theme'
 import { getUserInitials } from '@utils'
-import { FlexCenter, TextHeader } from '@theme/parents'
+import AppText from '@common/app-text/app-text'
+import Stack from '@common/stack/stack'
 import { getExerciseColor, EXERCISE_COLOR_COUNT } from '@theme/tokens'
 
 function stringToInt(str: string) {
@@ -29,9 +30,14 @@ export default memo(function UserImage({ name = '', photoUrl }: IProps) {
   return photoUrl ? (
     <Image source={{ uri: photoUrl }} style={[styles.profileImage, { borderColor: colors.inverse }]} />
   ) : (
-    <FlexCenter style={[styles.profileImage, { backgroundColor: getColorFromName(name, isDark), opacity: 0.5 }]}>
-      <TextHeader style={{ fontSize: 32 }}>{getUserInitials(name)}</TextHeader>
-    </FlexCenter>
+    <Stack
+      preset='center'
+      style={[styles.profileImage, { backgroundColor: getColorFromName(name, isDark), opacity: 0.5 }]}
+    >
+      <AppText variant='title' style={styles.initials}>
+        {getUserInitials(name)}
+      </AppText>
+    </Stack>
   )
 })
 
@@ -48,5 +54,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  initials: {
+    fontSize: 32,
   },
 })

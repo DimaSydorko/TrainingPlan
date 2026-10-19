@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { SvgXml } from 'react-native-svg'
-import { FlexCenter } from '@theme/parents'
+import Stack from '@common/stack/stack'
 import { useAppTheme } from '@theme/use-app-theme'
 import { useEmptyStateIconSize } from './use-empty-state-icon-size'
 
@@ -186,8 +186,8 @@ export default function EmptySearchIcon() {
       />
     </svg>`
   return (
-    <FlexCenter style={{ height: containerHeight }}>
+    <Stack preset='center' style={{ height: containerHeight }}>
       <SvgXml xml={xml} />
-    </FlexCenter>
+    </Stack>
   )
 }

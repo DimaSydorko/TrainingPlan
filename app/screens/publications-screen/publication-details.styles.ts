@@ -5,4 +5,10 @@ export default StyleSheet.create({
     padding: 10,
     paddingHorizontal: 20,
   },
+  ownerColumn: {
+    alignItems: 'flex-start',
+  },
+  list: {
+    padding: 0,
+  },
 })

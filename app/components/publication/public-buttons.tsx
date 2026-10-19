@@ -7,7 +7,8 @@ import { useAppDispatch, useUser } from '@hooks/redux'
 import { useAppTheme } from '@theme/use-app-theme'
 import { AppHelperContext } from '@hooks/app-helper-provider'
 import { AppNavigationType, PublicType } from '@utils/types'
-import { FlexEnd, TextSecondary } from '@theme/parents'
+import AppText from '@common/app-text/app-text'
+import Stack from '@common/stack/stack'
 import { icon } from '@theme/icons'
 import { AppModal, IconButton } from '@common'
 
@@ -38,7 +39,7 @@ export default memo(function PublicButtons({ publication, isOpenedScreen = false
 
   return (
     <>
-      <FlexEnd style={{ width: 115, alignItems: 'flex-start' }}>
+      <Stack preset='end' style={{ width: 115, alignItems: 'flex-start' }}>
         {isOwner && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}
         <View>
           <IconButton
@@ -47,7 +48,9 @@ export default memo(function PublicButtons({ publication, isOpenedScreen = false
             disabled={savedUids.includes(publication.uid)}
             onPress={onSave}
           />
-          <TextSecondary center>{publication.downloads.length}</TextSecondary>
+          <AppText variant='caption' tone='secondary' align='center'>
+            {publication.downloads.length}
+          </AppText>
         </View>
         <View>
           <IconButton
@@ -63,9 +66,11 @@ export default memo(function PublicButtons({ publication, isOpenedScreen = false
               )
             }
           />
-          <TextSecondary center>{publication.likes.length}</TextSecondary>
+          <AppText variant='caption' tone='secondary' align='center'>
+            {publication.likes.length}
+          </AppText>
         </View>
-      </FlexEnd>
+      </Stack>
       <AppModal
         onConfirm={onDelete}
         onClose={() => setIsDeleteModal(false)}

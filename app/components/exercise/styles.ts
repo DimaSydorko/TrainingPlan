@@ -26,4 +26,10 @@ export default StyleSheet.create({
   approaches: {
     marginLeft: 10,
   },
+  editActions: {
+    width: 100,
+  },
+  breakTime: {
+    width: 150,
+  },
 })

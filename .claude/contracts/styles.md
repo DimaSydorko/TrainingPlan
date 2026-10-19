@@ -6,8 +6,8 @@ Follow `code-style.md` during creation of styles. React Native has no CSS: style
 
 -   Static styles go in `StyleSheet.create` in a co-located `<component-name>.styles.ts` (legacy files use
     `styles.ts`; keep that name when editing them).
--   One default-exported `StyleSheet` per component file. Shared look-and-feel (typography, containers, header
-    options) belongs in `app/theme/theme.ts`, not copied between `*.styles.ts` files.
+-   One default-exported `StyleSheet` per component file. Never copy shared look-and-feel between `*.styles.ts`:
+    use the primitives below or `@theme/tokens`.
 
 ```ts
 // workout-card.styles.ts
@@ -34,7 +34,9 @@ export default StyleSheet.create({
 -   Every color must work in **light and dark** themes. Raw values live only in `app/theme/tokens/palette.ts`; add a
     role to `ThemeColors`, `lightColors` and `darkColors` in `app/theme/themes.ts` rather than picking a one-off
     color. Exercise/plan colors: `getExerciseColor(colorIdx, isDark)` from `@theme/tokens`.
--   Typography (sizes, weights) comes from `theme.text.*` or the text wrappers in `app/theme/parents.tsx`.
+-   Text: `<AppText variant tone align>` (`@common/app-text/app-text`); raw sizes: `typography` in `@theme/tokens`.
+-   Layout: `Stack` (`preset`/`direction`/`align`/`justify`/`gap`), `Screen`, `Card`, `Divider`, `AppHeader`,
+    `AppFooter` in `app/common`. Shadows: `shadow` token; stack header: `useScreenOptions` (`@theme/navigation-theme`).
 
 ### Static vs dynamic styles
 

@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { useEffect, useState } from 'react'
-import { useAppTheme } from '@theme/use-app-theme'
-import { TextSecondary } from '@theme/parents'
+import AppText from '../app-text/app-text'
 import { secondsToMinSec } from '@components/workout-duration/workout-duration'
 
 interface ITimer {
@@ -11,7 +10,6 @@ interface ITimer {
 }
 
 export default function Timer({ value = 0, isPaused, isRevers = false }: ITimer) {
-  const { colors } = useAppTheme()
   const [secondsCountDown, setSecondsCountDown] = useState<number>(value || 0)
 
   useEffect(() => {
@@ -28,5 +26,5 @@ export default function Timer({ value = 0, isPaused, isRevers = false }: ITimer)
     }
   }, [isPaused])
 
-  return <TextSecondary color={colors.textPrimary}>{secondsToMinSec(secondsCountDown, false, true)}</TextSecondary>
+  return <AppText variant='caption'>{secondsToMinSec(secondsCountDown, false, true)}</AppText>
 }

@@ -11,7 +11,8 @@ import Publication from '@components/publication/publication'
 import { ProfileNavigation } from '@utils/types'
 import { PUBLICATION_QUERY_LIMIT, ScreenName } from '@utils/constants'
 import { AppModal, IconButton, InfiniteScroll } from '@common'
-import { FlexCenterColumn, FlexEnd, TextHeader, TextSecondary } from '@theme/parents'
+import Stack from '@common/stack/stack'
+import AppText from '@common/app-text/app-text'
 import { icon } from '@theme/icons'
 import styles from './styles'
 import NoSignalIcon from '@assets/icons/no-signal-icon'
@@ -40,7 +41,7 @@ export default memo(function ProfileScreen() {
       onRefresh={isOnline ? () => dispatch(publicationsAC.get({ isYours: true })) : undefined}
       onScrollToBottom={getNextChunk}
     >
-      <FlexEnd>
+      <Stack preset='end'>
         {isOnline && (
           <IconButton
             iconName={icon.logout}
@@ -59,19 +60,21 @@ export default memo(function ProfileScreen() {
           size={36}
           style={styles.settingsButton}
         />
-      </FlexEnd>
-      <FlexCenterColumn style={styles.profileContainer}>
+      </Stack>
+      <Stack preset='centerColumn' style={styles.profileContainer}>
         <UserImage name={user?.displayName} photoUrl={user?.photoURL} />
-        <TextHeader>{user?.displayName}</TextHeader>
-        <TextSecondary>{user?.email}</TextSecondary>
-      </FlexCenterColumn>
-      <FlexCenterColumn>
+        <AppText variant='title'>{user?.displayName}</AppText>
+        <AppText variant='caption' tone='secondary'>
+          {user?.email}
+        </AppText>
+      </Stack>
+      <Stack preset='centerColumn'>
         {isOnline ? (
           userPublications.map(publication => <Publication key={publication.uid} publication={publication} />)
         ) : (
           <NoSignalIcon height={width} />
         )}
-      </FlexCenterColumn>
+      </Stack>
       <AppModal
         isWarning
         onConfirm={() => dispatch(userAC.signOut())}
