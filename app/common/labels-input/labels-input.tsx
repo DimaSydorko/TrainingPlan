@@ -68,17 +68,14 @@ export default function LabelsInput({ setLabels, style, labels, onWriteLabel }: 
       <FlexStart style={styles.labels}>
         {labels.map((label, idx) =>
           label ? (
-            <FlexStart
-              key={`${idx}-${label}`}
-              style={[styles.labelText, { backgroundColor: `${colors.secondPrimary}40` }]}
-            >
-              <TextSecondary style={{ color: colors.secondPrimary }}>{label}</TextSecondary>
+            <FlexStart key={`${idx}-${label}`} style={[styles.labelText, { backgroundColor: `${colors.accent}40` }]}>
+              <TextSecondary style={{ color: colors.accent }}>{label}</TextSecondary>
               <IconButton
                 iconName={icon.close}
                 margin={2}
                 style={{ marginTop: 2 }}
                 onPress={() => onDeleteLabel(idx)}
-                color={colors.secondPrimary}
+                color={colors.accent}
                 size={18}
               />
             </FlexStart>

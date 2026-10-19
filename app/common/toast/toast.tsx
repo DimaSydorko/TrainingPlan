@@ -4,19 +4,21 @@ import { StyleSheet } from 'react-native'
 import { Icon } from '../icon/icon'
 import { useAppTheme } from '@theme/use-app-theme'
 import { IconButton } from '../index'
-import { appScreen } from '@utils/constants'
+import { useScreen } from '@platform/screen'
+import { BAR_HEIGHT } from '@theme/bar-heights.constants'
 import { FlexSpaceBetween, TextOrdinary } from '@theme/parents'
 import { icon } from '@theme/icons'
 import { theme } from '@theme/theme'
-import { colorsFixed } from '@theme/colors'
+import { MESSAGE_GUTTER } from './toast.constants'
+import { spacing } from '@theme/tokens'
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 8,
+    paddingHorizontal: spacing.sm,
     width: '100%',
     borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,
-    height: appScreen.header,
+    height: BAR_HEIGHT.HEADER,
     maxWidth: 480,
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -43,6 +45,7 @@ export default React.memo(function Toast({
   iconName = '',
 }: ToastType) {
   const { colors } = useAppTheme()
+  const { width } = useScreen()
 
   useEffect(() => {
     if (pressAfterTime) {
@@ -57,27 +60,27 @@ export default React.memo(function Toast({
       style={[
         styles.container,
         variant === 'error' && {
-          backgroundColor: colors.error,
+          backgroundColor: colors.danger,
         },
         variant === 'info' && {
           backgroundColor: colors.info,
         },
         {
-          borderColor: colorsFixed.black,
+          borderColor: colors.staticBlack,
         },
         theme.view.shadow,
       ]}
     >
-      <Icon name={_icon} color={colorsFixed.white} size={36} />
+      <Icon name={_icon} color={colors.staticWhite} size={36} />
       <TextOrdinary
         ellipsizeMode='tail'
         numberOfLines={1}
-        style={{ width: appScreen.vw - 100 }}
-        color={colorsFixed.white}
+        style={{ width: width - MESSAGE_GUTTER }}
+        color={colors.staticWhite}
       >
         {message}
       </TextOrdinary>
-      <IconButton iconName={icon.close} size={36} color={colorsFixed.white} onPress={onPress} />
+      <IconButton iconName={icon.close} size={36} color={colors.staticWhite} onPress={onPress} />
     </FlexSpaceBetween>
   )
 })

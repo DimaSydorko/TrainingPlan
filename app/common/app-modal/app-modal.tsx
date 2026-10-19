@@ -4,7 +4,9 @@ import { Modal, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-nativ
 import { ConfirmButton } from '../index'
 import { useAppTheme } from '@theme/use-app-theme'
 import { FlexCenter, FlexEnd, FlexStart, TextHeader, TextSecondary } from '@theme/parents'
+import { useScreen } from '@platform/screen'
 import styles from './styles'
+import { MODAL_GUTTER } from './app-modal.constants'
 
 interface AppModalType {
   onConfirm: () => void
@@ -42,11 +44,14 @@ export default function AppModal({
   headerStyle,
 }: AppModalType) {
   const { colors } = useAppTheme()
+  const { width } = useScreen()
   const buttonStyle: ViewStyle = !onRefuse ? { width: '40%' } : { marginHorizontal: 6, width: '30%' }
   return (
     <Modal animationType='fade' transparent={true} visible={isOpen} onTouchStart={onClose} onRequestClose={onClose}>
       <FlexCenter style={styles.modal}>
-        <View style={[styles.container, { backgroundColor: colors.background }, style]}>
+        <View
+          style={[styles.container, { width: width - MODAL_GUTTER }, { backgroundColor: colors.background }, style]}
+        >
           <FlexCenter>
             {!!extraPlaceLeft && <FlexStart style={styles.extraPlaceLeft}>{extraPlaceLeft}</FlexStart>}
             <TextHeader style={headerStyle}>{header}</TextHeader>
@@ -68,7 +73,7 @@ export default function AppModal({
               <ConfirmButton
                 header={'No'}
                 testID='appModal.refuse'
-                color={colors.error}
+                color={colors.danger}
                 style={buttonStyle}
                 onPress={() => {
                   onRefuse()
@@ -79,7 +84,7 @@ export default function AppModal({
             <ConfirmButton
               header={confirmText}
               testID='appModal.confirm'
-              color={isWarning ? colors.error : colors.primary}
+              color={isWarning ? colors.danger : colors.primary}
               style={buttonStyle}
               disabled={disabled}
               onPress={() => {
@@ -89,7 +94,7 @@ export default function AppModal({
             />
           </FlexCenter>
         </View>
-        <TouchableOpacity onPress={onClose} style={[styles.emptySpace, { backgroundColor: `${colors.black}40` }]} />
+        <TouchableOpacity onPress={onClose} style={[styles.emptySpace, { backgroundColor: `${colors.inverse}40` }]} />
       </FlexCenter>
     </Modal>
   )

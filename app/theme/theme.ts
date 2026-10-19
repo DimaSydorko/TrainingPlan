@@ -1,9 +1,9 @@
 import { TextStyle, ViewStyle } from 'react-native'
 import { StackNavigationOptions } from '@react-navigation/stack'
-import { appScreen } from '@utils/constants'
+import { BAR_HEIGHT } from './bar-heights.constants'
 
 const headerStyle: ViewStyle = {
-  height: appScreen.header,
+  height: BAR_HEIGHT.HEADER,
   shadowOpacity: 0.1,
   shadowRadius: 5,
   shadowOffset: {
@@ -39,7 +39,6 @@ export const theme = {
       paddingLeft: 8,
       borderRadius: 10,
       margin: 2,
-      width: appScreen.vw - 30,
     } as ViewStyle,
     shadow: {
       shadowOpacity: 0.1,
@@ -80,7 +79,6 @@ export const theme = {
     secondHeader: {
       marginVertical: 10,
       paddingHorizontal: 5,
-      width: appScreen.vw - 10,
     } as ViewStyle,
     end: {
       width: '100%',

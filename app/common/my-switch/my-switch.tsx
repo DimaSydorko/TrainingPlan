@@ -17,7 +17,7 @@ interface MySwitchType {
 export default function MySwitch({ value, disabled, disableVibration, onValueChange, color, testID }: MySwitchType) {
   const { colors } = useAppTheme()
   const isVibration = useSettingsStore(state => state.isVibration)
-  const newColor = color || colors.secondPrimary
+  const newColor = color || colors.accent
 
   const onSwitch = () => {
     if (isVibration && !disableVibration) Vibration.vibrate(VIBRATION.BUTTON)
@@ -31,8 +31,8 @@ export default function MySwitch({ value, disabled, disableVibration, onValueCha
       disabled={disabled}
       circleSize={25}
       circleBorderWidth={0}
-      circleActiveColor={colors.white}
-      backgroundActive={`${colors.black}50`}
+      circleActiveColor={colors.surface}
+      backgroundActive={`${colors.inverse}50`}
       backgroundInactive={`${newColor}50`}
       circleInActiveColor={newColor}
       renderActiveText={false}

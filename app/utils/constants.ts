@@ -1,4 +1,3 @@
-import { Dimensions } from 'react-native'
 import { ApproachType, ExerciseType, PlanType, WorkoutType } from './types'
 
 export const FUTURE_FLAG = {
@@ -30,16 +29,6 @@ export enum ScreenName {
   Profile = 'Profile',
   Settings = 'Settings',
   Playing = 'Playing',
-}
-
-export const appScreen = {
-  vw: Dimensions.get('window').width,
-  vh: Dimensions.get('window').height,
-  sw: Dimensions.get('screen').width,
-  sh: Dimensions.get('screen').height,
-  header: 40,
-  footer: 55,
-  content: Dimensions.get('window').width - 50 - 55,
 }
 
 export const defaultPlan: PlanType = {

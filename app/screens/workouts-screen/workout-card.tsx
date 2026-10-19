@@ -7,7 +7,7 @@ import { Labels, WorkoutDuration } from '@common'
 import { FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '@theme/parents'
 import { WorkoutType } from '@utils/types'
 import { icon } from '@theme/icons'
-import { COLORS_EXERCISE } from '@theme/colors'
+import { getExerciseColor } from '@theme/tokens'
 
 interface IWorkoutCard {
   workout: WorkoutType
@@ -16,7 +16,7 @@ interface IWorkoutCard {
 
 export default memo(function WorkoutCard({ workout, isSelected = false }: IWorkoutCard) {
   const { colors, isDark } = useAppTheme()
-  const color = COLORS_EXERCISE[workout?.colorIdx === undefined ? 3 : workout?.colorIdx][+isDark]
+  const color = getExerciseColor(workout?.colorIdx === undefined ? 3 : workout?.colorIdx, isDark)
 
   return (
     <>

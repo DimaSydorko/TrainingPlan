@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { spacing } from '@theme/tokens'
 
 export default StyleSheet.create({
   breakContainer: {
@@ -20,7 +21,7 @@ export default StyleSheet.create({
     position: 'absolute',
     marginLeft: -10,
     marginRight: 10,
-    marginTop: 0,
+    marginTop: spacing.none,
   },
   approaches: {
     marginLeft: 10,

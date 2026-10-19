@@ -1,17 +1,18 @@
 import { StyleSheet } from 'react-native'
+import { fontSize, radius, spacing } from '@theme/tokens'
 
 export default StyleSheet.create({
   button: {
     marginHorizontal: 30,
-    paddingVertical: 12,
-    marginTop: 20,
+    paddingVertical: spacing.md,
+    marginTop: spacing.xl,
     height: 48,
-    borderRadius: 5,
+    borderRadius: radius.xs,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonTitle: {
-    fontSize: 16,
+    fontSize: fontSize.md,
     fontWeight: 'bold',
   },
 })

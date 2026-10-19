@@ -34,7 +34,7 @@ export default function LoginScreen() {
     // KeyboardAwareScrollView is the scroller here (it was nested in Page's ScrollView before, which
     // left it with nothing to scroll). react-native-keyboard-controller works with edge-to-edge.
     <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <TextSecondary color={colors.error}>{error}</TextSecondary>
+      <TextSecondary color={colors.danger}>{error}</TextSecondary>
       <KeyboardAwareScrollView keyboardShouldPersistTaps='always' bottomOffset={20}>
         <FlexCenterColumn>
           <MyTextInput

@@ -4,9 +4,10 @@ import { StyleSheet } from 'react-native'
 import { useAppTheme } from '@theme/use-app-theme'
 import { FlexSpaceBetween, TextHeader } from '@theme/parents'
 import { IconButton } from '../index'
-import { appScreen } from '@utils/constants'
+import { useScreen } from '@platform/screen'
 import { SetStateType } from '@utils/types'
 import { icon } from '@theme/icons'
+import { COUNTER_ROW_GUTTER, COUNTERS_PER_ROW } from './button-counter.constants'
 
 interface ButtonCounterType {
   value: number
@@ -30,10 +31,13 @@ export default memo(function ButtonCounter({
   children,
 }: ButtonCounterType) {
   const { colors } = useAppTheme()
+  const { width } = useScreen()
   const buttonColor = color || colors.textSecondary
 
   return (
-    <FlexSpaceBetween style={[styles.container, { width: (appScreen.vw - 120) / 2 + extraWidth }]}>
+    <FlexSpaceBetween
+      style={[styles.container, { width: (width - COUNTER_ROW_GUTTER) / COUNTERS_PER_ROW + extraWidth }]}
+    >
       <IconButton
         size={28}
         iconName={icon.minus}
@@ -43,7 +47,7 @@ export default memo(function ButtonCounter({
         isRepeatOnLongPress
         onPress={() => onChange(p => (p > minValue ? p - step : p))}
       />
-      <TextHeader color={color || colors.secondPrimary}>
+      <TextHeader color={color || colors.accent}>
         {value}
         {dataType}
         {children}

@@ -15,7 +15,7 @@ export default function Labels({ style, labels }: IProps) {
       {labels
         .filter(l => !!l)
         .map((label, idx) => (
-          <TextSecondary key={idx} color={colors.secondPrimary + 'A0'}>
+          <TextSecondary key={idx} color={colors.accent + 'A0'}>
             #{label}{' '}
           </TextSecondary>
         ))}

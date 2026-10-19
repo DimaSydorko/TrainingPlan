@@ -2,7 +2,8 @@ import * as React from 'react'
 import { memo, ReactNode } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { TextSecondary } from '@theme/parents'
-import { appScreen } from '@utils/constants'
+import { useScreen } from '@platform/screen'
+import { spacing } from '@theme/tokens'
 
 interface IProps {
   label: string
@@ -10,8 +11,10 @@ interface IProps {
 }
 
 export default memo(function SettingsHeader({ label, children }: IProps) {
+  const { width } = useScreen()
+
   return (
-    <View style={styles.container}>
+    <View style={{ width }}>
       <TextSecondary style={styles.label}>{label}</TextSecondary>
       {children}
     </View>
@@ -19,12 +22,9 @@ export default memo(function SettingsHeader({ label, children }: IProps) {
 })
 
 const styles = StyleSheet.create({
-  container: {
-    width: appScreen.vw,
-  },
   label: {
     marginLeft: 10,
-    marginTop: 12,
+    marginTop: spacing.md,
     marginBottom: 6,
   },
 })

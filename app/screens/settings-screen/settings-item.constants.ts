@@ -1,0 +1,1 @@
+export const SETTINGS_LABEL_GUTTER = 100

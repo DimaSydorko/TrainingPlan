@@ -4,8 +4,10 @@ import { StyleSheet, View } from 'react-native'
 import Slider from '@react-native-community/slider'
 import { useAppTheme } from '@theme/use-app-theme'
 import { Divider, FlexSpaceBetween, TextOrdinary, TextSecondary } from '@theme/parents'
-import { appScreen } from '@utils/constants'
+import { useScreen } from '@platform/screen'
 import { MySwitch } from '@common'
+import { SETTINGS_LABEL_GUTTER } from './settings-item.constants'
+import { spacing } from '@theme/tokens'
 
 interface IProps {
   label: string
@@ -35,15 +37,16 @@ export default memo(function SettingsItem({
 }: IProps) {
   const { colors } = useAppTheme()
   const [valSlider, setValSlider] = useState<number>(valueSlider)
+  const { width } = useScreen()
 
   useEffect(() => {
     setValSlider(p => (p !== valueSlider ? valueSlider : p))
   }, [valueSlider])
 
   return (
-    <View style={styles.container}>
+    <View style={{ width }}>
       <FlexSpaceBetween style={styles.content}>
-        <TextOrdinary style={{ width: appScreen.vw - 100 }}>{label}</TextOrdinary>
+        <TextOrdinary style={{ width: width - SETTINGS_LABEL_GUTTER }}>{label}</TextOrdinary>
         {!!onToggleSwitch && <MySwitch value={valueSwitch} onValueChange={onToggleSwitch} testID={testID} />}
         {!!onSliderChange && (
           <TextSecondary>
@@ -60,28 +63,25 @@ export default memo(function SettingsItem({
           maximumValue={sliderMaxValue}
           onValueChange={v => setValSlider(Math.round(v * 100) / 100)}
           style={styles.slider}
-          thumbTintColor={colors.secondPrimary}
+          thumbTintColor={colors.accent}
           maximumTrackTintColor={colors.disabled}
-          minimumTrackTintColor={colors.secondPrimary}
+          minimumTrackTintColor={colors.accent}
           // The native slider (community/slider 5) does not deliver responder events reliably
           onSlidingComplete={v => onSliderChange(Math.round(v * 100) / 100)}
         />
       )}
-      <Divider width={1} color={`${colors.black}40`} />
+      <Divider width={1} color={`${colors.inverse}40`} />
     </View>
   )
 })
 
 const styles = StyleSheet.create({
-  container: {
-    width: appScreen.vw,
-  },
   content: {
     paddingVertical: 10,
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.lg,
   },
   slider: {
     marginBottom: 10,
-    marginHorizontal: 2,
+    marginHorizontal: spacing.xxs,
   },
 })

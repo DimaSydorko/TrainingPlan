@@ -6,10 +6,12 @@ import { useAppTheme } from '@theme/use-app-theme'
 import { SelectedWorkoutType } from '@utils/types'
 import Exercise from '@components/exercise/exercise'
 import { ConfirmButton } from '@common'
-import { COLORS_EXERCISE } from '@theme/colors'
+import { getExerciseColor } from '@theme/tokens'
 import { Card } from '@theme/parents'
 import { useAppInsets } from '@theme/insets'
+import { useScreen } from '@platform/screen'
 import styles from './styles'
+import { PLAYING_GUTTER } from '../playing-screen.constants'
 
 interface IProps {
   playingWorkout: SelectedWorkoutType
@@ -29,6 +31,7 @@ export default memo(function PlayingReview({
   const { colors, isDark } = useAppTheme()
   // Sits between the playing header and footer, both of which grow by the system bar insets
   const { top, bottom } = useAppInsets()
+  const { width } = useScreen()
   const scrollRef = useRef<ScrollView>(null)
 
   useEffect(() => {
@@ -54,14 +57,15 @@ export default memo(function PlayingReview({
             <Card
               style={[
                 {
-                  borderColor: playingExerciseIdx === idx && !isTheLastOneComplete ? colors.primary : colors.menu,
+                  borderColor:
+                    playingExerciseIdx === idx && !isTheLastOneComplete ? colors.primary : colors.surfaceElevated,
                   borderWidth: 2,
                   opacity: playingExerciseIdx <= idx && !isTheLastOneComplete ? 1 : 0.8,
                 },
               ]}
             >
               <Exercise
-                color={COLORS_EXERCISE[exercise?.colorIdx || 0][+isDark]}
+                color={getExerciseColor(exercise?.colorIdx || 0, isDark)}
                 key={exercise.uid}
                 exercise={exercise}
                 playingExerciseLap={
@@ -72,7 +76,11 @@ export default memo(function PlayingReview({
           </View>
         ))}
         {isTheLastOneComplete && (
-          <ConfirmButton header={'Save Result'} style={styles.confirmButton} onPress={onSaveResult} />
+          <ConfirmButton
+            header={'Save Result'}
+            style={[styles.confirmButton, { width: width - PLAYING_GUTTER.SAVE_BUTTON }]}
+            onPress={onSaveResult}
+          />
         )}
       </ScrollView>
     </View>

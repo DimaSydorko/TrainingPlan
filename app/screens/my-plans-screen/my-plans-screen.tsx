@@ -23,7 +23,7 @@ import { QUERY_LIMIT, ScreenName, VIBRATION } from '@utils/constants'
 import { PlanType, PlansNavigation } from '@utils/types'
 import { icon } from '@theme/icons'
 import ShareModal from '@components/share-modal/share-modal'
-import { COLORS_EXERCISE } from '@theme/colors'
+import { getExerciseColor } from '@theme/tokens'
 import NoDataIcon from '@assets/icons/no-data-icon'
 
 export default memo(function MyPlansScreen() {
@@ -76,7 +76,7 @@ export default memo(function MyPlansScreen() {
   }, [selectedFirst])
 
   const renderItem = ({ item, drag, isActive }: DraggableRenderItemParams<PlanType>) => {
-    const color = COLORS_EXERCISE[item?.colorIdx === undefined ? 3 : item?.colorIdx][+isDark]
+    const color = getExerciseColor(item?.colorIdx === undefined ? 3 : item?.colorIdx, isDark)
     return (
       <DraggableItem>
         <Card borderLeftColor={color}>

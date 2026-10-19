@@ -11,3 +11,5 @@ export const THEME_MODE = {
 export type ThemeName = (typeof THEME_NAME)[keyof typeof THEME_NAME]
 
 export type ThemeMode = (typeof THEME_MODE)[keyof typeof THEME_MODE]
+
+export const LEGACY_DARK_PRIMARY = '#3c8739'

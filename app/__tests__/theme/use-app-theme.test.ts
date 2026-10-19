@@ -1,7 +1,6 @@
 import { act, renderHook } from '@testing-library/react-native'
 import { useColorScheme } from 'react-native'
-import { colorsDark, colorsLight } from '@theme/colors'
-import { resolveThemeName, themes } from '@theme/themes'
+import { darkColors, lightColors, resolveThemeName, themes } from '@theme/themes'
 import { THEME_MODE } from '@theme/themes.constants'
 import { useAppTheme, useIsDarkTheme, useThemeColors } from '@theme/use-app-theme'
 import { useSettingsStore } from '@stores/settings/use-settings-store'
@@ -32,8 +31,8 @@ describe('useAppTheme', () => {
   })
 
   it('maps the theme names to the existing palettes', () => {
-    expect(themes.light).toEqual({ name: 'light', isDark: false, colors: colorsLight })
-    expect(themes.dark).toEqual({ name: 'dark', isDark: true, colors: colorsDark })
+    expect(themes.light).toEqual({ name: 'light', isDark: false, colors: lightColors })
+    expect(themes.dark).toEqual({ name: 'dark', isDark: true, colors: darkColors })
   })
 
   it('resolves the light mode', async () => {
@@ -82,7 +81,7 @@ describe('useAppTheme', () => {
     const { result: isDark } = await renderHook(() => useIsDarkTheme())
 
     expect(name.current).toBe('dark')
-    expect(colors.current).toBe(colorsDark)
+    expect(colors.current).toBe(darkColors)
     expect(isDark.current).toBe(true)
   })
 })

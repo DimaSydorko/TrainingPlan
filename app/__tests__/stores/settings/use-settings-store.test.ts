@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { colorsDark, colorsLight } from '@theme/colors'
-import { THEME_MODE } from '@theme/themes.constants'
+import { lightColors } from '@theme/themes'
+import { LEGACY_DARK_PRIMARY, THEME_MODE } from '@theme/themes.constants'
 import { SoundType } from '@utils/constants'
 import {
   DEFAULT_SETTINGS,
@@ -12,7 +12,7 @@ import { useSettingsStore } from '@stores/settings/use-settings-store'
 import { resetTestStores } from '../../utils/reset-test-stores'
 
 const legacySettings = {
-  colors: colorsDark,
+  colors: { primary: LEGACY_DARK_PRIMARY },
   isVibration: false,
   isSaveBatteryMode: true,
   internet: { isOnline: true, lastBeOline: 1 },
@@ -135,7 +135,10 @@ describe('useSettingsStore', () => {
     })
 
     it('imports the legacy light palette as the light theme', async () => {
-      await AsyncStorage.setItem(LEGACY_PERSIST_KEY, serializeLegacyRoot({ ...legacySettings, colors: colorsLight }))
+      await AsyncStorage.setItem(
+        LEGACY_PERSIST_KEY,
+        serializeLegacyRoot({ ...legacySettings, colors: { primary: lightColors.primary } })
+      )
 
       await useSettingsStore.persist.rehydrate()
 

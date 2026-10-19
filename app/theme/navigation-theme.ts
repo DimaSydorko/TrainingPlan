@@ -8,11 +8,11 @@ export function buildNavigationTheme({ isDark, colors }: AppTheme): Theme {
     ...base,
     colors: {
       ...base.colors,
-      primary: colors.secondPrimary,
+      primary: colors.accent,
       background: colors.background,
-      card: colors.menu,
-      text: colors.text,
-      notification: colors.error,
+      card: colors.surfaceElevated,
+      text: colors.textPrimary,
+      notification: colors.danger,
     },
   }
 }

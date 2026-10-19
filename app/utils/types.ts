@@ -78,23 +78,6 @@ export interface PlanType {
   lastUpdated: number
 }
 
-export interface ColorsType {
-  primary: string
-  secondPrimary: string
-
-  error: string
-  info: string
-  disabled: string
-
-  black: string
-  white: string
-
-  background: string
-  text: string
-  textSecondary: string
-  menu: string
-}
-
 export type SetStateType<S> = (arg: S | ((prevState: S) => S)) => void
 
 // ---------------------------------------------------------------------------

@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
 
 export default function Approach({ weight, repeats, isPrevious = true }: ExerciseResultsType) {
   const { colors } = useAppTheme()
-  const color = isPrevious ? colors.text : colors.primary
+  const color = isPrevious ? colors.textPrimary : colors.primary
   return (
     <View style={styles.container}>
       <TextOrdinary color={color} style={styles.textCurrPrev}>{`\u2022  ${

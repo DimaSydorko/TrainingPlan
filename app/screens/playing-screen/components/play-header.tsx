@@ -27,7 +27,7 @@ export default memo(function PlayHeader({ playingLap, exerciseLaps, workoutDurat
         <TextHeader>
           Laps {playingLap}/{exerciseLaps}
         </TextHeader>
-        <TextSecondary color={colors.text}>{secondsToMinSec(time > 0 ? time : 0, false, true)}</TextSecondary>
+        <TextSecondary color={colors.textPrimary}>{secondsToMinSec(time > 0 ? time : 0, false, true)}</TextSecondary>
       </FlexSpaceBetween>
     </View>
   )

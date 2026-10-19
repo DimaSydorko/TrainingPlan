@@ -9,17 +9,19 @@ import { userAC } from '@store/user-reducer/user-ac'
 import UserImage from '@components/user-image/user-image'
 import Publication from '@components/publication/publication'
 import { ProfileNavigation } from '@utils/types'
-import { PUBLICATION_QUERY_LIMIT, appScreen, ScreenName } from '@utils/constants'
+import { PUBLICATION_QUERY_LIMIT, ScreenName } from '@utils/constants'
 import { AppModal, IconButton, InfiniteScroll } from '@common'
 import { FlexCenterColumn, FlexEnd, TextHeader, TextSecondary } from '@theme/parents'
 import { icon } from '@theme/icons'
 import styles from './styles'
 import NoSignalIcon from '@assets/icons/no-signal-icon'
+import { useScreen } from '@platform/screen'
 
 export default memo(function ProfileScreen() {
   const navigation = useNavigation<ProfileNavigation>()
   const dispatch = useAppDispatch()
   const { colors } = useAppTheme()
+  const { width } = useScreen()
   const isOnline = useIsOnline()
   const { user } = useUser()
   const { userPublications, isLoading } = usePublications()
@@ -67,7 +69,7 @@ export default memo(function ProfileScreen() {
         {isOnline ? (
           userPublications.map(publication => <Publication key={publication.uid} publication={publication} />)
         ) : (
-          <NoSignalIcon height={appScreen.vw} />
+          <NoSignalIcon height={width} />
         )}
       </FlexCenterColumn>
       <AppModal

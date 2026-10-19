@@ -6,10 +6,11 @@ import { AppImage, AppModal, IconButton } from '@common'
 import { secondsToMinSec } from '../workout-duration/workout-duration'
 import { Divider, FlexEnd, FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '@theme/parents'
 import { ExerciseType, SelectedExerciseType } from '@utils/types'
-import { appScreen } from '@utils/constants'
+import { useScreen } from '@platform/screen'
 import { icon } from '@theme/icons'
 import Approach from './approach'
 import styles from './styles'
+import { DETAILS_GUTTER, EDIT_NAME_GUTTER, NAME_GUTTER, OUTSIDE_MODAL_EXTRA_WIDTH } from './exercise.constants'
 
 const IMG_SIZE = 45
 
@@ -40,7 +41,12 @@ export default memo(function Exercise({
 }: IExercise) {
   const [isVisible, setIsVisible] = useState(exercise.isVisible)
   const [isDeleteModal, setIsDeleteModal] = useState(false)
+  const { width } = useScreen()
   const isImage = !!exercise.imageUrl
+  const editNameWidth = width - (isImage ? EDIT_NAME_GUTTER.WITH_IMAGE : EDIT_NAME_GUTTER.DEFAULT)
+  const nameWidth = width - (isImage ? NAME_GUTTER.WITH_IMAGE : NAME_GUTTER.DEFAULT)
+  const detailsWidth =
+    width - (isImage ? DETAILS_GUTTER.WITH_IMAGE : DETAILS_GUTTER.DEFAULT) + (isInModal ? 0 : OUTSIDE_MODAL_EXTRA_WIDTH)
   const containerStyle: ViewStyle = isImage ? { marginLeft: IMG_SIZE, width: '86.5%' } : {}
 
   useEffect(() => {
@@ -68,11 +74,7 @@ export default memo(function Exercise({
         <>
           {isImage && <AppImage src={exercise.imageUrl} size={IMG_SIZE} style={styles.imageContainer} />}
           <FlexSpaceBetween style={containerStyle}>
-            <TextHeader
-              color={isVisible ? color : `${color}80`}
-              numberOfLines={1}
-              style={{ width: appScreen.vw - (isImage ? 215 : 170) }}
-            >
+            <TextHeader color={isVisible ? color : `${color}80`} numberOfLines={1} style={{ width: editNameWidth }}>
               {exercise.name}
             </TextHeader>
             <FlexEnd style={{ width: 100 }}>
@@ -107,10 +109,10 @@ export default memo(function Exercise({
           <FlexStart>
             {isImage && <AppImage src={exercise.imageUrl} size={IMG_SIZE} style={{ marginLeft: -10 }} />}
             <View>
-              <TextHeader color={color} numberOfLines={1} style={{ width: appScreen.vw - (isImage ? 110 : 70) }}>
+              <TextHeader color={color} numberOfLines={1} style={{ width: nameWidth }}>
                 {exercise.name}
               </TextHeader>
-              <FlexSpaceBetween style={{ width: appScreen.vw - (isImage ? 140 : 100) + (isInModal ? 0 : 40) }}>
+              <FlexSpaceBetween style={{ width: detailsWidth }}>
                 {!!exercise.breakTimeInSec && (
                   <TextSecondary style={{ width: 150 }} ellipsizeMode='tail' numberOfLines={1}>
                     Break: {secondsToMinSec(exercise.breakTimeInSec)}

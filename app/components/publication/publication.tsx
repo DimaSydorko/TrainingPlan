@@ -6,9 +6,11 @@ import { useAppTheme } from '@theme/use-app-theme'
 import { Labels, WorkoutDuration } from '@common'
 import { Card, FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '@theme/parents'
 import { PublicType, PublicationsNavigation } from '@utils/types'
-import { appScreen, ScreenName } from '@utils/constants'
+import { ScreenName } from '@utils/constants'
+import { useScreen } from '@platform/screen'
 import PublicButtons from './public-buttons'
-import { COLORS_EXERCISE } from '@theme/colors'
+import { LABELS_GUTTER } from './publication.constants'
+import { getExerciseColor } from '@theme/tokens'
 
 interface IProps {
   publication: PublicType
@@ -17,8 +19,9 @@ interface IProps {
 export default memo(function Publication({ publication }: IProps) {
   const navigation = useNavigation<PublicationsNavigation>()
   const { colors, isDark } = useAppTheme()
+  const { width } = useScreen()
   const isPlan = !!publication?.workouts && !publication?.exercises
-  const color = COLORS_EXERCISE[publication?.colorIdx === undefined ? 3 : publication?.colorIdx][+isDark]
+  const color = getExerciseColor(publication?.colorIdx === undefined ? 3 : publication?.colorIdx, isDark)
 
   const onPress = () => {
     if (isPlan) navigation.navigate(ScreenName.PublicationPlan, { publication })
@@ -40,8 +43,8 @@ export default memo(function Publication({ publication }: IProps) {
                   <WorkoutDuration exercises={publication.exercises} />
                 </FlexStart>
               )}
-              <Labels labels={publication.labels} style={{ width: appScreen.vw - 180 }} />
-              <TextSecondary color={colors.black}>By {publication.ownerName}</TextSecondary>
+              <Labels labels={publication.labels} style={{ width: width - LABELS_GUTTER }} />
+              <TextSecondary color={colors.inverse}>By {publication.ownerName}</TextSecondary>
             </View>
             <PublicButtons publication={publication} />
           </FlexSpaceBetween>

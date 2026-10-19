@@ -171,15 +171,14 @@ export default memo(function SettingsScreen() {
         onSliderChange={setSoundVolume}
       />
       <TouchableOpacity onPress={() => setIsSoundModal(true)}>
-        <TextHeader color={colors.black} style={{ marginHorizontal: 16, marginVertical: 6 }}>
-          Sound type:{' '}
-          <TextHeader color={colors.secondPrimary}>{getSoundText(sound?.type || SoundType.Bell)}</TextHeader>
+        <TextHeader color={colors.inverse} style={{ marginHorizontal: 16, marginVertical: 6 }}>
+          Sound type: <TextHeader color={colors.accent}>{getSoundText(sound?.type || SoundType.Bell)}</TextHeader>
         </TextHeader>
       </TouchableOpacity>
       <ConfirmButton
         header={'Clear local storage'}
         style={{ marginTop: 250, marginBottom: 20 }}
-        color={colors.secondPrimary}
+        color={colors.accent}
         onPress={clearAll}
       />
       <AppSoundPicker isOpen={isSoundModal} setIsOpen={setIsSoundModal} />

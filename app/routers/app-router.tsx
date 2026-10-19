@@ -87,16 +87,16 @@ export default function AppRouter() {
             component={component}
             options={{
               tabBarLabel: ({ focused }) => (
-                <Text style={focused ? { color: colors.secondPrimary } : { color: colors.black }}>{buttonLabel}</Text>
+                <Text style={focused ? { color: colors.accent } : { color: colors.inverse }}>{buttonLabel}</Text>
               ),
-              tabBarIcon: ({ focused }) => icon(focused ? colors.secondPrimary : colors.black),
+              tabBarIcon: ({ focused }) => icon(focused ? colors.accent : colors.inverse),
               headerShown: false,
               tabBarButtonTestID: testID,
               tabBarStyle: {
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
-                backgroundColor: colors.menu,
+                backgroundColor: colors.surfaceElevated,
                 paddingTop: 5,
                 // Edge-to-edge: the bar extends under the Android navigation bar / iOS home indicator
                 paddingBottom: 5 + bottom,

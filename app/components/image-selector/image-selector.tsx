@@ -4,12 +4,13 @@ import { FlatList, Image, TouchableOpacity, View } from 'react-native'
 import { Icon } from '@common/icon/icon'
 import { useWorkout } from '@hooks/redux'
 import { useAppTheme } from '@theme/use-app-theme'
-import { appScreen } from '@utils/constants'
+import { useScreen } from '@platform/screen'
 import { AppImage, AppModal, TapBar } from '@common'
 import { ExerciseImageFilterType } from '@utils/types'
 import { FlexCenterColumn, TextSecondary } from '@theme/parents'
 import { icon } from '@theme/icons'
 import styles from './styles'
+import { IMAGE_LIST_RESERVED_HEIGHT } from './image-selector.constants'
 
 interface IImageSelector {
   value?: string
@@ -24,6 +25,7 @@ export default function ImageSelector({ onSubmit, value = '' }: IImageSelector) 
   const [isModal, setIsModal] = useState(false)
   const [selected, setSelected] = useState<string>(value)
   const [filter, setFilter] = useState<ExerciseImageFilterType>('home')
+  const { height } = useScreen()
 
   return (
     <>
@@ -60,7 +62,7 @@ export default function ImageSelector({ onSubmit, value = '' }: IImageSelector) 
           <FlatList
             data={exerciseImages?.filter(img => img.filter === filter)}
             numColumns={4}
-            style={{ height: appScreen.vh - 400 }}
+            style={{ height: height - IMAGE_LIST_RESERVED_HEIGHT }}
             renderItem={({ item, index }) => (
               <>
                 {index === 0 && (

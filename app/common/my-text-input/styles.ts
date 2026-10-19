@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { appScreen } from '@utils/constants'
+import { fontSize, radius, spacing } from '@theme/tokens'
 
 export default StyleSheet.create({
   container: {
@@ -7,29 +7,28 @@ export default StyleSheet.create({
   },
   ordinary: {
     height: 48,
-    borderRadius: 5,
+    borderRadius: radius.xs,
     overflow: 'hidden',
     marginVertical: 10,
-    paddingHorizontal: 12,
-    width: appScreen.vw - 40,
+    paddingHorizontal: spacing.md,
   },
   underline: {
     width: '100%',
-    marginVertical: 8,
+    marginVertical: spacing.sm,
     height: 48,
     fontWeight: 'bold',
-    paddingHorizontal: 4,
+    paddingHorizontal: spacing.xs,
     borderBottomWidth: 1,
-    fontSize: 18,
+    fontSize: fontSize.lg,
     borderRadius: 0,
   },
   secondary: {
     width: '100%',
-    marginVertical: 8,
+    marginVertical: spacing.sm,
     height: 36,
-    paddingHorizontal: 4,
+    paddingHorizontal: spacing.xs,
     borderBottomWidth: 1,
-    fontSize: 14,
+    fontSize: fontSize.sm,
     borderRadius: 0,
   },
   visibilityButton: {

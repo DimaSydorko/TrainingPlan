@@ -5,11 +5,14 @@ import { ScrollView } from 'react-native'
 import { useAppTheme } from '@theme/use-app-theme'
 import { AppModal } from '@common'
 import { PlanType, WorkoutType } from '@utils/types'
-import { COLORS_EXERCISE } from '@theme/colors'
+import { getExerciseColor } from '@theme/tokens'
 import WorkoutCard from '@screens/workouts-screen/workout-card'
 import { Card, TextOrdinary } from '@theme/parents'
 import Exercise from '../exercise/exercise'
+import { useScreen } from '@platform/screen'
+import { BAR_HEIGHT } from '@theme/bar-heights.constants'
 import styles from './styles'
+import { RESERVED_HEADER_COUNT } from './share-modal.constants'
 
 interface PropsType {
   isOpen: boolean
@@ -23,6 +26,8 @@ export default memo(function ShareModal({ onClose, isOpen, onShare, workout, pla
   const { colors, isDark } = useAppTheme()
   const isPlan = !!plan && !workout
   const isEmpty = isPlan ? !plan?.workouts?.length : !workout?.exercises?.length
+  const { height } = useScreen()
+
   return (
     <AppModal
       disabled={isEmpty}
@@ -32,7 +37,7 @@ export default memo(function ShareModal({ onClose, isOpen, onShare, workout, pla
       isOpen={isOpen}
       header={`Confirm share ${isPlan ? 'plan' : 'workout'}`}
     >
-      <ScrollView style={styles.container}>
+      <ScrollView style={[styles.container, { maxHeight: height - BAR_HEIGHT.HEADER * RESERVED_HEADER_COUNT }]}>
         {isPlan
           ? plan?.workouts?.map(workout => (
               <Card key={workout.uid} style={styles.card}>
@@ -40,7 +45,7 @@ export default memo(function ShareModal({ onClose, isOpen, onShare, workout, pla
               </Card>
             ))
           : workout?.exercises?.map(ex => {
-              const color = COLORS_EXERCISE[ex?.colorIdx || 0][+isDark]
+              const color = getExerciseColor(ex?.colorIdx || 0, isDark)
               return (
                 <Card key={ex.uid} style={styles.card}>
                   <Exercise isPublic isInModal exercise={ex} color={color} />
@@ -48,7 +53,7 @@ export default memo(function ShareModal({ onClose, isOpen, onShare, workout, pla
               )
             })}
         {isEmpty && (
-          <TextOrdinary center color={colors.secondPrimary}>
+          <TextOrdinary center color={colors.accent}>
             You can&apos;t share empty {isPlan ? 'Plan' : 'Workout'}!
           </TextOrdinary>
         )}

@@ -1,10 +1,9 @@
-import { colorsDark } from '@theme/colors'
-import { THEME_MODE } from '@theme/themes.constants'
+import { LEGACY_DARK_PRIMARY, THEME_MODE } from '@theme/themes.constants'
 import { DEFAULT_SETTINGS, LEGACY_SETTINGS_SLICE_KEY } from './settings.constants'
 import type { LegacySettings, Settings } from './settings.types'
 
 export const mapLegacySettings = (legacy: LegacySettings): Settings => ({
-  themeMode: legacy.colors?.primary === colorsDark.primary ? THEME_MODE.DARK : THEME_MODE.LIGHT,
+  themeMode: legacy.colors?.primary === LEGACY_DARK_PRIMARY ? THEME_MODE.DARK : THEME_MODE.LIGHT,
   isVibration: legacy.isVibration ?? DEFAULT_SETTINGS.isVibration,
   isSaveBatteryMode: legacy.isSaveBatteryMode ?? DEFAULT_SETTINGS.isSaveBatteryMode,
   tts: { ...DEFAULT_SETTINGS.tts, ...legacy.tts },

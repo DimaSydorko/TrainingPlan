@@ -53,7 +53,7 @@ export default memo(function PublicButtons({ publication, isOpenedScreen = false
           <IconButton
             iconName={isLiked || isOwner ? icon.like : icon.likeEmpty}
             disabled={isOwner}
-            color={isLiked || isOwner ? colors.secondPrimary : colors.textSecondary}
+            color={isLiked || isOwner ? colors.accent : colors.textSecondary}
             onPress={() =>
               dispatch(
                 publicationsAC.likeToggle({

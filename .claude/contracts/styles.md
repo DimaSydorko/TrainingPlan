@@ -28,11 +28,12 @@ export default StyleSheet.create({
 
 ### Colors and theme
 
--   Never hardcode a hex/rgb color in a component or `*.styles.ts`. Colors come from the active palette
-    (`useSettings().colors` today, the settings store after the Zustand migration) or `colorsFixed` for
-    theme-independent values.
--   Every color must work in **light and dark** themes. Add a new token to both `colorsLight` and `colorsDark` in
-    `app/theme/colors.ts` rather than picking a one-off color.
+-   Never hardcode a hex/rgb color in a component or `*.styles.ts`. Colors come from the semantic roles of the
+    active theme (`useThemeColors()` / `useAppTheme().colors` from `app/theme/use-app-theme.ts`); theme-independent
+    roles (`shadow`, `onPrimary`, `staticWhite`, `staticBlack`) are part of the same object.
+-   Every color must work in **light and dark** themes. Raw values live only in `app/theme/tokens/palette.ts`; add a
+    role to `ThemeColors`, `lightColors` and `darkColors` in `app/theme/themes.ts` rather than picking a one-off
+    color. Exercise/plan colors: `getExerciseColor(colorIdx, isDark)` from `@theme/tokens`.
 -   Typography (sizes, weights) comes from `theme.text.*` or the text wrappers in `app/theme/parents.tsx`.
 
 ### Static vs dynamic styles
@@ -55,8 +56,14 @@ For a fixed set of variants, define one style per variant in the StyleSheet and 
 
 ### Layout and sizes
 
--   No magic numbers: spacing/sizes reused across components come from `appScreen` / theme constants; component-only
-    values go into the component's `*.constants.ts` or StyleSheet with a clear name.
+-   Spacing, radius and font sizes come from `spacing`, `radius`, `fontSize` / `typography` in `@theme/tokens` when
+    the value is on the scale.
+-   No magic numbers: spacing/sizes reused across components come from theme constants (`BAR_HEIGHT`,
+    `LAYOUT_GUTTER` in `app/theme/*.constants.ts`); component-only values go into the component's `*.constants.ts`
+    or StyleSheet with a clear name.
+-   Window sizes: never `Dimensions.get` or sizes measured at module load. Prefer flex / `'100%'` / margins; when a
+    real size is needed use `useScreen()` from `app/platform/screen.ts` (`width`, `height`, `breakpoint`:
+    compact < 600 ≤ medium < 840 ≤ expanded) and compose it as a runtime style (`[styles.x, { width }]`).
 -   Respect safe areas through `app/theme/insets.ts` (`useAppInsets`), not hardcoded paddings for notches or the
     navigation bar.
 -   Platform differences via `Platform.select` inside the StyleSheet, not scattered `Platform.OS` checks in JSX.

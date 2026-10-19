@@ -4,9 +4,10 @@ import { ScrollView, StyleProp, Text, TextProps, TextStyle, View, ViewStyle } fr
 import { StackNavigationOptions } from '@react-navigation/stack'
 import { useAppTheme } from './use-app-theme'
 import { theme } from './theme'
-import { colorsFixed } from './colors'
-import { appScreen } from '@utils/constants'
+import { useScreen } from '@platform/screen'
 import { useAppInsets } from './insets'
+import { BAR_HEIGHT } from './bar-heights.constants'
+import { LAYOUT_GUTTER } from './layout.constants'
 
 interface ParentProps {
   children?: ReactNode
@@ -61,7 +62,7 @@ export const TextSecondary = ({ children, color, center = false, style, ...props
 
 export const TextHeader = ({ children, color, center = false, style, ...props }: TextParentProps & IText) => {
   const { colors } = useAppTheme()
-  const newColors = color || colors.text
+  const newColors = color || colors.textPrimary
   return (
     <Text
       style={[
@@ -81,7 +82,7 @@ export const TextHeader = ({ children, color, center = false, style, ...props }:
 
 export const TextOrdinary = ({ children, color, center = false, style, ...props }: TextParentProps & IText) => {
   const { colors } = useAppTheme()
-  const newColors = color || colors.text
+  const newColors = color || colors.textPrimary
   return (
     <Text
       style={[
@@ -131,7 +132,7 @@ export const Divider = ({
       style={[
         {
           width: '100%',
-          borderBottomColor: color || colors.secondPrimary,
+          borderBottomColor: color || colors.accent,
           borderStyle: isDashed ? 'dashed' : 'solid',
           borderBottomWidth: width,
         },
@@ -143,14 +144,16 @@ export const Divider = ({
 
 export const Card = ({ children, style, borderLeftColor }: ParentProps & { borderLeftColor?: string }) => {
   const { colors } = useAppTheme()
+  const { width } = useScreen()
   return (
     <View
       style={[
         {
-          backgroundColor: colors.white,
-          shadowColor: colorsFixed.shadow,
+          backgroundColor: colors.surface,
+          shadowColor: colors.shadow,
         },
         theme.view.card,
+        { width: width - LAYOUT_GUTTER.CARD },
         theme.view.shadow,
         !!borderLeftColor
           ? {
@@ -174,13 +177,13 @@ export const AppHeader = ({ children, style }: ParentProps) => {
         theme.containers.headerStyle,
         {
           width: '100%',
-          backgroundColor: colors.menu,
+          backgroundColor: colors.surfaceElevated,
           position: 'absolute',
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center',
-          top: -appScreen.header,
+          top: -BAR_HEIGHT.HEADER,
           left: 0,
           padding: 8,
           zIndex: 10,
@@ -202,7 +205,7 @@ export const AppFooter = ({ children, style }: ParentProps) => {
         theme.containers.headerStyle,
         {
           width: '100%',
-          backgroundColor: colors.menu,
+          backgroundColor: colors.surfaceElevated,
           position: 'absolute',
           display: 'flex',
           flexDirection: 'row',
@@ -210,7 +213,7 @@ export const AppFooter = ({ children, style }: ParentProps) => {
           alignItems: 'center',
           bottom: 0,
           left: 0,
-          height: appScreen.header + bottom,
+          height: BAR_HEIGHT.HEADER + bottom,
           paddingTop: 8,
           paddingBottom: 8 + bottom,
           paddingHorizontal: 30,
@@ -231,11 +234,11 @@ export const useScreenOptions = (): StackNavigationOptions => {
   const { header } = useAppInsets()
   return {
     ...theme.screenOptions,
-    headerTintColor: colors.text,
+    headerTintColor: colors.textPrimary,
     headerStyle: {
       ...theme.containers.headerStyle,
-      backgroundColor: colors.menu,
-      shadowColor: colorsFixed.shadow,
+      backgroundColor: colors.surfaceElevated,
+      shadowColor: colors.shadow,
       height: header,
     },
     cardStyle: { backgroundColor: colors.background },

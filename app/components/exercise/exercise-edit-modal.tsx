@@ -114,7 +114,7 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
           <FlexCenter>
             <TextHeader color={colors.textSecondary}>Break: </TextHeader>
             {isKeyboardVisible && (
-              <TextHeader color={colors.secondPrimary}>
+              <TextHeader color={colors.accent}>
                 {selectMinutes} min {selectSeconds} sec
               </TextHeader>
             )}

@@ -1,0 +1,1 @@
+export const RESERVED_HEADER_COUNT = 4

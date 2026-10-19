@@ -4,7 +4,7 @@ import { Image, StyleSheet } from 'react-native'
 import { useAppTheme } from '@theme/use-app-theme'
 import { getUserInitials } from '@utils'
 import { FlexCenter, TextHeader } from '@theme/parents'
-import { COLORS_EXERCISE } from '@theme/colors'
+import { getExerciseColor, EXERCISE_COLOR_COUNT } from '@theme/tokens'
 
 function stringToInt(str: string) {
   let res = 0
@@ -15,7 +15,7 @@ function stringToInt(str: string) {
 }
 
 function getColorFromName(name: string, isDark: boolean) {
-  return COLORS_EXERCISE[stringToInt(name) % COLORS_EXERCISE.length][+isDark]
+  return getExerciseColor(stringToInt(name) % EXERCISE_COLOR_COUNT, isDark)
 }
 
 interface IProps {
@@ -27,7 +27,7 @@ export default memo(function UserImage({ name = '', photoUrl }: IProps) {
   const { colors, isDark } = useAppTheme()
 
   return photoUrl ? (
-    <Image source={{ uri: photoUrl }} style={[styles.profileImage, { borderColor: colors.black }]} />
+    <Image source={{ uri: photoUrl }} style={[styles.profileImage, { borderColor: colors.inverse }]} />
   ) : (
     <FlexCenter style={[styles.profileImage, { backgroundColor: getColorFromName(name, isDark), opacity: 0.5 }]}>
       <TextHeader style={{ fontSize: 32 }}>{getUserInitials(name)}</TextHeader>

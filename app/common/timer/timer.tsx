@@ -28,5 +28,5 @@ export default function Timer({ value = 0, isPaused, isRevers = false }: ITimer)
     }
   }, [isPaused])
 
-  return <TextSecondary color={colors.text}>{secondsToMinSec(secondsCountDown, false, true)}</TextSecondary>
+  return <TextSecondary color={colors.textPrimary}>{secondsToMinSec(secondsCountDown, false, true)}</TextSecondary>
 }

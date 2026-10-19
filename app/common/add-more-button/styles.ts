@@ -1,13 +1,14 @@
 import { StyleSheet } from 'react-native'
-import { appScreen } from '@utils/constants'
+import { BAR_HEIGHT } from '@theme/bar-heights.constants'
+import { spacing } from '@theme/tokens'
 
 export default StyleSheet.create({
   container: {
-    padding: 12,
+    padding: spacing.md,
     borderRadius: 24,
     position: 'absolute',
     zIndex: 101,
-    bottom: appScreen.footer + 20,
+    bottom: BAR_HEIGHT.FOOTER + 20,
     right: 20,
   },
 })

@@ -33,10 +33,10 @@ export default function TapBar({ values, currentValue, onChange }: ITapBar) {
             marginHorizontal: 5,
             borderRadius: 8,
             padding: 5,
-            backgroundColor: value === currentValue ? `${colors.secondPrimary}40` : `${colors.black}10`,
+            backgroundColor: value === currentValue ? `${colors.accent}40` : `${colors.inverse}10`,
           }}
         >
-          <TextHeader color={value === currentValue ? colors.secondPrimary : colors.textSecondary} center>
+          <TextHeader color={value === currentValue ? colors.accent : colors.textSecondary} center>
             {value}
           </TextHeader>
         </TouchableOpacity>

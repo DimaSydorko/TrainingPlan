@@ -18,7 +18,7 @@ export default function Results({ onChange, type, value, color, diff, step, repe
   const { colors } = useAppTheme()
   return (
     <FlexSpaceBetween>
-      <TextHeader color={colors.text}>{type === 'repeats' ? 'Repeats' : 'Weight'}</TextHeader>
+      <TextHeader color={colors.textPrimary}>{type === 'repeats' ? 'Repeats' : 'Weight'}</TextHeader>
       <ButtonCounter
         value={value}
         step={step}
@@ -28,7 +28,7 @@ export default function Results({ onChange, type, value, color, diff, step, repe
         onChange={onChange}
       >
         {diff !== 0 && (
-          <TextHeader color={`${diff > 0 ? colors.primary : colors.secondPrimary}A0`}>
+          <TextHeader color={`${diff > 0 ? colors.primary : colors.accent}A0`}>
             {` ${diff > 0 ? '+' : ''}${diff}`}
           </TextHeader>
         )}

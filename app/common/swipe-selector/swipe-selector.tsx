@@ -70,14 +70,14 @@ export default memo(function SwipeSelector({
             fontSize: 19,
             lineHeight: 26,
             textAlign: 'center',
-            color: index === activeIndex ? colors.secondPrimary : colors.textSecondary,
+            color: index === activeIndex ? colors.accent : colors.textSecondary,
           }}
         >
           {item}
         </Text>
       </View>
     ),
-    [activeIndex, colors.secondPrimary, colors.textSecondary]
+    [activeIndex, colors.accent, colors.textSecondary]
   )
 
   return (
@@ -100,7 +100,7 @@ export default memo(function SwipeSelector({
           width: '100%',
           borderTopWidth: 1,
           borderBottomWidth: 1,
-          borderColor: colors.white,
+          borderColor: colors.surface,
         }}
       />
       <FlatList

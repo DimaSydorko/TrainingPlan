@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native'
 import { activateKeepAwake, deactivateKeepAwake } from '@platform/keep-awake'
 
 import usePlaying, { cueDelayMs } from '@hooks/use-playing'
-import { appScreen } from '@utils/constants'
+import { useScreen } from '@platform/screen'
 import useTTS from '@hooks/use-tts'
 import { useAppTheme } from '@theme/use-app-theme'
 import { useSettingsStore } from '@stores/settings/use-settings-store'
@@ -15,7 +15,7 @@ import { AppNavigationType } from '@utils/types'
 import { AppImage, ConfirmButton, GoBackSubmitModal, IconButton } from '@common'
 import { secondsToMinSec } from '@components/workout-duration/workout-duration'
 import { FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '@theme/parents'
-import { COLORS_EXERCISE, colorsFixed } from '@theme/colors'
+import { getExerciseColor } from '@theme/tokens'
 import { theme } from '@theme/theme'
 import { icon } from '@theme/icons'
 import { useAppInsets } from '@theme/insets'
@@ -26,6 +26,7 @@ import TimeObserver from './components/time-observer'
 import PlayHeader from './components/play-header'
 import styles from './styles'
 import useBackgroundCues from './use-background-cues'
+import { PLAYING_GUTTER } from './playing-screen.constants'
 
 export default memo(function PlayingScreen() {
   const { colors, isDark } = useAppTheme()
@@ -37,6 +38,8 @@ export default memo(function PlayingScreen() {
   const navigation = useNavigation<AppNavigationType>()
   // Edge-to-edge: keep the header below the status bar and the controls above the navigation bar
   const { top, bottom, footer } = useAppInsets()
+  const { width } = useScreen()
+  const timerContentMaxSize = width - PLAYING_GUTTER.TIMER_CONTENT
   const {
     isPlaying,
     isWaitForSubmit,
@@ -65,7 +68,7 @@ export default memo(function PlayingScreen() {
   const [isWorkoutReview, setIsWorkoutReview] = useState<boolean>(false)
   const [isSubmitGoBack, setIsSubmitGoBack] = useState<boolean>(false)
   const [isInvisibleTimerCircle, setIsInvisibleTimerCircle] = useState<boolean>(false)
-  const color = COLORS_EXERCISE[exercise?.colorIdx || 0][+isDark]
+  const color = getExerciseColor(exercise?.colorIdx || 0, isDark)
   const isTheLastOneComplete = isWaitForSubmit && isTheLastOne
 
   const weightDiff = currentWeight - approach?.weight || 0
@@ -161,7 +164,7 @@ export default memo(function PlayingScreen() {
               <TextSecondary center>Next up</TextSecondary>
               {!!exerciseNext ? (
                 <>
-                  <TextSecondary center color={COLORS_EXERCISE[exerciseNext?.colorIdx || 0][+isDark]}>
+                  <TextSecondary center color={getExerciseColor(exerciseNext?.colorIdx || 0, isDark)}>
                     {exerciseNext.name}
                   </TextSecondary>
                   <TextSecondary center>
@@ -170,7 +173,7 @@ export default memo(function PlayingScreen() {
                   </TextSecondary>
                 </>
               ) : (
-                <TextSecondary center color={colors.secondPrimary}>
+                <TextSecondary center color={colors.accent}>
                   Finish
                 </TextSecondary>
               )}
@@ -191,17 +194,19 @@ export default memo(function PlayingScreen() {
             colors={isInvisibleTimerCircle ? new Array(3).fill('#00000000') : (color as any)}
             colorsTime={[exercise.breakTimeInSec, exercise.breakTimeInSec / 2, 0]}
             strokeWidth={14}
-            trailColor={colors.menu as any}
+            trailColor={colors.surfaceElevated as any}
             // Segment completion and the spoken countdown are driven by the timestamp clock in usePlaying
-            size={appScreen.vw - 120}
+            size={width - PLAYING_GUTTER.TIMER}
           >
             {() => (
-              <FlexCenterColumn style={styles.timerContent}>
+              <FlexCenterColumn
+                style={[styles.timerContent, { maxWidth: timerContentMaxSize, maxHeight: timerContentMaxSize }]}
+              >
                 {!!exercise.imageUrl && <AppImage size={100} src={exercise.imageUrl} />}
                 <TextHeader center color={color} style={{ fontSize: 24 }} ellipsizeMode='tail' numberOfLines={2}>
                   {exercise.name}
                 </TextHeader>
-                <TextHeader color={colors.text} style={{ fontSize: 22 }}>
+                <TextHeader color={colors.textPrimary} style={{ fontSize: 22 }}>
                   {secondsToMinSec(displayRemainingSec, false)}
                 </TextHeader>
                 <TimeObserver time={displayRemainingSec} />
@@ -211,7 +216,7 @@ export default memo(function PlayingScreen() {
         </TouchableOpacity>
 
         {!!exercise.repeats && (
-          <View style={{ width: appScreen.vw - 140 }}>
+          <View style={{ width: width - PLAYING_GUTTER.RESULTS }}>
             <Results
               type={'weight'}
               step={workout.weightStep}
@@ -233,7 +238,7 @@ export default memo(function PlayingScreen() {
         {isTheLastOneComplete && (
           <ConfirmButton
             header={'Save Result'}
-            style={{ width: appScreen.vw - 80 }}
+            style={{ width: width - PLAYING_GUTTER.SAVE_BUTTON }}
             onPress={onSaveResult}
             testID='playing.saveResult'
           />
@@ -246,8 +251,8 @@ export default memo(function PlayingScreen() {
           {
             height: footer,
             paddingBottom: bottom,
-            backgroundColor: colors.menu,
-            shadowColor: colorsFixed.shadow,
+            backgroundColor: colors.surfaceElevated,
+            shadowColor: colors.shadow,
           },
         ]}
       >
@@ -255,7 +260,7 @@ export default memo(function PlayingScreen() {
           onPress={toggleWorkoutReview}
           testID='playing.review'
           iconName={isWorkoutReview ? icon.timer : icon.list}
-          color={colors.black}
+          color={colors.inverse}
           size={35}
         />
         <FlexSpaceBetween style={{ width: '50%' }}>
@@ -264,7 +269,7 @@ export default memo(function PlayingScreen() {
             testID='playing.previous'
             disabled={playing.idx <= 0 && playing.lap <= 1}
             iconName={icon.skipPrevious}
-            color={colors.black}
+            color={colors.inverse}
             size={35}
           />
           <IconButton
@@ -280,11 +285,17 @@ export default memo(function PlayingScreen() {
             testID='playing.next'
             disabled={isTheLastOneComplete}
             iconName={icon.skipNext}
-            color={colors.black}
+            color={colors.inverse}
             size={35}
           />
         </FlexSpaceBetween>
-        <IconButton onPress={onReload} iconName={icon.restart} color={colors.black} size={35} testID='playing.reload' />
+        <IconButton
+          onPress={onReload}
+          iconName={icon.restart}
+          color={colors.inverse}
+          size={35}
+          testID='playing.reload'
+        />
       </FlexSpaceBetween>
       {isWorkoutReview && (
         <PlayingReview

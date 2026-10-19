@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, RefreshControl, ScrollView } from 'react-native'
 import { useAppTheme } from '@theme/use-app-theme'
-import { appScreen } from '@utils/constants'
+import styles from './infinite-scroll.styles'
 
 interface IProps {
   children: React.ReactNode
@@ -40,7 +40,7 @@ export default function InfiniteScroll({ children, isLoading = false, onScrollTo
   return (
     <ScrollView
       centerContent
-      style={{ width: appScreen.vw, backgroundColor: colors.background }}
+      style={[styles.container, { backgroundColor: colors.background }]}
       onScroll={e => isCloseToBottom(e.nativeEvent) && _onScrollToBottom()}
       scrollEventThrottle={100}
       refreshControl={
@@ -48,7 +48,7 @@ export default function InfiniteScroll({ children, isLoading = false, onScrollTo
       }
     >
       {children}
-      {isLoading && !isRefreshLoading && <ActivityIndicator size='large' color={colors.secondPrimary} />}
+      {isLoading && !isRefreshLoading && <ActivityIndicator size='large' color={colors.accent} />}
     </ScrollView>
   )
 }

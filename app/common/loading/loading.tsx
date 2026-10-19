@@ -20,7 +20,7 @@ export default function Loading() {
   const { colors } = useAppTheme()
   return (
     <View style={[styles.bg, { backgroundColor: colors.background }]}>
-      <ActivityIndicator size='large' color={colors.secondPrimary} />
+      <ActivityIndicator size='large' color={colors.accent} />
     </View>
   )
 }

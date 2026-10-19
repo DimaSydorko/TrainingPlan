@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { Image, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
+import { radius } from '@theme/tokens'
 
 const styles = StyleSheet.create({
   imageC: {
-    borderRadius: 100,
+    borderRadius: radius.round,
     overflow: 'hidden',
     margin: 3,
   },
