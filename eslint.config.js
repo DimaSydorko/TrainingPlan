@@ -61,6 +61,23 @@ const restrictImports = (...patterns) => [
   { paths: baseRestrictions.paths, patterns: [...baseRestrictions.patterns, ...patterns] },
 ]
 
+// Styles guardrails (.claude/contracts/styles.md). Warnings until the styles refactor is finished; the
+// warning count must not grow.
+const stylesRestrictions = [
+  {
+    selector: 'Literal[value=/^(#[0-9a-fA-F]{3,8}|rgba?\\(|hsla?\\()/]',
+    message: 'Color literal: use a theme color role (app/theme).',
+  },
+  {
+    selector: 'JSXAttribute[name.name=/[sS]tyle$/] > JSXExpressionContainer > ObjectExpression',
+    message: 'Inline style object: move static values to <name>.styles.ts; compose runtime values in an array.',
+  },
+  {
+    selector: "MemberExpression[object.name='Dimensions'][property.name='get']",
+    message: 'Dimensions.get is read once and goes stale: use useWindowDimensions or app/platform/screen.',
+  },
+]
+
 module.exports = defineConfig([
   globalIgnores([
     'node_modules/**',
@@ -173,6 +190,11 @@ module.exports = defineConfig([
     files: ['app/**'],
     ignores: ['app/api/**', 'app/services/**', 'app/lib/**', 'app/__tests__/**'],
     rules: { 'no-restricted-imports': restrictImports(...supabaseClientPatterns, apiLayerPattern) },
+  },
+  {
+    files: ['app/**/*.ts', 'app/**/*.tsx'],
+    ignores: ['app/theme/**', 'app/platform/**', 'app/assets/**', 'app/__tests__/**'],
+    rules: { 'no-restricted-syntax': ['warn', ...stylesRestrictions] },
   },
   {
     // kebab-case paths. __tests__ is Jest's convention.
