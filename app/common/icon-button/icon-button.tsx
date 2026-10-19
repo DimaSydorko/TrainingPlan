@@ -5,8 +5,9 @@ import { Icon } from '../icon/icon'
 import { useAppTheme } from '@theme/use-app-theme'
 import { useSettingsStore } from '@stores/settings/use-settings-store'
 import { VIBRATION } from '@utils/constants'
+import styles from './icon-button.styles'
 
-interface IconButtonType {
+type IconButtonType = {
   iconName: string
   onPress: () => void
   isRepeatOnLongPress?: boolean
@@ -65,14 +66,7 @@ export default function IconButton({
       testID={testID}
       accessibilityRole='button'
       accessibilityState={{ disabled }}
-      style={[
-        {
-          opacity: disabled ? 0.5 : 1,
-          borderRadius: 50,
-          marginHorizontal: margin,
-        },
-        style,
-      ]}
+      style={[styles.button, { opacity: disabled ? 0.5 : 1, marginHorizontal: margin }, style]}
     >
       <Icon name={iconName} color={newColor} size={size} />
     </TouchableOpacity>

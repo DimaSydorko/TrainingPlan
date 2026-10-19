@@ -5,7 +5,7 @@ import { ButtonCounter } from '@common'
 import { useAppTheme } from '@theme/use-app-theme'
 import { SetStateType } from '@utils/types'
 
-interface ResultsI {
+type ResultsProps = {
   type: 'repeats' | 'weight'
   onChange: SetStateType<number>
   value: number
@@ -15,7 +15,7 @@ interface ResultsI {
   repeats?: number
 }
 
-export default function Results({ onChange, type, value, color, diff, step, repeats }: ResultsI) {
+export default function Results({ onChange, type, value, color, diff, step, repeats }: ResultsProps) {
   const { colors } = useAppTheme()
   return (
     <Stack preset='spaceBetween'>

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { radius } from '@theme/tokens'
 
 export default StyleSheet.create({
   container: {
@@ -9,6 +10,14 @@ export default StyleSheet.create({
     justifyContent: 'center',
     height: 35,
     width: '100%',
+  },
+  preview: {
+    borderRadius: radius.round,
+    height: 30,
+    width: 30,
+  },
+  modal: {
+    borderWidth: 10,
   },
   colorSelect: {
     height: 60,

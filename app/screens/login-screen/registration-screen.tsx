@@ -44,10 +44,10 @@ export default function RegistrationScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <KeyboardAwareScrollView
-        style={{ flex: 1, width: '100%' }}
-        contentContainerStyle={{ alignItems: 'center' }}
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps='always'
         bottomOffset={20}
       >

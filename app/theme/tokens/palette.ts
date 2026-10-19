@@ -8,6 +8,7 @@ export const palette = {
   grey325Alpha50: 'rgba(189,189,189,0.5)',
   grey350: '#bbbbbb',
   grey400: '#a1a1a1',
+  grey450: '#808080',
   grey500: '#767676',
   grey700: '#3e3e3e',
   grey750: '#353535',
@@ -16,11 +17,20 @@ export const palette = {
   grey850: '#2f2f2f',
   grey900: '#1f1f1f',
 
+  slate700: '#3f3d56',
+  slate800: '#2f2e41',
+  rose500: '#9e616a',
+  rose450: '#a0616a',
+  peach200: '#ffb6b6',
+  peach250: '#ffb8b8',
+  red450: '#f12929',
+
   green300: '#70b763',
   green400: '#66a757',
   green500: '#18b502',
   green600: '#3c8739',
   green700: '#0e9000',
+  green800: '#008000',
   mint500: '#00c87f',
 
   coral300: '#fa6e6e',

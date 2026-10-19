@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import PublicButtons from '@components/publication/public-buttons'
@@ -19,6 +19,7 @@ type PropsType = StackScreenProps<PublicationScreensParamList, ScreenName.Public
 export default function PublicationPlan({ route, navigation }: PropsType) {
   const { name, workouts, ownerName } = route.params.publication
   const { width } = useScreen()
+  const ownerNameStyle = useMemo(() => ({ width: width * OWNER_NAME_WIDTH_RATIO }), [width])
 
   useEffect(() => {
     navigation.setOptions({ title: name })
@@ -27,7 +28,7 @@ export default function PublicationPlan({ route, navigation }: PropsType) {
   return (
     <Screen>
       <Stack preset='spaceBetween' style={[styles.header, { width }]}>
-        <AppText variant='caption' tone='accent' style={{ width: width * OWNER_NAME_WIDTH_RATIO }}>
+        <AppText variant='caption' tone='accent' style={ownerNameStyle}>
           By {ownerName}
         </AppText>
         <PublicButtons isOpenedScreen publication={route.params.publication} />

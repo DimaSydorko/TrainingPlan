@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { LayoutAnimation, TouchableOpacity, View } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import { useNavigation } from '@react-navigation/native'
@@ -26,7 +26,7 @@ import TimeObserver from './components/time-observer'
 import PlayHeader from './components/play-header'
 import styles from './styles'
 import useBackgroundCues from './use-background-cues'
-import { PLAYING_GUTTER } from './playing-screen.constants'
+import { PLAYING_GUTTER, TRANSPARENT_HEX_ALPHA } from './playing-screen.constants'
 
 export default memo(function PlayingScreen() {
   const { colors, isDark } = useAppTheme()
@@ -40,6 +40,8 @@ export default memo(function PlayingScreen() {
   const { top, bottom, footer } = useAppInsets()
   const { width } = useScreen()
   const timerContentMaxSize = width - PLAYING_GUTTER.TIMER_CONTENT
+  const resultsStyle = useMemo(() => ({ width: width - PLAYING_GUTTER.RESULTS }), [width])
+  const saveButtonStyle = useMemo(() => ({ width: width - PLAYING_GUTTER.SAVE_BUTTON }), [width])
   const {
     isPlaying,
     isWaitForSubmit,
@@ -198,7 +200,11 @@ export default memo(function PlayingScreen() {
                 ? Math.min(duration, timerSync.initialRemainingSec)
                 : undefined
             }
-            colors={isInvisibleTimerCircle ? new Array(3).fill('#00000000') : (color as any)}
+            colors={
+              isInvisibleTimerCircle
+                ? new Array(3).fill(`${colors.staticBlack}${TRANSPARENT_HEX_ALPHA}`)
+                : (color as any)
+            }
             colorsTime={[exercise.breakTimeInSec, exercise.breakTimeInSec / 2, 0]}
             strokeWidth={14}
             trailColor={colors.surfaceElevated as any}
@@ -231,7 +237,7 @@ export default memo(function PlayingScreen() {
         </TouchableOpacity>
 
         {!!exercise.repeats && (
-          <View style={{ width: width - PLAYING_GUTTER.RESULTS }}>
+          <View style={resultsStyle}>
             <Results
               type={'weight'}
               step={workout.weightStep}
@@ -253,7 +259,7 @@ export default memo(function PlayingScreen() {
         {isTheLastOneComplete && (
           <ConfirmButton
             header={'Save Result'}
-            style={{ width: width - PLAYING_GUTTER.SAVE_BUTTON }}
+            style={saveButtonStyle}
             onPress={onSaveResult}
             testID='playing.saveResult'
           />

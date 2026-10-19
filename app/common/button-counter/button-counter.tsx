@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { memo, ReactNode } from 'react'
-import { StyleSheet } from 'react-native'
 import { useAppTheme } from '@theme/use-app-theme'
 import AppText from '../app-text/app-text'
 import Stack from '../stack/stack'
@@ -9,8 +8,9 @@ import { useScreen } from '@platform/screen'
 import { SetStateType } from '@utils/types'
 import { icon } from '@theme/icons'
 import { COUNTER_ROW_GUTTER, COUNTERS_PER_ROW } from './button-counter.constants'
+import styles from './button-counter.styles'
 
-interface ButtonCounterType {
+type ButtonCounterType = {
   value: number
   onChange: SetStateType<number>
   dataType?: string
@@ -64,13 +64,4 @@ export default memo(function ButtonCounter({
       />
     </Stack>
   )
-})
-
-const styles = StyleSheet.create({
-  container: {
-    margin: 10,
-  },
-  button: {
-    borderWidth: 2,
-  },
 })

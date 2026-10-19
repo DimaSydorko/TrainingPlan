@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { StyleProp, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native'
+import { StyleProp, TextStyle, TouchableOpacity, ViewStyle } from 'react-native'
 import { useAppTheme } from '@theme/use-app-theme'
+import AppText from '../app-text/app-text'
 import styles from './styles'
-import { BAR_HEIGHT } from '@theme/bar-heights.constants'
 
-interface ConfirmButtonType {
+type ConfirmButtonType = {
   header: string
   onPress: () => void
   headerStyle?: TextStyle
@@ -31,7 +31,7 @@ export default function ConfirmButton({
     <TouchableOpacity
       style={[
         styles.button,
-        isFooter ? { marginTop: 0, width: '90%', height: BAR_HEIGHT.FOOTER - 16, paddingVertical: 0 } : {},
+        isFooter && styles.footerButton,
         {
           backgroundColor: disabled ? colors.disabled : newColor,
           opacity: disabled ? 0.8 : 1,
@@ -45,7 +45,9 @@ export default function ConfirmButton({
       accessibilityRole='button'
       accessibilityState={{ disabled }}
     >
-      <Text style={[styles.buttonTitle, { color: colors.onPrimary }, headerStyle]}>{header}</Text>
+      <AppText variant='link' color={colors.onPrimary} style={headerStyle}>
+        {header}
+      </AppText>
     </TouchableOpacity>
   )
 }

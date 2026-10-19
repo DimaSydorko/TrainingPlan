@@ -14,6 +14,7 @@ import { useAppTheme } from '@theme/use-app-theme'
 import { useSettingsHydrated } from '@stores/settings/use-settings-hydrated'
 import AuthRouter from '@routers/auth-router'
 import { statusBarStyleFor } from '@theme/navigation-theme'
+import styles from './app.styles'
 
 if (!globalThis.btoa) globalThis.btoa = encode
 if (!globalThis.atob) globalThis.atob = decode
@@ -33,7 +34,7 @@ function ThemedRoot({ children }: { children: ReactNode }) {
   }, [colors.background])
 
   return (
-    <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.background }}>
+    <GestureHandlerRootView style={[styles.root, { backgroundColor: colors.background }]}>
       <StatusBar style={statusBarStyleFor(appTheme)} />
       {children}
     </GestureHandlerRootView>

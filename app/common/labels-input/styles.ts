@@ -16,4 +16,7 @@ export default StyleSheet.create({
     marginRight: spacing.xxs,
     marginTop: 3,
   },
+  removeButton: {
+    marginTop: spacing.xxs,
+  },
 })

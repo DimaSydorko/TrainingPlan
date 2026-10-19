@@ -13,7 +13,7 @@ import { useScreen } from '@platform/screen'
 import styles from './styles'
 import { PLAYING_GUTTER } from '../playing-screen.constants'
 
-interface IProps {
+type PropsType = {
   playingWorkout: SelectedWorkoutType
   playingExerciseIdx: number
   playingExerciseLap: number
@@ -27,7 +27,7 @@ export default memo(function PlayingReview({
   playingExerciseLap,
   isTheLastOneComplete,
   onSaveResult,
-}: IProps) {
+}: PropsType) {
   const { colors, isDark } = useAppTheme()
   // Sits between the playing header and footer, both of which grow by the system bar insets
   const { top, bottom } = useAppInsets()

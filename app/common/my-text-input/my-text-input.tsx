@@ -8,7 +8,7 @@ import { useScreen } from '@platform/screen'
 import styles from './styles'
 import { ORDINARY_INPUT_GUTTER } from './my-text-input.constants'
 
-interface MyTextInputType {
+type MyTextInputType = {
   style?: TextStyle
   secureTextEntry?: boolean
   type?: 'ordinary' | 'underline' | 'secondary'

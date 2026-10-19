@@ -33,7 +33,6 @@ import AppText from '@common/app-text/app-text'
 import { icon } from '@theme/icons'
 import { getExerciseColor } from '@theme/tokens'
 import { useAppInsets } from '@theme/insets'
-import { BAR_HEIGHT } from '@theme/bar-heights.constants'
 import { LAYOUT_GUTTER } from '@theme/layout.constants'
 import { useScreen } from '@platform/screen'
 import styles from './workout-screen.styles'
@@ -47,6 +46,11 @@ export default function WorkoutScreen() {
   const { onToggleTabMenu } = useContext(AppHelperContext)
   const bars = useAppInsets()
   const screen = useScreen()
+  const scrollContainerStyle = useMemo(
+    () => ({ height: screen.height - bars.footer - bars.header, marginBottom: bars.footer }),
+    [screen.height, bars.footer, bars.header]
+  )
+  const durationHeaderStyle = useMemo(() => ({ width: screen.width - LAYOUT_GUTTER.SECOND_HEADER }), [screen.width])
   const [isEditMode, setIsEditMode] = useState(false)
   const [isNewExercise, setIsNewExercise] = useState(false)
   const [isSaveChangesModal, setIsSaveChangesModal] = useState(false)
@@ -171,25 +175,20 @@ export default function WorkoutScreen() {
                 onChangeText={workoutName => setWorkoutNameInput(workoutName)}
                 value={workoutNameInput}
                 type={'underline'}
-                style={{ height: BAR_HEIGHT.HEADER - 2 }}
+                style={styles.nameInput}
               />
             </AppHeader>
           )}
           <Screen scrollDisabled>
             <Stack preset='centerColumn' style={styles.content}>
-              <DraggableScrollContainer
-                style={{
-                  height: screen.height - bars.footer - bars.header,
-                  marginBottom: bars.footer,
-                }}
-              >
+              <DraggableScrollContainer style={scrollContainerStyle}>
                 {isEditMode && !!workoutExercises.length ? (
                   <DraggableList
                     renderItem={renderItem}
                     data={workoutExercises}
                     dragItemOverflow
                     autoscrollSpeed={40}
-                    style={{ paddingVertical: 10 }}
+                    style={styles.exerciseList}
                     keyExtractor={(item, idx) => item.uid + idx}
                     onDragEnd={({ data }) => setWorkoutExercises(data)}
                   />
@@ -200,7 +199,7 @@ export default function WorkoutScreen() {
                       direction='row'
                       justify='between'
                       align='center'
-                      style={{ width: screen.width - LAYOUT_GUTTER.SECOND_HEADER }}
+                      style={durationHeaderStyle}
                     >
                       <WorkoutDuration exercises={selectedWorkout?.exercises} />
                     </Stack>

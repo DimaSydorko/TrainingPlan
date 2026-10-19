@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
 import { useAppTheme } from '@theme/use-app-theme'
@@ -24,6 +24,7 @@ export default function PublicationWorkout({ route, navigation }: PropsType) {
   const { isDark } = useAppTheme()
   const { name, exercises, ownerName } = route.params.workout
   const { width } = useScreen()
+  const ownerNameStyle = useMemo(() => ({ width: width * OWNER_NAME_WIDTH_RATIO }), [width])
 
   useEffect(() => {
     navigation.setOptions({ title: name })
@@ -34,7 +35,7 @@ export default function PublicationWorkout({ route, navigation }: PropsType) {
       <Stack preset='spaceBetween' style={[styles.header, { width }]}>
         <Stack preset='centerColumn' style={styles.ownerColumn}>
           {!!ownerName && (
-            <AppText variant='caption' tone='accent' style={{ width: width * OWNER_NAME_WIDTH_RATIO }}>
+            <AppText variant='caption' tone='accent' style={ownerNameStyle}>
               By {ownerName}
             </AppText>
           )}

@@ -13,17 +13,20 @@ import { useScreen } from '@platform/screen'
 import PublicButtons from './public-buttons'
 import { LABELS_GUTTER } from './publication.constants'
 import { getExerciseColor } from '@theme/tokens'
+import styles from './publication.styles'
 
-interface IProps {
+type PublicationProps = {
   publication: PublicType
 }
 
-export default memo(function Publication({ publication }: IProps) {
+export default memo(function Publication({ publication }: PublicationProps) {
   const navigation = useNavigation<PublicationsNavigation>()
   const { isDark } = useAppTheme()
   const { width } = useScreen()
   const isPlan = !!publication?.workouts && !publication?.exercises
   const color = getExerciseColor(publication?.colorIdx === undefined ? 3 : publication?.colorIdx, isDark)
+
+  const labelsStyle = { width: width - LABELS_GUTTER }
 
   const onPress = () => {
     if (isPlan) navigation.navigate(ScreenName.PublicationPlan, { publication })
@@ -32,7 +35,7 @@ export default memo(function Publication({ publication }: IProps) {
 
   return (
     <>
-      <TouchableOpacity onPress={onPress} style={{ marginHorizontal: 10 }}>
+      <TouchableOpacity onPress={onPress} style={styles.container}>
         <Card borderLeftColor={isPlan ? color : undefined}>
           <AppText variant='title' color={color}>
             {publication.name}
@@ -51,7 +54,7 @@ export default memo(function Publication({ publication }: IProps) {
                   <WorkoutDuration exercises={publication.exercises} />
                 </Stack>
               )}
-              <Labels labels={publication.labels} style={{ width: width - LABELS_GUTTER }} />
+              <Labels labels={publication.labels} style={labelsStyle} />
               <AppText variant='caption' tone='inverse'>
                 By {publication.ownerName}
               </AppText>

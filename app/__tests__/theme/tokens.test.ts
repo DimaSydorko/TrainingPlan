@@ -5,6 +5,7 @@ import {
   exerciseColors,
   getExerciseColor,
   getExerciseColorPair,
+  illustration,
   palette,
   radius,
   shadow,
@@ -69,6 +70,24 @@ describe('theme colors', () => {
       background: '#1f1f1f',
       info: '#1370fc',
       disabled: '#767676',
+    })
+  })
+})
+
+describe('illustration colors', () => {
+  it('builds every role from the palette', () => {
+    Object.values(illustration).forEach(color => expect(paletteValues).toContain(color))
+  })
+
+  it('keeps the rendered values of the empty-state illustrations', () => {
+    expect(illustration).toEqual({
+      outline: '#3f3d56',
+      hair: '#2f2e41',
+      skin: '#9e616a',
+      skinShade: '#a0616a',
+      skinLight: '#ffb6b6',
+      skinLighter: '#ffb8b8',
+      alert: '#f12929',
     })
   })
 })

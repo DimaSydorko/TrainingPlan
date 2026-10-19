@@ -5,7 +5,7 @@ import { PlanType, WorkoutType } from '@utils/types'
 import { AppColorPicker, AppModal, LabelsInput, MyTextInput } from '@common'
 import Stack from '@common/stack/stack'
 
-interface IEditPlanWorkout {
+type EditPlanWorkoutProps = {
   isModal: boolean
   type: 'Plan' | 'Workout'
   initialValue?: WorkoutType | PlanType
@@ -13,7 +13,7 @@ interface IEditPlanWorkout {
   onSubmit: (newItem: WorkoutType | PlanType) => void
 }
 
-export default memo(function EditPlanWorkout({ onSubmit, type, isModal, onClose, initialValue }: IEditPlanWorkout) {
+export default memo(function EditPlanWorkout({ onSubmit, type, isModal, onClose, initialValue }: EditPlanWorkoutProps) {
   const isNew = !initialValue
   const initialName = useMemo(() => (isNew ? `New_${type}` : initialValue.name), [])
   const initialLabels = useMemo(() => (isNew ? [] : initialValue.labels), [])

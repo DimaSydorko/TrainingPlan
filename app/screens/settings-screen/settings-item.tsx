@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { memo, useEffect, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { memo, useEffect, useMemo, useState } from 'react'
+import { View } from 'react-native'
 import Slider from '@react-native-community/slider'
 import { useAppTheme } from '@theme/use-app-theme'
 import Divider from '@common/divider/divider'
@@ -9,9 +9,9 @@ import AppText from '@common/app-text/app-text'
 import { useScreen } from '@platform/screen'
 import { MySwitch } from '@common'
 import { SETTINGS_LABEL_GUTTER } from './settings-item.constants'
-import { spacing } from '@theme/tokens'
+import styles from './settings-item.styles'
 
-interface IProps {
+type PropsType = {
   label: string
   valueSwitch?: boolean
   onToggleSwitch?: () => void
@@ -36,19 +36,21 @@ export default memo(function SettingsItem({
   sliderValueType = '',
   onSliderChange,
   testID,
-}: IProps) {
+}: PropsType) {
   const { colors } = useAppTheme()
   const [valSlider, setValSlider] = useState<number>(valueSlider)
   const { width } = useScreen()
+  const containerStyle = useMemo(() => ({ width }), [width])
+  const labelStyle = useMemo(() => ({ width: width - SETTINGS_LABEL_GUTTER }), [width])
 
   useEffect(() => {
     setValSlider(p => (p !== valueSlider ? valueSlider : p))
   }, [valueSlider])
 
   return (
-    <View style={{ width }}>
+    <View style={containerStyle}>
       <Stack preset='spaceBetween' style={styles.content}>
-        <AppText style={{ width: width - SETTINGS_LABEL_GUTTER }}>{label}</AppText>
+        <AppText style={labelStyle}>{label}</AppText>
         {!!onToggleSwitch && <MySwitch value={valueSwitch} onValueChange={onToggleSwitch} testID={testID} />}
         {!!onSliderChange && (
           <AppText variant='caption' tone='secondary'>
@@ -75,15 +77,4 @@ export default memo(function SettingsItem({
       <Divider width={1} color={`${colors.inverse}40`} />
     </View>
   )
-})
-
-const styles = StyleSheet.create({
-  content: {
-    paddingVertical: 10,
-    paddingHorizontal: spacing.lg,
-  },
-  slider: {
-    marginBottom: 10,
-    marginHorizontal: spacing.xxs,
-  },
 })

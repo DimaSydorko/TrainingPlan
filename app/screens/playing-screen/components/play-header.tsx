@@ -8,14 +8,14 @@ import Stack from '@common/stack/stack'
 import AppText from '@common/app-text/app-text'
 import styles from '../styles'
 
-interface IProps {
+type PropsType = {
   playingLap: number
   exerciseLaps: number
   workoutDurationTime: number
   isPlaying: boolean
 }
 
-export default memo(function PlayHeader({ playingLap, exerciseLaps, workoutDurationTime }: IProps) {
+export default memo(function PlayHeader({ playingLap, exerciseLaps, workoutDurationTime }: PropsType) {
   const { playTimer } = usePlayTimerContext()
   const time = workoutDurationTime + playTimer
   return (

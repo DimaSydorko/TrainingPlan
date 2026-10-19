@@ -24,6 +24,13 @@ export default StyleSheet.create({
     marginBottom: 48,
     padding: 15,
   },
+  button: {
+    width: '40%',
+  },
+  buttonWithRefuse: {
+    marginHorizontal: spacing.sm - 2,
+    width: '30%',
+  },
   content: {
     minHeight: 100,
   },

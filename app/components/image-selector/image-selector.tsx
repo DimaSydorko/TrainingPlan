@@ -13,20 +13,21 @@ import { icon } from '@theme/icons'
 import styles from './styles'
 import { IMAGE_LIST_RESERVED_HEIGHT } from './image-selector.constants'
 
-interface IImageSelector {
+type ImageSelectorProps = {
   value?: string
   onSubmit: (imageUrl: string) => void
 }
 
 const tabBarValues: ExerciseImageFilterType[] = ['home', 'street', 'gym']
 
-export default function ImageSelector({ onSubmit, value = '' }: IImageSelector) {
+export default function ImageSelector({ onSubmit, value = '' }: ImageSelectorProps) {
   const { colors } = useAppTheme()
   const { exerciseImages } = useWorkout()
   const [isModal, setIsModal] = useState(false)
   const [selected, setSelected] = useState<string>(value)
   const [filter, setFilter] = useState<ExerciseImageFilterType>('home')
   const { height } = useScreen()
+  const listStyle = { height: height - IMAGE_LIST_RESERVED_HEIGHT }
 
   return (
     <>
@@ -48,7 +49,7 @@ export default function ImageSelector({ onSubmit, value = '' }: IImageSelector) 
         <Stack preset='centerColumn'>
           <View style={styles.selectedContainer}>
             {selected ? (
-              <View style={[styles.image, styles.imageC, { borderWidth: 4, borderColor: colors.primary }]}>
+              <View style={[styles.image, styles.imageC, styles.selectedImage, { borderColor: colors.primary }]}>
                 <Image source={{ uri: selected }} style={styles.image} />
               </View>
             ) : (
@@ -63,7 +64,7 @@ export default function ImageSelector({ onSubmit, value = '' }: IImageSelector) 
           <FlatList
             data={exerciseImages?.filter(img => img.filter === filter)}
             numColumns={4}
-            style={{ height: height - IMAGE_LIST_RESERVED_HEIGHT }}
+            style={listStyle}
             renderItem={({ item, index }) => (
               <>
                 {index === 0 && (

@@ -27,6 +27,9 @@ export default StyleSheet.create({
     height: 30,
     width: 30,
   },
+  selectedImage: {
+    borderWidth: 4,
+  },
   selectedContainer: {
     height: 65,
   },

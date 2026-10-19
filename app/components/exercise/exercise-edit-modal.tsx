@@ -11,14 +11,14 @@ import Stack from '@common/stack/stack'
 import { icon } from '@theme/icons'
 import styles from './styles'
 
-interface IEditExerciseModal {
+type ExerciseEditModalProps = {
   exercise?: ExerciseType
   onSave: (exercise: ExerciseType) => void
   onClose: () => void
   onDelete: () => void
 }
 
-export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onClose }: IEditExerciseModal) {
+export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onClose }: ExerciseEditModalProps) {
   const isNewExercise = useMemo(() => !exercise, [exercise])
   const initialEx = useMemo(() => {
     return isNewExercise ? { ...defaultExercise, uid: nanoid() } : exercise

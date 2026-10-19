@@ -50,6 +50,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
   const { onToggleTabMenu, isTabMenu } = useContext(AppHelperContext)
   const workoutState = useWorkout()
   const { footer } = useAppInsets()
+  const scrollContainerStyle = useMemo(() => ({ paddingBottom: footer }), [footer])
   const [workouts, setWorkouts] = useState<WorkoutType[]>()
   const [selectedWorkoutsUids, setSelectedWorkoutsUids] = useState<string[]>([])
   const [planNameInput, setPlanNameInput] = useState<string>(selectedPlan?.name || '')
@@ -233,7 +234,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
           />
         )}
         {workouts?.length === 0 && <NoDataIcon />}
-        <DraggableScrollContainer style={{ paddingBottom: footer }}>
+        <DraggableScrollContainer style={scrollContainerStyle}>
           <DraggableList
             data={workouts || []}
             renderItem={renderItem}

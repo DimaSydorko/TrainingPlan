@@ -61,8 +61,7 @@ const restrictImports = (...patterns) => [
   { paths: baseRestrictions.paths, patterns: [...baseRestrictions.patterns, ...patterns] },
 ]
 
-// Styles guardrails (.claude/contracts/styles.md). Warnings until the styles refactor is finished; the
-// warning count must not grow.
+// Styles guardrails (.claude/contracts/styles.md).
 const stylesRestrictions = [
   {
     selector: 'Literal[value=/^(#[0-9a-fA-F]{3,8}|rgba?\\(|hsla?\\()/]',
@@ -194,7 +193,7 @@ module.exports = defineConfig([
   {
     files: ['app/**/*.ts', 'app/**/*.tsx'],
     ignores: ['app/theme/**', 'app/platform/**', 'app/assets/**', 'app/__tests__/**'],
-    rules: { 'no-restricted-syntax': ['warn', ...stylesRestrictions] },
+    rules: { 'no-restricted-syntax': ['error', ...stylesRestrictions] },
   },
   {
     // kebab-case paths. __tests__ is Jest's convention.

@@ -11,13 +11,14 @@ import AppText from '@common/app-text/app-text'
 import Stack from '@common/stack/stack'
 import { icon } from '@theme/icons'
 import { AppModal, IconButton } from '@common'
+import styles from './public-buttons.styles'
 
-interface IProps {
+type PublicButtonsProps = {
   publication: PublicType
   isOpenedScreen?: boolean
 }
 
-export default memo(function PublicButtons({ publication, isOpenedScreen = false }: IProps) {
+export default memo(function PublicButtons({ publication, isOpenedScreen = false }: PublicButtonsProps) {
   const dispatch = useAppDispatch()
   const { addSavedUids, savedUids } = useContext(AppHelperContext)
   const { colors } = useAppTheme()
@@ -39,7 +40,7 @@ export default memo(function PublicButtons({ publication, isOpenedScreen = false
 
   return (
     <>
-      <Stack preset='end' style={{ width: 115, alignItems: 'flex-start' }}>
+      <Stack preset='end' style={styles.container}>
         {isOwner && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}
         <View>
           <IconButton

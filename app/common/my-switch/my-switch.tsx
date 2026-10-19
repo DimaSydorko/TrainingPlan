@@ -5,7 +5,7 @@ import { useSettingsStore } from '@stores/settings/use-settings-store'
 import { Vibration } from 'react-native'
 import { VIBRATION } from '@utils/constants'
 
-interface MySwitchType {
+type MySwitchType = {
   value: boolean
   disabled?: boolean
   disableVibration?: boolean

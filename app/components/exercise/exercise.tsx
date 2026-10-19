@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { memo, useCallback, useEffect, useState } from 'react'
-import { View, ViewStyle } from 'react-native'
+import { View } from 'react-native'
 import { nanoid } from '@utils'
 import { AppImage, AppModal, IconButton } from '@common'
-import { secondsToMinSec } from '../workout-duration/workout-duration'
+import { secondsToMinSec } from '@components/workout-duration/workout-duration'
 import AppText from '@common/app-text/app-text'
 import Divider from '@common/divider/divider'
 import Stack from '@common/stack/stack'
@@ -12,11 +12,15 @@ import { useScreen } from '@platform/screen'
 import { icon } from '@theme/icons'
 import Approach from './approach'
 import styles from './styles'
-import { DETAILS_GUTTER, EDIT_NAME_GUTTER, NAME_GUTTER, OUTSIDE_MODAL_EXTRA_WIDTH } from './exercise.constants'
+import {
+  DETAILS_GUTTER,
+  EDIT_NAME_GUTTER,
+  IMG_SIZE,
+  NAME_GUTTER,
+  OUTSIDE_MODAL_EXTRA_WIDTH,
+} from './exercise.constants'
 
-const IMG_SIZE = 45
-
-interface IExercise {
+type ExerciseProps = {
   idx?: number
   exercise: ExerciseType | SelectedExerciseType
   isEdit?: boolean
@@ -40,16 +44,20 @@ export default memo(function Exercise({
   onVisibilityToggle,
   playingExerciseLap,
   color,
-}: IExercise) {
+}: ExerciseProps) {
   const [isVisible, setIsVisible] = useState(exercise.isVisible)
   const [isDeleteModal, setIsDeleteModal] = useState(false)
   const { width } = useScreen()
   const isImage = !!exercise.imageUrl
-  const editNameWidth = width - (isImage ? EDIT_NAME_GUTTER.WITH_IMAGE : EDIT_NAME_GUTTER.DEFAULT)
-  const nameWidth = width - (isImage ? NAME_GUTTER.WITH_IMAGE : NAME_GUTTER.DEFAULT)
-  const detailsWidth =
-    width - (isImage ? DETAILS_GUTTER.WITH_IMAGE : DETAILS_GUTTER.DEFAULT) + (isInModal ? 0 : OUTSIDE_MODAL_EXTRA_WIDTH)
-  const containerStyle: ViewStyle = isImage ? { marginLeft: IMG_SIZE, width: '86.5%' } : {}
+  const editNameStyle = { width: width - (isImage ? EDIT_NAME_GUTTER.WITH_IMAGE : EDIT_NAME_GUTTER.DEFAULT) }
+  const nameStyle = { width: width - (isImage ? NAME_GUTTER.WITH_IMAGE : NAME_GUTTER.DEFAULT) }
+  const detailsStyle = {
+    width:
+      width -
+      (isImage ? DETAILS_GUTTER.WITH_IMAGE : DETAILS_GUTTER.DEFAULT) +
+      (isInModal ? 0 : OUTSIDE_MODAL_EXTRA_WIDTH),
+  }
+  const containerStyle = isImage && styles.withImage
 
   useEffect(() => {
     setIsVisible(prev => (prev === exercise.isVisible ? prev : exercise.isVisible))
@@ -76,12 +84,7 @@ export default memo(function Exercise({
         <>
           {isImage && <AppImage src={exercise.imageUrl} size={IMG_SIZE} style={styles.imageContainer} />}
           <Stack preset='spaceBetween' style={containerStyle}>
-            <AppText
-              variant='title'
-              color={isVisible ? color : `${color}80`}
-              numberOfLines={1}
-              style={{ width: editNameWidth }}
-            >
+            <AppText variant='title' color={isVisible ? color : `${color}80`} numberOfLines={1} style={editNameStyle}>
               {exercise.name}
             </AppText>
             <Stack preset='end' style={styles.editActions}>
@@ -116,12 +119,12 @@ export default memo(function Exercise({
       ) : (
         <>
           <Stack preset='start'>
-            {isImage && <AppImage src={exercise.imageUrl} size={IMG_SIZE} style={{ marginLeft: -10 }} />}
+            {isImage && <AppImage src={exercise.imageUrl} size={IMG_SIZE} style={styles.image} />}
             <View>
-              <AppText variant='title' color={color} numberOfLines={1} style={{ width: nameWidth }}>
+              <AppText variant='title' color={color} numberOfLines={1} style={nameStyle}>
                 {exercise.name}
               </AppText>
-              <Stack preset='spaceBetween' style={{ width: detailsWidth }}>
+              <Stack preset='spaceBetween' style={detailsStyle}>
                 {!!exercise.breakTimeInSec && (
                   <AppText
                     variant='caption'

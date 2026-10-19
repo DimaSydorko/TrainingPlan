@@ -187,7 +187,7 @@ export default memo(function SettingsScreen() {
       </TouchableOpacity>
       <ConfirmButton
         header={'Clear local storage'}
-        style={{ marginTop: 250, marginBottom: 20 }}
+        style={styles.clearButton}
         color={colors.accent}
         onPress={clearAll}
       />

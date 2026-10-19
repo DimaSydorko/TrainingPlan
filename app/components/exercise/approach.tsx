@@ -1,30 +1,14 @@
 import * as React from 'react'
-import { StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
+import { View } from 'react-native'
 import AppText from '@common/app-text/app-text'
 import { useAppTheme } from '@theme/use-app-theme'
+import styles from './approach.styles'
 
-interface ExerciseResultsType {
+type ExerciseResultsType = {
   weight: number
   repeats: number
   isPrevious?: boolean
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginVertical: 3,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    flexDirection: 'row',
-  } as ViewStyle,
-  textRepWeight: {
-    width: '35%',
-    textAlign: 'center',
-  } as TextStyle,
-  textCurrPrev: {
-    width: '30%',
-  },
-})
 
 export default function Approach({ weight, repeats, isPrevious = true }: ExerciseResultsType) {
   const { colors } = useAppTheme()

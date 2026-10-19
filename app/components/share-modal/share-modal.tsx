@@ -15,7 +15,7 @@ import { BAR_HEIGHT } from '@theme/bar-heights.constants'
 import styles from './styles'
 import { RESERVED_HEADER_COUNT } from './share-modal.constants'
 
-interface PropsType {
+type PropsType = {
   isOpen: boolean
   onClose: () => void
   onShare: () => void

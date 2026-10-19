@@ -1,3 +1,5 @@
+export const IMG_SIZE = 45
+
 export const EDIT_NAME_GUTTER = {
   DEFAULT: 170,
   WITH_IMAGE: 215,

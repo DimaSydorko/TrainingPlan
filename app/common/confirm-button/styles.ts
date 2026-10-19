@@ -1,5 +1,8 @@
 import { StyleSheet } from 'react-native'
-import { fontSize, radius, spacing } from '@theme/tokens'
+import { BAR_HEIGHT } from '@theme/bar-heights.constants'
+import { radius, spacing } from '@theme/tokens'
+
+const FOOTER_BUTTON_INSET = 16
 
 export default StyleSheet.create({
   button: {
@@ -11,8 +14,10 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  buttonTitle: {
-    fontSize: fontSize.md,
-    fontWeight: 'bold',
+  footerButton: {
+    marginTop: spacing.none,
+    width: '90%',
+    height: BAR_HEIGHT.FOOTER - FOOTER_BUTTON_INSET,
+    paddingVertical: spacing.none,
   },
 })

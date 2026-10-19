@@ -16,7 +16,7 @@ import styles from './styles'
 import { PLAN_NAME_GUTTER, RESERVED_BARS_COUNT } from './copy-workouts-modal.constants'
 import { getExerciseColor } from '@theme/tokens'
 
-interface PropsType {
+type PropsType = {
   isOpen: boolean
   isInPlan: boolean
   onClose: () => void

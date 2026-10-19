@@ -1,11 +1,11 @@
 import { usePlayTimerContext } from './play-timer-provider'
 import { memo, useEffect } from 'react'
 
-interface IProps {
+type PropsType = {
   time: number
 }
 
-export default memo(function TimeObserver({ time }: IProps) {
+export default memo(function TimeObserver({ time }: PropsType) {
   const { setPlayTimer } = usePlayTimerContext()
 
   useEffect(() => {

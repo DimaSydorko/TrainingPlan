@@ -40,20 +40,20 @@ function useAppHelper() {
   }
 }
 
-export interface IContext {
+export type AppHelperContextType = {
   isTabMenu: boolean
   savedUids: string[]
   onToggleTabMenu: (arg?: boolean) => void
   addSavedUids: (uid: string) => void
 }
 
-export const AppHelperContext = createContext<IContext>(null!)
+export const AppHelperContext = createContext<AppHelperContextType>(null!)
 
-interface IProvider {
+type AppHelperProviderProps = {
   children: ReactNode
 }
 
-export default function AppHelperProvider({ children }: IProvider) {
+export default function AppHelperProvider({ children }: AppHelperProviderProps) {
   const { ...playData } = useAppHelper()
   return <AppHelperContext.Provider value={playData}>{children}</AppHelperContext.Provider>
 }

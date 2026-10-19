@@ -9,7 +9,7 @@ import { SetStateType } from '@utils/types'
 import { IconButton, MyTextInput } from '../index'
 import styles from './styles'
 
-interface IProps {
+type LabelsInputProps = {
   labels: string[]
   setLabels: SetStateType<string[]>
   onWriteLabel?: (labels?: string[]) => void
@@ -19,7 +19,7 @@ interface IProps {
 const MAX_LABELS_COUNT = 6
 const MAX_LABEL_LENGTH = 16
 
-export default function LabelsInput({ setLabels, style, labels, onWriteLabel }: IProps) {
+export default function LabelsInput({ setLabels, style, labels, onWriteLabel }: LabelsInputProps) {
   const { colors } = useAppTheme()
   const [editLabelIdx, setEditLabelIdx] = useState<number>(labels?.length || 0)
 
@@ -80,7 +80,7 @@ export default function LabelsInput({ setLabels, style, labels, onWriteLabel }: 
               <IconButton
                 iconName={icon.close}
                 margin={2}
-                style={{ marginTop: 2 }}
+                style={styles.removeButton}
                 onPress={() => onDeleteLabel(idx)}
                 color={colors.accent}
                 size={18}

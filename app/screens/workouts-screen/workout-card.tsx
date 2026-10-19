@@ -9,25 +9,22 @@ import AppText from '@common/app-text/app-text'
 import { WorkoutType } from '@utils/types'
 import { icon } from '@theme/icons'
 import { getExerciseColor } from '@theme/tokens'
+import { SELECTED_ICON } from './workout-card.constants'
+import styles from './workout-card.styles'
 
-interface IWorkoutCard {
+type WorkoutCardProps = {
   workout: WorkoutType
   isSelected?: boolean
 }
 
-export default memo(function WorkoutCard({ workout, isSelected = false }: IWorkoutCard) {
+export default memo(function WorkoutCard({ workout, isSelected = false }: WorkoutCardProps) {
   const { colors, isDark } = useAppTheme()
   const color = getExerciseColor(workout?.colorIdx === undefined ? 3 : workout?.colorIdx, isDark)
 
   return (
     <>
       {isSelected && (
-        <Icon
-          name={icon.checkCircle}
-          color={colors.primary}
-          size={16}
-          style={{ position: 'absolute', left: -12, top: -12 }}
-        />
+        <Icon name={icon.checkCircle} color={colors.primary} size={SELECTED_ICON.SIZE} style={styles.selectedIcon} />
       )}
       <Stack preset='spaceBetween'>
         <View>

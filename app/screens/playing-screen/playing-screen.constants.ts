@@ -4,3 +4,5 @@ export const PLAYING_GUTTER = {
   RESULTS: 140,
   SAVE_BUTTON: 80,
 } as const
+
+export const TRANSPARENT_HEX_ALPHA = '00'

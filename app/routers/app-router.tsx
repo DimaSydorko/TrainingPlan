@@ -19,6 +19,8 @@ import PublicationsRouter from './publications-router'
 import { TabName } from '@utils/constants'
 import { AppTabParamList } from '@utils/types'
 import { useAppInsets } from '@theme/insets'
+import { TAB_BAR_VERTICAL_PADDING } from './app-router.constants'
+import styles from './app-router.styles'
 
 const Tab = createBottomTabNavigator<AppTabParamList, 'AppTabs'>()
 
@@ -92,17 +94,15 @@ export default function AppRouter() {
               tabBarIcon: ({ focused }) => icon(focused ? colors.accent : colors.inverse),
               headerShown: false,
               tabBarButtonTestID: testID,
-              tabBarStyle: {
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                backgroundColor: colors.surfaceElevated,
-                paddingTop: 5,
-                // Edge-to-edge: the bar extends under the Android navigation bar / iOS home indicator
-                paddingBottom: 5 + bottom,
-                height: footer,
-                display: isTabMenu ? undefined : 'none',
-              },
+              tabBarStyle: [
+                styles.tabBar,
+                {
+                  backgroundColor: colors.surfaceElevated,
+                  paddingBottom: TAB_BAR_VERTICAL_PADDING + bottom,
+                  height: footer,
+                  display: isTabMenu ? undefined : 'none',
+                },
+              ],
             }}
           />
         ))}

@@ -4,7 +4,7 @@ import { ActivityIndicator, RefreshControl, ScrollView } from 'react-native'
 import { useAppTheme } from '@theme/use-app-theme'
 import styles from './infinite-scroll.styles'
 
-interface IProps {
+type InfiniteScrollProps = {
   children: React.ReactNode
   onScrollToBottom?: () => void
   isLoading?: boolean
@@ -15,7 +15,12 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   return layoutMeasurement.height + contentOffset.y >= contentSize.height
 }
 
-export default function InfiniteScroll({ children, isLoading = false, onScrollToBottom, onRefresh }: IProps) {
+export default function InfiniteScroll({
+  children,
+  isLoading = false,
+  onScrollToBottom,
+  onRefresh,
+}: InfiniteScrollProps) {
   const [isRefreshLoading, setIsRefreshLoading] = useState<boolean>(false)
   const [isDelay, setIsDelay] = useState<boolean>(false)
   const { colors } = useAppTheme()

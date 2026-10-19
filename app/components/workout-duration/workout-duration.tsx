@@ -8,7 +8,7 @@ import { useAppTheme } from '@theme/use-app-theme'
 import { getWorkoutDuration } from '@utils'
 import { icon } from '@theme/icons'
 
-interface WorkoutDurationType {
+type WorkoutDurationType = {
   exercises: ExerciseType[]
 }
 

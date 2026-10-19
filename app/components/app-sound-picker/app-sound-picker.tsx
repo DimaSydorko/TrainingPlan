@@ -11,6 +11,7 @@ import { SetStateType } from '@utils/types'
 import { SoundType } from '@utils/constants'
 import AppText from '@common/app-text/app-text'
 import Stack from '@common/stack/stack'
+import styles from './app-sound-picker.styles'
 
 // The old code switched to Sound.setCategory('Alarm') here so previews were heard with the silent
 // switch on. The shared session from audio.ts already plays in silent mode, so no category change.
@@ -40,7 +41,7 @@ export default memo(function AppSoundPicker({ isOpen, setIsOpen }: PropsT) {
 
   return (
     <AppModal onConfirm={onConfirm} onClose={() => setIsOpen(false)} isOpen={isOpen} header={'Select Sound'}>
-      <Stack preset='centerColumn' style={{ alignItems: 'flex-start' }}>
+      <Stack preset='centerColumn' style={styles.list}>
         {Object.values(SoundType).map(s => (
           <TouchableOpacity
             key={s}
@@ -49,7 +50,7 @@ export default memo(function AppSoundPicker({ isOpen, setIsOpen }: PropsT) {
               setSoundType(s)
             }}
             onPressOut={() => setIsPressing(false)}
-            style={{ marginVertical: 2, marginHorizontal: 8 }}
+            style={styles.option}
           >
             <AppText
               variant='title'

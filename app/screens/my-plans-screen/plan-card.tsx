@@ -8,27 +8,24 @@ import Stack from '@common/stack/stack'
 import AppText from '@common/app-text/app-text'
 import { PlanType } from '@utils/types'
 import { icon } from '@theme/icons'
+import { SELECTED_ICON } from './plan-card.constants'
+import styles from './plan-card.styles'
 
-interface IPlanCard {
+type PlanCardProps = {
   plan: PlanType
   isSelected: boolean
   color: string
   onDelete?: () => void
 }
 
-export default memo(function PlanCard({ plan, isSelected, onDelete, color }: IPlanCard) {
+export default memo(function PlanCard({ plan, isSelected, onDelete, color }: PlanCardProps) {
   const [isDeleteModal, setIsDeleteModal] = useState(false)
   const { colors } = useAppTheme()
 
   return (
     <>
       {isSelected && (
-        <Icon
-          name={icon.checkCircle}
-          color={colors.primary}
-          size={16}
-          style={{ position: 'absolute', left: -12, top: -12 }}
-        />
+        <Icon name={icon.checkCircle} color={colors.primary} size={SELECTED_ICON.SIZE} style={styles.selectedIcon} />
       )}
       <Stack preset='spaceBetween'>
         <View>

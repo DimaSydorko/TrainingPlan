@@ -3,13 +3,13 @@ import { useEffect, useState } from 'react'
 import AppText from '../app-text/app-text'
 import { secondsToMinSec } from '@components/workout-duration/workout-duration'
 
-interface ITimer {
+type TimerProps = {
   isRevers?: boolean
   isPaused?: boolean
   value?: number
 }
 
-export default function Timer({ value = 0, isPaused, isRevers = false }: ITimer) {
+export default function Timer({ value = 0, isPaused, isRevers = false }: TimerProps) {
   const [secondsCountDown, setSecondsCountDown] = useState<number>(value || 0)
 
   useEffect(() => {

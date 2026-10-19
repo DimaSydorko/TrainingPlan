@@ -5,7 +5,7 @@ import { useAppTheme } from '@theme/use-app-theme'
 import styles from './styles'
 import { useAppInsets } from '@theme/insets'
 
-interface AddMoreButtonType {
+type AddMoreButtonType = {
   onPress: () => void
   color?: string
   iconColor?: string

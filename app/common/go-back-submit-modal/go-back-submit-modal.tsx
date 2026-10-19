@@ -4,7 +4,7 @@ import { Alert, BackHandler, View } from 'react-native'
 import { EventArg, NavigationAction, useNavigation } from '@react-navigation/native'
 import { AppNavigationType } from '@utils/types'
 
-interface IGoBackSubmitModal {
+type GoBackSubmitModalProps = {
   title?: string
   text: string
   confirmText?: string
@@ -21,7 +21,7 @@ export default memo(function GoBackSubmitModal({
   text,
   confirmText = 'YES',
   onConfirm,
-}: IGoBackSubmitModal) {
+}: GoBackSubmitModalProps) {
   const navigation = useNavigation<AppNavigationType>()
   // Set once the user confirmed, so the navigation that follows (onConfirm usually calls goBack())
   // is not stopped again by the beforeRemove listener, which is still mounted until the next render.

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useAppDispatch, usePublications } from '@hooks/redux'
 import { useAppTheme } from '@theme/use-app-theme'
 import { useIsOnline } from '@stores/network/use-network-store'
@@ -11,6 +11,7 @@ import { PUBLICATION_QUERY_LIMIT } from '@utils/constants'
 import NoSignalIcon from '@assets/icons/no-signal-icon'
 import EmptySearchIcon from '@assets/icons/empty-search-icon'
 import Stack from '@common/stack/stack'
+import styles from './publications-screen.styles'
 
 export default function PublicationsScreen() {
   const dispatch = useAppDispatch()
@@ -19,6 +20,7 @@ export default function PublicationsScreen() {
   const isOnline = useIsOnline()
   const [labels, setLabels] = useState<string[]>([])
   const [prevSearch, setPrevSearch] = useState<string[]>([])
+  const screenStyle = useMemo(() => ({ backgroundColor: colors.background }), [colors.background])
 
   const searchByLabel = useCallback(
     (val?: string[]) => {
@@ -41,19 +43,14 @@ export default function PublicationsScreen() {
   }, [publications[publications.length - 1]])
 
   return (
-    <Stack preset='centerColumn' style={{ backgroundColor: colors.background }}>
+    <Stack preset='centerColumn' style={screenStyle}>
       {isOnline ? (
         <InfiniteScroll
           isLoading={isLoading}
           onRefresh={() => dispatch(publicationsAC.get({ labels }))}
           onScrollToBottom={getNextChunk}
         >
-          <LabelsInput
-            labels={labels}
-            setLabels={setLabels}
-            onWriteLabel={searchByLabel}
-            style={{ paddingHorizontal: 20 }}
-          />
+          <LabelsInput labels={labels} setLabels={setLabels} onWriteLabel={searchByLabel} style={styles.labelsInput} />
           {publications.length ? (
             publications.map(publication => <Publication key={publication.uid} publication={publication} />)
           ) : (

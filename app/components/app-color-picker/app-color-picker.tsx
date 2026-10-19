@@ -6,16 +6,18 @@ import { EXERCISE_COLOR_NAMES, getExerciseColor } from '@theme/tokens'
 import { useAppTheme } from '@theme/use-app-theme'
 import styles from './styles'
 
-interface IAppColorPicker {
+type AppColorPickerProps = {
   value: number
   onChange: (value: number) => void
 }
 
-export default memo(function AppColorPicker({ value, onChange }: IAppColorPicker) {
+export default memo(function AppColorPicker({ value, onChange }: AppColorPickerProps) {
   const { isDark } = useAppTheme()
   const [isModal, setIsModal] = useState(false)
   const [colorIdx, setColorIdx] = useState<number>()
   const color = getExerciseColor(colorIdx === undefined ? value : colorIdx, isDark)
+
+  const headerStyle = { color }
 
   const onSubmit = useCallback(() => {
     if (colorIdx !== undefined) onChange(colorIdx)
@@ -24,21 +26,18 @@ export default memo(function AppColorPicker({ value, onChange }: IAppColorPicker
   const onClose = useCallback(() => {
     setColorIdx(undefined)
     setIsModal(false)
-  }, [colorIdx, value])
+  }, [])
 
   return (
     <>
-      <TouchableOpacity
-        style={{ borderRadius: 100, backgroundColor: color, height: 30, width: 30 }}
-        onPress={() => setIsModal(true)}
-      />
+      <TouchableOpacity style={[styles.preview, { backgroundColor: color }]} onPress={() => setIsModal(true)} />
       <AppModal
         onConfirm={onSubmit}
         onClose={onClose}
         isOpen={isModal}
         header='Chose Color'
-        headerStyle={{ color }}
-        style={{ borderWidth: 10, borderColor: color }}
+        headerStyle={headerStyle}
+        style={[styles.modal, { borderColor: color }]}
       >
         <View style={styles.colorsContainer}>
           {EXERCISE_COLOR_NAMES.map((colorName, idx) => (

@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { spacing } from '@theme/tokens'
+import { IMG_SIZE } from './exercise.constants'
 
 export default StyleSheet.create({
   breakContainer: {
@@ -16,6 +17,13 @@ export default StyleSheet.create({
   },
   iconButton: {
     marginLeft: 7,
+  },
+  withImage: {
+    marginLeft: IMG_SIZE,
+    width: '86.5%',
+  },
+  image: {
+    marginLeft: -10,
   },
   imageContainer: {
     position: 'absolute',

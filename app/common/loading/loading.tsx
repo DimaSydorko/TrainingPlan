@@ -1,20 +1,7 @@
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import { useAppTheme } from '@theme/use-app-theme'
-
-const styles = StyleSheet.create({
-  bg: {
-    zIndex: 1000,
-    position: 'absolute',
-    height: '100%',
-    width: '100%',
-    top: 0,
-    left: 0,
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
+import styles from './loading.styles'
 
 export default function Loading() {
   const { colors } = useAppTheme()

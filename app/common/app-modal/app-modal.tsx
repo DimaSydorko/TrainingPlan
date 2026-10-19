@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ReactNode } from 'react'
-import { Modal, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native'
+import { Modal, StyleProp, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native'
 import { ConfirmButton } from '../index'
 import { useAppTheme } from '@theme/use-app-theme'
 import AppText from '../app-text/app-text'
@@ -9,7 +9,7 @@ import { useScreen } from '@platform/screen'
 import styles from './styles'
 import { MODAL_GUTTER } from './app-modal.constants'
 
-interface AppModalType {
+type AppModalType = {
   onConfirm: () => void
   onClose: () => void
   onRefuse?: () => void
@@ -23,8 +23,8 @@ interface AppModalType {
   extraPlaceRight?: ReactNode
   extraPlaceLeft?: ReactNode
   children?: ReactNode
-  style?: ViewStyle
-  headerStyle?: TextStyle
+  style?: StyleProp<ViewStyle>
+  headerStyle?: StyleProp<TextStyle>
 }
 
 export default function AppModal({
@@ -46,7 +46,7 @@ export default function AppModal({
 }: AppModalType) {
   const { colors } = useAppTheme()
   const { width } = useScreen()
-  const buttonStyle: ViewStyle = !onRefuse ? { width: '40%' } : { marginHorizontal: 6, width: '30%' }
+  const buttonStyle = onRefuse ? styles.buttonWithRefuse : styles.button
   return (
     <Modal animationType='fade' transparent={true} visible={isOpen} onTouchStart={onClose} onRequestClose={onClose}>
       <Stack preset='center' style={styles.modal}>
