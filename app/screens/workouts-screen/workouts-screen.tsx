@@ -28,10 +28,16 @@ import ShareModal from '@components/share-modal/share-modal'
 import EditPlanWorkout from '@components/edit-plan-workout/edit-plan-workout'
 import CopyWorkoutsModal from '@components/copy-workouts-modal/copy-workouts-modal'
 import WorkoutCard from './workout-card'
-import { AppFooter, AppHeader, Card, FlexEnd, FlexStart, Page, TextHeader } from '@theme/parents'
+import AppFooter from '@common/app-footer/app-footer'
+import AppHeader from '@common/app-header/app-header'
+import Card from '@common/card/card'
+import Stack from '@common/stack/stack'
+import Screen from '@common/screen/screen'
+import AppText from '@common/app-text/app-text'
 import { icon } from '@theme/icons'
 import NoDataIcon from '@assets/icons/no-data-icon'
 import { useAppInsets } from '@theme/insets'
+import styles from './workouts-screen.styles'
 
 type PropsType = {
   isInPlan?: boolean
@@ -44,6 +50,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
   const { onToggleTabMenu, isTabMenu } = useContext(AppHelperContext)
   const workoutState = useWorkout()
   const { footer } = useAppInsets()
+  const scrollContainerStyle = useMemo(() => ({ paddingBottom: footer }), [footer])
   const [workouts, setWorkouts] = useState<WorkoutType[]>()
   const [selectedWorkoutsUids, setSelectedWorkoutsUids] = useState<string[]>([])
   const [planNameInput, setPlanNameInput] = useState<string>(selectedPlan?.name || '')
@@ -188,10 +195,10 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
   return (
     <>
       {isEditMode && (
-        <AppHeader style={{ justifyContent: 'space-between' }}>
-          <FlexStart>
+        <AppHeader style={styles.header}>
+          <Stack preset='start'>
             <IconButton iconName={icon.close} onPress={() => setSelectedWorkoutsUids([])} />
-            <TextHeader>{selectedWorkoutsUids.length}</TextHeader>
+            <AppText variant='title'>{selectedWorkoutsUids.length}</AppText>
             {workouts.length > selectedWorkoutsUids.length && (
               <IconButton
                 margin={10}
@@ -199,8 +206,8 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
                 onPress={() => setSelectedWorkoutsUids(workouts.map(w => w.uid))}
               />
             )}
-          </FlexStart>
-          <FlexEnd style={{ width: 250 }}>
+          </Stack>
+          <Stack preset='end' style={styles.headerActions}>
             {selectedWorkoutsUids.length === 1 && (
               <IconButton iconName={icon.share} margin={10} onPress={() => setIsShareModal(true)} />
             )}
@@ -214,10 +221,10 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
             {!!selectedWorkoutsUids.length && (
               <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} testID='workouts.delete' />
             )}
-          </FlexEnd>
+          </Stack>
         </AppHeader>
       )}
-      <Page>
+      <Screen>
         {isPlanEdit && (
           <MyTextInput
             placeholder={'Plan name'}
@@ -227,7 +234,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
           />
         )}
         {workouts?.length === 0 && <NoDataIcon />}
-        <DraggableScrollContainer style={{ paddingBottom: footer }}>
+        <DraggableScrollContainer style={scrollContainerStyle}>
           <DraggableList
             data={workouts || []}
             renderItem={renderItem}
@@ -246,7 +253,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
             onClose={() => (isNewWorkoutModal ? setIsNewWorkoutModal(false) : setChangeWorkout(null))}
           />
         )}
-      </Page>
+      </Screen>
       {!isTabMenu && (
         <AppFooter>
           <ConfirmButton isFooter header='Save Plan' onPress={onSavePlan} />

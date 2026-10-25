@@ -5,12 +5,13 @@ import { GoogleSigninButton } from '@react-native-google-signin/google-signin'
 import { configureGoogleSignIn } from '@platform/google-auth'
 import { userAC } from '@store/user-reducer/user-ac'
 import { useAppDispatch } from '@hooks/redux'
+import styles from './app-google-sign-in-button.styles'
 
-interface IProps {
+type PropsType = {
   disabled?: boolean
 }
 
-export default memo(function AppGoogleSignInButton({ disabled }: IProps) {
+export default memo(function AppGoogleSignInButton({ disabled }: PropsType) {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -26,7 +27,7 @@ export default memo(function AppGoogleSignInButton({ disabled }: IProps) {
   return (
     <View>
       <GoogleSigninButton
-        style={{ marginLeft: 30, width: '83%', marginTop: 20, height: 48 }}
+        style={styles.button}
         size={GoogleSigninButton.Size.Wide}
         color={GoogleSigninButton.Color.Dark}
         onPress={signIn}

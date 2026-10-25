@@ -4,7 +4,9 @@ import { Text } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Icon } from '@common/icon/icon'
 
-import { useAppDispatch, useSettings } from '@hooks/redux'
+import { useAppDispatch } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
+import { useIsOnline } from '@stores/network/use-network-store'
 import { AppHelperContext } from '@hooks/app-helper-provider'
 import { workoutAC } from '@store/workout-reducer/workout-ac'
 import { plansAC } from '@store/plans-reducer/plans-ac'
@@ -17,6 +19,8 @@ import PublicationsRouter from './publications-router'
 import { TabName } from '@utils/constants'
 import { AppTabParamList } from '@utils/types'
 import { useAppInsets } from '@theme/insets'
+import { TAB_BAR_VERTICAL_PADDING } from './app-router.constants'
+import styles from './app-router.styles'
 
 const Tab = createBottomTabNavigator<AppTabParamList, 'AppTabs'>()
 
@@ -62,16 +66,17 @@ const tabs = [
 export default function AppRouter() {
   const { isTabMenu } = useContext(AppHelperContext)
   const dispatch = useAppDispatch()
-  const { colors, internet } = useSettings()
+  const { colors } = useAppTheme()
+  const isOnline = useIsOnline()
   const { bottom, footer } = useAppInsets()
 
   useEffect(() => {
-    if (internet.isOnline) {
+    if (isOnline) {
       dispatch(workoutAC.getWorkouts())
       dispatch(plansAC.getPlans())
       dispatch(workoutAC.getExerciseImages())
     }
-  }, [internet.isOnline])
+  }, [isOnline])
 
   return (
     <>
@@ -84,22 +89,20 @@ export default function AppRouter() {
             component={component}
             options={{
               tabBarLabel: ({ focused }) => (
-                <Text style={focused ? { color: colors.secondPrimary } : { color: colors.black }}>{buttonLabel}</Text>
+                <Text style={focused ? { color: colors.accent } : { color: colors.inverse }}>{buttonLabel}</Text>
               ),
-              tabBarIcon: ({ focused }) => icon(focused ? colors.secondPrimary : colors.black),
+              tabBarIcon: ({ focused }) => icon(focused ? colors.accent : colors.inverse),
               headerShown: false,
               tabBarButtonTestID: testID,
-              tabBarStyle: {
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                backgroundColor: colors.menu,
-                paddingTop: 5,
-                // Edge-to-edge: the bar extends under the Android navigation bar / iOS home indicator
-                paddingBottom: 5 + bottom,
-                height: footer,
-                display: isTabMenu ? undefined : 'none',
-              },
+              tabBarStyle: [
+                styles.tabBar,
+                {
+                  backgroundColor: colors.surfaceElevated,
+                  paddingBottom: TAB_BAR_VERTICAL_PADDING + bottom,
+                  height: footer,
+                  display: isTabMenu ? undefined : 'none',
+                },
+              ],
             }}
           />
         ))}

@@ -1,20 +1,24 @@
 import * as React from 'react'
 import { useState } from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
-import { useAppDispatch, useSettings, useUser } from '@hooks/redux'
+import { useAppDispatch, useUser } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
+import { useIsOnline } from '@stores/network/use-network-store'
 import { userAC } from '@store/user-reducer/user-ac'
 import { useNavigation } from '@react-navigation/native'
 import { FUTURE_FLAG, ScreenName } from '@utils/constants'
 import { ConfirmButton, MyTextInput } from '@common'
-import { FlexCenterColumn, TextHeader, TextOrdinary } from '@theme/parents'
-import { theme } from '@theme/theme'
+import Stack from '@common/stack/stack'
+import AppText from '@common/app-text/app-text'
 import AppGoogleSignInButton from './app-google-sign-in-button'
+import styles from './registration-screen.styles'
 import { AuthNavigation } from '@utils/types'
 
 export default function RegistrationScreen() {
   const dispatch = useAppDispatch()
-  const { colors, internet } = useSettings()
+  const { colors } = useAppTheme()
+  const isOnline = useIsOnline()
   const { error, isLoading } = useUser()
   const navigation = useNavigation<AuthNavigation>()
   const [inputData, setInputData] = useState({ fullName: '', email: '', password: '', confirmPassword: '' })
@@ -40,14 +44,14 @@ export default function RegistrationScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <KeyboardAwareScrollView
-        style={{ flex: 1, width: '100%' }}
-        contentContainerStyle={{ alignItems: 'center' }}
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps='always'
         bottomOffset={20}
       >
-        <TextHeader>{error}</TextHeader>
+        <AppText variant='title'>{error}</AppText>
         <MyTextInput
           value={inputData.fullName}
           onChangeText={fullName => setInputData({ ...inputData, fullName })}
@@ -70,16 +74,16 @@ export default function RegistrationScreen() {
           onChangeText={confirmPassword => setInputData({ ...inputData, confirmPassword })}
           placeholder='Confirm Password'
         />
-        <ConfirmButton disabled={isLoading || !internet.isOnline} onPress={onRegister} header='Create account' />
-        {!FUTURE_FLAG.IS_DEV && <AppGoogleSignInButton disabled={!internet.isOnline} />}
-        <FlexCenterColumn style={theme.margin.top20}>
-          <TextOrdinary>
+        <ConfirmButton disabled={isLoading || !isOnline} onPress={onRegister} header='Create account' />
+        {!FUTURE_FLAG.IS_DEV && <AppGoogleSignInButton disabled={!isOnline} />}
+        <Stack preset='centerColumn' style={styles.footer}>
+          <AppText>
             Already got an account?{' '}
-            <Text onPress={onFooterLinkPress} style={[theme.text.link, { color: colors.primary }]}>
+            <AppText variant='link' color={colors.primary} onPress={onFooterLinkPress}>
               Log in
-            </Text>
-          </TextOrdinary>
-        </FlexCenterColumn>
+            </AppText>
+          </AppText>
+        </Stack>
       </KeyboardAwareScrollView>
     </View>
   )

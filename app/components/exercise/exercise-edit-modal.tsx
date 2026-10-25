@@ -1,25 +1,24 @@
 import * as React from 'react'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { Keyboard, View } from 'react-native'
-import { useSettings } from '@hooks/redux'
 import { AppColorPicker, AppModal, ButtonCounter, IconButton, MyTextInput, SwipeSelector } from '@common'
 import ImageSelector from '../image-selector/image-selector'
 import { defaultApproach, defaultExercise } from '@utils/constants'
 import { ExerciseType } from '@utils/types'
 import { nanoid } from '@utils'
-import { FlexCenter, FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '@theme/parents'
+import AppText from '@common/app-text/app-text'
+import Stack from '@common/stack/stack'
 import { icon } from '@theme/icons'
 import styles from './styles'
 
-interface IEditExerciseModal {
+type ExerciseEditModalProps = {
   exercise?: ExerciseType
   onSave: (exercise: ExerciseType) => void
   onClose: () => void
   onDelete: () => void
 }
 
-export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onClose }: IEditExerciseModal) {
-  const { colors } = useSettings()
+export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onClose }: ExerciseEditModalProps) {
   const isNewExercise = useMemo(() => !exercise, [exercise])
   const initialEx = useMemo(() => {
     return isNewExercise ? { ...defaultExercise, uid: nanoid() } : exercise
@@ -103,7 +102,7 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
           </>
         }
       >
-        <FlexCenterColumn>
+        <Stack preset='centerColumn'>
           <MyTextInput
             placeholder={'Exercise name'}
             onChangeText={setName}
@@ -111,17 +110,19 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
             type={'underline'}
             testID='exerciseEdit.name'
           />
-          <FlexCenter>
-            <TextHeader color={colors.textSecondary}>Break: </TextHeader>
+          <Stack preset='center'>
+            <AppText variant='title' tone='secondary'>
+              Break:{' '}
+            </AppText>
             {isKeyboardVisible && (
-              <TextHeader color={colors.secondPrimary}>
+              <AppText variant='title' tone='accent'>
                 {selectMinutes} min {selectSeconds} sec
-              </TextHeader>
+              </AppText>
             )}
-          </FlexCenter>
+          </Stack>
           {!isKeyboardVisible && (
             <View style={styles.breakContainer}>
-              <FlexSpaceBetween style={styles.swipeContainer}>
+              <Stack preset='spaceBetween' style={styles.swipeContainer}>
                 <SwipeSelector
                   maxValue={60}
                   value={selectMinutes}
@@ -135,28 +136,32 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
                   onChange={setSelectSeconds}
                   testID='exerciseEdit.breakSeconds'
                 />
-              </FlexSpaceBetween>
-              <FlexSpaceBetween>
-                <TextSecondary style={styles.breakText}>min</TextSecondary>
-                <TextSecondary style={styles.breakText}>sec</TextSecondary>
-              </FlexSpaceBetween>
+              </Stack>
+              <Stack preset='spaceBetween'>
+                <AppText variant='caption' tone='secondary' style={styles.breakText}>
+                  min
+                </AppText>
+                <AppText variant='caption' tone='secondary' style={styles.breakText}>
+                  sec
+                </AppText>
+              </Stack>
             </View>
           )}
-          <FlexSpaceBetween>
+          <Stack preset='spaceBetween'>
             <View>
-              <TextHeader color={colors.textSecondary} style={{ textAlign: 'center' }}>
+              <AppText variant='title' tone='secondary' align='center'>
                 Laps
-              </TextHeader>
+              </AppText>
               <ButtonCounter value={laps} minValue={1} onChange={setLaps} />
             </View>
             <View>
-              <TextHeader color={colors.textSecondary} style={{ textAlign: 'center' }}>
+              <AppText variant='title' tone='secondary' align='center'>
                 Repeats
-              </TextHeader>
+              </AppText>
               <ButtonCounter value={repeats} onChange={setRepeats} />
             </View>
-          </FlexSpaceBetween>
-        </FlexCenterColumn>
+          </Stack>
+        </Stack>
       </AppModal>
       <AppModal
         isWarning

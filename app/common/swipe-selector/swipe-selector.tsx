@@ -1,18 +1,16 @@
 import * as React from 'react'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { FlatList, ListRenderItemInfo, NativeScrollEvent, NativeSyntheticEvent, Text, View } from 'react-native'
-import { useSettings } from '@hooks/redux'
+import { FlatList, ListRenderItemInfo, NativeScrollEvent, NativeSyntheticEvent, View } from 'react-native'
+import { useAppTheme } from '@theme/use-app-theme'
+import AppText from '../app-text/app-text'
 import { buildPickerValues, indexForOffset, indexForValue } from './picker-math'
+import { ITEM_HEIGHT } from './swipe-selector.constants'
+import styles from './swipe-selector.styles'
 
 // Replaces react-native-scroll-picker-wheel (unmaintained since 2021, needs undeclared prop-types,
 // and ignored the colour props passed here). Same props as before; a snapping FlatList wheel.
 
-const ITEM_HEIGHT = 50
-const WRAPPER_WIDTH = 50
-const WRAPPER_HEIGHT = 150
-const PADDING = (WRAPPER_HEIGHT - ITEM_HEIGHT) / 2
-
-interface SwipeSelectorType {
+type SwipeSelectorType = {
   onChange: (number: number) => void
   value?: number
   step?: number
@@ -27,7 +25,7 @@ export default memo(function SwipeSelector({
   maxValue = 60,
   testID,
 }: SwipeSelectorType) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const values = useMemo(() => buildPickerValues(maxValue, step), [maxValue, step])
   const valueIndex = indexForValue(value, step, values.length)
   const listRef = useRef<FlatList<number>>(null)
@@ -64,45 +62,22 @@ export default memo(function SwipeSelector({
 
   const renderItem = useCallback(
     ({ item, index }: ListRenderItemInfo<number>) => (
-      <View style={{ height: ITEM_HEIGHT, justifyContent: 'center', alignItems: 'center' }}>
-        <Text
-          style={{
-            fontSize: 19,
-            lineHeight: 26,
-            textAlign: 'center',
-            color: index === activeIndex ? colors.secondPrimary : colors.textSecondary,
-          }}
+      <View style={styles.item}>
+        <AppText
+          align='center'
+          color={index === activeIndex ? colors.accent : colors.textSecondary}
+          style={styles.itemText}
         >
           {item}
-        </Text>
+        </AppText>
       </View>
     ),
-    [activeIndex, colors.secondPrimary, colors.textSecondary]
+    [activeIndex, colors.accent, colors.textSecondary]
   )
 
   return (
-    <View
-      testID={testID}
-      style={{
-        height: WRAPPER_HEIGHT,
-        width: WRAPPER_WIDTH,
-        overflow: 'hidden',
-        alignSelf: 'center',
-        backgroundColor: colors.background,
-      }}
-    >
-      <View
-        pointerEvents='none'
-        style={{
-          position: 'absolute',
-          top: PADDING,
-          height: ITEM_HEIGHT,
-          width: '100%',
-          borderTopWidth: 1,
-          borderBottomWidth: 1,
-          borderColor: colors.white,
-        }}
-      />
+    <View testID={testID} style={[styles.wrapper, { backgroundColor: colors.background }]}>
+      <View pointerEvents='none' style={[styles.selection, { borderColor: colors.surface }]} />
       <FlatList
         ref={listRef}
         data={values}
@@ -111,7 +86,7 @@ export default memo(function SwipeSelector({
         renderItem={renderItem}
         getItemLayout={(_, index) => ({ length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index })}
         initialScrollIndex={valueIndex}
-        contentContainerStyle={{ paddingVertical: PADDING }}
+        contentContainerStyle={styles.listContent}
         snapToInterval={ITEM_HEIGHT}
         decelerationRate='fast'
         bounces={false}

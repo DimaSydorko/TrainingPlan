@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { radius, spacing } from '@theme/tokens'
 
 export default StyleSheet.create({
   container: {
@@ -9,10 +10,13 @@ export default StyleSheet.create({
     flexWrap: 'wrap',
   },
   labelText: {
-    borderRadius: 5,
+    borderRadius: radius.xs,
     padding: 3,
     width: 'auto',
-    marginRight: 2,
+    marginRight: spacing.xxs,
     marginTop: 3,
+  },
+  removeButton: {
+    marginTop: spacing.xxs,
   },
 })

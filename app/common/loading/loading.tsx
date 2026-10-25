@@ -1,26 +1,13 @@
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, View } from 'react-native'
-import { useSettings } from '@hooks/redux'
-
-const styles = StyleSheet.create({
-  bg: {
-    zIndex: 1000,
-    position: 'absolute',
-    height: '100%',
-    width: '100%',
-    top: 0,
-    left: 0,
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
+import { ActivityIndicator, View } from 'react-native'
+import { useAppTheme } from '@theme/use-app-theme'
+import styles from './loading.styles'
 
 export default function Loading() {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   return (
     <View style={[styles.bg, { backgroundColor: colors.background }]}>
-      <ActivityIndicator size='large' color={colors.secondPrimary} />
+      <ActivityIndicator size='large' color={colors.accent} />
     </View>
   )
 }

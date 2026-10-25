@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { SwitchLib } from './switch-lib'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
+import { useSettingsStore } from '@stores/settings/use-settings-store'
 import { Vibration } from 'react-native'
 import { VIBRATION } from '@utils/constants'
 
-interface MySwitchType {
+type MySwitchType = {
   value: boolean
   disabled?: boolean
   disableVibration?: boolean
@@ -14,8 +15,9 @@ interface MySwitchType {
 }
 
 export default function MySwitch({ value, disabled, disableVibration, onValueChange, color, testID }: MySwitchType) {
-  const { colors, isVibration } = useSettings()
-  const newColor = color || colors.secondPrimary
+  const { colors } = useAppTheme()
+  const isVibration = useSettingsStore(state => state.isVibration)
+  const newColor = color || colors.accent
 
   const onSwitch = () => {
     if (isVibration && !disableVibration) Vibration.vibrate(VIBRATION.BUTTON)
@@ -29,8 +31,8 @@ export default function MySwitch({ value, disabled, disableVibration, onValueCha
       disabled={disabled}
       circleSize={25}
       circleBorderWidth={0}
-      circleActiveColor={colors.white}
-      backgroundActive={`${colors.black}50`}
+      circleActiveColor={colors.surface}
+      backgroundActive={`${colors.inverse}50`}
       backgroundInactive={`${newColor}50`}
       circleInActiveColor={newColor}
       renderActiveText={false}

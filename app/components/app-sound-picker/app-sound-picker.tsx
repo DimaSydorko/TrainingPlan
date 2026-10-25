@@ -3,13 +3,15 @@ import { memo, useCallback, useEffect, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { previewSound } from '@platform/audio'
 
-import { useAppDispatch, useSettings } from '@hooks/redux'
-import { onSoundTypeChange } from '@store/settings-reducer/settings-slice'
+import { useAppTheme } from '@theme/use-app-theme'
+import { useSettingsStore } from '@stores/settings/use-settings-store'
 import { AppModal } from '@common'
 import { getSoundText } from '@utils'
 import { SetStateType } from '@utils/types'
 import { SoundType } from '@utils/constants'
-import { FlexCenterColumn, TextHeader } from '@theme/parents'
+import AppText from '@common/app-text/app-text'
+import Stack from '@common/stack/stack'
+import styles from './app-sound-picker.styles'
 
 // The old code switched to Sound.setCategory('Alarm') here so previews were heard with the silent
 // switch on. The shared session from audio.ts already plays in silent mode, so no category change.
@@ -20,8 +22,9 @@ type PropsT = {
 }
 
 export default memo(function AppSoundPicker({ isOpen, setIsOpen }: PropsT) {
-  const dispatch = useAppDispatch()
-  const { sound, colors } = useSettings()
+  const { colors } = useAppTheme()
+  const sound = useSettingsStore(state => state.sound)
+  const setStoredSoundType = useSettingsStore(state => state.setSoundType)
   const [soundType, setSoundType] = useState<SoundType>(sound?.type || SoundType.Bell)
   const [isPressing, setIsPressing] = useState<boolean>(false)
 
@@ -32,13 +35,13 @@ export default memo(function AppSoundPicker({ isOpen, setIsOpen }: PropsT) {
   }, [soundType, isPressing])
 
   const onConfirm = useCallback(() => {
-    if (soundType !== sound?.type) dispatch(onSoundTypeChange(soundType))
+    if (soundType !== sound?.type) setStoredSoundType(soundType)
     setIsOpen(false)
   }, [soundType])
 
   return (
     <AppModal onConfirm={onConfirm} onClose={() => setIsOpen(false)} isOpen={isOpen} header={'Select Sound'}>
-      <FlexCenterColumn style={{ alignItems: 'flex-start' }}>
+      <Stack preset='centerColumn' style={styles.list}>
         {Object.values(SoundType).map(s => (
           <TouchableOpacity
             key={s}
@@ -47,14 +50,15 @@ export default memo(function AppSoundPicker({ isOpen, setIsOpen }: PropsT) {
               setSoundType(s)
             }}
             onPressOut={() => setIsPressing(false)}
-            style={{ marginVertical: 2, marginHorizontal: 8 }}
+            style={styles.option}
           >
-            <TextHeader color={s === soundType ? colors.primary : colors.textSecondary}>{`\u2022  ${getSoundText(
-              s
-            )}`}</TextHeader>
+            <AppText
+              variant='title'
+              color={s === soundType ? colors.primary : colors.textSecondary}
+            >{`\u2022  ${getSoundText(s)}`}</AppText>
           </TouchableOpacity>
         ))}
-      </FlexCenterColumn>
+      </Stack>
     </AppModal>
   )
 })

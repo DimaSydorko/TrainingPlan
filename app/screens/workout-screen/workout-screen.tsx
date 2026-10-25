@@ -2,7 +2,8 @@ import * as React from 'react'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { useAppDispatch, useSettings, useUser, useWorkout } from '@hooks/redux'
+import { useAppDispatch, useUser, useWorkout } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { workoutAC } from '@store/workout-reducer/workout-ac'
 import { plansAC } from '@store/plans-reducer/plans-ac'
 import { AppHelperContext } from '@hooks/app-helper-provider'
@@ -21,22 +22,35 @@ import {
 import Exercise from '@components/exercise/exercise'
 import EditExerciseModal from '@components/exercise/exercise-edit-modal'
 import { deepCompare } from '@utils'
-import { appScreen, ScreenName } from '@utils/constants'
+import { ScreenName } from '@utils/constants'
 import { ExerciseType, PlayableNavigation, WorkoutType } from '@utils/types'
-import { AppFooter, AppHeader, Card, FlexCenterColumn, FlexSpaceBetween, Page, TextSecondary } from '@theme/parents'
+import AppFooter from '@common/app-footer/app-footer'
+import AppHeader from '@common/app-header/app-header'
+import Card from '@common/card/card'
+import Stack from '@common/stack/stack'
+import Screen from '@common/screen/screen'
+import AppText from '@common/app-text/app-text'
 import { icon } from '@theme/icons'
-import { theme } from '@theme/theme'
-import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
+import { getExerciseColor } from '@theme/tokens'
 import { useAppInsets } from '@theme/insets'
+import { LAYOUT_GUTTER } from '@theme/layout.constants'
+import { useScreen } from '@platform/screen'
+import styles from './workout-screen.styles'
 
 export default function WorkoutScreen() {
   const dispatch = useAppDispatch()
   const navigation = useNavigation<PlayableNavigation>()
   const { selectedWorkout } = useWorkout()
-  const { colors } = useSettings()
+  const { isDark } = useAppTheme()
   const { user } = useUser()
   const { onToggleTabMenu } = useContext(AppHelperContext)
   const bars = useAppInsets()
+  const screen = useScreen()
+  const scrollContainerStyle = useMemo(
+    () => ({ height: screen.height - bars.footer - bars.header, marginBottom: bars.footer }),
+    [screen.height, bars.footer, bars.header]
+  )
+  const durationHeaderStyle = useMemo(() => ({ width: screen.width - LAYOUT_GUTTER.SECOND_HEADER }), [screen.width])
   const [isEditMode, setIsEditMode] = useState(false)
   const [isNewExercise, setIsNewExercise] = useState(false)
   const [isSaveChangesModal, setIsSaveChangesModal] = useState(false)
@@ -45,7 +59,6 @@ export default function WorkoutScreen() {
   const [workoutExercises, setWorkoutExercises] = useState<ExerciseType[] | null>(null)
   const [changeExercise, setChangeExercise] = useState<ExerciseType | null>(null)
   const isEmpty = !workoutExercises?.filter(ex => ex.isVisible)?.length
-  const isDarkTheme = colors.primary === colorsDark.primary
 
   const changedWorkout: WorkoutType = useMemo(
     () => ({
@@ -128,7 +141,7 @@ export default function WorkoutScreen() {
 
   const renderItem = useCallback(
     ({ item, drag, isActive, getIndex }: DraggableRenderItemParams<ExerciseType>) => {
-      const color = COLORS_EXERCISE[item?.colorIdx || 0][+isDarkTheme]
+      const color = getExerciseColor(item?.colorIdx || 0, isDark)
       return (
         <DraggableItem>
           <Card borderLeftColor={item.isVisible ? `${color}` : `${color}80`}>
@@ -147,7 +160,7 @@ export default function WorkoutScreen() {
         </DraggableItem>
       )
     },
-    [isEditMode, onVisibilityToggle, onSaveExercise, isDarkTheme, onDeleteExercise]
+    [isEditMode, onVisibilityToggle, onSaveExercise, isDark, onDeleteExercise]
   )
 
   return (
@@ -162,37 +175,38 @@ export default function WorkoutScreen() {
                 onChangeText={workoutName => setWorkoutNameInput(workoutName)}
                 value={workoutNameInput}
                 type={'underline'}
-                style={{ height: appScreen.header - 2 }}
+                style={styles.nameInput}
               />
             </AppHeader>
           )}
-          <Page scrollDisabled>
-            <FlexCenterColumn style={{ paddingHorizontal: 8 }}>
-              <DraggableScrollContainer
-                style={{
-                  height: appScreen.vh - bars.footer - bars.header,
-                  marginBottom: bars.footer,
-                }}
-              >
+          <Screen scrollDisabled>
+            <Stack preset='centerColumn' style={styles.content}>
+              <DraggableScrollContainer style={scrollContainerStyle}>
                 {isEditMode && !!workoutExercises.length ? (
                   <DraggableList
                     renderItem={renderItem}
                     data={workoutExercises}
                     dragItemOverflow
                     autoscrollSpeed={40}
-                    style={{ paddingVertical: 10 }}
+                    style={styles.exerciseList}
                     keyExtractor={(item, idx) => item.uid + idx}
                     onDragEnd={({ data }) => setWorkoutExercises(data)}
                   />
                 ) : (
                   <>
-                    <FlexSpaceBetween style={theme.containers.secondHeader}>
+                    <Stack
+                      preset='secondHeader'
+                      direction='row'
+                      justify='between'
+                      align='center'
+                      style={durationHeaderStyle}
+                    >
                       <WorkoutDuration exercises={selectedWorkout?.exercises} />
-                    </FlexSpaceBetween>
+                    </Stack>
                     {workoutExercises
                       ?.filter(ex => ex.isVisible)
                       ?.map(exercise => {
-                        const color = COLORS_EXERCISE[exercise?.colorIdx || 0][+isDarkTheme]
+                        const color = getExerciseColor(exercise?.colorIdx || 0, isDark)
                         return (
                           <Card key={exercise.uid} borderLeftColor={color}>
                             <Exercise exercise={exercise} color={color} />
@@ -202,8 +216,8 @@ export default function WorkoutScreen() {
                   </>
                 )}
               </DraggableScrollContainer>
-            </FlexCenterColumn>
-          </Page>
+            </Stack>
+          </Screen>
           <AddMoreButton
             icon={isEditMode ? icon.plus : icon.edit}
             testID='workout.fab'
@@ -247,9 +261,11 @@ export default function WorkoutScreen() {
           )}
         </>
       ) : (
-        <Page>
-          <TextSecondary>Error try reload page</TextSecondary>
-        </Page>
+        <Screen>
+          <AppText variant='caption' tone='secondary'>
+            Error try reload page
+          </AppText>
+        </Screen>
       )}
     </>
   )

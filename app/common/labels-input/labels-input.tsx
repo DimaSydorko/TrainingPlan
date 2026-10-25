@@ -1,14 +1,15 @@
 import * as React from 'react'
 import { useCallback, useState } from 'react'
 import { View, ViewStyle } from 'react-native'
-import { useSettings } from '@hooks/redux'
-import { FlexStart, TextSecondary } from '@theme/parents'
+import { useAppTheme } from '@theme/use-app-theme'
+import AppText from '../app-text/app-text'
+import Stack from '../stack/stack'
 import { icon } from '@theme/icons'
 import { SetStateType } from '@utils/types'
 import { IconButton, MyTextInput } from '../index'
 import styles from './styles'
 
-interface IProps {
+type LabelsInputProps = {
   labels: string[]
   setLabels: SetStateType<string[]>
   onWriteLabel?: (labels?: string[]) => void
@@ -18,8 +19,8 @@ interface IProps {
 const MAX_LABELS_COUNT = 6
 const MAX_LABEL_LENGTH = 16
 
-export default function LabelsInput({ setLabels, style, labels, onWriteLabel }: IProps) {
-  const { colors } = useSettings()
+export default function LabelsInput({ setLabels, style, labels, onWriteLabel }: LabelsInputProps) {
+  const { colors } = useAppTheme()
   const [editLabelIdx, setEditLabelIdx] = useState<number>(labels?.length || 0)
 
   const onNextLabel = useCallback(() => {
@@ -65,26 +66,29 @@ export default function LabelsInput({ setLabels, style, labels, onWriteLabel }: 
 
   return (
     <View style={[styles.container, style]}>
-      <FlexStart style={styles.labels}>
+      <Stack preset='start' style={styles.labels}>
         {labels.map((label, idx) =>
           label ? (
-            <FlexStart
+            <Stack
+              preset='start'
               key={`${idx}-${label}`}
-              style={[styles.labelText, { backgroundColor: `${colors.secondPrimary}40` }]}
+              style={[styles.labelText, { backgroundColor: `${colors.accent}40` }]}
             >
-              <TextSecondary style={{ color: colors.secondPrimary }}>{label}</TextSecondary>
+              <AppText variant='caption' tone='accent'>
+                {label}
+              </AppText>
               <IconButton
                 iconName={icon.close}
                 margin={2}
-                style={{ marginTop: 2 }}
+                style={styles.removeButton}
                 onPress={() => onDeleteLabel(idx)}
-                color={colors.secondPrimary}
+                color={colors.accent}
                 size={18}
               />
-            </FlexStart>
+            </Stack>
           ) : null
         )}
-      </FlexStart>
+      </Stack>
       <MyTextInput
         type='secondary'
         autoCapitalize='none'

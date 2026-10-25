@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native'
-import { appScreen } from '@utils/constants'
+import { BAR_HEIGHT } from '@theme/bar-heights.constants'
+import { HEADER_BAR_STYLE } from '@theme/navigation-theme.constants'
+import { radius } from '@theme/tokens'
 
 export default StyleSheet.create({
   page: {
@@ -11,11 +13,12 @@ export default StyleSheet.create({
     left: 0,
   },
   header: {
+    ...HEADER_BAR_STYLE,
     paddingHorizontal: 15,
     paddingVertical: 15,
     width: '100%',
     zIndex: 15,
-    height: appScreen.footer,
+    height: BAR_HEIGHT.FOOTER,
   },
   footer: {
     position: 'absolute',
@@ -41,12 +44,19 @@ export default StyleSheet.create({
     height: 48,
   },
   timerContainer: {
-    borderRadius: 100,
+    borderRadius: radius.round,
     marginVertical: 15,
   },
   timerContent: {
     justifyContent: 'center',
-    maxWidth: appScreen.vw - 160,
-    maxHeight: appScreen.vw - 160,
+  },
+  exerciseName: {
+    fontSize: 24,
+  },
+  remainingTime: {
+    fontSize: 22,
+  },
+  controls: {
+    width: '50%',
   },
 })

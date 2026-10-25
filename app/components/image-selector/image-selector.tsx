@@ -2,27 +2,32 @@ import * as React from 'react'
 import { useState } from 'react'
 import { FlatList, Image, TouchableOpacity, View } from 'react-native'
 import { Icon } from '@common/icon/icon'
-import { useSettings, useWorkout } from '@hooks/redux'
-import { appScreen } from '@utils/constants'
+import { useWorkout } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
+import { useScreen } from '@platform/screen'
 import { AppImage, AppModal, TapBar } from '@common'
 import { ExerciseImageFilterType } from '@utils/types'
-import { FlexCenterColumn, TextSecondary } from '@theme/parents'
+import AppText from '@common/app-text/app-text'
+import Stack from '@common/stack/stack'
 import { icon } from '@theme/icons'
 import styles from './styles'
+import { IMAGE_LIST_RESERVED_HEIGHT } from './image-selector.constants'
 
-interface IImageSelector {
+type ImageSelectorProps = {
   value?: string
   onSubmit: (imageUrl: string) => void
 }
 
 const tabBarValues: ExerciseImageFilterType[] = ['home', 'street', 'gym']
 
-export default function ImageSelector({ onSubmit, value = '' }: IImageSelector) {
-  const { colors } = useSettings()
+export default function ImageSelector({ onSubmit, value = '' }: ImageSelectorProps) {
+  const { colors } = useAppTheme()
   const { exerciseImages } = useWorkout()
   const [isModal, setIsModal] = useState(false)
   const [selected, setSelected] = useState<string>(value)
   const [filter, setFilter] = useState<ExerciseImageFilterType>('home')
+  const { height } = useScreen()
+  const listStyle = { height: height - IMAGE_LIST_RESERVED_HEIGHT }
 
   return (
     <>
@@ -41,10 +46,10 @@ export default function ImageSelector({ onSubmit, value = '' }: IImageSelector) 
         isOpen={isModal}
         header={'Select Image for Exercise'}
       >
-        <FlexCenterColumn>
+        <Stack preset='centerColumn'>
           <View style={styles.selectedContainer}>
             {selected ? (
-              <View style={[styles.image, styles.imageC, { borderWidth: 4, borderColor: colors.primary }]}>
+              <View style={[styles.image, styles.imageC, styles.selectedImage, { borderColor: colors.primary }]}>
                 <Image source={{ uri: selected }} style={styles.image} />
               </View>
             ) : (
@@ -59,7 +64,7 @@ export default function ImageSelector({ onSubmit, value = '' }: IImageSelector) 
           <FlatList
             data={exerciseImages?.filter(img => img.filter === filter)}
             numColumns={4}
-            style={{ height: appScreen.vh - 400 }}
+            style={listStyle}
             renderItem={({ item, index }) => (
               <>
                 {index === 0 && (
@@ -73,12 +78,14 @@ export default function ImageSelector({ onSubmit, value = '' }: IImageSelector) 
                   style={styles.imageCard}
                 >
                   <AppImage src={item.downloadUrl} size={60} />
-                  <TextSecondary numberOfLines={1}>{item.fileName}</TextSecondary>
+                  <AppText variant='caption' tone='secondary' numberOfLines={1}>
+                    {item.fileName}
+                  </AppText>
                 </TouchableOpacity>
               </>
             )}
           />
-        </FlexCenterColumn>
+        </Stack>
       </AppModal>
     </>
   )

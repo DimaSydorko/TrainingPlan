@@ -1,4 +1,4 @@
-import { appScreen } from '@utils/constants'
+import { BAR_HEIGHT } from './bar-heights.constants'
 
 export type BarHeights = {
   /** Stack header height including the status bar inset (the header draws behind the status bar). */
@@ -10,7 +10,7 @@ export type BarHeights = {
 /** SDK 57 apps are edge-to-edge: the app's fixed bar heights grow by the system bar insets. */
 export function getBarHeights(insets: { top: number; bottom: number }): BarHeights {
   return {
-    header: appScreen.header + insets.top,
-    footer: appScreen.footer + insets.bottom,
+    header: BAR_HEIGHT.HEADER + insets.top,
+    footer: BAR_HEIGHT.FOOTER + insets.bottom,
   }
 }

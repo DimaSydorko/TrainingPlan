@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Component, ReactNode } from 'react'
 import {
   Text,
-  StyleSheet,
   Animated,
   TouchableWithoutFeedback,
   StyleProp,
@@ -11,9 +10,11 @@ import {
   AccessibilityRole,
   AccessibilityState,
 } from 'react-native'
+import { palette } from '@theme/tokens'
+import styles from './switch-lib.styles'
 import SpringAnimationConfig = Animated.SpringAnimationConfig
 
-interface SwitchProps {
+type SwitchProps = {
   onValueChange?: (value: boolean) => void
   disabled?: boolean
   activeText?: string
@@ -24,8 +25,6 @@ interface SwitchProps {
   circleActiveColor?: string
   circleInActiveColor?: string
   circleSize?: number
-  circleBorderActiveColor?: string
-  circleBorderInactiveColor?: string
   activeTextStyle?: StyleProp<TextStyle>
   inactiveTextStyle?: StyleProp<TextStyle>
   containerStyle?: StyleProp<ViewStyle>
@@ -49,7 +48,7 @@ interface SwitchProps {
   accessibilityState?: AccessibilityState
 }
 
-interface SwitchState {
+type SwitchState = {
   value?: boolean
   transformSwitch: Animated.Value
   backgroundColor: Animated.Value
@@ -65,12 +64,10 @@ export class SwitchLib extends Component<SwitchProps, SwitchState> {
     disabled: false,
     activeText: 'On',
     inActiveText: 'Off',
-    backgroundActive: 'green',
-    backgroundInactive: 'gray',
-    circleActiveColor: 'white',
-    circleInActiveColor: 'white',
-    circleBorderActiveColor: 'rgb(100, 100, 100)',
-    circleBorderInactiveColor: 'rgb(80, 80, 80)',
+    backgroundActive: palette.green800,
+    backgroundInactive: palette.grey450,
+    circleActiveColor: palette.white,
+    circleInActiveColor: palette.white,
     circleSize: 30,
     barHeight: null,
     circleBorderWidth: 1,
@@ -254,35 +251,3 @@ export class SwitchLib extends Component<SwitchProps, SwitchState> {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: 71,
-    height: 30,
-    borderRadius: 30,
-    backgroundColor: 'black',
-  },
-  animatedContainer: {
-    flex: 1,
-    width: 78,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  circle: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: 'white',
-  },
-  text: {
-    color: 'white',
-    backgroundColor: 'transparent',
-  },
-  paddingRight: {
-    paddingRight: 5,
-  },
-  paddingLeft: {
-    paddingLeft: 5,
-  },
-})

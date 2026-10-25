@@ -2,10 +2,12 @@ import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { TouchableOpacity, Vibration, ViewStyle } from 'react-native'
 import { Icon } from '../icon/icon'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
+import { useSettingsStore } from '@stores/settings/use-settings-store'
 import { VIBRATION } from '@utils/constants'
+import styles from './icon-button.styles'
 
-interface IconButtonType {
+type IconButtonType = {
   iconName: string
   onPress: () => void
   isRepeatOnLongPress?: boolean
@@ -30,7 +32,8 @@ export default function IconButton({
   style,
   testID,
 }: IconButtonType) {
-  const { colors, isVibration } = useSettings()
+  const { colors } = useAppTheme()
+  const isVibration = useSettingsStore(state => state.isVibration)
   const newColor = color || colors.textSecondary
   const [intervalID, setIntervalID] = useState<any>(null)
 
@@ -63,14 +66,7 @@ export default function IconButton({
       testID={testID}
       accessibilityRole='button'
       accessibilityState={{ disabled }}
-      style={[
-        {
-          opacity: disabled ? 0.5 : 1,
-          borderRadius: 50,
-          marginHorizontal: margin,
-        },
-        style,
-      ]}
+      style={[styles.button, { opacity: disabled ? 0.5 : 1, marginHorizontal: margin }, style]}
     >
       <Icon name={iconName} color={newColor} size={size} />
     </TouchableOpacity>

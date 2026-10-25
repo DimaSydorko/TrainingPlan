@@ -5,8 +5,13 @@ import { useNavigation } from '@react-navigation/native'
 import { changePlansPosition, selectPlan } from '@store/plans-reducer/plans-slice'
 import { plansAC } from '@store/plans-reducer/plans-ac'
 import { publicationsAC } from '@store/publications-reducer/publications-ac'
-import { useAppDispatch, usePlans, useSettings } from '@hooks/redux'
-import { AppHeader, Card, FlexEnd, FlexStart, Page, TextHeader } from '@theme/parents'
+import { useAppDispatch, usePlans } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
+import AppHeader from '@common/app-header/app-header'
+import Card from '@common/card/card'
+import Stack from '@common/stack/stack'
+import Screen from '@common/screen/screen'
+import AppText from '@common/app-text/app-text'
 import {
   AddMoreButton,
   AppModal,
@@ -22,21 +27,21 @@ import { QUERY_LIMIT, ScreenName, VIBRATION } from '@utils/constants'
 import { PlanType, PlansNavigation } from '@utils/types'
 import { icon } from '@theme/icons'
 import ShareModal from '@components/share-modal/share-modal'
-import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
+import { getExerciseColor } from '@theme/tokens'
 import NoDataIcon from '@assets/icons/no-data-icon'
+import styles from './my-plans-screen.styles'
 
 export default memo(function MyPlansScreen() {
   const navigation = useNavigation<PlansNavigation>()
   const dispatch = useAppDispatch()
   const statePlans = usePlans()
-  const { colors } = useSettings()
+  const { isDark } = useAppTheme()
   const [selectedPlanUids, setSelectedPlanUids] = useState<string[]>([])
   const [isNewPlanModal, setIsNewPlanModal] = useState(false)
   const [isDeleteModal, setIsDeleteModal] = useState(false)
   const [isShareModal, setIsShareModal] = useState(false)
   const [changePlan, setChangePlan] = useState<PlanType | null>(null)
   const isEditMode = !!selectedPlanUids.length
-  const isDarkTheme = colors.primary === colorsDark.primary
   const plans = statePlans.plans
     ?.slice()
     ?.sort((a, b) => (statePlans.sortedPlanUids.indexOf(a.uid) || 0) - statePlans.sortedPlanUids.indexOf(b.uid) || 0)
@@ -76,7 +81,7 @@ export default memo(function MyPlansScreen() {
   }, [selectedFirst])
 
   const renderItem = ({ item, drag, isActive }: DraggableRenderItemParams<PlanType>) => {
-    const color = COLORS_EXERCISE[item?.colorIdx === undefined ? 3 : item?.colorIdx][+isDarkTheme]
+    const color = getExerciseColor(item?.colorIdx === undefined ? 3 : item?.colorIdx, isDark)
     return (
       <DraggableItem>
         <Card borderLeftColor={color}>
@@ -99,10 +104,10 @@ export default memo(function MyPlansScreen() {
   return (
     <>
       {isEditMode && (
-        <AppHeader style={{ justifyContent: 'space-between' }}>
-          <FlexStart>
+        <AppHeader style={styles.header}>
+          <Stack preset='start'>
             <IconButton iconName={icon.close} onPress={() => setSelectedPlanUids([])} />
-            <TextHeader>{selectedPlanUids.length}</TextHeader>
+            <AppText variant='title'>{selectedPlanUids.length}</AppText>
             {plans.length > selectedPlanUids.length && (
               <IconButton
                 margin={10}
@@ -110,8 +115,8 @@ export default memo(function MyPlansScreen() {
                 onPress={() => setSelectedPlanUids(plans.map(p => p.uid))}
               />
             )}
-          </FlexStart>
-          <FlexEnd style={{ width: 250 }}>
+          </Stack>
+          <Stack preset='end' style={styles.headerActions}>
             {selectedPlanUids.length === 1 && (
               <IconButton iconName={icon.share} onPress={() => setIsShareModal(true)} />
             )}
@@ -123,10 +128,10 @@ export default memo(function MyPlansScreen() {
               />
             )}
             <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />
-          </FlexEnd>
+          </Stack>
         </AppHeader>
       )}
-      <Page>
+      <Screen>
         {plans?.length === 0 && <NoDataIcon />}
         <DraggableScrollContainer>
           <DraggableList
@@ -136,7 +141,7 @@ export default memo(function MyPlansScreen() {
             onDragEnd={({ data }) => dispatch(changePlansPosition(data.map(plan => plan.uid)))}
           />
         </DraggableScrollContainer>
-      </Page>
+      </Screen>
       {plans?.length <= QUERY_LIMIT && <AddMoreButton onPress={() => setIsNewPlanModal(true)} />}
       {(isNewPlanModal || !!changePlan) && (
         <EditPlanWorkout

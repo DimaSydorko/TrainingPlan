@@ -1,24 +1,26 @@
 import * as React from 'react'
 import { ViewStyle } from 'react-native'
-import { useSettings } from '@hooks/redux'
-import { FlexStart, TextSecondary } from '@theme/parents'
+import { useAppTheme } from '@theme/use-app-theme'
+import AppText from '../app-text/app-text'
+import Stack from '../stack/stack'
+import styles from './labels.styles'
 
-interface IProps {
+type LabelsProps = {
   labels: string[]
   style?: ViewStyle
 }
 
-export default function Labels({ style, labels }: IProps) {
-  const { colors } = useSettings()
+export default function Labels({ style, labels }: LabelsProps) {
+  const { colors } = useAppTheme()
   return (
-    <FlexStart style={[{ flexWrap: 'wrap' }, style]}>
+    <Stack preset='start' style={[styles.container, style]}>
       {labels
         .filter(l => !!l)
         .map((label, idx) => (
-          <TextSecondary key={idx} color={colors.secondPrimary + 'A0'}>
+          <AppText variant='caption' key={idx} color={colors.accent + 'A0'}>
             #{label}{' '}
-          </TextSecondary>
+          </AppText>
         ))}
-    </FlexStart>
+    </Stack>
   )
 }

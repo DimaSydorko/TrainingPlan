@@ -3,9 +3,9 @@ import { memo, useCallback, useMemo, useState } from 'react'
 import { defaultPlan, defaultWorkout } from '@utils/constants'
 import { PlanType, WorkoutType } from '@utils/types'
 import { AppColorPicker, AppModal, LabelsInput, MyTextInput } from '@common'
-import { FlexCenterColumn } from '@theme/parents'
+import Stack from '@common/stack/stack'
 
-interface IEditPlanWorkout {
+type EditPlanWorkoutProps = {
   isModal: boolean
   type: 'Plan' | 'Workout'
   initialValue?: WorkoutType | PlanType
@@ -13,7 +13,7 @@ interface IEditPlanWorkout {
   onSubmit: (newItem: WorkoutType | PlanType) => void
 }
 
-export default memo(function EditPlanWorkout({ onSubmit, type, isModal, onClose, initialValue }: IEditPlanWorkout) {
+export default memo(function EditPlanWorkout({ onSubmit, type, isModal, onClose, initialValue }: EditPlanWorkoutProps) {
   const isNew = !initialValue
   const initialName = useMemo(() => (isNew ? `New_${type}` : initialValue.name), [])
   const initialLabels = useMemo(() => (isNew ? [] : initialValue.labels), [])
@@ -45,7 +45,7 @@ export default memo(function EditPlanWorkout({ onSubmit, type, isModal, onClose,
       onClose={onCloseModal}
       extraPlaceLeft={<AppColorPicker value={colorIdx} onChange={setColorIdx} />}
     >
-      <FlexCenterColumn>
+      <Stack preset='centerColumn'>
         <MyTextInput
           placeholder={`${type} name`}
           onChangeText={setName}
@@ -54,7 +54,7 @@ export default memo(function EditPlanWorkout({ onSubmit, type, isModal, onClose,
           testID='editPlanWorkout.name'
         />
         <LabelsInput labels={labels} setLabels={setLabels} />
-      </FlexCenterColumn>
+      </Stack>
     </AppModal>
   )
 })

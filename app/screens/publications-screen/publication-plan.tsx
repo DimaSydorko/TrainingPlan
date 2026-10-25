@@ -1,33 +1,39 @@
 import * as React from 'react'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
-import { useSettings } from '@hooks/redux'
 import PublicButtons from '@components/publication/public-buttons'
 import { PublicationScreensParamList, WorkoutType } from '@utils/types'
-import { appScreen, ScreenName } from '@utils/constants'
-import { Card, FlexCenterColumn, FlexSpaceBetween, Page, TextSecondary } from '@theme/parents'
+import { ScreenName } from '@utils/constants'
+import Card from '@common/card/card'
+import Stack from '@common/stack/stack'
+import Screen from '@common/screen/screen'
+import AppText from '@common/app-text/app-text'
 import WorkoutCard from '../workouts-screen/workout-card'
+import { useScreen } from '@platform/screen'
+import styles from './publication-details.styles'
+import { OWNER_NAME_WIDTH_RATIO } from './publication-details.constants'
 
 type PropsType = StackScreenProps<PublicationScreensParamList, ScreenName.PublicationPlan>
 
 export default function PublicationPlan({ route, navigation }: PropsType) {
-  const { colors } = useSettings()
   const { name, workouts, ownerName } = route.params.publication
+  const { width } = useScreen()
+  const ownerNameStyle = useMemo(() => ({ width: width * OWNER_NAME_WIDTH_RATIO }), [width])
 
   useEffect(() => {
     navigation.setOptions({ title: name })
   }, [])
 
   return (
-    <Page>
-      <FlexSpaceBetween style={{ padding: 10, paddingHorizontal: 20, width: appScreen.vw }}>
-        <TextSecondary style={{ width: appScreen.vw / 2 }} color={colors.secondPrimary}>
+    <Screen>
+      <Stack preset='spaceBetween' style={[styles.header, { width }]}>
+        <AppText variant='caption' tone='accent' style={ownerNameStyle}>
           By {ownerName}
-        </TextSecondary>
+        </AppText>
         <PublicButtons isOpenedScreen publication={route.params.publication} />
-      </FlexSpaceBetween>
-      <FlexCenterColumn style={{ padding: 0 }}>
+      </Stack>
+      <Stack preset='centerColumn' style={styles.list}>
         {workouts.map(workout => (
           <TouchableOpacity
             key={workout.uid}
@@ -38,7 +44,7 @@ export default function PublicationPlan({ route, navigation }: PropsType) {
             </Card>
           </TouchableOpacity>
         ))}
-      </FlexCenterColumn>
-    </Page>
+      </Stack>
+    </Screen>
   )
 }

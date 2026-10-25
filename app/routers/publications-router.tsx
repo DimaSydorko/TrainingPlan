@@ -1,9 +1,10 @@
 import * as React from 'react'
 import { memo, useEffect } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import { useAppDispatch, useSettings } from '@hooks/redux'
+import { useAppDispatch } from '@hooks/redux'
+import { useIsOnline } from '@stores/network/use-network-store'
 import { ScreenName } from '@utils/constants'
-import { useScreenOptions } from '@theme/parents'
+import { useScreenOptions } from '@theme/navigation-theme'
 import { PublicationsScreen } from '@screens'
 import { publicationsAC } from '@store/publications-reducer/publications-ac'
 import PublicationPlan from '@screens/publications-screen/publication-plan'
@@ -15,13 +16,13 @@ const Stack = createStackNavigator<PublicationsStackParamList, 'PublicationsStac
 export default memo(function PublicationsRouter() {
   const dispatch = useAppDispatch()
   const options = useScreenOptions()
-  const { internet } = useSettings()
+  const isOnline = useIsOnline()
 
   useEffect(() => {
-    if (internet.isOnline) {
+    if (isOnline) {
       dispatch(publicationsAC.get({}))
     }
-  }, [internet.isOnline])
+  }, [isOnline])
 
   return (
     <Stack.Navigator id='PublicationsStack'>

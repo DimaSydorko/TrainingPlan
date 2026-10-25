@@ -1,0 +1,8 @@
+export const PLAYING_GUTTER = {
+  TIMER: 120,
+  TIMER_CONTENT: 160,
+  RESULTS: 140,
+  SAVE_BUTTON: 80,
+} as const
+
+export const TRANSPARENT_HEX_ALPHA = '00'

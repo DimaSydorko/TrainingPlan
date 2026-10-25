@@ -1,21 +1,22 @@
 import * as React from 'react'
-import { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { LayoutAnimation, TouchableOpacity, View } from 'react-native'
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer'
 import { useNavigation } from '@react-navigation/native'
 import { activateKeepAwake, deactivateKeepAwake } from '@platform/keep-awake'
 
 import usePlaying, { cueDelayMs } from '@hooks/use-playing'
-import { appScreen } from '@utils/constants'
+import { useScreen } from '@platform/screen'
 import useTTS from '@hooks/use-tts'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
+import { useSettingsStore } from '@stores/settings/use-settings-store'
 import { getWorkoutDuration } from '@utils'
 import { AppNavigationType } from '@utils/types'
 import { AppImage, ConfirmButton, GoBackSubmitModal, IconButton } from '@common'
 import { secondsToMinSec } from '@components/workout-duration/workout-duration'
-import { FlexCenterColumn, FlexSpaceBetween, TextHeader, TextSecondary } from '@theme/parents'
-import { COLORS_EXERCISE, colorsDark, colorsFixed } from '@theme/colors'
-import { theme } from '@theme/theme'
+import Stack from '@common/stack/stack'
+import AppText from '@common/app-text/app-text'
+import { getExerciseColor } from '@theme/tokens'
 import { icon } from '@theme/icons'
 import { useAppInsets } from '@theme/insets'
 
@@ -25,13 +26,22 @@ import TimeObserver from './components/time-observer'
 import PlayHeader from './components/play-header'
 import styles from './styles'
 import useBackgroundCues from './use-background-cues'
+import { PLAYING_GUTTER, TRANSPARENT_HEX_ALPHA } from './playing-screen.constants'
 
 export default memo(function PlayingScreen() {
-  const { colors, workout, isSaveBatteryMode, sound, isVibration } = useSettings()
+  const { colors, isDark } = useAppTheme()
+  const workout = useSettingsStore(state => state.workout)
+  const isSaveBatteryMode = useSettingsStore(state => state.isSaveBatteryMode)
+  const sound = useSettingsStore(state => state.sound)
+  const isVibration = useSettingsStore(state => state.isVibration)
   const onSay = useTTS()
   const navigation = useNavigation<AppNavigationType>()
   // Edge-to-edge: keep the header below the status bar and the controls above the navigation bar
   const { top, bottom, footer } = useAppInsets()
+  const { width } = useScreen()
+  const timerContentMaxSize = width - PLAYING_GUTTER.TIMER_CONTENT
+  const resultsStyle = useMemo(() => ({ width: width - PLAYING_GUTTER.RESULTS }), [width])
+  const saveButtonStyle = useMemo(() => ({ width: width - PLAYING_GUTTER.SAVE_BUTTON }), [width])
   const {
     isPlaying,
     isWaitForSubmit,
@@ -60,9 +70,7 @@ export default memo(function PlayingScreen() {
   const [isWorkoutReview, setIsWorkoutReview] = useState<boolean>(false)
   const [isSubmitGoBack, setIsSubmitGoBack] = useState<boolean>(false)
   const [isInvisibleTimerCircle, setIsInvisibleTimerCircle] = useState<boolean>(false)
-
-  const isDarkTheme = colors.primary === colorsDark.primary
-  const color = COLORS_EXERCISE[exercise?.colorIdx || 0][+isDarkTheme]
+  const color = getExerciseColor(exercise?.colorIdx || 0, isDark)
   const isTheLastOneComplete = isWaitForSubmit && isTheLastOne
 
   const weightDiff = currentWeight - approach?.weight || 0
@@ -140,9 +148,10 @@ export default memo(function PlayingScreen() {
   }, [setIsWorkoutReview])
 
   return (
-    <View
+    <Stack
+      preset='centerColumn'
       testID='playing.screen'
-      style={[theme.containers.centerColumn, styles.page, { backgroundColor: colors.background, paddingTop: top }]}
+      style={[styles.page, { backgroundColor: colors.background, paddingTop: top }]}
     >
       <PlayHeader
         isPlaying={isPlaying}
@@ -151,25 +160,31 @@ export default memo(function PlayingScreen() {
         workoutDurationTime={workoutDurationTime}
       />
 
-      <FlexCenterColumn>
+      <Stack preset='centerColumn'>
         <View style={styles.nextExercise}>
           {!isTheLastOneComplete && (
             <>
-              <TextSecondary center>Next up</TextSecondary>
+              <AppText variant='caption' tone='secondary' align='center'>
+                Next up
+              </AppText>
               {!!exerciseNext ? (
                 <>
-                  <TextSecondary center color={COLORS_EXERCISE[exerciseNext?.colorIdx || 0][+isDarkTheme]}>
+                  <AppText
+                    variant='caption'
+                    align='center'
+                    color={getExerciseColor(exerciseNext?.colorIdx || 0, isDark)}
+                  >
                     {exerciseNext.name}
-                  </TextSecondary>
-                  <TextSecondary center>
+                  </AppText>
+                  <AppText variant='caption' tone='secondary' align='center'>
                     Laps {exerciseNext.laps}
                     {!!exerciseNext.approaches[0]?.weight && `    Weight ${exerciseNext.approaches[0]?.weight} kg`}
-                  </TextSecondary>
+                  </AppText>
                 </>
               ) : (
-                <TextSecondary center color={colors.secondPrimary}>
+                <AppText variant='caption' tone='accent' align='center'>
                   Finish
-                </TextSecondary>
+                </AppText>
               )}
             </>
           )}
@@ -185,30 +200,44 @@ export default memo(function PlayingScreen() {
                 ? Math.min(duration, timerSync.initialRemainingSec)
                 : undefined
             }
-            colors={isInvisibleTimerCircle ? new Array(3).fill('#00000000') : (color as any)}
+            colors={
+              isInvisibleTimerCircle
+                ? new Array(3).fill(`${colors.staticBlack}${TRANSPARENT_HEX_ALPHA}`)
+                : (color as any)
+            }
             colorsTime={[exercise.breakTimeInSec, exercise.breakTimeInSec / 2, 0]}
             strokeWidth={14}
-            trailColor={colors.menu as any}
+            trailColor={colors.surfaceElevated as any}
             // Segment completion and the spoken countdown are driven by the timestamp clock in usePlaying
-            size={appScreen.vw - 120}
+            size={width - PLAYING_GUTTER.TIMER}
           >
             {() => (
-              <FlexCenterColumn style={styles.timerContent}>
+              <Stack
+                preset='centerColumn'
+                style={[styles.timerContent, { maxWidth: timerContentMaxSize, maxHeight: timerContentMaxSize }]}
+              >
                 {!!exercise.imageUrl && <AppImage size={100} src={exercise.imageUrl} />}
-                <TextHeader center color={color} style={{ fontSize: 24 }} ellipsizeMode='tail' numberOfLines={2}>
+                <AppText
+                  variant='title'
+                  align='center'
+                  color={color}
+                  style={styles.exerciseName}
+                  ellipsizeMode='tail'
+                  numberOfLines={2}
+                >
                   {exercise.name}
-                </TextHeader>
-                <TextHeader color={colors.text} style={{ fontSize: 22 }}>
+                </AppText>
+                <AppText variant='title' style={styles.remainingTime}>
                   {secondsToMinSec(displayRemainingSec, false)}
-                </TextHeader>
+                </AppText>
                 <TimeObserver time={displayRemainingSec} />
-              </FlexCenterColumn>
+              </Stack>
             )}
           </CountdownCircleTimer>
         </TouchableOpacity>
 
         {!!exercise.repeats && (
-          <View style={{ width: appScreen.vw - 140 }}>
+          <View style={resultsStyle}>
             <Results
               type={'weight'}
               step={workout.weightStep}
@@ -230,21 +259,22 @@ export default memo(function PlayingScreen() {
         {isTheLastOneComplete && (
           <ConfirmButton
             header={'Save Result'}
-            style={{ width: appScreen.vw - 80 }}
+            style={saveButtonStyle}
             onPress={onSaveResult}
             testID='playing.saveResult'
           />
         )}
-      </FlexCenterColumn>
+      </Stack>
 
-      <FlexSpaceBetween
+      <Stack
+        preset='spaceBetween'
         style={[
           styles.footer,
           {
             height: footer,
             paddingBottom: bottom,
-            backgroundColor: colors.menu,
-            shadowColor: colorsFixed.shadow,
+            backgroundColor: colors.surfaceElevated,
+            shadowColor: colors.shadow,
           },
         ]}
       >
@@ -252,16 +282,16 @@ export default memo(function PlayingScreen() {
           onPress={toggleWorkoutReview}
           testID='playing.review'
           iconName={isWorkoutReview ? icon.timer : icon.list}
-          color={colors.black}
+          color={colors.inverse}
           size={35}
         />
-        <FlexSpaceBetween style={{ width: '50%' }}>
+        <Stack preset='spaceBetween' style={styles.controls}>
           <IconButton
             onPress={onPrevious}
             testID='playing.previous'
             disabled={playing.idx <= 0 && playing.lap <= 1}
             iconName={icon.skipPrevious}
-            color={colors.black}
+            color={colors.inverse}
             size={35}
           />
           <IconButton
@@ -277,12 +307,18 @@ export default memo(function PlayingScreen() {
             testID='playing.next'
             disabled={isTheLastOneComplete}
             iconName={icon.skipNext}
-            color={colors.black}
+            color={colors.inverse}
             size={35}
           />
-        </FlexSpaceBetween>
-        <IconButton onPress={onReload} iconName={icon.restart} color={colors.black} size={35} testID='playing.reload' />
-      </FlexSpaceBetween>
+        </Stack>
+        <IconButton
+          onPress={onReload}
+          iconName={icon.restart}
+          color={colors.inverse}
+          size={35}
+          testID='playing.reload'
+        />
+      </Stack>
       {isWorkoutReview && (
         <PlayingReview
           playingWorkout={playingWorkout}
@@ -293,6 +329,6 @@ export default memo(function PlayingScreen() {
         />
       )}
       {!isSubmitGoBack && <GoBackSubmitModal text={'Current results will be lost!'} onConfirm={onGoBack} />}
-    </View>
+    </Stack>
   )
 })

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { appScreen } from '@utils/constants'
+import { spacing } from '@theme/tokens'
 
 export default StyleSheet.create({
   container: {
@@ -16,7 +16,6 @@ export default StyleSheet.create({
     zIndex: 10,
   },
   confirmButton: {
-    width: appScreen.vw - 80,
-    marginBottom: 20,
+    marginBottom: spacing.xl,
   },
 })

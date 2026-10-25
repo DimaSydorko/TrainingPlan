@@ -1,12 +1,15 @@
 import * as React from 'react'
 import { ReactNode } from 'react'
-import { Modal, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native'
+import { Modal, StyleProp, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native'
 import { ConfirmButton } from '../index'
-import { useSettings } from '@hooks/redux'
-import { FlexCenter, FlexEnd, FlexStart, TextHeader, TextSecondary } from '@theme/parents'
+import { useAppTheme } from '@theme/use-app-theme'
+import AppText from '../app-text/app-text'
+import Stack from '../stack/stack'
+import { useScreen } from '@platform/screen'
 import styles from './styles'
+import { MODAL_GUTTER } from './app-modal.constants'
 
-interface AppModalType {
+type AppModalType = {
   onConfirm: () => void
   onClose: () => void
   onRefuse?: () => void
@@ -20,8 +23,8 @@ interface AppModalType {
   extraPlaceRight?: ReactNode
   extraPlaceLeft?: ReactNode
   children?: ReactNode
-  style?: ViewStyle
-  headerStyle?: TextStyle
+  style?: StyleProp<ViewStyle>
+  headerStyle?: StyleProp<TextStyle>
 }
 
 export default function AppModal({
@@ -41,22 +44,39 @@ export default function AppModal({
   style,
   headerStyle,
 }: AppModalType) {
-  const { colors } = useSettings()
-  const buttonStyle: ViewStyle = !onRefuse ? { width: '40%' } : { marginHorizontal: 6, width: '30%' }
+  const { colors } = useAppTheme()
+  const { width } = useScreen()
+  const buttonStyle = onRefuse ? styles.buttonWithRefuse : styles.button
   return (
     <Modal animationType='fade' transparent={true} visible={isOpen} onTouchStart={onClose} onRequestClose={onClose}>
-      <FlexCenter style={styles.modal}>
-        <View style={[styles.container, { backgroundColor: colors.background }, style]}>
-          <FlexCenter>
-            {!!extraPlaceLeft && <FlexStart style={styles.extraPlaceLeft}>{extraPlaceLeft}</FlexStart>}
-            <TextHeader style={headerStyle}>{header}</TextHeader>
-            {!!extraPlaceRight && <FlexEnd style={styles.extraPlaceRight}>{extraPlaceRight}</FlexEnd>}
-          </FlexCenter>
-          <FlexCenter style={styles.content}>
-            {text && <TextSecondary style={styles.text}>{text}</TextSecondary>}
+      <Stack preset='center' style={styles.modal}>
+        <View
+          style={[styles.container, { width: width - MODAL_GUTTER }, { backgroundColor: colors.background }, style]}
+        >
+          <Stack preset='center'>
+            {!!extraPlaceLeft && (
+              <Stack preset='start' style={styles.extraPlaceLeft}>
+                {extraPlaceLeft}
+              </Stack>
+            )}
+            <AppText variant='title' style={headerStyle}>
+              {header}
+            </AppText>
+            {!!extraPlaceRight && (
+              <Stack preset='end' style={styles.extraPlaceRight}>
+                {extraPlaceRight}
+              </Stack>
+            )}
+          </Stack>
+          <Stack preset='center' style={styles.content}>
+            {text && (
+              <AppText variant='caption' tone='secondary' style={styles.text}>
+                {text}
+              </AppText>
+            )}
             {children}
-          </FlexCenter>
-          <FlexCenter>
+          </Stack>
+          <Stack preset='center'>
             <ConfirmButton
               header={'Cancel'}
               color={colors.disabled}
@@ -68,7 +88,7 @@ export default function AppModal({
               <ConfirmButton
                 header={'No'}
                 testID='appModal.refuse'
-                color={colors.error}
+                color={colors.danger}
                 style={buttonStyle}
                 onPress={() => {
                   onRefuse()
@@ -79,7 +99,7 @@ export default function AppModal({
             <ConfirmButton
               header={confirmText}
               testID='appModal.confirm'
-              color={isWarning ? colors.error : colors.primary}
+              color={isWarning ? colors.danger : colors.primary}
               style={buttonStyle}
               disabled={disabled}
               onPress={() => {
@@ -87,10 +107,10 @@ export default function AppModal({
                 !disableAutoClose && onClose()
               }}
             />
-          </FlexCenter>
+          </Stack>
         </View>
-        <TouchableOpacity onPress={onClose} style={[styles.emptySpace, { backgroundColor: `${colors.black}40` }]} />
-      </FlexCenter>
+        <TouchableOpacity onPress={onClose} style={[styles.emptySpace, { backgroundColor: `${colors.inverse}40` }]} />
+      </Stack>
     </Modal>
   )
 }

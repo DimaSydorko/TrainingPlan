@@ -14,12 +14,12 @@ type AddType = (PlanType | WorkoutType) & {
   exercises?: ExerciseType[]
 }
 
-export interface LikeToggleType {
+export type LikeToggleType = {
   publicationUid: string
   isLiked: boolean
 }
 
-export interface getType {
+export type getType = {
   isYours?: boolean
   labels?: string[]
   lastVisible?: PublicType

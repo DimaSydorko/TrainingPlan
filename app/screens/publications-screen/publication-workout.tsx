@@ -1,45 +1,52 @@
 import * as React from 'react'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { StackScreenProps } from '@react-navigation/stack'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { WorkoutDuration } from '@common'
-import { Card, FlexCenterColumn, FlexSpaceBetween, Page, TextSecondary } from '@theme/parents'
+import Card from '@common/card/card'
+import Stack from '@common/stack/stack'
+import Screen from '@common/screen/screen'
+import AppText from '@common/app-text/app-text'
 import { PublicType, PublicationScreensParamList } from '@utils/types'
 import Exercise from '@components/exercise/exercise'
-import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
+import { getExerciseColor } from '@theme/tokens'
 import NoDataIcon from '@assets/icons/no-data-icon'
-import { appScreen, ScreenName } from '@utils/constants'
+import { ScreenName } from '@utils/constants'
 import PublicButtons from '@components/publication/public-buttons'
+import { useScreen } from '@platform/screen'
+import styles from './publication-details.styles'
+import { OWNER_NAME_WIDTH_RATIO } from './publication-details.constants'
 
 type PropsType = StackScreenProps<PublicationScreensParamList, ScreenName.PublicationWorkout>
 
 export default function PublicationWorkout({ route, navigation }: PropsType) {
-  const { colors } = useSettings()
+  const { isDark } = useAppTheme()
   const { name, exercises, ownerName } = route.params.workout
-  const isDarkTheme = colors.primary === colorsDark.primary
+  const { width } = useScreen()
+  const ownerNameStyle = useMemo(() => ({ width: width * OWNER_NAME_WIDTH_RATIO }), [width])
 
   useEffect(() => {
     navigation.setOptions({ title: name })
   }, [])
 
   return (
-    <Page>
-      <FlexSpaceBetween style={{ padding: 10, paddingHorizontal: 20, width: appScreen.vw }}>
-        <FlexCenterColumn style={{ alignItems: 'flex-start' }}>
+    <Screen>
+      <Stack preset='spaceBetween' style={[styles.header, { width }]}>
+        <Stack preset='centerColumn' style={styles.ownerColumn}>
           {!!ownerName && (
-            <TextSecondary style={{ width: appScreen.vw / 2 }} color={colors.secondPrimary}>
+            <AppText variant='caption' tone='accent' style={ownerNameStyle}>
               By {ownerName}
-            </TextSecondary>
+            </AppText>
           )}
           <WorkoutDuration exercises={exercises} />
-        </FlexCenterColumn>
+        </Stack>
         {!!ownerName && <PublicButtons isOpenedScreen publication={route.params.workout as PublicType} />}
-      </FlexSpaceBetween>
-      <FlexCenterColumn style={{ padding: 0 }}>
+      </Stack>
+      <Stack preset='centerColumn' style={styles.list}>
         {exercises.length ? (
           exercises.map(ex => {
-            const color = COLORS_EXERCISE[ex?.colorIdx || 0][+isDarkTheme]
+            const color = getExerciseColor(ex?.colorIdx || 0, isDark)
             return (
               <TouchableOpacity key={ex.uid}>
                 <Card>
@@ -51,7 +58,7 @@ export default function PublicationWorkout({ route, navigation }: PropsType) {
         ) : (
           <NoDataIcon />
         )}
-      </FlexCenterColumn>
-    </Page>
+      </Stack>
+    </Screen>
   )
 }

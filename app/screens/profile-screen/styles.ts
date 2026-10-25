@@ -1,15 +1,16 @@
 import { StyleSheet } from 'react-native'
-import { appScreen } from '@utils/constants'
+import { spacing } from '@theme/tokens'
 
 export default StyleSheet.create({
   profileContainer: {
-    marginBottom: 20,
+    marginBottom: spacing.xl,
   },
   settingsButton: {
     marginRight: 10,
     marginTop: 10,
   },
   signOutButton: {
-    marginRight: appScreen.vw - 92,
+    marginLeft: 10,
+    marginRight: 'auto',
   },
 })

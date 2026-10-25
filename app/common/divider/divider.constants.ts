@@ -1,0 +1,1 @@
+export const DIVIDER_DEFAULT_WIDTH = 2

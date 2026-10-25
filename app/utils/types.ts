@@ -2,18 +2,18 @@ import type { NavigatorScreenParams, ParamListBase } from '@react-navigation/nat
 import type { StackNavigationProp } from '@react-navigation/stack'
 import { ScreenName, TabName } from './constants'
 
-export interface UserType {
+export type UserType = {
   uid: string
   displayName: string
   photoURL: string | null
   email: string
 }
 
-export interface UserDataType {
+export type UserDataType = {
   friendsUIDs: string[]
 }
 
-export interface StoredFile {
+export type StoredFile = {
   fileName: string
   storageKey: string
   downloadUrl: string
@@ -22,7 +22,7 @@ export interface StoredFile {
 export type ExerciseImageFilterType = 'home' | 'gym' | 'street'
 export type StoredExerciseImage = StoredFile & { filter: ExerciseImageFilterType }
 
-export interface ApproachType {
+export type ApproachType = {
   weight: number
   repeats: number
 }
@@ -32,7 +32,7 @@ export type SelectedApproachType = ApproachType & {
   currentWeight?: number
 }
 
-export interface ExerciseType {
+export type ExerciseType = {
   uid: string
   name: string
   breakTimeInSec: number
@@ -58,7 +58,7 @@ export type PublicType = Omit<WorkoutType, 'exercises'> &
     downloads: string[]
   }
 
-export interface WorkoutType {
+export type WorkoutType = {
   uid: string
   colorIdx: number
   name: string
@@ -68,7 +68,7 @@ export interface WorkoutType {
   lastUpdated?: number
 }
 
-export interface PlanType {
+export type PlanType = {
   uid: string
   colorIdx: number
   ownerUid: string
@@ -76,23 +76,6 @@ export interface PlanType {
   workouts: WorkoutType[]
   labels: string[]
   lastUpdated: number
-}
-
-export interface ColorsType {
-  primary: string
-  secondPrimary: string
-
-  error: string
-  info: string
-  disabled: string
-
-  black: string
-  white: string
-
-  background: string
-  text: string
-  textSecondary: string
-  menu: string
 }
 
 export type SetStateType<S> = (arg: S | ((prevState: S) => S)) => void

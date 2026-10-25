@@ -1,11 +1,12 @@
 import * as React from 'react'
 import { memo, useEffect } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import { useAppDispatch, useSettings, useUser } from '@hooks/redux'
+import { useAppDispatch, useUser } from '@hooks/redux'
+import { useIsOnline } from '@stores/network/use-network-store'
 import { Loading } from '@common'
 import { ScreenName } from '@utils/constants'
 import { ProfileScreen, SettingsScreen } from '@screens'
-import { useScreenOptions } from '@theme/parents'
+import { useScreenOptions } from '@theme/navigation-theme'
 import { publicationsAC } from '@store/publications-reducer/publications-ac'
 import PublicationPlan from '@screens/publications-screen/publication-plan'
 import PublicationWorkout from '@screens/publications-screen/publication-workout'
@@ -17,13 +18,13 @@ export default memo(function ProfileRouter() {
   const dispatch = useAppDispatch()
   const options = useScreenOptions()
   const user = useUser()
-  const { internet } = useSettings()
+  const isOnline = useIsOnline()
 
   useEffect(() => {
-    if (internet.isOnline) {
+    if (isOnline) {
       dispatch(publicationsAC.get({ isYours: true }))
     }
-  }, [internet.isOnline])
+  }, [isOnline])
 
   return (
     <>

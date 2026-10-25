@@ -1,0 +1,3 @@
+export const APP_FOOTER_Z_INDEX = 100
+
+export const APP_FOOTER_HORIZONTAL_PADDING = 30

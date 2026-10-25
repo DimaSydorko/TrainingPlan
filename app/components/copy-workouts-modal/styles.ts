@@ -1,14 +1,13 @@
 import { StyleSheet } from 'react-native'
-import { appScreen } from '@utils/constants'
+import { spacing } from '@theme/tokens'
 
 export default StyleSheet.create({
   container: {
-    marginHorizontal: 20,
+    marginHorizontal: spacing.xl,
     marginTop: 10,
-    maxHeight: appScreen.vh - (appScreen.header + appScreen.footer) * 2,
   },
   plan: {
-    margin: 2,
+    margin: spacing.xxs,
     padding: 6,
     width: '100%',
     display: 'flex',
@@ -21,7 +20,6 @@ export default StyleSheet.create({
     zIndex: 0,
   },
   textHeader: {
-    width: appScreen.vw - 210,
     zIndex: 1,
   },
 })

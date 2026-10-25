@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { LikeToggleType, publicationsAC } from './publications-ac'
 import { PublicType } from '@utils/types'
 
-export interface PublicationsSliceType {
+export type PublicationsSliceType = {
   publications: PublicType[]
   userPublications: PublicType[]
   isPublicationsAll: boolean

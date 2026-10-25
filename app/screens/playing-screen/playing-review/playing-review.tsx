@@ -2,16 +2,18 @@ import * as React from 'react'
 import { memo, useEffect, useRef } from 'react'
 import { ScrollView, View } from 'react-native'
 
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { SelectedWorkoutType } from '@utils/types'
 import Exercise from '@components/exercise/exercise'
 import { ConfirmButton } from '@common'
-import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
-import { Card } from '@theme/parents'
+import { getExerciseColor } from '@theme/tokens'
+import Card from '@common/card/card'
 import { useAppInsets } from '@theme/insets'
+import { useScreen } from '@platform/screen'
 import styles from './styles'
+import { PLAYING_GUTTER } from '../playing-screen.constants'
 
-interface IProps {
+type PropsType = {
   playingWorkout: SelectedWorkoutType
   playingExerciseIdx: number
   playingExerciseLap: number
@@ -25,12 +27,12 @@ export default memo(function PlayingReview({
   playingExerciseLap,
   isTheLastOneComplete,
   onSaveResult,
-}: IProps) {
-  const { colors } = useSettings()
+}: PropsType) {
+  const { colors, isDark } = useAppTheme()
   // Sits between the playing header and footer, both of which grow by the system bar insets
   const { top, bottom } = useAppInsets()
+  const { width } = useScreen()
   const scrollRef = useRef<ScrollView>(null)
-  const isDarkTheme = colors.primary === colorsDark.primary
 
   useEffect(() => {
     if (isTheLastOneComplete) {
@@ -55,14 +57,15 @@ export default memo(function PlayingReview({
             <Card
               style={[
                 {
-                  borderColor: playingExerciseIdx === idx && !isTheLastOneComplete ? colors.primary : colors.menu,
+                  borderColor:
+                    playingExerciseIdx === idx && !isTheLastOneComplete ? colors.primary : colors.surfaceElevated,
                   borderWidth: 2,
                   opacity: playingExerciseIdx <= idx && !isTheLastOneComplete ? 1 : 0.8,
                 },
               ]}
             >
               <Exercise
-                color={COLORS_EXERCISE[exercise?.colorIdx || 0][+isDarkTheme]}
+                color={getExerciseColor(exercise?.colorIdx || 0, isDark)}
                 key={exercise.uid}
                 exercise={exercise}
                 playingExerciseLap={
@@ -73,7 +76,11 @@ export default memo(function PlayingReview({
           </View>
         ))}
         {isTheLastOneComplete && (
-          <ConfirmButton header={'Save Result'} style={styles.confirmButton} onPress={onSaveResult} />
+          <ConfirmButton
+            header={'Save Result'}
+            style={[styles.confirmButton, { width: width - PLAYING_GUTTER.SAVE_BUTTON }]}
+            onPress={onSaveResult}
+          />
         )}
       </ScrollView>
     </View>

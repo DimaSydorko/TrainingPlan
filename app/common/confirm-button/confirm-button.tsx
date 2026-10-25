@@ -1,18 +1,17 @@
 import * as React from 'react'
-import { Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native'
-import { useSettings } from '@hooks/redux'
-import { colorsFixed } from '@theme/colors'
+import { StyleProp, TextStyle, TouchableOpacity, ViewStyle } from 'react-native'
+import { useAppTheme } from '@theme/use-app-theme'
+import AppText from '../app-text/app-text'
 import styles from './styles'
-import { appScreen } from '@utils/constants'
 
-interface ConfirmButtonType {
+type ConfirmButtonType = {
   header: string
   onPress: () => void
   headerStyle?: TextStyle
   disabled?: boolean
   isFooter?: boolean
   color?: string
-  style?: ViewStyle
+  style?: StyleProp<ViewStyle>
   testID?: string
 }
 
@@ -26,13 +25,13 @@ export default function ConfirmButton({
   disabled = false,
   testID,
 }: ConfirmButtonType) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const newColor = color || colors.primary
   return (
     <TouchableOpacity
       style={[
         styles.button,
-        isFooter ? { marginTop: 0, width: '90%', height: appScreen.footer - 16, paddingVertical: 0 } : {},
+        isFooter && styles.footerButton,
         {
           backgroundColor: disabled ? colors.disabled : newColor,
           opacity: disabled ? 0.8 : 1,
@@ -46,7 +45,9 @@ export default function ConfirmButton({
       accessibilityRole='button'
       accessibilityState={{ disabled }}
     >
-      <Text style={[styles.buttonTitle, { color: colorsFixed.white }, headerStyle]}>{header}</Text>
+      <AppText variant='link' color={colors.onPrimary} style={headerStyle}>
+        {header}
+      </AppText>
     </TouchableOpacity>
   )
 }

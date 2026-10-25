@@ -1,30 +1,25 @@
 import * as React from 'react'
-import { memo, ReactNode } from 'react'
-import { StyleSheet, View } from 'react-native'
-import { TextSecondary } from '@theme/parents'
-import { appScreen } from '@utils/constants'
+import { memo, ReactNode, useMemo } from 'react'
+import { View } from 'react-native'
+import AppText from '@common/app-text/app-text'
+import { useScreen } from '@platform/screen'
+import styles from './settings-header.styles'
 
-interface IProps {
+type PropsType = {
   label: string
   children?: ReactNode
 }
 
-export default memo(function SettingsHeader({ label, children }: IProps) {
+export default memo(function SettingsHeader({ label, children }: PropsType) {
+  const { width } = useScreen()
+  const containerStyle = useMemo(() => ({ width }), [width])
+
   return (
-    <View style={styles.container}>
-      <TextSecondary style={styles.label}>{label}</TextSecondary>
+    <View style={containerStyle}>
+      <AppText variant='caption' tone='secondary' style={styles.label}>
+        {label}
+      </AppText>
       {children}
     </View>
   )
-})
-
-const styles = StyleSheet.create({
-  container: {
-    width: appScreen.vw,
-  },
-  label: {
-    marginLeft: 10,
-    marginTop: 12,
-    marginBottom: 6,
-  },
 })

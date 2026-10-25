@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AppState, Vibration } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
-import { useAppDispatch, useSettings, useWorkout } from './redux'
+import { useAppDispatch, useWorkout } from './redux'
+import { useSettingsStore } from '@stores/settings/use-settings-store'
 import { workoutAC } from '@store/workout-reducer/workout-ac'
 import { AppNavigationType, SelectedExerciseType, SelectedWorkoutType, WorkoutType } from '@utils/types'
 import { SOUND_CUE_DURATION_MS, VIBRATION } from '@utils/constants'
@@ -47,7 +48,8 @@ export default function usePlaying() {
   const onSay = useTTS()
   const { selectedWorkout } = useWorkout()
   const navigation = useNavigation<AppNavigationType>()
-  const { isVibration, sound } = useSettings()
+  const isVibration = useSettingsStore(state => state.isVibration)
+  const sound = useSettingsStore(state => state.sound)
   const [playing, setPlaying] = useState<PlayingType>(initialPlaying)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isWaitForSubmit, setIsWaitForSubmit] = useState(false)

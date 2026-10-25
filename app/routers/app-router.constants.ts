@@ -1,0 +1,1 @@
+export const TAB_BAR_VERTICAL_PADDING = 5

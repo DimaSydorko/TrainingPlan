@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { radius } from '@theme/tokens'
 
 export default StyleSheet.create({
   listContainer: {
@@ -14,7 +15,7 @@ export default StyleSheet.create({
     width: 70,
   },
   imageC: {
-    borderRadius: 100,
+    borderRadius: radius.round,
     overflow: 'hidden',
     margin: 3,
   },
@@ -25,6 +26,9 @@ export default StyleSheet.create({
   imageButton: {
     height: 30,
     width: 30,
+  },
+  selectedImage: {
+    borderWidth: 4,
   },
   selectedContainer: {
     height: 65,

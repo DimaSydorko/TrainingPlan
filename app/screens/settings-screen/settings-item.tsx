@@ -1,13 +1,17 @@
 import * as React from 'react'
-import { memo, useEffect, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { memo, useEffect, useMemo, useState } from 'react'
+import { View } from 'react-native'
 import Slider from '@react-native-community/slider'
-import { useSettings } from '@hooks/redux'
-import { Divider, FlexSpaceBetween, TextOrdinary, TextSecondary } from '@theme/parents'
-import { appScreen } from '@utils/constants'
+import { useAppTheme } from '@theme/use-app-theme'
+import Divider from '@common/divider/divider'
+import Stack from '@common/stack/stack'
+import AppText from '@common/app-text/app-text'
+import { useScreen } from '@platform/screen'
 import { MySwitch } from '@common'
+import { SETTINGS_LABEL_GUTTER } from './settings-item.constants'
+import styles from './settings-item.styles'
 
-interface IProps {
+type PropsType = {
   label: string
   valueSwitch?: boolean
   onToggleSwitch?: () => void
@@ -32,26 +36,29 @@ export default memo(function SettingsItem({
   sliderValueType = '',
   onSliderChange,
   testID,
-}: IProps) {
-  const { colors } = useSettings()
+}: PropsType) {
+  const { colors } = useAppTheme()
   const [valSlider, setValSlider] = useState<number>(valueSlider)
+  const { width } = useScreen()
+  const containerStyle = useMemo(() => ({ width }), [width])
+  const labelStyle = useMemo(() => ({ width: width - SETTINGS_LABEL_GUTTER }), [width])
 
   useEffect(() => {
     setValSlider(p => (p !== valueSlider ? valueSlider : p))
   }, [valueSlider])
 
   return (
-    <View style={styles.container}>
-      <FlexSpaceBetween style={styles.content}>
-        <TextOrdinary style={{ width: appScreen.vw - 100 }}>{label}</TextOrdinary>
+    <View style={containerStyle}>
+      <Stack preset='spaceBetween' style={styles.content}>
+        <AppText style={labelStyle}>{label}</AppText>
         {!!onToggleSwitch && <MySwitch value={valueSwitch} onValueChange={onToggleSwitch} testID={testID} />}
         {!!onSliderChange && (
-          <TextSecondary>
+          <AppText variant='caption' tone='secondary'>
             {valSlider}
             {sliderValueType}
-          </TextSecondary>
+          </AppText>
         )}
-      </FlexSpaceBetween>
+      </Stack>
       {!!onSliderChange && (
         <Slider
           value={valSlider}
@@ -60,28 +67,14 @@ export default memo(function SettingsItem({
           maximumValue={sliderMaxValue}
           onValueChange={v => setValSlider(Math.round(v * 100) / 100)}
           style={styles.slider}
-          thumbTintColor={colors.secondPrimary}
+          thumbTintColor={colors.accent}
           maximumTrackTintColor={colors.disabled}
-          minimumTrackTintColor={colors.secondPrimary}
+          minimumTrackTintColor={colors.accent}
           // The native slider (community/slider 5) does not deliver responder events reliably
           onSlidingComplete={v => onSliderChange(Math.round(v * 100) / 100)}
         />
       )}
-      <Divider width={1} color={`${colors.black}40`} />
+      <Divider width={1} color={`${colors.inverse}40`} />
     </View>
   )
-})
-
-const styles = StyleSheet.create({
-  container: {
-    width: appScreen.vw,
-  },
-  content: {
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-  },
-  slider: {
-    marginBottom: 10,
-    marginHorizontal: 2,
-  },
 })

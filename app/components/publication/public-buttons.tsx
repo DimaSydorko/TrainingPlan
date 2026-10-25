@@ -3,22 +3,25 @@ import { memo, useCallback, useContext, useState } from 'react'
 import { View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { publicationsAC } from '@store/publications-reducer/publications-ac'
-import { useAppDispatch, useSettings, useUser } from '@hooks/redux'
+import { useAppDispatch, useUser } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { AppHelperContext } from '@hooks/app-helper-provider'
 import { AppNavigationType, PublicType } from '@utils/types'
-import { FlexEnd, TextSecondary } from '@theme/parents'
+import AppText from '@common/app-text/app-text'
+import Stack from '@common/stack/stack'
 import { icon } from '@theme/icons'
 import { AppModal, IconButton } from '@common'
+import styles from './public-buttons.styles'
 
-interface IProps {
+type PublicButtonsProps = {
   publication: PublicType
   isOpenedScreen?: boolean
 }
 
-export default memo(function PublicButtons({ publication, isOpenedScreen = false }: IProps) {
+export default memo(function PublicButtons({ publication, isOpenedScreen = false }: PublicButtonsProps) {
   const dispatch = useAppDispatch()
   const { addSavedUids, savedUids } = useContext(AppHelperContext)
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
   const { user } = useUser()
   const navigation = useNavigation<AppNavigationType>()
   const isOwner = publication.ownerUid === (user?.uid || '')
@@ -37,7 +40,7 @@ export default memo(function PublicButtons({ publication, isOpenedScreen = false
 
   return (
     <>
-      <FlexEnd style={{ width: 115, alignItems: 'flex-start' }}>
+      <Stack preset='end' style={styles.container}>
         {isOwner && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}
         <View>
           <IconButton
@@ -46,13 +49,15 @@ export default memo(function PublicButtons({ publication, isOpenedScreen = false
             disabled={savedUids.includes(publication.uid)}
             onPress={onSave}
           />
-          <TextSecondary center>{publication.downloads.length}</TextSecondary>
+          <AppText variant='caption' tone='secondary' align='center'>
+            {publication.downloads.length}
+          </AppText>
         </View>
         <View>
           <IconButton
             iconName={isLiked || isOwner ? icon.like : icon.likeEmpty}
             disabled={isOwner}
-            color={isLiked || isOwner ? colors.secondPrimary : colors.textSecondary}
+            color={isLiked || isOwner ? colors.accent : colors.textSecondary}
             onPress={() =>
               dispatch(
                 publicationsAC.likeToggle({
@@ -62,9 +67,11 @@ export default memo(function PublicButtons({ publication, isOpenedScreen = false
               )
             }
           />
-          <TextSecondary center>{publication.likes.length}</TextSecondary>
+          <AppText variant='caption' tone='secondary' align='center'>
+            {publication.likes.length}
+          </AppText>
         </View>
-      </FlexEnd>
+      </Stack>
       <AppModal
         onConfirm={onDelete}
         onClose={() => setIsDeleteModal(false)}

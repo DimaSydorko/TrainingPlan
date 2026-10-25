@@ -1,15 +1,15 @@
 import * as React from 'react'
 import { createContext, ReactNode, useCallback, useEffect, useState } from 'react'
 import { setSpeechDefaults } from '@platform/speech'
-import { useSettings } from './redux'
+import { useSettingsStore } from '@stores/settings/use-settings-store'
 
 function useAppHelper() {
   const [isTabMenu, setIsTabMenu] = useState<boolean>(true)
   const [savedUids, setSavedUids] = useState<string[]>([])
 
-  const {
-    tts: { isDucking, pitch, rate },
-  } = useSettings()
+  const isDucking = useSettingsStore(state => state.tts.isDucking)
+  const pitch = useSettingsStore(state => state.tts.pitch)
+  const rate = useSettingsStore(state => state.tts.rate)
 
   useEffect(() => {
     setSpeechDefaults({ rate })
@@ -40,20 +40,20 @@ function useAppHelper() {
   }
 }
 
-export interface IContext {
+export type AppHelperContextType = {
   isTabMenu: boolean
   savedUids: string[]
   onToggleTabMenu: (arg?: boolean) => void
   addSavedUids: (uid: string) => void
 }
 
-export const AppHelperContext = createContext<IContext>(null!)
+export const AppHelperContext = createContext<AppHelperContextType>(null!)
 
-interface IProvider {
+type AppHelperProviderProps = {
   children: ReactNode
 }
 
-export default function AppHelperProvider({ children }: IProvider) {
+export default function AppHelperProvider({ children }: AppHelperProviderProps) {
   const { ...playData } = useAppHelper()
   return <AppHelperContext.Provider value={playData}>{children}</AppHelperContext.Provider>
 }

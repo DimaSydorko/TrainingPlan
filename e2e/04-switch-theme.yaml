@@ -29,7 +29,7 @@ tags:
     id: settings.darkTheme
     checked: true
 - takeScreenshot: e2e-theme-dark
-# Persisted by redux-persist: still dark after a restart.
+# Persisted by the settings store: still dark after a restart.
 - stopApp
 - launchApp
 - runFlow: subflows/login.yaml

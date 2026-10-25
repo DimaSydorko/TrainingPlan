@@ -29,8 +29,8 @@ Complex) from `component.md`. New folders and files are kebab-case.
 import { memo } from 'react'
 import { Pressable } from 'react-native'
 
-import { useSettings } from '../../Hooks/redux'
-import { TextHeader } from '../../Theme/Parents'
+import AppText from '@common/app-text/app-text'
+import { useThemeColors } from '@theme/use-app-theme'
 import styles from './workout-card.styles'
 
 type WorkoutCardProps = {
@@ -41,7 +41,7 @@ type WorkoutCardProps = {
 }
 
 const WorkoutCard = ({ title, exercisesCount, isSelected = false, onPress }: WorkoutCardProps) => {
-  const { colors } = useSettings()
+  const colors = useThemeColors()
 
   return (
     <Pressable
@@ -51,8 +51,8 @@ const WorkoutCard = ({ title, exercisesCount, isSelected = false, onPress }: Wor
       onPress={onPress}
       testID='workouts.card'
     >
-      <TextHeader>{title}</TextHeader>
-      <TextHeader>{exercisesCount}</TextHeader>
+      <AppText variant='title'>{title}</AppText>
+      <AppText tone='secondary'>{exercisesCount}</AppText>
     </Pressable>
   )
 }
@@ -82,7 +82,7 @@ export default StyleSheet.create({
 -   Containers (screens, `components/`) get server data from `app/services/<entity>` hooks and UI state from
     `app/stores` — not from new Redux selectors. Legacy screens that still use `useAppSelector` may keep it until
     their entity is migrated.
--   Theme colors: `useSettings().colors` today; the settings store selector after the Zustand migration.
+-   Theme colors: `useThemeColors()` (`@theme/use-app-theme`).
 
 ## Step 5 — Tests
 

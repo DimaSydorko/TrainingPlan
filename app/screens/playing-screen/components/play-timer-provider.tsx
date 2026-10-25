@@ -11,18 +11,18 @@ function usePlayTimer() {
   }
 }
 
-export interface IContext {
+export type PlayTimerContextType = {
   playTimer: number
   setPlayTimer: SetStateType<number>
 }
 
-export const PlayTimerContext = createContext<IContext>(null!)
+export const PlayTimerContext = createContext<PlayTimerContextType>(null!)
 
-interface IProvider {
+type ProviderProps = {
   children: ReactNode
 }
 
-export function PlayTimerProvider({ children }: IProvider) {
+export function PlayTimerProvider({ children }: ProviderProps) {
   const { ...data } = usePlayTimer()
   return <PlayTimerContext.Provider value={data}>{children}</PlayTimerContext.Provider>
 }

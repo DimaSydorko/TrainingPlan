@@ -1,19 +1,10 @@
 import * as React from 'react'
 import { memo } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import styles from './toaster.styles'
 
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    width: '100%',
-    top: 0,
-    left: 0,
-    zIndex: 1000,
-  },
-})
-
-interface ToasterType {
+type ToasterType = {
   toasts: (React.JSX.Element | boolean)[]
 }
 

@@ -2,24 +2,31 @@ import * as React from 'react'
 import { memo } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { Labels, WorkoutDuration } from '@common'
-import { Card, FlexSpaceBetween, FlexStart, TextHeader, TextSecondary } from '@theme/parents'
+import AppText from '@common/app-text/app-text'
+import Card from '@common/card/card'
+import Stack from '@common/stack/stack'
 import { PublicType, PublicationsNavigation } from '@utils/types'
-import { appScreen, ScreenName } from '@utils/constants'
+import { ScreenName } from '@utils/constants'
+import { useScreen } from '@platform/screen'
 import PublicButtons from './public-buttons'
-import { COLORS_EXERCISE, colorsDark } from '@theme/colors'
+import { LABELS_GUTTER } from './publication.constants'
+import { getExerciseColor } from '@theme/tokens'
+import styles from './publication.styles'
 
-interface IProps {
+type PublicationProps = {
   publication: PublicType
 }
 
-export default memo(function Publication({ publication }: IProps) {
+export default memo(function Publication({ publication }: PublicationProps) {
   const navigation = useNavigation<PublicationsNavigation>()
-  const { colors } = useSettings()
+  const { isDark } = useAppTheme()
+  const { width } = useScreen()
   const isPlan = !!publication?.workouts && !publication?.exercises
-  const isDarkTheme = colors.primary === colorsDark.primary
-  const color = COLORS_EXERCISE[publication?.colorIdx === undefined ? 3 : publication?.colorIdx][+isDarkTheme]
+  const color = getExerciseColor(publication?.colorIdx === undefined ? 3 : publication?.colorIdx, isDark)
+
+  const labelsStyle = { width: width - LABELS_GUTTER }
 
   const onPress = () => {
     if (isPlan) navigation.navigate(ScreenName.PublicationPlan, { publication })
@@ -28,24 +35,32 @@ export default memo(function Publication({ publication }: IProps) {
 
   return (
     <>
-      <TouchableOpacity onPress={onPress} style={{ marginHorizontal: 10 }}>
+      <TouchableOpacity onPress={onPress} style={styles.container}>
         <Card borderLeftColor={isPlan ? color : undefined}>
-          <TextHeader color={color}>{publication.name}</TextHeader>
-          <FlexSpaceBetween>
+          <AppText variant='title' color={color}>
+            {publication.name}
+          </AppText>
+          <Stack preset='spaceBetween'>
             <View>
               {isPlan ? (
-                <TextSecondary>{publication.workouts.length} Workouts</TextSecondary>
+                <AppText variant='caption' tone='secondary'>
+                  {publication.workouts.length} Workouts
+                </AppText>
               ) : (
-                <FlexStart>
-                  <TextSecondary>{publication.exercises.length} Exercises</TextSecondary>
+                <Stack preset='start'>
+                  <AppText variant='caption' tone='secondary'>
+                    {publication.exercises.length} Exercises
+                  </AppText>
                   <WorkoutDuration exercises={publication.exercises} />
-                </FlexStart>
+                </Stack>
               )}
-              <Labels labels={publication.labels} style={{ width: appScreen.vw - 180 }} />
-              <TextSecondary color={colors.black}>By {publication.ownerName}</TextSecondary>
+              <Labels labels={publication.labels} style={labelsStyle} />
+              <AppText variant='caption' tone='inverse'>
+                By {publication.ownerName}
+              </AppText>
             </View>
             <PublicButtons publication={publication} />
-          </FlexSpaceBetween>
+          </Stack>
         </Card>
       </TouchableOpacity>
     </>

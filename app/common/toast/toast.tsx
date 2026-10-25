@@ -1,33 +1,16 @@
 import * as React from 'react'
 import { useEffect } from 'react'
-import { StyleSheet } from 'react-native'
 import { Icon } from '../icon/icon'
-import { useSettings } from '@hooks/redux'
+import { useAppTheme } from '@theme/use-app-theme'
 import { IconButton } from '../index'
-import { appScreen } from '@utils/constants'
-import { FlexSpaceBetween, TextOrdinary } from '@theme/parents'
+import { useScreen } from '@platform/screen'
+import AppText from '../app-text/app-text'
+import Stack from '../stack/stack'
 import { icon } from '@theme/icons'
-import { theme } from '@theme/theme'
-import { colorsFixed } from '@theme/colors'
+import { MESSAGE_GUTTER } from './toast.constants'
+import styles from './toast.styles'
 
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 8,
-    width: '100%',
-    borderBottomRightRadius: 12,
-    borderBottomLeftRadius: 12,
-    height: appScreen.header,
-    maxWidth: 480,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderStyle: 'solid',
-    borderBottomWidth: 1.5,
-    borderLeftWidth: 1.5,
-    borderRightWidth: 1.5,
-  },
-})
-
-interface ToastType {
+type ToastType = {
   message: string
   onPress: () => void
   variant: 'error' | 'info'
@@ -42,7 +25,8 @@ export default React.memo(function Toast({
   pressAfterTime,
   iconName = '',
 }: ToastType) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
+  const { width } = useScreen()
 
   useEffect(() => {
     if (pressAfterTime) {
@@ -50,34 +34,30 @@ export default React.memo(function Toast({
     }
   }, [pressAfterTime])
 
+  const messageStyle = { width: width - MESSAGE_GUTTER }
   const _icon = iconName ? iconName : variant === 'error' ? icon.serverRemove : icon.alertCircleOutline
 
   return (
-    <FlexSpaceBetween
+    <Stack
+      preset='spaceBetween'
       style={[
         styles.container,
         variant === 'error' && {
-          backgroundColor: colors.error,
+          backgroundColor: colors.danger,
         },
         variant === 'info' && {
           backgroundColor: colors.info,
         },
         {
-          borderColor: colorsFixed.black,
+          borderColor: colors.staticBlack,
         },
-        theme.view.shadow,
       ]}
     >
-      <Icon name={_icon} color={colorsFixed.white} size={36} />
-      <TextOrdinary
-        ellipsizeMode='tail'
-        numberOfLines={1}
-        style={{ width: appScreen.vw - 100 }}
-        color={colorsFixed.white}
-      >
+      <Icon name={_icon} color={colors.staticWhite} size={36} />
+      <AppText ellipsizeMode='tail' numberOfLines={1} style={messageStyle} color={colors.staticWhite}>
         {message}
-      </TextOrdinary>
-      <IconButton iconName={icon.close} size={36} color={colorsFixed.white} onPress={onPress} />
-    </FlexSpaceBetween>
+      </AppText>
+      <IconButton iconName={icon.close} size={36} color={colors.staticWhite} onPress={onPress} />
+    </Stack>
   )
 })

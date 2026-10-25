@@ -1,14 +1,16 @@
 import * as React from 'react'
 import { memo, ReactNode } from 'react'
-import { StyleSheet } from 'react-native'
-import { useSettings } from '@hooks/redux'
-import { FlexSpaceBetween, TextHeader } from '@theme/parents'
+import { useAppTheme } from '@theme/use-app-theme'
+import AppText from '../app-text/app-text'
+import Stack from '../stack/stack'
 import { IconButton } from '../index'
-import { appScreen } from '@utils/constants'
+import { useScreen } from '@platform/screen'
 import { SetStateType } from '@utils/types'
 import { icon } from '@theme/icons'
+import { COUNTER_ROW_GUTTER, COUNTERS_PER_ROW } from './button-counter.constants'
+import styles from './button-counter.styles'
 
-interface ButtonCounterType {
+type ButtonCounterType = {
   value: number
   onChange: SetStateType<number>
   dataType?: string
@@ -29,11 +31,15 @@ export default memo(function ButtonCounter({
   extraWidth = 0,
   children,
 }: ButtonCounterType) {
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
+  const { width } = useScreen()
   const buttonColor = color || colors.textSecondary
 
   return (
-    <FlexSpaceBetween style={[styles.container, { width: (appScreen.vw - 120) / 2 + extraWidth }]}>
+    <Stack
+      preset='spaceBetween'
+      style={[styles.container, { width: (width - COUNTER_ROW_GUTTER) / COUNTERS_PER_ROW + extraWidth }]}
+    >
       <IconButton
         size={28}
         iconName={icon.minus}
@@ -43,11 +49,11 @@ export default memo(function ButtonCounter({
         isRepeatOnLongPress
         onPress={() => onChange(p => (p > minValue ? p - step : p))}
       />
-      <TextHeader color={color || colors.secondPrimary}>
+      <AppText variant='title' color={color || colors.accent}>
         {value}
         {dataType}
         {children}
-      </TextHeader>
+      </AppText>
       <IconButton
         size={28}
         isRepeatOnLongPress
@@ -56,15 +62,6 @@ export default memo(function ButtonCounter({
         style={[styles.button, { borderColor: buttonColor }]}
         onPress={() => onChange(p => p + step)}
       />
-    </FlexSpaceBetween>
+    </Stack>
   )
-})
-
-const styles = StyleSheet.create({
-  container: {
-    margin: 10,
-  },
-  button: {
-    borderWidth: 2,
-  },
 })

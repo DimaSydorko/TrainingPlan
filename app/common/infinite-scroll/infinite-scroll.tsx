@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { ActivityIndicator, RefreshControl, ScrollView } from 'react-native'
-import { useSettings } from '@hooks/redux'
-import { appScreen } from '@utils/constants'
+import { useAppTheme } from '@theme/use-app-theme'
+import styles from './infinite-scroll.styles'
 
-interface IProps {
+type InfiniteScrollProps = {
   children: React.ReactNode
   onScrollToBottom?: () => void
   isLoading?: boolean
@@ -15,10 +15,15 @@ const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
   return layoutMeasurement.height + contentOffset.y >= contentSize.height
 }
 
-export default function InfiniteScroll({ children, isLoading = false, onScrollToBottom, onRefresh }: IProps) {
+export default function InfiniteScroll({
+  children,
+  isLoading = false,
+  onScrollToBottom,
+  onRefresh,
+}: InfiniteScrollProps) {
   const [isRefreshLoading, setIsRefreshLoading] = useState<boolean>(false)
   const [isDelay, setIsDelay] = useState<boolean>(false)
-  const { colors } = useSettings()
+  const { colors } = useAppTheme()
 
   useEffect(() => {
     if (!isLoading) setIsRefreshLoading(p => (p ? false : p))
@@ -40,7 +45,7 @@ export default function InfiniteScroll({ children, isLoading = false, onScrollTo
   return (
     <ScrollView
       centerContent
-      style={{ width: appScreen.vw, backgroundColor: colors.background }}
+      style={[styles.container, { backgroundColor: colors.background }]}
       onScroll={e => isCloseToBottom(e.nativeEvent) && _onScrollToBottom()}
       scrollEventThrottle={100}
       refreshControl={
@@ -48,7 +53,7 @@ export default function InfiniteScroll({ children, isLoading = false, onScrollTo
       }
     >
       {children}
-      {isLoading && !isRefreshLoading && <ActivityIndicator size='large' color={colors.secondPrimary} />}
+      {isLoading && !isRefreshLoading && <ActivityIndicator size='large' color={colors.accent} />}
     </ScrollView>
   )
 }

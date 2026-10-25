@@ -1,11 +1,10 @@
 import { useCallback } from 'react'
 import { speak, stopSpeaking } from '@platform/speech'
-import { useSettings } from './redux'
+import { useSettingsStore } from '@stores/settings/use-settings-store'
 
 export default function useTTS() {
-  const {
-    tts: { rate, volume },
-  } = useSettings()
+  const rate = useSettingsStore(state => state.tts.rate)
+  const volume = useSettingsStore(state => state.tts.volume)
 
   return useCallback(
     (textToSpeech: string) => {

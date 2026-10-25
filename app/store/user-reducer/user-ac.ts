@@ -10,6 +10,7 @@ import {
 } from 'firebase/auth'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { auth, usersDataCollection } from '@utils/firebase'
+import { resetStores } from '@stores/reset-stores'
 import { errorMessage } from '../sync'
 import { toUserType } from './auth-state'
 import { UserDataType } from '@utils/types'
@@ -63,6 +64,7 @@ export const userAC = {
       await firebaseSignOut(auth)
       thunkAPI.dispatch(clearWorkoutResults())
       thunkAPI.dispatch(clearPlaneResults())
+      resetStores()
       return
     } catch (e) {
       return thunkAPI.rejectWithValue(errorMessage(e))

@@ -1,16 +1,23 @@
 import { StyleSheet } from 'react-native'
-import { appScreen } from '@utils/constants'
+import { radius } from '@theme/tokens'
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    height: appScreen.vh - 400,
   },
   selectedContainer: {
     display: 'flex',
     justifyContent: 'center',
     height: 35,
     width: '100%',
+  },
+  preview: {
+    borderRadius: radius.round,
+    height: 30,
+    width: 30,
+  },
+  modal: {
+    borderWidth: 10,
   },
   colorSelect: {
     height: 60,

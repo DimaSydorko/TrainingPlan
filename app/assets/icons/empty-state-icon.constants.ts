@@ -1,0 +1,4 @@
+export const EMPTY_STATE_ICON = {
+  WIDTH_GUTTER: 50,
+  RESERVED_HEADER_COUNT: 5,
+} as const

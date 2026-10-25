@@ -1,0 +1,1 @@
+export const ORDINARY_INPUT_GUTTER = 40

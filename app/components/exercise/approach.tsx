@@ -1,46 +1,28 @@
 import * as React from 'react'
-import { StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
-import { TextOrdinary } from '@theme/parents'
-import { useSettings } from '@hooks/redux'
+import { View } from 'react-native'
+import AppText from '@common/app-text/app-text'
+import { useAppTheme } from '@theme/use-app-theme'
+import styles from './approach.styles'
 
-interface ExerciseResultsType {
+type ExerciseResultsType = {
   weight: number
   repeats: number
   isPrevious?: boolean
 }
 
-const styles = StyleSheet.create({
-  container: {
-    marginVertical: 3,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    flexDirection: 'row',
-  } as ViewStyle,
-  textRepWeight: {
-    width: '35%',
-    textAlign: 'center',
-  } as TextStyle,
-  textCurrPrev: {
-    width: '30%',
-  },
-})
-
 export default function Approach({ weight, repeats, isPrevious = true }: ExerciseResultsType) {
-  const { colors } = useSettings()
-  const color = isPrevious ? colors.text : colors.primary
+  const { colors } = useAppTheme()
+  const color = isPrevious ? colors.textPrimary : colors.primary
   return (
     <View style={styles.container}>
-      <TextOrdinary color={color} style={styles.textCurrPrev}>{`\u2022  ${
-        isPrevious ? 'previous' : 'current'
-      }`}</TextOrdinary>
-      <TextOrdinary color={color} style={styles.textRepWeight}>
+      <AppText color={color} style={styles.textCurrPrev}>{`\u2022  ${isPrevious ? 'previous' : 'current'}`}</AppText>
+      <AppText color={color} style={styles.textRepWeight}>
         {repeats}
-      </TextOrdinary>
+      </AppText>
       {!!weight && (
-        <TextOrdinary color={color} style={styles.textRepWeight}>
+        <AppText color={color} style={styles.textRepWeight}>
           {weight} kg
-        </TextOrdinary>
+        </AppText>
       )}
     </View>
   )

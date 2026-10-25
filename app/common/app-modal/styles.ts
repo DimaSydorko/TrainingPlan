@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { appScreen } from '@utils/constants'
+import { radius, spacing } from '@theme/tokens'
 
 export default StyleSheet.create({
   emptySpace: {
@@ -19,11 +19,17 @@ export default StyleSheet.create({
     zIndex: 1,
     maxWidth: 500,
     minHeight: 150,
-    width: appScreen.vw - 40,
-    marginHorizontal: 20,
-    borderRadius: 8,
+    marginHorizontal: spacing.xl,
+    borderRadius: radius.base,
     marginBottom: 48,
     padding: 15,
+  },
+  button: {
+    width: '40%',
+  },
+  buttonWithRefuse: {
+    marginHorizontal: spacing.sm - 2,
+    width: '30%',
   },
   content: {
     minHeight: 100,
