@@ -6,3 +6,6 @@
 
 // Reanimated 4: deterministic animation timers and matchers such as toHaveAnimatedStyle.
 require('react-native-reanimated').setUpTests()
+
+// Initializes i18next once for every test file, as app.tsx does for the app.
+require('@i18n')

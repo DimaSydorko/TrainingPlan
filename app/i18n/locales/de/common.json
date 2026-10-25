@@ -1,0 +1,20 @@
+{
+  "tabs": {
+    "plans": "Meine Pläne",
+    "workouts": "Meine Workouts",
+    "profile": "Profil"
+  },
+  "actions": {
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "yes": "Ja",
+    "no": "Nein",
+    "save": "Speichern",
+    "delete": "Löschen"
+  },
+  "dialogs": {
+    "leaveScreen": {
+      "title": "Möchtest du wirklich zurückgehen?"
+    }
+  }
+}

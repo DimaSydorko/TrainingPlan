@@ -19,6 +19,8 @@
       "@components/*": ["./app/components/*"],
       "@hooks": ["./app/hooks"],
       "@hooks/*": ["./app/hooks/*"],
+      "@i18n": ["./app/i18n"],
+      "@i18n/*": ["./app/i18n/*"],
       "@platform": ["./app/platform"],
       "@platform/*": ["./app/platform/*"],
       "@routers": ["./app/routers"],

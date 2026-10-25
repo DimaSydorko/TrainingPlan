@@ -30,6 +30,7 @@ mockModule('expo-audio', () => require('./mocks/expo-audio'))
 mockModule('expo-speech', () => require('./mocks/expo-speech'))
 mockModule('expo-keep-awake', () => require('./mocks/expo-keep-awake'))
 mockModule('expo-notifications', () => require('./mocks/expo-notifications'))
+mockModule('expo-localization', () => require('./mocks/expo-localization'))
 
 // Google Sign-In.
 mockModule('@react-native-google-signin/google-signin', () => require('./mocks/google-signin'))
