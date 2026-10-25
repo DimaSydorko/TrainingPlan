@@ -8,7 +8,6 @@ export enum FirebaseDBCollection {
   UsersData = 'usersData',
   Plans = 'plans',
   Workouts = 'workouts',
-  Publications = 'publications',
 }
 
 export enum FirebaseDatabase {
@@ -23,9 +22,6 @@ export enum ScreenName {
   Workout = 'Workout',
   Plan = 'Plan',
   App = 'App',
-  Publications = 'Publications',
-  PublicationWorkout = 'PublicationWorkout',
-  PublicationPlan = 'PublicationPlan',
   Profile = 'Profile',
   Settings = 'Settings',
   Playing = 'Playing',
@@ -65,7 +61,6 @@ export const defaultApproach: ApproachType = {
 }
 
 export const QUERY_LIMIT = 30
-export const PUBLICATION_QUERY_LIMIT = 10
 
 export const settings = {
   isVibration: true,
@@ -93,6 +88,5 @@ export const SOUND_CUE_DURATION_MS = 1000
 export enum TabName {
   Plans = 'All saved Plans',
   Workouts = 'All saved Workouts',
-  Publications = 'Publications',
   Profile = 'Profile',
 }

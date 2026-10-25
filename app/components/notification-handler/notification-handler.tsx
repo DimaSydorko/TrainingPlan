@@ -1,10 +1,9 @@
 import * as React from 'react'
 import { memo, useEffect, useState } from 'react'
-import { useAppDispatch, usePlans, usePublications, useWorkout } from '@hooks/redux'
+import { useAppDispatch, usePlans, useWorkout } from '@hooks/redux'
 import { useIsOnline } from '@stores/network/use-network-store'
 import { errorPlansClear } from '@store/plans-reducer/plans-slice'
 import { errorWorkoutClear } from '@store/workout-reducer/workout-slice'
-import { errorPublicationClear } from '@store/publications-reducer/publications-slice'
 import { Toast, Toaster } from '@common'
 import { icon } from '@theme/icons'
 import { LayoutAnimation } from 'react-native'
@@ -13,7 +12,6 @@ export default memo(function NotificationHandler() {
   const dispatch = useAppDispatch()
   const plans = usePlans()
   const workout = useWorkout()
-  const publications = usePublications()
   const isOnline = useIsOnline()
   const [isInternetInfo, setIsInternetInfo] = useState<boolean>(false)
 
@@ -45,17 +43,6 @@ export default memo(function NotificationHandler() {
             }}
             variant='error'
             message={workout.error}
-            pressAfterTime={16000}
-          />
-        ),
-        !!publications.error && (
-          <Toast
-            onPress={() => {
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-              dispatch(errorPublicationClear())
-            }}
-            variant='error'
-            message={publications.error}
             pressAfterTime={16000}
           />
         ),

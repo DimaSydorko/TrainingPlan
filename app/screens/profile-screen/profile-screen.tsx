@@ -1,17 +1,16 @@
 import * as React from 'react'
-import { memo, useCallback, useState } from 'react'
+import { memo, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { useAppDispatch, usePublications, useUser } from '@hooks/redux'
+import { useAppDispatch, useUser } from '@hooks/redux'
 import { useAppTheme } from '@theme/use-app-theme'
 import { useIsOnline } from '@stores/network/use-network-store'
-import { publicationsAC } from '@store/publications-reducer/publications-ac'
 import { userAC } from '@store/user-reducer/user-ac'
 import UserImage from '@components/user-image/user-image'
-import Publication from '@components/publication/publication'
 import { ProfileNavigation } from '@utils/types'
-import { PUBLICATION_QUERY_LIMIT, ScreenName } from '@utils/constants'
-import { AppModal, IconButton, InfiniteScroll } from '@common'
+import { ScreenName } from '@utils/constants'
+import { AppModal, IconButton } from '@common'
 import Stack from '@common/stack/stack'
+import Screen from '@common/screen/screen'
 import AppText from '@common/app-text/app-text'
 import { icon } from '@theme/icons'
 import styles from './styles'
@@ -25,22 +24,10 @@ export default memo(function ProfileScreen() {
   const { width } = useScreen()
   const isOnline = useIsOnline()
   const { user } = useUser()
-  const { userPublications, isLoading } = usePublications()
   const [isLogoutModal, setIsLogoutModal] = useState(false)
 
-  const getNextChunk = useCallback(() => {
-    if (isOnline && userPublications.length >= PUBLICATION_QUERY_LIMIT) {
-      const lastVisible = userPublications[userPublications.length - 1]
-      dispatch(publicationsAC.get({ lastVisible, isYours: true }))
-    }
-  }, [userPublications[userPublications.length - 1], isOnline])
-
   return (
-    <InfiniteScroll
-      isLoading={isLoading}
-      onRefresh={isOnline ? () => dispatch(publicationsAC.get({ isYours: true })) : undefined}
-      onScrollToBottom={getNextChunk}
-    >
+    <Screen>
       <Stack preset='end'>
         {isOnline && (
           <IconButton
@@ -68,13 +55,11 @@ export default memo(function ProfileScreen() {
           {user?.email}
         </AppText>
       </Stack>
-      <Stack preset='centerColumn'>
-        {isOnline ? (
-          userPublications.map(publication => <Publication key={publication.uid} publication={publication} />)
-        ) : (
+      {!isOnline && (
+        <Stack preset='centerColumn'>
           <NoSignalIcon height={width} />
-        )}
-      </Stack>
+        </Stack>
+      )}
       <AppModal
         isWarning
         onConfirm={() => dispatch(userAC.signOut())}
@@ -83,6 +68,6 @@ export default memo(function ProfileScreen() {
         text={'Are you sure?'}
         header={'Log out'}
       />
-    </InfiniteScroll>
+    </Screen>
   )
 })

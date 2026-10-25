@@ -1,30 +1,18 @@
 import * as React from 'react'
-import { memo, useEffect } from 'react'
+import { memo } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import { useAppDispatch, useUser } from '@hooks/redux'
-import { useIsOnline } from '@stores/network/use-network-store'
+import { useUser } from '@hooks/redux'
 import { Loading } from '@common'
 import { ScreenName } from '@utils/constants'
 import { ProfileScreen, SettingsScreen } from '@screens'
 import { useScreenOptions } from '@theme/navigation-theme'
-import { publicationsAC } from '@store/publications-reducer/publications-ac'
-import PublicationPlan from '@screens/publications-screen/publication-plan'
-import PublicationWorkout from '@screens/publications-screen/publication-workout'
 import { ProfileStackParamList } from '@utils/types'
 
 const Stack = createStackNavigator<ProfileStackParamList, 'ProfileStack'>()
 
 export default memo(function ProfileRouter() {
-  const dispatch = useAppDispatch()
   const options = useScreenOptions()
   const user = useUser()
-  const isOnline = useIsOnline()
-
-  useEffect(() => {
-    if (isOnline) {
-      dispatch(publicationsAC.get({ isYours: true }))
-    }
-  }, [isOnline])
 
   return (
     <>
@@ -35,18 +23,6 @@ export default memo(function ProfileRouter() {
           name={ScreenName.Settings}
           options={{ ...options, title: 'Settings' }}
           component={SettingsScreen}
-        />
-        {/* The profile lists the user's own publications (components/publication). Opening one stays in
-            this tab; before, navigate() targeted screens that only existed in the Publications stack. */}
-        <Stack.Screen
-          name={ScreenName.PublicationPlan}
-          options={{ ...options, title: 'Plan' }}
-          component={PublicationPlan}
-        />
-        <Stack.Screen
-          name={ScreenName.PublicationWorkout}
-          options={{ ...options, title: 'Workout' }}
-          component={PublicationWorkout}
         />
       </Stack.Navigator>
     </>

@@ -1,6 +1,6 @@
 # TrainingPlan
 
-Mobile app (Android + iOS) for building training plans and workouts, playing them with a fitness timer (audio/TTS cues, background playback), tracking progress, and sharing/publishing plans. Light and dark themes.
+Mobile app (Android + iOS) for building training plans and workouts, playing them with a fitness timer (audio/TTS cues, background playback) and tracking progress. Light and dark themes.
 
 **Stack:** Expo SDK 57 · React Native 0.86 (New Architecture) · React 19.2 · TypeScript · React Navigation 7 · Jest + RNTL · Maestro.
 **Migration in progress** — every area has a *legacy* and a *target* pattern. New code always uses the target.

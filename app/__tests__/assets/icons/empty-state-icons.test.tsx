@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react-native'
-import EmptySearchIcon from '@assets/icons/empty-search-icon'
 import NoDataIcon from '@assets/icons/no-data-icon'
 import NoSignalIcon from '@assets/icons/no-signal-icon'
 import { darkColors, lightColors } from '@theme/themes'
@@ -37,18 +36,15 @@ describe('empty-state icons', () => {
   it('accepts a custom highlight color', async () => {
     expect(await renderXml(<NoDataIcon color='blue' />)).toContain("fill='blue'")
     expect(await renderXml(<NoSignalIcon color='blue' />)).toContain("fill='blue'")
-    expect(await renderXml(<EmptySearchIcon color='blue' />)).toContain("fill='blue'")
   })
 
   it('uses the light theme colors for the theme-dependent parts', async () => {
-    expect(await renderXml(<EmptySearchIcon />)).toContain(`fill='${lightColors.accent}'`)
     expect(await renderXml(<NoDataIcon />)).toContain(`fill='${lightColors.background}'`)
   })
 
   it('uses the dark theme colors for the theme-dependent parts', async () => {
     useSettingsStore.setState({ themeMode: THEME_MODE.DARK })
 
-    expect(await renderXml(<EmptySearchIcon />)).toContain(`fill='${darkColors.accent}'`)
     expect(await renderXml(<NoDataIcon />)).toContain(`fill='${darkColors.background}'`)
   })
 })

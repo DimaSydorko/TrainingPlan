@@ -8,7 +8,6 @@ jest.mock('@utils/firebase', () => ({
   usersDataCollection: { path: 'usersData' },
   plansCollection: { path: 'plans' },
   workoutsCollection: { path: 'workouts' },
-  publicationsCollection: { path: 'publications' },
 }))
 jest.mock('firebase/auth', () => ({
   createUserWithEmailAndPassword: jest.fn(),

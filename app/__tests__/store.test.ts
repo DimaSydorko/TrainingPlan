@@ -50,7 +50,6 @@ describe('store persistence', () => {
     expect(state.userReducer?.user).toBeNull()
     expect(state.plansReducer).toBeDefined()
     expect(state.workoutReducer).toBeDefined()
-    expect(state.publicationsReducer).toBeDefined()
   })
 
   it('rehydrates state persisted by a previous app version', async () => {

@@ -1,10 +1,9 @@
 import * as React from 'react'
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { TouchableOpacity, Vibration } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { changePlansPosition, selectPlan } from '@store/plans-reducer/plans-slice'
 import { plansAC } from '@store/plans-reducer/plans-ac'
-import { publicationsAC } from '@store/publications-reducer/publications-ac'
 import { useAppDispatch, usePlans } from '@hooks/redux'
 import { useAppTheme } from '@theme/use-app-theme'
 import AppHeader from '@common/app-header/app-header'
@@ -26,7 +25,6 @@ import PlanCard from './plan-card'
 import { QUERY_LIMIT, ScreenName, VIBRATION } from '@utils/constants'
 import { PlanType, PlansNavigation } from '@utils/types'
 import { icon } from '@theme/icons'
-import ShareModal from '@components/share-modal/share-modal'
 import { getExerciseColor } from '@theme/tokens'
 import NoDataIcon from '@assets/icons/no-data-icon'
 import styles from './my-plans-screen.styles'
@@ -39,16 +37,11 @@ export default memo(function MyPlansScreen() {
   const [selectedPlanUids, setSelectedPlanUids] = useState<string[]>([])
   const [isNewPlanModal, setIsNewPlanModal] = useState(false)
   const [isDeleteModal, setIsDeleteModal] = useState(false)
-  const [isShareModal, setIsShareModal] = useState(false)
   const [changePlan, setChangePlan] = useState<PlanType | null>(null)
   const isEditMode = !!selectedPlanUids.length
   const plans = statePlans.plans
     ?.slice()
     ?.sort((a, b) => (statePlans.sortedPlanUids.indexOf(a.uid) || 0) - statePlans.sortedPlanUids.indexOf(b.uid) || 0)
-  const selectedFirst = useMemo(
-    () => plans.find(workout => workout.uid === selectedPlanUids[0]),
-    [plans, selectedPlanUids[0]]
-  )
 
   const onAddPlan = useCallback(
     (newPlan: PlanType) => {
@@ -74,11 +67,6 @@ export default memo(function MyPlansScreen() {
     setSelectedPlanUids([])
     selectedPlanUids.forEach(uid => dispatch(plansAC.deletePlan(uid)))
   }
-
-  const onShare = useCallback(() => {
-    dispatch(publicationsAC.add(selectedFirst))
-    setSelectedPlanUids([])
-  }, [selectedFirst])
 
   const renderItem = ({ item, drag, isActive }: DraggableRenderItemParams<PlanType>) => {
     const color = getExerciseColor(item?.colorIdx === undefined ? 3 : item?.colorIdx, isDark)
@@ -118,9 +106,6 @@ export default memo(function MyPlansScreen() {
           </Stack>
           <Stack preset='end' style={styles.headerActions}>
             {selectedPlanUids.length === 1 && (
-              <IconButton iconName={icon.share} onPress={() => setIsShareModal(true)} />
-            )}
-            {selectedPlanUids.length === 1 && (
               <IconButton
                 margin={10}
                 iconName={icon.edit}
@@ -152,7 +137,6 @@ export default memo(function MyPlansScreen() {
           onClose={() => (isNewPlanModal ? setIsNewPlanModal(false) : setChangePlan(null))}
         />
       )}
-      <ShareModal isOpen={isShareModal} onShare={onShare} onClose={() => setIsShareModal(false)} plan={selectedFirst} />
       <AppModal
         isWarning
         header={`Delete plan${selectedPlanUids.length === 1 ? '' : 's'}`}
