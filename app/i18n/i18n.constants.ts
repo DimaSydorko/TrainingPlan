@@ -3,13 +3,12 @@ export enum LANGUAGE {
   UK = 'uk',
   DE = 'de',
 }
-export type Language = (typeof LANGUAGE)[keyof typeof LANGUAGE]
 
 export const LANGUAGE_SETTING = { SYSTEM: 'system', ...LANGUAGE } as const
 export type LanguageSetting = (typeof LANGUAGE_SETTING)[keyof typeof LANGUAGE_SETTING]
 
-export const DEFAULT_LANGUAGE: Language = LANGUAGE.EN
-export const SUPPORTED_LANGUAGES: readonly Language[] = Object.values(LANGUAGE)
+export const DEFAULT_LANGUAGE: LANGUAGE = LANGUAGE.EN
+export const SUPPORTED_LANGUAGES: readonly LANGUAGE[] = Object.values(LANGUAGE)
 
 export enum NAMESPACE {
   COMMON = 'common',
