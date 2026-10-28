@@ -1,3 +1,4 @@
+import '@i18n'
 import * as React from 'react'
 import { ReactNode, useEffect } from 'react'
 import { Provider } from 'react-redux'
