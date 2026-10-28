@@ -78,12 +78,12 @@ const { store } = await renderWithStore(<SettingsScreen />, {
 | Stage | Flags | Errors today | Notes |
 |---|---|---|---|
 | 0 (done) | `alwaysStrict`, `strictBindCallApply`, `noImplicitThis`, `strictBuiltinIteratorReturn`, `noFallthroughCasesInSwitch`, `forceConsistentCasingInFileNames` | 0 | Enabled in `tsconfig.json` |
-| 1 | `strictFunctionTypes` | 4 | `PublicationsRouter.tsx` (2), `WorkoutsScreen.tsx`, `MyPlansScreen.tsx`: navigator/screen component prop types |
+| 1 | `strictFunctionTypes` | 2 | `WorkoutsScreen.tsx`, `MyPlansScreen.tsx`: navigator/screen component prop types |
 | 1 | `noImplicitReturns` | 2 | `UserAC.ts`, `WorkoutsScreen.tsx` |
 | 1 | `noImplicitOverride` | 2 | `common/my-switch/switch-lib.tsx` (class component) |
 | 1 | `useUnknownInCatchVariables` | 21 | All in `app/store/*/*AC.ts` `catch (e)` blocks. Fix: `e instanceof FirebaseError ? e.message : String(e)` |
 | 2 | `noImplicitAny` | 29 | SwitchLib (9), SettingsScreen (5), Exercise (4), SwipeSelector (3), InfiniteScroll (3), PlansSlice (2), GoBackSubmitModal (2), usePlaying (1) |
-| 3 | `strictNullChecks` (brings `strictPropertyInitialization`, 0 extra) | 114 | The big one. Go folder by folder: `app/store` → `app/hooks` → `app/common` → `app/components` → `app/screens`. Biggest: MySwitch 20, Exercise 15, WorkoutsScreen 12, PublicationsReducer 10. Option: use `// @ts-expect-error TODO(strict)` per remaining line to flip the flag early and burn the list down |
+| 3 | `strictNullChecks` (brings `strictPropertyInitialization`, 0 extra) | 114 | The big one. Go folder by folder: `app/store` → `app/hooks` → `app/common` → `app/components` → `app/screens`. Biggest: MySwitch 20, Exercise 15, WorkoutsScreen 12. Option: use `// @ts-expect-error TODO(strict)` per remaining line to flip the flag early and burn the list down |
 | 4 | `"strict": true` and delete the individual flags | 161 today in total | Only when stages 1–3 are at 0 |
 | 5 (optional) | `noUncheckedIndexedAccess` | +33 on top of strictNullChecks | Worth it for the playback index maths (`exercises[idx]`) |
 | — | `noUnusedLocals` / `noUnusedParameters` | 71 / 5 | Not recommended: ESLint's `@typescript-eslint/no-unused-vars` already reports these as warnings without blocking the build |
@@ -131,7 +131,7 @@ Shared components need a `testID` prop passed through to their touchable/input.
 | testID | Where |
 |---|---|
 | `login.email`, `login.password`, `login.submit` | `LoginScreen` inputs and "Log in" button (`MyTextInput` and `ConfirmButton` need a `testID` prop) |
-| `tab.plans`, `tab.workouts`, `tab.publications`, `tab.profile` | `AppRouter` tabs, via `tabBarButtonTestID` |
+| `tab.plans`, `tab.workouts`, `tab.profile` | `AppRouter` tabs, via `tabBarButtonTestID` |
 | `workouts.add` | `WorkoutsScreen` `AddMoreButton` (needs a `testID` prop) |
 | `workouts.delete` | `WorkoutsScreen` edit-mode delete `IconButton` (needs a `testID` prop) |
 | `editPlanWorkout.name` | `EditPlanWorkout` name `MyTextInput` |
@@ -156,9 +156,9 @@ Run the full pass on **one real Android device** (Android 13+; ideally also one 
 
 - [ ] Build under test recorded (EAS build id or git sha, profile, platform, device model, OS version).
 - [ ] `.env` points to the Firebase project you mean to test (test project, or production with a test account).
-- [ ] Two test accounts ready: an email/password account and a Google account. Account B (any type) for publications.
+- [ ] Two test accounts ready: an email/password account and a Google account.
 - [ ] Device volume up, not in silent mode (iOS ring/silent switch off), Do Not Disturb off.
-- [ ] For §4.9 (upgrade in place): the **old** Play Store / pre-migration build installed on a second device, with data, before installing the new one.
+- [ ] For §4.8 (upgrade in place): the **old** Play Store / pre-migration build installed on a second device, with data, before installing the new one.
 
 Mark each line pass / fail / n/a. On failure, note what you saw and attach a screenshot or screen recording.
 
@@ -189,7 +189,7 @@ Mark each line pass / fail / n/a. On failure, note what you saw and attach a scr
 - [ ] Empty account shows the no-data illustration.
 - [ ] "+" → "Create new Plan?" → change name, add labels, pick a colour → Create → appears in the list.
 - [ ] Open the plan → its workouts; add a workout to the plan; edit its name; "Save Plan" persists after relaunch.
-- [ ] Long-press a plan → selection mode; edit, copy, share and delete icons behave; delete asks for confirmation.
+- [ ] Long-press a plan → selection mode; edit, copy and delete icons behave; delete asks for confirmation.
 - [ ] Leaving a plan with unsaved changes shows the "aren't saved" confirmation.
 
 ### 4.4 Workouts (My Workouts tab)
@@ -205,18 +205,7 @@ Mark each line pass / fail / n/a. On failure, note what you saw and attach a scr
 - [ ] Back button with unsaved changes → "Changes in '…' workout aren't saved!" modal; Confirm discards, Cancel stays.
 - [ ] Exercise image picker opens and shows images (from Firebase storage); choosing one shows it on the card.
 
-### 4.5 Publications
-
-- [ ] **Browse**: Publications tab loads a list; pull to refresh.
-- [ ] **Search by labels**: type a label → results filtered; clear → full list.
-- [ ] **Paginate**: scroll to the bottom with more than 10 publications → next page loads once, no duplicates, spinner disappears.
-- [ ] **Publish**: in My Workouts select one workout → share icon → confirm → it shows in Publications and under Profile ("your publications").
-- [ ] **Open** a publication (plan and workout types) → detail screen renders exercises.
-- [ ] **Copy/save** someone else's publication (account B's) → appears in My Workouts / My Plans.
-- [ ] **Delete** your own publication from Profile → confirmation → gone.
-- [ ] Offline: Publications tab shows the no-signal state, no endless spinner.
-
-### 4.6 Playing a workout
+### 4.5 Playing a workout
 
 Use a workout with at least 3 exercises: one with repeats/weight, one time-only, short breaks (10–20 s), 2 laps on one exercise.
 
@@ -250,31 +239,31 @@ Use a workout with at least 3 exercises: one with repeats/weight, one time-only,
 - [ ] Settings → "Safe battery mode" on → theme switches to dark, workout still plays correctly.
 - [ ] Android system battery saver on (and, on Samsung/Xiaomi, the vendor's aggressive mode if available) → lock the screen for 2 minutes during a workout → cues still arrive (note any delay in seconds).
 
-### 4.7 Settings (Profile → gear icon)
+### 4.6 Settings (Profile → gear icon)
 
 - [ ] **Dark Theme** switch → whole app switches; persists after relaunch.
 - [ ] **Safe battery mode** → turns on dark theme; persists.
 - [ ] **Weight step** slider (1–10 kg) → used by the weight stepper while playing.
 - [ ] **Vibration** off → no vibration on cues or button long-press.
 - [ ] **Press for test speech** → says "Test speech" with the current volume/pitch/speed.
-- [ ] **Lowering other apps output level** → see 4.6 interruptions.
+- [ ] **Lowering other apps output level** → see 4.5 interruptions.
 - [ ] **Volume / Pitch / Speed** sliders → audible difference with test speech; values persist.
 - [ ] **Press for test sound** → plays the selected cue at the selected sound volume.
 - [ ] **Sound Volume** slider → test sound and in-workout cues follow it (0 = silent).
 - [ ] **Sound type** → picker lists bell, digital clock, double ding, hop bell; tapping one previews it; the choice is used during play and persists.
 - [ ] **Clear local storage** → settings back to defaults, results cleared; account stays signed in.
 
-### 4.8 Offline (NetInfo / no-signal state)
+### 4.7 Offline (NetInfo / no-signal state)
 
 - [ ] Start the app in airplane mode while signed in → tabs show cached data, an offline toast appears after ~1 s, no crash.
-- [ ] Profile and Publications show the no-signal illustration; logout icon hidden.
+- [ ] Profile shows the no-signal illustration; logout icon hidden.
 - [ ] Login "Log in" and Google buttons disabled when offline.
 - [ ] Turn the network back on → toast disappears, data refreshes (workouts, plans, images) without restarting.
 - [ ] Toggle airplane mode on/off quickly several times → no duplicate fetches visible as flicker loops, no crash.
 - [ ] Edit a workout offline and save → behaviour is clear (error toast or saved locally); note which. Back online → state is consistent with Firebase.
 - [ ] Play a workout offline → works fully (sounds are bundled).
 
-### 4.9 Upgrade in place from the old build
+### 4.8 Upgrade in place from the old build
 
 The new build must install **over** the old one (same Android package `com.trainingplantogether_cli`, same signing key; see [build.md §4](build.md)) and keep users' data.
 
@@ -286,7 +275,7 @@ The new build must install **over** the old one (same Android package `com.train
 - [ ] No duplicate notifications left over from react-native-background-actions.
 - [ ] iOS: only applicable if an old iOS build was distributed (bundle id changed from the template placeholder, so it installs as a new app; note this).
 
-### 4.10 Release sanity (preview/production builds only)
+### 4.9 Release sanity (preview/production builds only)
 
 - [ ] Android permissions listed in system settings match what the app needs (no SYSTEM_ALERT_WINDOW or storage permissions).
 - [ ] No dev menu, no yellow box, no `[stub]` logs (`adb logcat | grep stub` shows nothing).

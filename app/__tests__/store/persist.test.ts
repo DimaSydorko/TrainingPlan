@@ -48,7 +48,7 @@ describe('redux-persist config', () => {
       Object.keys(store.getState())
         .filter(k => k !== '_persist')
         .sort()
-    ).toEqual(['plansReducer', 'publicationsReducer', 'settingsReducer', 'userReducer', 'workoutReducer'].sort())
+    ).toEqual(['plansReducer', 'settingsReducer', 'userReducer', 'workoutReducer'].sort())
   })
 
   it('rehydrates state stored by the old app', async () => {

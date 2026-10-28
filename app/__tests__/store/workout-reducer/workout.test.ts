@@ -7,7 +7,6 @@ jest.mock('@utils/firebase', () => ({
   rtdb: { name: 'rtdb' },
   plansCollection: { path: 'plans' },
   workoutsCollection: { path: 'workouts' },
-  publicationsCollection: { path: 'publications' },
   usersDataCollection: { path: 'usersData' },
 }))
 jest.mock('firebase/firestore', () => {

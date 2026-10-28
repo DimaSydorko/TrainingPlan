@@ -49,15 +49,6 @@ export type SelectedWorkoutType = Omit<WorkoutType, 'exercises'> & {
 }
 export type SelectedExerciseType = Omit<ExerciseType, 'approaches'> & { approaches: SelectedApproachType[] }
 
-export type PublicType = Omit<WorkoutType, 'exercises'> &
-  Omit<PlanType, 'workouts'> & {
-    workouts?: WorkoutType[]
-    exercises?: ExerciseType[]
-    ownerName: string
-    likes: string[]
-    downloads: string[]
-  }
-
 export type WorkoutType = {
   uid: string
   colorIdx: number
@@ -85,15 +76,6 @@ export type SetStateType<S> = (arg: S | ((prevState: S) => S)) => void
 // navigate() calls to screens that are not in the current stack.
 // ---------------------------------------------------------------------------
 
-export type PublicationWorkoutParams = { workout: (PublicType | WorkoutType) & { ownerName?: string } }
-export type PublicationPlanParams = { publication: PublicType }
-
-/** Screens that open a publication. Both the Publications and the Profile stacks register them. */
-export type PublicationScreensParamList = {
-  [ScreenName.PublicationWorkout]: PublicationWorkoutParams
-  [ScreenName.PublicationPlan]: PublicationPlanParams
-}
-
 /** Root stack (AuthRouter): auth screens when logged out, the tab app when logged in. */
 export type AuthStackParamList = {
   [ScreenName.Login]: undefined
@@ -105,7 +87,6 @@ export type AuthStackParamList = {
 export type AppTabParamList = {
   [TabName.Plans]: NavigatorScreenParams<PlansStackParamList> | undefined
   [TabName.Workouts]: NavigatorScreenParams<WorkoutsStackParamList> | undefined
-  [TabName.Publications]: NavigatorScreenParams<PublicationsStackParamList> | undefined
   [TabName.Profile]: NavigatorScreenParams<ProfileStackParamList> | undefined
 }
 
@@ -125,11 +106,7 @@ export type WorkoutsStackParamList = PlayableStackParamList & {
   [ScreenName.Workout]: undefined
 }
 
-export type PublicationsStackParamList = PublicationScreensParamList & {
-  [ScreenName.Publications]: undefined
-}
-
-export type ProfileStackParamList = PublicationScreensParamList & {
+export type ProfileStackParamList = {
   [ScreenName.Profile]: undefined
   [ScreenName.Settings]: undefined
 }
@@ -138,7 +115,6 @@ export type AuthNavigation = StackNavigationProp<AuthStackParamList>
 export type PlansNavigation = StackNavigationProp<PlansStackParamList>
 export type WorkoutsNavigation = StackNavigationProp<WorkoutsStackParamList>
 export type PlayableNavigation = StackNavigationProp<PlayableStackParamList>
-export type PublicationsNavigation = StackNavigationProp<PublicationScreensParamList>
 export type ProfileNavigation = StackNavigationProp<ProfileStackParamList>
 
 /**

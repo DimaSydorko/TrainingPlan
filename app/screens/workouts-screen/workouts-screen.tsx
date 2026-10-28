@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native'
 import { changeWorkoutsPosition, updateSelectedWorkout } from '@store/workout-reducer/workout-slice'
 import { plansAC } from '@store/plans-reducer/plans-ac'
 import { workoutAC } from '@store/workout-reducer/workout-ac'
-import { publicationsAC } from '@store/publications-reducer/publications-ac'
 import { AppHelperContext } from '@hooks/app-helper-provider'
 import { useAppDispatch, useWorkout } from '@hooks/redux'
 import useWorkoutPlan from '@hooks/use-workout-plan'
@@ -24,7 +23,6 @@ import {
   IconButton,
   MyTextInput,
 } from '@common'
-import ShareModal from '@components/share-modal/share-modal'
 import EditPlanWorkout from '@components/edit-plan-workout/edit-plan-workout'
 import CopyWorkoutsModal from '@components/copy-workouts-modal/copy-workouts-modal'
 import WorkoutCard from './workout-card'
@@ -56,7 +54,6 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
   const [planNameInput, setPlanNameInput] = useState<string>(selectedPlan?.name || '')
   const [changeWorkout, setChangeWorkout] = useState<WorkoutType | null>(null)
   const [isSaveChangesModal, setIsSaveChangesModal] = useState(false)
-  const [isShareModal, setIsShareModal] = useState(false)
   const [isNewWorkoutModal, setIsNewWorkoutModal] = useState(false)
   const [isDeleteModal, setIsDeleteModal] = useState(false)
   const [isCopyModal, setIsCopyModal] = useState(false)
@@ -84,10 +81,6 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
         workouts,
       } as PlanType),
     [selectedPlan, planNameInput, workouts]
-  )
-  const selectedFirst = useMemo(
-    () => workouts?.find(workout => workout.uid === selectedWorkoutsUids[0]),
-    [workouts, selectedWorkoutsUids[0]]
   )
 
   useEffect(() => {
@@ -142,10 +135,6 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
     },
     [copyWorkouts, selectedWorkoutsUids, workouts]
   )
-  const onShare = useCallback(() => {
-    dispatch(publicationsAC.add(selectedFirst))
-    setSelectedWorkoutsUids([])
-  }, [selectedFirst])
 
   const onWorkoutPress = useCallback(
     (workout: WorkoutType) => {
@@ -209,9 +198,6 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
           </Stack>
           <Stack preset='end' style={styles.headerActions}>
             {selectedWorkoutsUids.length === 1 && (
-              <IconButton iconName={icon.share} margin={10} onPress={() => setIsShareModal(true)} />
-            )}
-            {selectedWorkoutsUids.length === 1 && (
               <IconButton
                 iconName={icon.edit}
                 onPress={() => setChangeWorkout(workouts.find(workout => workout.uid === selectedWorkoutsUids[0]))}
@@ -268,12 +254,6 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
         isOpen={isCopyModal}
         onCopy={onCopy}
         onClose={() => setIsCopyModal(false)}
-      />
-      <ShareModal
-        isOpen={isShareModal}
-        onShare={onShare}
-        onClose={() => setIsShareModal(false)}
-        workout={selectedFirst}
       />
       <AppModal
         isOpen={isSaveChangesModal}

@@ -7,7 +7,6 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import userReducer from '@store/user-reducer/user-slice'
 import plansReducer from '@store/plans-reducer/plans-slice'
 import workoutReducer from '@store/workout-reducer/workout-slice'
-import publicationsReducer from '@store/publications-reducer/publications-slice'
 import { legacySettingsReducer } from '@store/legacy-settings-reducer'
 import type { Persistor } from 'redux-persist'
 import type { RootState } from '@store'
@@ -17,7 +16,6 @@ export const testRootReducer = combineReducers({
   plansReducer,
   workoutReducer,
   settingsReducer: legacySettingsReducer,
-  publicationsReducer,
 })
 
 type DeepPartial<T> = { [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K] }

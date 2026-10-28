@@ -65,4 +65,3 @@ const col = (name: FirebaseDBCollection) => collection(db, name) as CollectionRe
 export const usersDataCollection = col(FirebaseDBCollection.UsersData)
 export const workoutsCollection = col(FirebaseDBCollection.Workouts)
 export const plansCollection = col(FirebaseDBCollection.Plans)
-export const publicationsCollection = col(FirebaseDBCollection.Publications)

@@ -17,7 +17,6 @@ export const icon = {
   copy: 'content-copy',
   empty: 'cancel',
   plus: 'plus',
-  share: 'share-variant',
   list: 'format-list-bulleted',
   timer: 'timer-outline',
   image: 'image-outline',
@@ -34,5 +33,4 @@ export const icon = {
   minus: 'minus',
   tabPlans: 'clipboard-list-outline',
   tabWorkouts: 'clock-fast',
-  tabPublications: 'tooltip-text-outline',
 } as const satisfies Record<string, IconName>

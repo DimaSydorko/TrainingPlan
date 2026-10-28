@@ -24,7 +24,6 @@ type ExerciseProps = {
   idx?: number
   exercise: ExerciseType | SelectedExerciseType
   isEdit?: boolean
-  isPublic?: boolean
   isInModal?: boolean
   playingExerciseLap?: number
   onDelete?: (exercise: ExerciseType) => void
@@ -37,7 +36,6 @@ export default memo(function Exercise({
   idx,
   exercise,
   isEdit = false,
-  isPublic = false,
   isInModal = false,
   onCopy,
   onDelete,
@@ -136,31 +134,24 @@ export default memo(function Exercise({
                     Break: {secondsToMinSec(exercise.breakTimeInSec)}
                   </AppText>
                 )}
-                {isPublic && (
-                  <AppText variant='caption' tone='secondary'>
-                    Laps: {exercise.laps}
-                  </AppText>
-                )}
               </Stack>
             </View>
           </Stack>
-          {!isPublic && (
-            <View style={styles.approaches}>
-              {exercise.approaches?.map((approach, idx) => {
-                const isPrevious = approach.currentWeight === undefined && approach.currentRepeats === undefined
-                return (
-                  <View key={idx}>
-                    {playingExerciseLap === idx + 1 && <Divider isDashed />}
-                    <Approach
-                      isPrevious={isPrevious}
-                      weight={isPrevious ? approach.weight : approach.currentWeight}
-                      repeats={isPrevious ? approach.repeats : approach.currentRepeats}
-                    />
-                  </View>
-                )
-              })}
-            </View>
-          )}
+          <View style={styles.approaches}>
+            {exercise.approaches?.map((approach, idx) => {
+              const isPrevious = approach.currentWeight === undefined && approach.currentRepeats === undefined
+              return (
+                <View key={idx}>
+                  {playingExerciseLap === idx + 1 && <Divider isDashed />}
+                  <Approach
+                    isPrevious={isPrevious}
+                    weight={isPrevious ? approach.weight : approach.currentWeight}
+                    repeats={isPrevious ? approach.repeats : approach.currentRepeats}
+                  />
+                </View>
+              )
+            })}
+          </View>
         </>
       )}
       <AppModal

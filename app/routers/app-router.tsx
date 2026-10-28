@@ -15,7 +15,6 @@ import WorkoutsRouter from './workouts-router'
 import PlanRouter from './plan-router'
 import { icon } from '@theme/icons'
 import ProfileRouter from './profile-router'
-import PublicationsRouter from './publications-router'
 import { TabName } from '@utils/constants'
 import { AppTabParamList } from '@utils/types'
 import { useAppInsets } from '@theme/insets'
@@ -46,13 +45,6 @@ const tabs = [
     buttonLabel: 'My Workouts',
     testID: 'tab.workouts',
     icon: color => <Icon name={icon.tabWorkouts} size={28} color={color} />,
-  },
-  {
-    name: TabName.Publications,
-    component: PublicationsRouter,
-    buttonLabel: 'Publications',
-    testID: 'tab.publications',
-    icon: color => <Icon name={icon.tabPublications} size={28} color={color} />,
   },
   {
     name: TabName.Profile,

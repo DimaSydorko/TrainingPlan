@@ -17,6 +17,4 @@ tags:
 - assertVisible:
     id: tab.plans
 - assertVisible:
-    id: tab.publications
-- assertVisible:
     id: tab.profile
