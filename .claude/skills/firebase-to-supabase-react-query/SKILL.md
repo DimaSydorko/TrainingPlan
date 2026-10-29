@@ -58,7 +58,7 @@ Do not assume A. **Never create or switch branches yourself** — ask the user.
 
 1. **Inventory.** List every Firestore read/write for the entity (`rg "<collection>Collection|<Entity>AC|<entity>Reducer" app`),
    the Redux fields holding its data, and every screen reading them (`use<Entity>()` from `app/hooks/redux.ts`).
-2. **Schema.** Migration with table, `updated_at` trigger, RLS + policies; regenerate types.
+2. **Schema.** Migration with table, `updated_at` trigger, RLS + policies (`supabase-backend` skill); regenerate types.
 3. **Data migration.** A one-off script outside the app (`scripts/migrate-<entity>.ts`, run with the service-role
    key from the developer's machine, never bundled) copies Firestore docs into the table, mapping Firebase uids to
    Supabase user ids. Make it idempotent (upsert) and log counts. Ask the user before running it against
