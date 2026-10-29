@@ -21,7 +21,7 @@ npx supabase db reset                        # apply locally
 npx supabase gen types typescript --local > app/lib/supabase/database.types.ts
 ```
 
-RLS enabled + explicit policies on every table. UUID primary keys the client can generate.
+RLS enabled + explicit policies on every table. UUID primary keys the client can generate. SQL templates and security rules: `supabase-backend` skill.
 
 ## Step 2 — Domain type and mapper — `app/api/<entity>/`
 
