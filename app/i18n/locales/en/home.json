@@ -1,0 +1,30 @@
+{
+  "greeting": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  },
+  "todaySession": {
+    "label": "Today's session",
+    "minutes": "{{count}} min",
+    "exercises_one": "{{count}} exercise",
+    "exercises_other": "{{count}} exercises",
+    "start": "Start",
+    "change": "Change"
+  },
+  "workouts": {
+    "title": "Your workouts",
+    "all": "All workouts",
+    "minutes": "{{count}} min"
+  },
+  "ai": {
+    "title": "AI suggestions"
+  },
+  "stats": {
+    "title": "Statistics"
+  },
+  "askAi": {
+    "placeholder": "Ask AI..."
+  },
+  "comingSoon": "Coming soon"
+}
