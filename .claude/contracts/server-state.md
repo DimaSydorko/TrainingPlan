@@ -40,7 +40,7 @@ Rules:
 ### Supabase client and types
 
 -   One client in `app/lib/supabase/client.ts`, created with the anon key from `EXPO_PUBLIC_SUPABASE_URL` /
-    `EXPO_PUBLIC_SUPABASE_ANON_KEY`, session persisted in AsyncStorage, `detectSessionInUrl: false`, and
+    `EXPO_PUBLIC_SUPABASE_KEY`, session persisted in AsyncStorage, `detectSessionInUrl: false`, and
     `startAutoRefresh` / `stopAutoRefresh` wired to `AppState`. Follow the current Supabase Expo quickstart for the
     exact setup (polyfills change between versions — check before adding one).
 -   The **service-role key never ships in the app.**

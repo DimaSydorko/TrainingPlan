@@ -8,6 +8,7 @@ import { KeyboardProvider } from 'react-native-keyboard-controller'
 import { StatusBar } from 'expo-status-bar'
 import * as SystemUI from 'expo-system-ui'
 import { PersistGate } from 'redux-persist/integration/react'
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { decode, encode } from 'base-64'
 import { persistedStore, store } from '@store'
 import AppHelperProvider from '@hooks/app-helper-provider'
@@ -15,6 +16,7 @@ import { useAppTheme } from '@theme/use-app-theme'
 import { useSettingsHydrated } from '@stores/settings/use-settings-hydrated'
 import AuthRouter from '@routers/auth-router'
 import { statusBarStyleFor } from '@theme/navigation-theme'
+import { asyncStoragePersister, queryClient } from '@lib/query-client'
 import styles from './app.styles'
 
 if (!globalThis.btoa) globalThis.btoa = encode
@@ -44,21 +46,23 @@ function ThemedRoot({ children }: { children: ReactNode }) {
 
 function App() {
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistedStore}>
-        <SettingsGate>
-          <SafeAreaProvider>
-            <KeyboardProvider>
-              <ThemedRoot>
-                <AppHelperProvider>
-                  <AuthRouter />
-                </AppHelperProvider>
-              </ThemedRoot>
-            </KeyboardProvider>
-          </SafeAreaProvider>
-        </SettingsGate>
-      </PersistGate>
-    </Provider>
+    <PersistQueryClientProvider client={queryClient} persistOptions={{ persister: asyncStoragePersister }}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistedStore}>
+          <SettingsGate>
+            <SafeAreaProvider>
+              <KeyboardProvider>
+                <ThemedRoot>
+                  <AppHelperProvider>
+                    <AuthRouter />
+                  </AppHelperProvider>
+                </ThemedRoot>
+              </KeyboardProvider>
+            </SafeAreaProvider>
+          </SettingsGate>
+        </PersistGate>
+      </Provider>
+    </PersistQueryClientProvider>
   )
 }
 
