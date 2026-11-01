@@ -1,3 +1,21 @@
-// Expo's ambient types (process.env for EXPO_PUBLIC_* vars, Metro's require/module, asset modules)
-// so `tsc` works on a clean clone, like the expo-env.d.ts that `expo start` generates.
-/// <reference types="expo/types" />
+declare namespace NodeJS {
+  interface ProcessEnv {
+    EXPO_PUBLIC_SUPABASE_URL: string
+    EXPO_PUBLIC_SUPABASE_KEY: string
+
+    EXPO_PUBLIC_FIREBASE_API_KEY: string
+    EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN: string
+    EXPO_PUBLIC_FIREBASE_DATABASE_URL: string
+    EXPO_PUBLIC_FIREBASE_PROJECT_ID: string
+    EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET: string
+    EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: string
+    EXPO_PUBLIC_FIREBASE_APP_ID: string
+    EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID: string
+
+    EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: string
+    EXPO_PUBLIC_GOOGLE_IOS_URL_SCHEME: string
+    EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID: string
+
+    APP_VARIANT: 'development' | 'production'
+  }
+}

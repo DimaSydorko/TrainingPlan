@@ -41,7 +41,7 @@ Do not assume A. **Never create or switch branches yourself** — ask the user.
 -   [ ] Supabase project exists; ask the user for the project ref. Add `supabase/` via `npx supabase init`
 -   [ ] Install with `npx expo install @supabase/supabase-js @tanstack/react-query @tanstack/react-query-persist-client @tanstack/query-async-storage-persister expo-crypto`
         (check the current Supabase Expo quickstart for any extra polyfill it requires)
--   [ ] `.env.example` + EAS env: `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`
+-   [ ] `.env.example` + EAS env: `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_KEY`
 -   [ ] `app/lib/supabase/client.ts` (AsyncStorage session, `detectSessionInUrl: false`, AppState auto-refresh)
 -   [ ] `app/lib/supabase/database.types.ts` generated
 -   [ ] `app/lib/query-client.ts`: `QueryClient` defaults (`gcTime` 24 h, queries `networkMode: 'offlineFirst'`,
