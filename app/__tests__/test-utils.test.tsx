@@ -1,14 +1,14 @@
 /** Checks the shared test helpers in app/__tests__/utils. */
 import { Text } from 'react-native'
 import { screen } from '@testing-library/react-native'
-import { useAppSelector, useWorkout } from '@hooks/redux'
+import { useAppSelector, usePlans } from '@hooks/redux'
 import { renderWithStore } from './utils/render'
 import { getInitialState } from './utils/test-store'
 
 function Probe() {
-  const { sortedWorkoutUids, error } = useWorkout()
+  const { sortedPlanUids, error } = usePlans()
   const user = useAppSelector(state => state.userReducer?.user)
-  return <Text>{`sorted=${sortedWorkoutUids.join(',')} error=${error} user=${user?.uid ?? 'none'}`}</Text>
+  return <Text>{`sorted=${sortedPlanUids.join(',')} error=${error} user=${user?.uid ?? 'none'}`}</Text>
 }
 
 describe('renderWithStore', () => {
@@ -17,7 +17,7 @@ describe('renderWithStore', () => {
     await renderWithStore(<Probe />)
     expect(
       screen.getByText(
-        `sorted=${initial.workoutReducer.sortedWorkoutUids.join(',')} error=${initial.workoutReducer.error} user=none`
+        `sorted=${initial.plansReducer.sortedPlanUids.join(',')} error=${initial.plansReducer.error} user=none`
       )
     ).toBeOnTheScreen()
   })
@@ -25,9 +25,9 @@ describe('renderWithStore', () => {
   it('deep-merges a partial preloaded state', async () => {
     const initial = getInitialState()
     const { store } = await renderWithStore(<Probe />, {
-      preloadedState: { workoutReducer: { sortedWorkoutUids: ['w1'] }, userReducer: { user: { uid: 'u1' } as any } },
+      preloadedState: { plansReducer: { sortedPlanUids: ['p1'] }, userReducer: { user: { uid: 'u1' } as any } },
     })
-    expect(screen.getByText(`sorted=w1 error=${initial.workoutReducer.error} user=u1`)).toBeOnTheScreen()
-    expect(store.getState().workoutReducer.workouts).toEqual(initial.workoutReducer.workouts)
+    expect(screen.getByText(`sorted=p1 error=${initial.plansReducer.error} user=u1`)).toBeOnTheScreen()
+    expect(store.getState().plansReducer.plans).toEqual(initial.plansReducer.plans)
   })
 })

@@ -3,6 +3,7 @@ import NetInfo from '@react-native-community/netinfo'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import { MutationCache, QueryCache, QueryClient, onlineManager, focusManager } from '@tanstack/react-query'
 import { AppState } from 'react-native'
+import { useToastStore } from '@stores/toast/use-toast-store'
 
 const TWENTY_FOUR_HOURS = 24 * 60 * 60_000
 
@@ -32,17 +33,12 @@ export const queryClient = new QueryClient({
     },
   },
   queryCache: new QueryCache({
-    onError: (_error, query) => {
-      if (query.state.data !== undefined) {
-        // Background refetch error — already have cached data, suppress
-        return
-      }
+    onError: (error, query) => {
+      if (query.state.data === undefined) useToastStore.getState().showError(error.message)
     },
   }),
   mutationCache: new MutationCache({
-    onError: _error => {
-      // Global mutation error handling — screens may override with their own onError
-    },
+    onError: error => useToastStore.getState().showError(error.message),
   }),
 })
 

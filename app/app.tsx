@@ -17,7 +17,10 @@ import { useSettingsHydrated } from '@stores/settings/use-settings-hydrated'
 import AuthRouter from '@routers/auth-router'
 import { statusBarStyleFor } from '@theme/navigation-theme'
 import { asyncStoragePersister, queryClient } from '@lib/query-client'
+import { registerWorkoutsMutationDefaults } from '@services/workouts/mutation-defaults'
 import styles from './app.styles'
+
+registerWorkoutsMutationDefaults(queryClient)
 
 if (!globalThis.btoa) globalThis.btoa = encode
 if (!globalThis.atob) globalThis.atob = decode
@@ -46,7 +49,11 @@ function ThemedRoot({ children }: { children: ReactNode }) {
 
 function App() {
   return (
-    <PersistQueryClientProvider client={queryClient} persistOptions={{ persister: asyncStoragePersister }}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{ persister: asyncStoragePersister }}
+      onSuccess={() => queryClient.resumePausedMutations()}
+    >
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistedStore}>
           <SettingsGate>

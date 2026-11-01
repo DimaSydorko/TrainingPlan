@@ -9,6 +9,9 @@ import { useAppTheme } from '@theme/use-app-theme'
 import { useIsOnline } from '@stores/network/use-network-store'
 import { AppHelperContext } from '@hooks/app-helper-provider'
 import { workoutAC } from '@store/workout-reducer/workout-ac'
+import { useSessionStore } from '@stores/session/use-session-store'
+import useProfile from '@services/profiles/use-profile'
+import useLegacyImport from '@services/legacy-import/use-legacy-import'
 import { plansAC } from '@store/plans-reducer/plans-ac'
 import NotificationHandler from '@components/notification-handler/notification-handler'
 import HomeRouter from './home-router'
@@ -69,10 +72,20 @@ export default function AppRouter() {
   const { colors } = useAppTheme()
   const isOnline = useIsOnline()
   const { bottom, footer } = useAppInsets()
+  const userId = useSessionStore(state => state.userId)
+  const sessionEmail = useSessionStore(state => state.email)
+  const profile = useProfile(userId)
+
+  useLegacyImport({
+    userId,
+    sessionEmail,
+    isProfileLoaded: profile.isSuccess,
+    legacyImportedAt: profile.data?.legacyImportedAt,
+    isOnline,
+  })
 
   useEffect(() => {
     if (isOnline) {
-      dispatch(workoutAC.getWorkouts())
       dispatch(plansAC.getPlans())
       dispatch(workoutAC.getExerciseImages())
     }

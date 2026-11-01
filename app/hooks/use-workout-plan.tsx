@@ -1,26 +1,36 @@
 import { useCallback } from 'react'
 import { useAppDispatch, usePlans } from './redux'
 import { PlanType, WorkoutType } from '@utils/types'
-import { workoutAC } from '@store/workout-reducer/workout-ac'
 import { plansAC } from '@store/plans-reducer/plans-ac'
+import { useSessionUserId } from '@stores/session/use-session-store'
+import useSaveWorkout from '@services/workouts/use-save-workout'
+import useDeleteWorkouts from '@services/workouts/use-delete-workouts'
+import { copyWorkout } from '@services/workouts/workout-copies'
 import { nanoid } from '@utils'
 
-export default function useWorkoutPlan() {
+const toPlanWorkout = (workout: WorkoutType): WorkoutType => {
+  const { lastUpdated, ownerUid, ...planWorkout } = workout
+  return planWorkout
+}
+
+const useWorkoutPlan = () => {
   const dispatch = useAppDispatch()
+  const userId = useSessionUserId()
   const { selectedPlan } = usePlans()
+  const { saveWorkout } = useSaveWorkout()
+  const { mutate: removeWorkouts } = useDeleteWorkouts()
 
   const addWorkout = useCallback(
     (workout: WorkoutType, isInPlan: boolean) => {
       if (isInPlan) {
-        const { lastUpdated, ownerUid, ...planWorkout } = workout
         const newPlan = {
           ...selectedPlan,
-          workouts: [...selectedPlan.workouts, { ...planWorkout, uid: nanoid() } as WorkoutType],
+          workouts: [...selectedPlan.workouts, { ...toPlanWorkout(workout), uid: nanoid() }],
         }
         dispatch(plansAC.updatePlan(newPlan))
-      } else dispatch(workoutAC.addWorkout(workout))
+      } else if (userId) saveWorkout(userId, workout)
     },
-    [selectedPlan?.uid, selectedPlan]
+    [selectedPlan, userId, saveWorkout, dispatch]
   )
 
   const deleteWorkouts = useCallback(
@@ -31,31 +41,23 @@ export default function useWorkoutPlan() {
           workouts: selectedPlan.workouts.filter(w => !workoutUids.includes(w.uid)),
         }
         dispatch(plansAC.updatePlan(newPlan))
-      } else {
-        dispatch(workoutAC.deleteWorkouts(workoutUids))
-      }
+      } else if (userId) removeWorkouts({ userId, workoutIds: workoutUids })
     },
-    [selectedPlan]
+    [selectedPlan, userId, removeWorkouts, dispatch]
   )
 
-  const copyWorkouts = useCallback((workouts: WorkoutType[], plan: PlanType | undefined) => {
-    const newWorkouts = workouts.map(w => {
-      const { ownerUid, lastUpdated, ...newWorkout } = w
-      newWorkout.uid = nanoid()
-      return newWorkout
-    })
+  const copyWorkouts = useCallback(
+    (workouts: WorkoutType[], plan: PlanType | undefined) => {
+      const copies = workouts.map(copyWorkout)
 
-    if (!plan) {
-      // Workouts come from frozen Redux state: copy instead of assigning w.uid
-      workouts.forEach(w => dispatch(workoutAC.addWorkout({ ...w, uid: nanoid() })))
-    } else {
-      const newPlan = {
-        ...plan,
-        workouts: [...plan.workouts, ...newWorkouts],
+      if (!plan) {
+        if (userId) copies.forEach(copy => saveWorkout(userId, copy))
+      } else {
+        dispatch(plansAC.updatePlan({ ...plan, workouts: [...plan.workouts, ...copies.map(toPlanWorkout)] }))
       }
-      dispatch(plansAC.updatePlan(newPlan))
-    }
-  }, [])
+    },
+    [userId, saveWorkout, dispatch]
+  )
 
   return {
     deleteWorkouts,
@@ -64,3 +66,5 @@ export default function useWorkoutPlan() {
     copyWorkouts,
   }
 }
+
+export default useWorkoutPlan

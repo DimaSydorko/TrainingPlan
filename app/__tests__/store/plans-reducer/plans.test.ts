@@ -160,12 +160,11 @@ describe('plansAC thunks', () => {
     online(true)
     const w1 = { uid: 'w1', name: 'old', colorIdx: 0, labels: [], exercises: [] }
     const state = rootState({ selectedPlan: plan('p', 1, { workouts: [w1] }) })
-    const { action, dispatch } = await run(plansAC.updateSelectedPlanWorkout({ ...w1, name: 'new' }), state)
+    const { action } = await run(plansAC.updateSelectedPlanWorkout({ ...w1, name: 'new' }), state)
     expect(action.payload.uid).toBe('p')
     expect(action.payload.workouts[0].name).toBe('new')
     expect(firestore.setDoc.mock.calls[0][0].path).toBe('plans/p')
     expect(firestore.setDoc.mock.calls[0][1]).not.toHaveProperty('uid')
-    expect(dispatch).toHaveBeenCalledWith(expect.objectContaining({ payload: { ...w1, name: 'new' } }))
   })
 
   it('deletePlan deletes the document when online', async () => {

@@ -103,7 +103,7 @@ function collectExercises(
   return [...byKey.values()]
 }
 
-function getMetric(exercise: ExerciseType, previousMetric?: ExerciseMetric): ExerciseMetric {
+export function getMetric(exercise: ExerciseType, previousMetric?: ExerciseMetric): ExerciseMetric {
   if (isTimeExercise(exercise)) return EXERCISE_METRIC.TIME
   if (previousMetric === EXERCISE_METRIC.WEIGHT_REPS || hasWeight(exercise)) return EXERCISE_METRIC.WEIGHT_REPS
 

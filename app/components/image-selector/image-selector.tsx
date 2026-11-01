@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useState } from 'react'
 import { FlatList, Image, TouchableOpacity, View } from 'react-native'
 import { Icon } from '@common/icon/icon'
-import { useWorkout } from '@hooks/redux'
+import { useExerciseImages } from '@hooks/redux'
 import { useAppTheme } from '@theme/use-app-theme'
 import { useScreen } from '@platform/screen'
 import { AppImage, AppModal, TapBar } from '@common'
@@ -22,7 +22,7 @@ const tabBarValues: ExerciseImageFilterType[] = ['home', 'street', 'gym']
 
 export default function ImageSelector({ onSubmit, value = '' }: ImageSelectorProps) {
   const { colors } = useAppTheme()
-  const { exerciseImages } = useWorkout()
+  const exerciseImages = useExerciseImages()
   const [isModal, setIsModal] = useState(false)
   const [selected, setSelected] = useState<string>(value)
   const [filter, setFilter] = useState<ExerciseImageFilterType>('home')

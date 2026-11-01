@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { memo, useEffect, useState } from 'react'
-import { useAppDispatch, usePlans, useWorkout } from '@hooks/redux'
+import { useAppDispatch, usePlans } from '@hooks/redux'
 import { useIsOnline } from '@stores/network/use-network-store'
 import { errorPlansClear } from '@store/plans-reducer/plans-slice'
-import { errorWorkoutClear } from '@store/workout-reducer/workout-slice'
+import { useToastStore } from '@stores/toast/use-toast-store'
 import { Toast, Toaster } from '@common'
 import { icon } from '@theme/icons'
 import { LayoutAnimation } from 'react-native'
@@ -11,7 +11,8 @@ import { LayoutAnimation } from 'react-native'
 export default memo(function NotificationHandler() {
   const dispatch = useAppDispatch()
   const plans = usePlans()
-  const workout = useWorkout()
+  const errorMessage = useToastStore(state => state.errorMessage)
+  const clearError = useToastStore(state => state.clearError)
   const isOnline = useIsOnline()
   const [isInternetInfo, setIsInternetInfo] = useState<boolean>(false)
 
@@ -35,14 +36,14 @@ export default memo(function NotificationHandler() {
             pressAfterTime={16000}
           />
         ),
-        !!workout.error && (
+        !!errorMessage && (
           <Toast
             onPress={() => {
               LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-              dispatch(errorWorkoutClear())
+              clearError()
             }}
             variant='error'
-            message={workout.error}
+            message={errorMessage}
             pressAfterTime={16000}
           />
         ),

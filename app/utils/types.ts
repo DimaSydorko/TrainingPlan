@@ -24,6 +24,7 @@ export type SelectedApproachType = ApproachType & {
 
 export type ExerciseType = {
   uid: string
+  exerciseId?: string
   name: string
   breakTimeInSec: number
   laps: number
@@ -82,19 +83,22 @@ export type AppTabParamList = {
 }
 
 /** Stack screens that can start a workout (both the Plans and the Workouts stacks have it). */
+export type WorkoutRouteParams = { workoutId: string }
+export type PlayingRouteParams = WorkoutRouteParams & { isInPlan?: boolean }
+
 export type PlayableStackParamList = {
-  [ScreenName.Playing]: undefined
+  [ScreenName.Playing]: PlayingRouteParams
 }
 
 export type PlansStackParamList = PlayableStackParamList & {
   [ScreenName.SavedWorkouts]: undefined
   [ScreenName.Plan]: undefined
-  [ScreenName.WorkoutInPlan]: undefined
+  [ScreenName.WorkoutInPlan]: WorkoutRouteParams
 }
 
 export type WorkoutsStackParamList = PlayableStackParamList & {
   [ScreenName.SavedWorkouts]: undefined
-  [ScreenName.Workout]: undefined
+  [ScreenName.Workout]: WorkoutRouteParams
 }
 
 export type ProfileStackParamList = {
@@ -104,7 +108,7 @@ export type ProfileStackParamList = {
 
 export type HomeStackParamList = PlayableStackParamList & {
   [ScreenName.Home]: undefined
-  [ScreenName.Workout]: undefined
+  [ScreenName.Workout]: WorkoutRouteParams
 }
 
 export type AuthNavigation = StackNavigationProp<AuthStackParamList>

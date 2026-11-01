@@ -6,7 +6,6 @@ import { previewSound } from '@platform/audio'
 
 import { useAppDispatch } from '@hooks/redux'
 import { useSettingsStore } from '@stores/settings/use-settings-store'
-import { clearWorkoutResults } from '@store/workout-reducer/workout-slice'
 import { clearPlaneResults } from '@store/plans-reducer/plans-slice'
 import useTTS from '@hooks/use-tts'
 import { ConfirmButton } from '@common'
@@ -89,7 +88,6 @@ export default memo(function SettingsScreen() {
   )
 
   const clearAll = useCallback(() => {
-    dispatch(clearWorkoutResults())
     dispatch(clearPlaneResults())
     resetSettings()
   }, [dispatch, resetSettings])

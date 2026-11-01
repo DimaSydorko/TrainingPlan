@@ -31,7 +31,6 @@ export type Database = {
       [_ in never]: never
     }
   }
-
   public: {
     Tables: {
       body_weights: {
@@ -43,7 +42,6 @@ export type Database = {
           user_id: string
           weight_kg: number
         }
-        ComputedFields: never
         Insert: {
           created_at?: string
           id?: string
@@ -80,7 +78,6 @@ export type Database = {
           storage_path: string
           updated_at: string
         }
-        ComputedFields: never
         Insert: {
           created_at?: string
           file_name?: string
@@ -115,7 +112,6 @@ export type Database = {
           muscle_id: string
           weight: number
         }
-        ComputedFields: never
         Insert: {
           exercise_id: string
           muscle_id: string
@@ -160,7 +156,6 @@ export type Database = {
           user_id: string
           volume: number
         }
-        ComputedFields: never
         Insert: {
           best_e1rm?: number | null
           completion_ratio?: number | null
@@ -233,7 +228,6 @@ export type Database = {
           pattern_load_ratio: number | null
           updated_at: string
         }
-        ComputedFields: never
         Insert: {
           archived_at?: string | null
           based_on_exercise_id?: string | null
@@ -300,7 +294,6 @@ export type Database = {
           id: string
           reference_exercise_id: string | null
         }
-        ComputedFields: never
         Insert: {
           id: string
           reference_exercise_id?: string | null
@@ -324,7 +317,6 @@ export type Database = {
           id: string
           sort: number
         }
-        ComputedFields: never
         Insert: {
           id: string
           sort?: number
@@ -342,7 +334,6 @@ export type Database = {
           recovery_hours: number
           sort: number
         }
-        ComputedFields: never
         Insert: {
           group_id: string
           id: string
@@ -374,7 +365,6 @@ export type Database = {
           user_id: string
           value: number
         }
-        ComputedFields: never
         Insert: {
           achieved_at: string
           exercise_id: string
@@ -421,7 +411,6 @@ export type Database = {
           position: number
           workout_id: string
         }
-        ComputedFields: never
         Insert: {
           plan_id: string
           position: number
@@ -457,9 +446,9 @@ export type Database = {
           labels: string[]
           name: string
           owner_id: string
+          sort_order: number
           updated_at: string
         }
-        ComputedFields: never
         Insert: {
           color_idx?: number
           created_at?: string
@@ -467,6 +456,7 @@ export type Database = {
           labels?: string[]
           name?: string
           owner_id?: string
+          sort_order?: number
           updated_at?: string
         }
         Update: {
@@ -476,6 +466,7 @@ export type Database = {
           labels?: string[]
           name?: string
           owner_id?: string
+          sort_order?: number
           updated_at?: string
         }
         Relationships: [
@@ -503,7 +494,6 @@ export type Database = {
           training_experience: string | null
           updated_at: string
         }
-        ComputedFields: never
         Insert: {
           created_at?: string
           display_name?: string
@@ -554,7 +544,6 @@ export type Database = {
           weight: number | null
           workout_exercise_id: string | null
         }
-        ComputedFields: never
         Insert: {
           duration_sec?: number | null
           exercise_id: string
@@ -632,7 +621,6 @@ export type Database = {
           sex: string
           value: number
         }
-        ComputedFields: never
         Insert: {
           exercise_id: string
           level: string
@@ -666,7 +654,6 @@ export type Database = {
           updated_at: string
           user_id: string
         }
-        ComputedFields: never
         Insert: {
           confidence: number
           exercise_id: string
@@ -710,11 +697,10 @@ export type Database = {
           laps: number
           position: number
           rest_sec: number
-          sets: NonNullable<Json>
+          sets: Json
           updated_at: string
           workout_id: string
         }
-        ComputedFields: never
         Insert: {
           color_idx?: number
           created_at?: string
@@ -724,7 +710,7 @@ export type Database = {
           laps?: number
           position: number
           rest_sec?: number
-          sets?: NonNullable<Json>
+          sets?: Json
           updated_at?: string
           workout_id: string
         }
@@ -737,7 +723,7 @@ export type Database = {
           laps?: number
           position?: number
           rest_sec?: number
-          sets?: NonNullable<Json>
+          sets?: Json
           updated_at?: string
           workout_id?: string
         }
@@ -771,7 +757,6 @@ export type Database = {
           workout_id: string | null
           workout_name: string
         }
-        ComputedFields: never
         Insert: {
           created_at?: string
           effort_rating?: number | null
@@ -829,10 +814,10 @@ export type Database = {
           labels: string[]
           name: string
           owner_id: string
+          sort_order: number
           source_workout_id: string | null
           updated_at: string
         }
-        ComputedFields: never
         Insert: {
           color_idx?: number
           created_at?: string
@@ -841,6 +826,7 @@ export type Database = {
           labels?: string[]
           name?: string
           owner_id?: string
+          sort_order?: number
           source_workout_id?: string | null
           updated_at?: string
         }
@@ -852,6 +838,7 @@ export type Database = {
           labels?: string[]
           name?: string
           owner_id?: string
+          sort_order?: number
           source_workout_id?: string | null
           updated_at?: string
         }
@@ -878,7 +865,10 @@ export type Database = {
     }
     Functions: {
       delete_plan: { Args: { p_plan_id: string }; Returns: undefined }
-      estimate_e1rm: { Args: { p_reps: number; p_weight: number }; Returns: number }
+      estimate_e1rm: {
+        Args: { p_reps: number; p_weight: number }
+        Returns: number
+      }
       estimate_start_weight: {
         Args: { p_exercise_id: string }
         Returns: {
@@ -944,7 +934,12 @@ export type Database = {
       is_visible_exercise: { Args: { p_exercise_id: string }; Returns: boolean }
       legacy_uuid: { Args: { p_name: string }; Returns: string }
       legacy_workout_payload: {
-        Args: { p_exercise_ids: Json; p_id: string; p_source_workout_id: string; p_workout: Json }
+        Args: {
+          p_exercise_ids: Json
+          p_id: string
+          p_source_workout_id: string
+          p_workout: Json
+        }
         Returns: Json
       }
       level_from_experience: { Args: { p_experience: string }; Returns: string }
@@ -952,10 +947,22 @@ export type Database = {
       level_rank: { Args: { p_level: string }; Returns: number }
       period_days_for_level: { Args: { p_level: string }; Returns: number }
       recalc_levels: { Args: { p_user_id?: string }; Returns: undefined }
-      refresh_personal_records: { Args: { p_exercise_ids: string[]; p_user_id: string }; Returns: undefined }
+      refresh_personal_records: {
+        Args: { p_exercise_ids: string[]; p_user_id: string }
+        Returns: undefined
+      }
+      reorder_plans: { Args: { p_ids: string[] }; Returns: undefined }
+      reorder_workouts: { Args: { p_ids: string[] }; Returns: undefined }
+      resolve_own_exercise: {
+        Args: { p_key: string; p_metric: string; p_name: string }
+        Returns: string
+      }
       save_plan: { Args: { p_plan: Json }; Returns: string }
       save_workout: { Args: { p_workout: Json }; Returns: string }
-      upsert_workout_tree: { Args: { p_in_library: boolean; p_workout: Json }; Returns: string }
+      upsert_workout_tree: {
+        Args: { p_in_library: boolean; p_workout: Json }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
@@ -980,7 +987,9 @@ export type Tables<
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
     : never = never
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
       DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
       Row: infer R
@@ -1002,7 +1011,9 @@ export type TablesInsert<
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
     : never = never
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Insert: infer I
     }
@@ -1023,7 +1034,9 @@ export type TablesUpdate<
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
     : never = never
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Update: infer U
     }
@@ -1044,7 +1057,9 @@ export type Enums<
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
     : never = never
-> = DefaultSchemaEnumNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
   ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
@@ -1059,7 +1074,9 @@ export type CompositeTypes<
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
     : never = never
-> = PublicCompositeTypeNameOrOptions extends { schema: keyof DatabaseWithoutInternals }
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
   ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { memo } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import { usePlans, useWorkout } from '@hooks/redux'
+import { usePlans } from '@hooks/redux'
 import { HomeScreen, PlayingScreen, WorkoutScreen } from '@screens'
 import { useScreenOptions } from '@theme/navigation-theme'
 import { Loading } from '@common'
@@ -12,19 +12,14 @@ const Stack = createStackNavigator<HomeStackParamList, 'HomeStack'>()
 
 export default memo(function HomeRouter() {
   const options = useScreenOptions()
-  const { selectedWorkout, isLoading } = useWorkout()
   const plans = usePlans()
 
   return (
     <>
-      {(isLoading || plans.isLoading) && <Loading />}
+      {plans.isLoading && <Loading />}
       <Stack.Navigator id='HomeStack'>
         <Stack.Screen name={ScreenName.Home} options={{ ...options, headerShown: false }} component={HomeScreen} />
-        <Stack.Screen
-          name={ScreenName.Workout}
-          options={{ ...options, title: selectedWorkout?.name }}
-          component={WorkoutScreen}
-        />
+        <Stack.Screen name={ScreenName.Workout} options={options} component={WorkoutScreen} />
         <Stack.Screen
           name={ScreenName.Playing}
           options={{ ...options, headerShown: false }}

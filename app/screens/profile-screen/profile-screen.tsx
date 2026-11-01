@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native'
 import { useAppDispatch } from '@hooks/redux'
 import { useAppTheme } from '@theme/use-app-theme'
 import { useIsOnline } from '@stores/network/use-network-store'
-import { clearWorkoutResults } from '@store/workout-reducer/workout-slice'
 import { clearPlaneResults } from '@store/plans-reducer/plans-slice'
 import { resetStores } from '@stores/reset-stores'
 import { useSessionUserId } from '@stores/session/use-session-store'
@@ -33,7 +32,6 @@ export default memo(function ProfileScreen() {
   const [isLogoutModal, setIsLogoutModal] = useState(false)
 
   const handleSignedOut = () => {
-    dispatch(clearWorkoutResults())
     dispatch(clearPlaneResults())
     resetStores()
   }

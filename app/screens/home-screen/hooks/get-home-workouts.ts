@@ -6,13 +6,9 @@ export type HomeWorkouts = {
   upcomingWorkouts: WorkoutType[]
 }
 
-export default function getHomeWorkouts(workouts: WorkoutType[], sortedWorkoutUids: string[]): HomeWorkouts {
-  const sortedWorkouts = workouts
-    .slice()
-    .sort((a, b) => sortedWorkoutUids.indexOf(a.uid) - sortedWorkoutUids.indexOf(b.uid))
+const getHomeWorkouts = (workouts: WorkoutType[]): HomeWorkouts => ({
+  todayWorkout: workouts[0] ?? null,
+  upcomingWorkouts: workouts.slice(1, 1 + PREVIEW_WORKOUTS_COUNT),
+})
 
-  return {
-    todayWorkout: sortedWorkouts[0] ?? null,
-    upcomingWorkouts: sortedWorkouts.slice(1, 1 + PREVIEW_WORKOUTS_COUNT),
-  }
-}
+export default getHomeWorkouts

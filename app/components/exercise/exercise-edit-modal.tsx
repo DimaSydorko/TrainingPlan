@@ -13,12 +13,19 @@ import styles from './styles'
 
 type ExerciseEditModalProps = {
   exercise?: ExerciseType
+  isImageSelectable: boolean
   onSave: (exercise: ExerciseType) => void
   onClose: () => void
   onDelete: () => void
 }
 
-export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onClose }: ExerciseEditModalProps) {
+export default memo(function EditExerciseModal({
+  exercise,
+  isImageSelectable,
+  onSave,
+  onDelete,
+  onClose,
+}: ExerciseEditModalProps) {
   const isNewExercise = useMemo(() => !exercise, [exercise])
   const initialEx = useMemo(() => {
     return isNewExercise ? { ...defaultExercise, uid: nanoid() } : exercise
@@ -89,7 +96,7 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
         extraPlaceLeft={
           <>
             <AppColorPicker value={colorIdx} onChange={setColorIdx} />
-            <ImageSelector value={imageUrl} onSubmit={setImageUrl} />
+            {isImageSelectable && <ImageSelector value={imageUrl} onSubmit={setImageUrl} />}
           </>
         }
         extraPlaceRight={

@@ -24,7 +24,7 @@ AsyncStorage.setItem(
   'persist:root',
   JSON.stringify({
     settingsReducer: JSON.stringify(legacySettings),
-    workoutReducer: JSON.stringify({ workouts: [], deletedWorkoutUids: [], sortedWorkoutUids: [] }),
+    workoutReducer: JSON.stringify({ workouts: [{ uid: 'w1' }], deletedWorkoutUids: [], sortedWorkoutUids: ['w1'] }),
     _persist: JSON.stringify({ version: -1, rehydrated: true }),
   })
 )
@@ -42,13 +42,14 @@ describe('settings hand-over with both stores booted', () => {
   it('keeps the legacy settings in persist:root and writes the migrated settings-v1', async () => {
     await waitFor(() => persistedStore.getState().bootstrapped && useSettingsStore.persist.hasHydrated())
 
-    store.dispatch({ type: 'plans/changeWorkoutsPosition', payload: ['w1'] })
+    store.dispatch({ type: 'plans/changePlansPosition', payload: ['p1'] })
     await persistedStore.flush()
 
     const legacyRoot = JSON.parse(await AsyncStorage.getItem('persist:root'))
     const settings = JSON.parse(await AsyncStorage.getItem('settings-v1'))
 
-    expect(JSON.parse(legacyRoot.workoutReducer).sortedWorkoutUids).toEqual(['w1'])
+    expect(JSON.parse(legacyRoot.workoutReducer).workouts).toEqual([{ uid: 'w1' }])
+    expect(JSON.parse(legacyRoot.plansReducer).sortedPlanUids).toEqual(['p1'])
     expect(JSON.parse(legacyRoot.settingsReducer)).toEqual(legacySettings)
     expect(settings.state).toEqual({
       themeMode: 'dark',

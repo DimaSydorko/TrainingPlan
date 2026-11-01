@@ -6,7 +6,6 @@ export const FUTURE_FLAG = {
 
 export enum FirebaseDBCollection {
   Plans = 'plans',
-  Workouts = 'workouts',
 }
 
 export enum FirebaseDatabase {

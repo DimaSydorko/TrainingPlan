@@ -7,7 +7,7 @@ const ok = (data = null) => jest.fn(async () => ({ data, error: null }))
 
 const createQuery = () => {
   const query = {}
-  ;['select', 'eq', 'order', 'range', 'limit', 'insert', 'update', 'upsert', 'delete'].forEach(method => {
+  ;['select', 'eq', 'in', 'order', 'range', 'limit', 'insert', 'update', 'upsert', 'delete'].forEach(method => {
     query[method] = jest.fn(() => query)
   })
   query.single = ok()

@@ -2,7 +2,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import NetInfo from '@react-native-community/netinfo'
 import { deleteDoc, doc, getDocs, limit, query, setDoc, where } from 'firebase/firestore'
 import { plansCollection } from '@utils/firebase'
-import { updateSelectedWorkout } from '../workout-reducer/workout-slice'
 import { QUERY_LIMIT } from '@utils/constants'
 import { PlanType, WorkoutType } from '@utils/types'
 import { getCurrentTime, nanoid } from '@utils'
@@ -95,7 +94,6 @@ export const plansAC = {
         if (net.isConnected) {
           await setDoc(doc(plansCollection, uid), selectedPlan)
         }
-        thunkAPI.dispatch(updateSelectedWorkout(workout))
         return { uid, ...selectedPlan } as PlanType
       } catch (e) {
         return thunkAPI.rejectWithValue(errorMessage(e))

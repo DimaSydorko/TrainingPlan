@@ -48,5 +48,4 @@ export const rtdb: Database = getDatabase(app)
 
 const col = (name: FirebaseDBCollection) => collection(db, name) as CollectionReference<DocumentData>
 
-export const workoutsCollection = col(FirebaseDBCollection.Workouts)
 export const plansCollection = col(FirebaseDBCollection.Plans)
