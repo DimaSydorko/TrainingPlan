@@ -13,7 +13,7 @@ so the offline cache survives restarts), queries `networkMode: 'offlineFirst'`.
 
 ## Rules
 
--   Put the value in the entity's `*.constants.ts` (`WORKOUTS_STALE_TIME_MS`), with a unit suffix.
+-   Put the value in the entity's `*.constants.ts` (shared by its hooks), with a unit suffix (`WORKOUTS_STALE_TIME_MS`).
 -   Don't override `gcTime` per query unless there is a reason (large, rarely used data may use a shorter one; it
     then won't be available offline after a restart).
 -   `staleTime: Infinity` only for data that never changes during a session.

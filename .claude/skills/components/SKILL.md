@@ -74,7 +74,7 @@ export default StyleSheet.create({
 })
 ```
 
-`workout-card/workout-card.constants.ts` — only when the component has constants (then always in this file).
+Constants at the top of `workout-card.tsx`; a `workout-card.constants.ts` only when another file shares them.
 
 ## Step 4 — Data
 

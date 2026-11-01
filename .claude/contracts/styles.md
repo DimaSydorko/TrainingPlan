@@ -61,8 +61,8 @@ For a fixed set of variants, define one style per variant in the StyleSheet and 
 -   Spacing, radius and font sizes come from `spacing`, `radius`, `fontSize` / `typography` in `@theme/tokens` when
     the value is on the scale.
 -   No magic numbers: spacing/sizes reused across components come from theme constants (`BAR_HEIGHT`,
-    `LAYOUT_GUTTER` in `app/theme/*.constants.ts`); component-only values go into the component's `*.constants.ts`
-    or StyleSheet with a clear name.
+    `LAYOUT_GUTTER` in `app/theme/*.constants.ts`); component-only values go into a named constant at the top of
+    the component file or the StyleSheet.
 -   Window sizes: never `Dimensions.get` or sizes measured at module load. Prefer flex / `'100%'` / margins; when a
     real size is needed use `useScreen()` from `app/platform/screen.ts` (`width`, `height`, `breakpoint`:
     compact < 600 ≤ medium < 840 ≤ expanded) and compose it as a runtime style (`[styles.x, { width }]`).
