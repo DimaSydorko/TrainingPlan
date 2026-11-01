@@ -1,5 +1,6 @@
 import reducer, { clearWorkoutResults, updateSelectedWorkout } from '@store/workout-reducer/workout-slice'
 import { workoutAC } from '@store/workout-reducer/workout-ac'
+import { useSessionStore } from '@stores/session/use-session-store'
 
 jest.mock('@utils/firebase', () => ({
   db: {},
@@ -43,7 +44,6 @@ const workout = (uid: string, lastUpdated = 1, extra = {}) => ({
 })
 const initial = () => reducer(undefined, { type: '@@init' })
 const rootState = (workoutReducer = {}) => ({
-  userReducer: { user: { uid: 'u1' } },
   workoutReducer: { ...initial(), ...workoutReducer },
 })
 const run = async (thunk, state) => {
@@ -52,7 +52,10 @@ const run = async (thunk, state) => {
 }
 const online = (isConnected: boolean) => NetInfo.fetch.mockResolvedValue({ isConnected })
 
-beforeEach(() => jest.clearAllMocks())
+beforeEach(() => {
+  jest.clearAllMocks()
+  useSessionStore.setState({ userId: 'u1' })
+})
 
 describe('WorkoutSlice reducers', () => {
   it('getWorkouts.fulfilled keeps pending offline deletes when loaded offline', () => {

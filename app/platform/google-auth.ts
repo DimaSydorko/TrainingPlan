@@ -1,6 +1,6 @@
 // Device seam. Keep the exported signatures stable.
 // Backed by @react-native-google-signin/google-signin (v16, "original" Google Sign-In API) with
-// its Expo config plugin in app.config.ts. Firebase uses the ID token (UserAC).
+// its Expo config plugin in app.config.ts. Supabase signs in with the ID token (app/api/auth).
 //
 // Config comes from EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID (all platforms) and
 // EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID (iOS; we don't ship GoogleService-Info.plist).
@@ -54,7 +54,7 @@ function ensureConfigured(): void {
 }
 
 /**
- * Shows the Google account picker and returns the ID token for Firebase.
+ * Shows the Google account picker and returns the ID token for Supabase.
  * Throws GoogleAuthError; `isGoogleSignInCancelled(e)` is true when the user backed out.
  */
 export async function getGoogleIdToken(): Promise<string> {

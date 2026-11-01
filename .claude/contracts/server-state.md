@@ -191,15 +191,17 @@ only **invalidates** (or patches) the entity's keys; it never writes to a store.
 -   Supabase Auth is the session source. Email/password via `supabase.auth.signInWithPassword` / `signUp`; Google
     via `getGoogleIdToken()` from `app/platform/google-auth.ts` → `supabase.auth.signInWithIdToken({ provider:
     'google', token })`.
--   Auth calls live in `app/api/auth/`; the session is exposed through one hook (`app/services/auth/use-session.ts`)
-    driven by `onAuthStateChange`.
--   Logout: `supabase.auth.signOut()`, `signOutGoogle()`, `queryClient.clear()` (and remove the persisted cache), and
-    every store's `reset()` (`client-state.md`).
+-   Auth calls live in `app/api/auth/` (errors → `AuthRequestError.code`). `useAuthSessionListener` (`onAuthStateChange`)
+    feeds `useSessionStore` (`app/stores/session`: status, userId, email); consumers pass `userId` into hooks.
+-   Logout (`useSignOut`): `signOutGoogle()`, `signOut({ scope: 'local' })`, `queryClient.clear()` + persisted cache
+    removal; the caller resets stores (`client-state.md`).
 
 ### Legacy Firebase (until removed)
 
--   Firestore/Auth calls exist only in `app/utils/firebase.ts`, `app/store/firestore.ts`, `app/store/sync.ts` and the
+-   Firestore calls exist only in `app/utils/firebase.ts`, `app/store/firestore.ts`, `app/store/sync.ts` and the
     `app/store/**/*AC.ts` thunks. **Do not add new ones.** Modular API only (`firebase/compat` is ESLint-blocked).
 -   When an entity moves to Supabase, delete its Firestore code, its thunks and its Redux data in the same change;
     never dual-write or read from both.
--   Existing user data is moved by a one-off migration script (outside the app bundle), not by app code.
+-   Existing user data moves once in-app after Supabase login (`import_legacy_data` RPC from persisted Redux, only
+    when the old Firebase user's e-mail matches: `app/api/legacy-import/legacy-owner.ts`). Keep `userReducer` in
+    `persist:root` (read-only `legacy-user-reducer.ts`) until then.

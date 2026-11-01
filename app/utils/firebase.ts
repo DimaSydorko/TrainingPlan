@@ -1,7 +1,4 @@
-// Firebase modular JS SDK. Auth is persisted with AsyncStorage so the session survives restarts.
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { FirebaseApp, FirebaseOptions, getApp, getApps, initializeApp } from 'firebase/app'
-import { Auth, getAuth, getReactNativePersistence, initializeAuth } from 'firebase/auth'
 import {
   collection,
   CollectionReference,
@@ -33,16 +30,6 @@ if (__DEV__ && !firebaseConfig.apiKey) {
 const isFirstInit = getApps().length === 0
 export const app: FirebaseApp = isFirstInit ? initializeApp(firebaseConfig) : getApp()
 
-const createAuth = (): Auth => {
-  if (!isFirstInit) return getAuth(app)
-  try {
-    return initializeAuth(app, { persistence: getReactNativePersistence(AsyncStorage) })
-  } catch {
-    // initializeAuth throws auth/already-initialized if it was called before for this app.
-    return getAuth(app)
-  }
-}
-
 const createFirestore = (): Firestore => {
   if (!isFirstInit) return getFirestore(app)
   try {
@@ -55,13 +42,11 @@ const createFirestore = (): Firestore => {
   }
 }
 
-export const auth: Auth = createAuth()
 export const db: Firestore = createFirestore()
 // Realtime Database: holds the exercise GIF catalogue (FirebaseDatabase.ExerciseImages).
 export const rtdb: Database = getDatabase(app)
 
 const col = (name: FirebaseDBCollection) => collection(db, name) as CollectionReference<DocumentData>
 
-export const usersDataCollection = col(FirebaseDBCollection.UsersData)
 export const workoutsCollection = col(FirebaseDBCollection.Workouts)
 export const plansCollection = col(FirebaseDBCollection.Plans)

@@ -7,6 +7,7 @@ import { QUERY_LIMIT } from '@utils/constants'
 import { PlanType, WorkoutType } from '@utils/types'
 import { getCurrentTime, nanoid } from '@utils'
 import type { RootState } from '../index'
+import { useSessionStore } from '@stores/session/use-session-store'
 import { errorMessage, ownedBy, splitUid, syncWithRemote } from '../sync'
 import { pushSync } from '../firestore'
 
@@ -22,8 +23,8 @@ export type DeletePlanReducerType = {
 
 export const plansAC = {
   getPlans: createAsyncThunk('plans/getPlans', async (_, thunkAPI) => {
-    const { plansReducer, userReducer } = thunkAPI.getState() as RootState
-    const userUid: string = userReducer.user.uid
+    const { plansReducer } = thunkAPI.getState() as RootState
+    const userUid = useSessionStore.getState().userId ?? ''
     try {
       const net = await NetInfo.fetch()
       const isInternet = net.isConnected
@@ -47,11 +48,10 @@ export const plansAC = {
   }),
 
   addPlan: createAsyncThunk('plans/addPlans', async (props: PlanType, thunkAPI) => {
-    const { userReducer } = thunkAPI.getState() as RootState
     const newPlan: PlanType = {
       ...props,
       uid: props?.uid || nanoid(),
-      ownerUid: props?.ownerUid || userReducer.user.uid,
+      ownerUid: props?.ownerUid || (useSessionStore.getState().userId ?? ''),
       lastUpdated: getCurrentTime(),
     }
     const { uid, data } = splitUid(newPlan)

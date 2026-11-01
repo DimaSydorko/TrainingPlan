@@ -29,7 +29,7 @@ export class GoogleAuthError extends Error {
 }
 
 /**
- * True when the error means "the user cancelled". Callers (UserAC) should treat this as a
+ * True when the error means "the user cancelled". Callers should treat this as a
  * no-op and not show an error toast. Checks `code` rather than `instanceof` so it keeps working
  * across bundling or serialisation boundaries.
  */
@@ -131,7 +131,7 @@ export function toGoogleAuthError(error: unknown, codes: GoogleStatusCodes): Goo
     case ANDROID_DEVELOPER_ERROR:
       return new GoogleAuthError(
         'developer_error',
-        'Google sign-in is not set up for this build (DEVELOPER_ERROR). Register its SHA-1 in Firebase.',
+        'Google sign-in is not set up for this build (DEVELOPER_ERROR). Register its SHA-1 in Google Cloud Console.',
         error
       )
     default:

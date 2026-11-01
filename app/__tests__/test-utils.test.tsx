@@ -1,13 +1,13 @@
 /** Checks the shared test helpers in app/__tests__/utils. */
 import { Text } from 'react-native'
 import { screen } from '@testing-library/react-native'
-import { useUser, useWorkout } from '@hooks/redux'
+import { useAppSelector, useWorkout } from '@hooks/redux'
 import { renderWithStore } from './utils/render'
 import { getInitialState } from './utils/test-store'
 
 function Probe() {
   const { sortedWorkoutUids, error } = useWorkout()
-  const { user } = useUser()
+  const user = useAppSelector(state => state.userReducer?.user)
   return <Text>{`sorted=${sortedWorkoutUids.join(',')} error=${error} user=${user?.uid ?? 'none'}`}</Text>
 }
 

@@ -3,6 +3,7 @@ import NetInfo from '@react-native-community/netinfo'
 import { doc, getDocs, limit, query, setDoc, updateDoc, where } from 'firebase/firestore'
 import { get, ref } from 'firebase/database'
 import type { RootState } from '../index'
+import { useSessionStore } from '@stores/session/use-session-store'
 import { rtdb, workoutsCollection } from '@utils/firebase'
 import { FirebaseDatabase, QUERY_LIMIT } from '@utils/constants'
 import { StoredExerciseImage, WorkoutType } from '@utils/types'
@@ -22,8 +23,8 @@ export type DeleteWorkoutReducerType = {
 
 export const workoutAC = {
   getWorkouts: createAsyncThunk('workout/getWorkouts', async (_, thunkAPI) => {
-    const { workoutReducer, userReducer } = thunkAPI.getState() as RootState
-    const userUid: string = userReducer.user.uid
+    const { workoutReducer } = thunkAPI.getState() as RootState
+    const userUid = useSessionStore.getState().userId ?? ''
     try {
       const net = await NetInfo.fetch()
       const isInternet = net.isConnected
@@ -48,12 +49,11 @@ export const workoutAC = {
   }),
 
   addWorkout: createAsyncThunk('workout/addWorkout', async (props: WorkoutType, thunkAPI) => {
-    const { userReducer } = thunkAPI.getState() as RootState
     const workout: WorkoutType = {
       ...props,
       lastUpdated: getCurrentTime(),
       uid: props?.uid || nanoid(),
-      ownerUid: userReducer.user.uid,
+      ownerUid: useSessionStore.getState().userId ?? '',
     }
     const { uid, data } = splitUid(workout)
     try {

@@ -3,17 +3,6 @@ import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
 import type { StackNavigationProp } from '@react-navigation/stack'
 import { ScreenName, TabName } from './constants'
 
-export type UserType = {
-  uid: string
-  displayName: string
-  photoURL: string | null
-  email: string
-}
-
-export type UserDataType = {
-  friendsUIDs: string[]
-}
-
 export type StoredFile = {
   fileName: string
   storageKey: string

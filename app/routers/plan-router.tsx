@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { memo } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import { usePlans, useUser, useWorkout } from '@hooks/redux'
+import { usePlans, useWorkout } from '@hooks/redux'
 import { MyPlansScreen, PlayingScreen, WorkoutScreen, WorkoutsScreen } from '@screens'
 import { useScreenOptions } from '@theme/navigation-theme'
 import { Loading } from '@common'
@@ -16,14 +16,13 @@ function PlanWorkoutsScreen() {
 
 export default memo(function PlanRouter() {
   const options = useScreenOptions()
-  const user = useUser()
 
   const workout = useWorkout()
   const plans = usePlans()
 
   return (
     <>
-      {(workout.isLoading || plans.isLoading || user.isLoading) && <Loading />}
+      {(workout.isLoading || plans.isLoading) && <Loading />}
       <Stack.Navigator id='PlansStack'>
         <Stack.Screen
           name={ScreenName.SavedWorkouts}

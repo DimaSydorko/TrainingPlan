@@ -69,3 +69,6 @@ require('react-native-gesture-handler/jestSetup')
 
 // EXPO_PUBLIC_* values are inlined by babel-preset-expo at build time; in tests they are undefined
 // unless a test sets them. Never put real credentials here.
+
+// Supabase client (app/lib/supabase/client): no URL/key in tests, so the real createClient would throw.
+jest.doMock('../../lib/supabase/client', () => require('./mocks/supabase-client'))

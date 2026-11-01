@@ -1,5 +1,6 @@
 import reducer, { changePlansPosition, clearPlaneResults, selectPlan } from '@store/plans-reducer/plans-slice'
 import { plansAC } from '@store/plans-reducer/plans-ac'
+import { useSessionStore } from '@stores/session/use-session-store'
 
 jest.mock('@utils/firebase', () => ({
   db: {},
@@ -42,7 +43,6 @@ const plan = (uid: string, lastUpdated = 1, extra = {}) => ({
 })
 const initial = () => reducer(undefined, { type: '@@init' })
 const rootState = (plansReducer = {}) => ({
-  userReducer: { user: { uid: 'u1' } },
   plansReducer: { ...initial(), ...plansReducer },
 })
 const run = async (thunk, state) => {
@@ -52,7 +52,10 @@ const run = async (thunk, state) => {
 }
 const online = (isConnected: boolean) => NetInfo.fetch.mockResolvedValue({ isConnected })
 
-beforeEach(() => jest.clearAllMocks())
+beforeEach(() => {
+  jest.clearAllMocks()
+  useSessionStore.setState({ userId: 'u1' })
+})
 
 describe('PlansSlice reducers', () => {
   it('selects, sorts and clears', () => {

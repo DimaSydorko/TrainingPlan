@@ -2,7 +2,8 @@ import * as React from 'react'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { useAppDispatch, useUser, useWorkout } from '@hooks/redux'
+import { useAppDispatch, useWorkout } from '@hooks/redux'
+import { useSessionUserId } from '@stores/session/use-session-store'
 import { useAppTheme } from '@theme/use-app-theme'
 import { workoutAC } from '@store/workout-reducer/workout-ac'
 import { plansAC } from '@store/plans-reducer/plans-ac'
@@ -42,7 +43,7 @@ export default function WorkoutScreen() {
   const navigation = useNavigation<PlayableNavigation>()
   const { selectedWorkout } = useWorkout()
   const { isDark } = useAppTheme()
-  const { user } = useUser()
+  const userId = useSessionUserId()
   const { onToggleTabMenu } = useContext(AppHelperContext)
   const bars = useAppInsets()
   const screen = useScreen()
@@ -87,13 +88,13 @@ export default function WorkoutScreen() {
   }, [isEmpty])
 
   const onSaveWorkout = useCallback(async () => {
-    if (!workoutExercises || !user || !selectedWorkout) return
+    if (!workoutExercises || !userId || !selectedWorkout) return
     if (isChanged) {
       if (changedWorkout?.ownerUid) dispatch(workoutAC.updateWorkout(changedWorkout))
       else dispatch(plansAC.updateSelectedPlanWorkout(changedWorkout))
     }
     setIsEditMode(false)
-  }, [workoutExercises, user, selectedWorkout, isChanged, changedWorkout])
+  }, [workoutExercises, userId, selectedWorkout, isChanged, changedWorkout])
 
   const onVisibilityToggle = useCallback((exercise: ExerciseType) => {
     setWorkoutExercises(prev => prev?.map(ex => (ex.uid === exercise.uid ? exercise : ex)) || [])

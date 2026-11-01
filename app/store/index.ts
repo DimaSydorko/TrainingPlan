@@ -1,14 +1,13 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
-import userReducer from './user-reducer/user-slice'
 import plansReducer from './plans-reducer/plans-slice'
 import workoutReducer from './workout-reducer/workout-slice'
-import { listenToAuthChanges } from './user-reducer/auth-listener'
 import { legacySettingsReducer } from './legacy-settings-reducer'
+import { legacyUserReducer } from './legacy-user-reducer'
 
 const rootReducer = combineReducers({
-  userReducer,
+  userReducer: legacyUserReducer,
   plansReducer,
   workoutReducer,
   settingsReducer: legacySettingsReducer,
@@ -39,10 +38,7 @@ export const setupStore = (preloadedState?: Partial<RootState>) => {
 }
 
 export const store = setupStore()
-// Start syncing with Firebase Auth only after rehydration, so the persisted user is known.
-export const persistedStore = persistStore(store, null, () => {
-  listenToAuthChanges(store)
-})
+export const persistedStore = persistStore(store)
 
 export type RootState = ReturnType<typeof rootReducer>
 export type AppStore = ReturnType<typeof setupStore>

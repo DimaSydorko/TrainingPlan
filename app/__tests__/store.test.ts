@@ -47,7 +47,7 @@ describe('store persistence', () => {
   it('starts from the initial state when nothing is persisted', async () => {
     const { store } = await loadStore()
     const state = store.getState()
-    expect(state.userReducer?.user).toBeNull()
+    expect(state.userReducer).toBeNull()
     expect(state.plansReducer).toBeDefined()
     expect(state.workoutReducer).toBeDefined()
   })
