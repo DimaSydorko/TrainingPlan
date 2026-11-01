@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { runLegacyImport, type RunLegacyImportArgs } from '@api/legacy-import/run-legacy-import'
 import { profilesKeys } from '@services/profiles/query-keys'
 import { workoutsKeys } from '@services/workouts/query-keys'
+import { plansKeys } from '@services/plans/query-keys'
 
 type UseLegacyImportArgs = {
   userId?: string | null
@@ -25,6 +26,7 @@ const useLegacyImport = ({
     onSuccess: result => {
       if (!result || !userId) return
       queryClient.invalidateQueries({ queryKey: workoutsKeys.all })
+      queryClient.invalidateQueries({ queryKey: plansKeys.all })
       queryClient.invalidateQueries({ queryKey: profilesKeys.detail(userId) })
     },
   })

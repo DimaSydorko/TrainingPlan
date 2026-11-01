@@ -1,18 +1,18 @@
 import * as React from 'react'
 import { memo, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { TouchableOpacity, Vibration } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
-import { plansAC } from '@store/plans-reducer/plans-ac'
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { AppHelperContext } from '@hooks/app-helper-provider'
-import { useAppDispatch } from '@hooks/redux'
 import { useSessionUserId } from '@stores/session/use-session-store'
 import useWorkouts from '@services/workouts/use-workouts'
 import useSaveWorkout from '@services/workouts/use-save-workout'
 import useReorderWorkouts from '@services/workouts/use-reorder-workouts'
+import useSavePlan from '@services/plans/use-save-plan'
+import useSavePlanWorkout from '@services/plans/use-save-plan-workout'
 import useWorkoutPlan from '@hooks/use-workout-plan'
 import { deepCompare } from '@utils'
 import { QUERY_LIMIT, ScreenName, VIBRATION } from '@utils/constants'
-import { PlanType, PlansNavigation, WorkoutType, WorkoutsNavigation } from '@utils/types'
+import { PlanRouteParams, PlanType, PlansNavigation, WorkoutType, WorkoutsNavigation } from '@utils/types'
 import {
   AddMoreButton,
   AppModal,
@@ -45,13 +45,16 @@ type PropsType = {
 
 export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
   const navigation = useNavigation<PlansNavigation | WorkoutsNavigation>()
-  const dispatch = useAppDispatch()
-  const { selectedPlan, addWorkout, deleteWorkouts, copyWorkouts } = useWorkoutPlan()
+  const route = useRoute<RouteProp<Record<string, PlanRouteParams | undefined>, string>>()
+  const planId = isInPlan ? route.params?.planId : undefined
+  const { selectedPlan, addWorkout, deleteWorkouts, copyWorkouts } = useWorkoutPlan(planId)
   const { onToggleTabMenu, isTabMenu } = useContext(AppHelperContext)
   const userId = useSessionUserId()
   const { data: libraryWorkouts } = useWorkouts(userId)
   const { saveWorkout } = useSaveWorkout()
   const { mutate: reorderWorkouts } = useReorderWorkouts()
+  const { savePlan } = useSavePlan()
+  const { savePlanWorkout } = useSavePlanWorkout()
   const { footer } = useAppInsets()
   const scrollContainerStyle = useMemo(() => ({ paddingBottom: footer }), [footer])
   const [workouts, setWorkouts] = useState<WorkoutType[]>()
@@ -84,6 +87,10 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
   }, [_workouts])
 
   useEffect(() => {
+    if (isInPlan) navigation.setOptions({ title: selectedPlan?.name })
+  }, [isInPlan, navigation, selectedPlan?.name])
+
+  useEffect(() => {
     if (isEditMode && isInPlan) {
       onToggleTabMenu(false)
       return () => onToggleTabMenu(true)
@@ -92,12 +99,10 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
 
   const onSavePlan = useCallback(
     (isClearSelected = true) => {
-      if (isChanged) {
-        dispatch(plansAC.updatePlan({ ...selectedPlan, name: planNameInput, workouts }))
-      }
+      if (isChanged && userId && selectedPlan) savePlan(userId, { ...selectedPlan, name: planNameInput, workouts })
       if (isClearSelected) setSelectedWorkoutsUids([])
     },
-    [isChanged, selectedPlan, workouts, planNameInput]
+    [isChanged, selectedPlan, workouts, planNameInput, userId, savePlan]
   )
 
   const onSaveRefuse = useCallback(() => {
@@ -111,11 +116,12 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
       if (isNewWorkoutModal) addWorkout(newWorkout, isInPlan)
       else {
         setSelectedWorkoutsUids([])
-        if (isInPlan) dispatch(plansAC.updateSelectedPlanWorkout(newWorkout))
-        else if (userId) saveWorkout(userId, newWorkout)
+        if (!userId) return
+        if (planId) savePlanWorkout(userId, planId, newWorkout)
+        else saveWorkout(userId, newWorkout)
       }
     },
-    [isNewWorkoutModal, isInPlan, addWorkout, dispatch, userId, saveWorkout]
+    [isNewWorkoutModal, isInPlan, addWorkout, planId, userId, saveWorkout, savePlanWorkout]
   )
 
   const onDelete = useCallback(() => {
@@ -139,11 +145,12 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
         if (selectedWorkoutsUids.length === 1 && isInPlan) onSavePlan(false)
       } else {
         // Rendered by both the Plans stack (isInPlan) and the Workouts stack
-        if (isInPlan) (navigation as PlansNavigation).navigate(ScreenName.WorkoutInPlan, { workoutId: workout.uid })
+        if (planId)
+          (navigation as PlansNavigation).navigate(ScreenName.WorkoutInPlan, { workoutId: workout.uid, planId })
         else (navigation as WorkoutsNavigation).navigate(ScreenName.Workout, { workoutId: workout.uid })
       }
     },
-    [isInPlan, isEditMode, onSavePlan, selectedWorkoutsUids.length, navigation]
+    [isInPlan, isEditMode, onSavePlan, selectedWorkoutsUids.length, navigation, planId]
   )
 
   const onWorkoutLongPress = useCallback(
@@ -246,6 +253,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
       {isChanged && isInPlan && <GoBackSubmitModal text={`Changes in '${selectedPlan?.name}' plan aren\`t saved!`} />}
       <CopyWorkoutsModal
         isInPlan={isInPlan}
+        currentPlanId={planId}
         isOpen={isCopyModal}
         onCopy={onCopy}
         onClose={() => setIsCopyModal(false)}

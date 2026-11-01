@@ -12,7 +12,6 @@ import { workoutAC } from '@store/workout-reducer/workout-ac'
 import { useSessionStore } from '@stores/session/use-session-store'
 import useProfile from '@services/profiles/use-profile'
 import useLegacyImport from '@services/legacy-import/use-legacy-import'
-import { plansAC } from '@store/plans-reducer/plans-ac'
 import NotificationHandler from '@components/notification-handler/notification-handler'
 import HomeRouter from './home-router'
 import WorkoutsRouter from './workouts-router'
@@ -86,7 +85,6 @@ export default function AppRouter() {
 
   useEffect(() => {
     if (isOnline) {
-      dispatch(plansAC.getPlans())
       dispatch(workoutAC.getExerciseImages())
     }
   }, [isOnline])

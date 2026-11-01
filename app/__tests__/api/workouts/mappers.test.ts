@@ -13,6 +13,7 @@ const row: WorkoutRow = {
   color_idx: 2,
   labels: ['gym'],
   updated_at: '2026-11-01T10:00:00.000Z',
+  source_workout_id: null,
   workout_exercises: [
     {
       id: 'we-2',
@@ -129,5 +130,7 @@ describe('workout ids', () => {
     expect(copy.uid).not.toBe(W_ID)
     expect(copy.exercises[0].uid).not.toBe(E_ID)
     expect(copy.exercises[0].uid).toMatch(UUID)
+    expect(copy.sourceWorkoutId).toBe(W_ID)
+    expect(toSaveWorkoutPayload(copy, false).source_workout_id).toBe(W_ID)
   })
 })

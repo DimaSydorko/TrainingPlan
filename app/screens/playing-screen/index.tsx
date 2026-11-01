@@ -9,7 +9,7 @@ import PlayingScreen from './playing-screen'
 
 export default memo(function PlayingScreenWithTimer() {
   const { params } = useRoute<RouteProp<Record<string, PlayingRouteParams>, string>>()
-  const { workout } = useSelectedWorkout({ workoutId: params?.workoutId, isInPlan: !!params?.isInPlan })
+  const { workout } = useSelectedWorkout({ workoutId: params?.workoutId, planId: params?.planId })
 
   if (!workout) return <Loading />
 

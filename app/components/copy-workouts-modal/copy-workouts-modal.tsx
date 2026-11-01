@@ -3,7 +3,8 @@ import { memo, useCallback, useState } from 'react'
 import { ScrollView, TouchableOpacity } from 'react-native'
 import { Icon } from '@common/icon/icon'
 
-import { usePlans } from '@hooks/redux'
+import { useSessionUserId } from '@stores/session/use-session-store'
+import usePlans from '@services/plans/use-plans'
 import { useAppTheme } from '@theme/use-app-theme'
 import { AppModal } from '@common'
 import { PlanType } from '@utils/types'
@@ -19,12 +20,16 @@ import { getExerciseColor } from '@theme/tokens'
 type PropsType = {
   isOpen: boolean
   isInPlan: boolean
+  currentPlanId?: string
   onClose: () => void
   onCopy: (plan: PlanType | undefined) => void
 }
 
-export default memo(function CopyWorkoutsModal({ onClose, onCopy, isOpen, isInPlan }: PropsType) {
-  const { plans, selectedPlan } = usePlans()
+const NO_PLANS: PlanType[] = []
+
+export default memo(function CopyWorkoutsModal({ onClose, onCopy, isOpen, isInPlan, currentPlanId }: PropsType) {
+  const userId = useSessionUserId()
+  const { data: plans = NO_PLANS } = usePlans(userId)
   const { colors, isDark } = useAppTheme()
   const [selectedIdx, setSelectedIdx] = useState<number | undefined>(undefined)
   const { width, height } = useScreen()
@@ -64,7 +69,7 @@ export default memo(function CopyWorkoutsModal({ onClose, onCopy, isOpen, isInPl
           </TouchableOpacity>
         ) : null}
         {plans.map((plan, idx) => {
-          const isCurrent = isInPlan ? selectedPlan.uid === plan.uid : false
+          const isCurrent = isInPlan ? currentPlanId === plan.uid : false
           const color = getExerciseColor(plan?.colorIdx === undefined ? 3 : plan?.colorIdx, isDark)
           return isCurrent ? null : (
             <TouchableOpacity key={plan.uid} onPress={() => setSelectedIdx(idx)}>

@@ -1,10 +1,8 @@
 import * as React from 'react'
 import { memo, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { useAppDispatch } from '@hooks/redux'
 import { useAppTheme } from '@theme/use-app-theme'
 import { useIsOnline } from '@stores/network/use-network-store'
-import { clearPlaneResults } from '@store/plans-reducer/plans-slice'
 import { resetStores } from '@stores/reset-stores'
 import { useSessionUserId } from '@stores/session/use-session-store'
 import useProfile from '@services/profiles/use-profile'
@@ -23,7 +21,6 @@ import { useScreen } from '@platform/screen'
 
 export default memo(function ProfileScreen() {
   const navigation = useNavigation<ProfileNavigation>()
-  const dispatch = useAppDispatch()
   const { colors } = useAppTheme()
   const { width } = useScreen()
   const isOnline = useIsOnline()
@@ -32,7 +29,6 @@ export default memo(function ProfileScreen() {
   const [isLogoutModal, setIsLogoutModal] = useState(false)
 
   const handleSignedOut = () => {
-    dispatch(clearPlaneResults())
     resetStores()
   }
   const signOut = useSignOut({ onSignedOut: handleSignedOut })

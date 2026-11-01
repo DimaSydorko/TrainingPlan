@@ -24,5 +24,6 @@ export type SaveWorkoutPayload = {
   color_idx: number
   labels: string[]
   in_library: boolean
+  source_workout_id: string | null
   exercises: WorkoutExercisePayload[]
 }

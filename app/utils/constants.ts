@@ -4,10 +4,6 @@ export const FUTURE_FLAG = {
   IS_DEV: false,
 }
 
-export enum FirebaseDBCollection {
-  Plans = 'plans',
-}
-
 export enum FirebaseDatabase {
   ExerciseImages = '/ExerciseImages',
 }

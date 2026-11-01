@@ -1,14 +1,14 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
-import plansReducer from './plans-reducer/plans-slice'
 import workoutReducer from './workout-reducer/workout-slice'
 import { legacySettingsReducer } from './legacy-settings-reducer'
 import { legacyUserReducer } from './legacy-user-reducer'
+import { legacyPlansReducer } from './legacy-plans-reducer'
 
 const rootReducer = combineReducers({
   userReducer: legacyUserReducer,
-  plansReducer,
+  plansReducer: legacyPlansReducer,
   workoutReducer,
   settingsReducer: legacySettingsReducer,
 })

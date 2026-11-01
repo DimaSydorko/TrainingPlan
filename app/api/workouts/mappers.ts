@@ -14,7 +14,7 @@ type WorkoutExerciseRow = Pick<
 
 export type WorkoutRow = Pick<
   Tables<'workouts'>,
-  'id' | 'owner_id' | 'name' | 'color_idx' | 'labels' | 'updated_at'
+  'id' | 'owner_id' | 'name' | 'color_idx' | 'labels' | 'updated_at' | 'source_workout_id'
 > & { workout_exercises: WorkoutExerciseRow[] }
 
 const DEFAULT_REPEATS = 1
@@ -52,6 +52,7 @@ export const toWorkout = (row: WorkoutRow): Workout => ({
   colorIdx: row.color_idx,
   labels: row.labels,
   lastUpdated: new Date(row.updated_at).getTime(),
+  ...(row.source_workout_id ? { sourceWorkoutId: row.source_workout_id } : {}),
   exercises: [...row.workout_exercises].sort((a, b) => a.position - b.position).map(toExercise),
 })
 
@@ -88,6 +89,7 @@ export const toSaveWorkoutPayload = (workout: Workout, isInLibrary: boolean): Sa
   color_idx: workout.colorIdx,
   labels: workout.labels ?? [],
   in_library: isInLibrary,
+  source_workout_id: workout.sourceWorkoutId ?? null,
   exercises: (workout.exercises ?? []).map(toWorkoutExercisePayload),
 })
 
@@ -102,5 +104,6 @@ export const withWorkoutIds = (workout: Workout): Workout => ({
 export const copyWorkout = (workout: Workout): Workout => ({
   ...workout,
   uid: createUuid(),
+  sourceWorkoutId: workout.uid,
   exercises: (workout.exercises ?? []).map(exercise => ({ ...exercise, uid: createUuid() })),
 })

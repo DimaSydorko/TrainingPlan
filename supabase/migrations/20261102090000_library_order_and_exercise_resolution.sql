@@ -1,6 +1,7 @@
 -- Library order (replaces the device-only sortedWorkoutUids / sortedPlanUids) and per-user exercise resolution:
 -- the editor sends an exercise by key (normalized name, "time:" prefix for timed ones) and the server finds or
 -- creates the user's own exercise with the same deterministic id the legacy import uses.
+-- A source_workout_id that no longer exists (deleted library workout, stale client cache) is stored as null.
 
 alter table public.workouts add column sort_order integer not null default 0;
 alter table public.plans add column sort_order integer not null default 0;
@@ -43,7 +44,7 @@ begin
     coalesce((p_workout ->> 'color_idx')::smallint, 0),
     coalesce(array(select jsonb_array_elements_text(p_workout -> 'labels')), '{}'),
     p_in_library,
-    (p_workout ->> 'source_workout_id')::uuid,
+    (select w.id from public.workouts w where w.id = (p_workout ->> 'source_workout_id')::uuid),
     (
       select coalesce(max(w.sort_order), -1) + 1 from public.workouts w
       where w.owner_id = (select auth.uid()) and w.in_library = p_in_library

@@ -4,7 +4,6 @@ import { get, ref } from 'firebase/database'
 import { rtdb } from '@utils/firebase'
 import { FirebaseDatabase } from '@utils/constants'
 import { StoredExerciseImage } from '@utils/types'
-import { errorMessage } from '../sync'
 
 export const workoutAC = {
   getExerciseImages: createAsyncThunk('workout/getExerciseImages', async (_, thunkAPI) => {
@@ -18,7 +17,7 @@ export const workoutAC = {
       }
       return exerciseImages
     } catch (e) {
-      return thunkAPI.rejectWithValue(errorMessage(e))
+      return thunkAPI.rejectWithValue(e instanceof Error ? e.message : String(e))
     }
   }),
 }

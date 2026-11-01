@@ -52,7 +52,7 @@ export default function usePlaying() {
   const { params } = useRoute<RouteProp<Record<string, PlayingRouteParams>, string>>()
   const { workout, onSaveWorkout } = useSelectedWorkout({
     workoutId: params?.workoutId,
-    isInPlan: !!params?.isInPlan,
+    planId: params?.planId,
   })
   const selectedWorkout: SelectedWorkoutType | null = workout
   const navigation = useNavigation<AppNavigationType>()

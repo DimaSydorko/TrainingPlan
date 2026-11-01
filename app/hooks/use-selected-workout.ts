@@ -1,36 +1,36 @@
 import { useCallback, useMemo } from 'react'
-import { useAppDispatch, usePlans } from '@hooks/redux'
 import { useSessionUserId } from '@stores/session/use-session-store'
-import { plansAC } from '@store/plans-reducer/plans-ac'
 import useWorkout from '@services/workouts/use-workout'
 import useSaveWorkout from '@services/workouts/use-save-workout'
+import usePlan from '@services/plans/use-plan'
+import useSavePlanWorkout from '@services/plans/use-save-plan-workout'
 import { WorkoutType } from '@utils/types'
 
-type UseSelectedWorkoutArgs = { workoutId?: string; isInPlan: boolean }
+type UseSelectedWorkoutArgs = { workoutId?: string; planId?: string }
 
-const useSelectedWorkout = ({ workoutId, isInPlan }: UseSelectedWorkoutArgs) => {
-  const dispatch = useAppDispatch()
+const useSelectedWorkout = ({ workoutId, planId }: UseSelectedWorkoutArgs) => {
   const userId = useSessionUserId()
-  const { selectedPlan } = usePlans()
-  const libraryWorkout = useWorkout({ userId, workoutId: isInPlan ? undefined : workoutId })
+  const libraryWorkout = useWorkout({ userId, workoutId: planId ? undefined : workoutId })
+  const { data: plan } = usePlan({ userId, planId })
   const { saveWorkout } = useSaveWorkout()
+  const { savePlanWorkout } = useSavePlanWorkout()
 
   const planWorkout = useMemo(
-    () => (isInPlan ? selectedPlan?.workouts.find(workout => workout.uid === workoutId) ?? null : null),
-    [isInPlan, selectedPlan?.workouts, workoutId]
+    () => plan?.workouts.find(workout => workout.uid === workoutId) ?? null,
+    [plan?.workouts, workoutId]
   )
 
   const handleSaveWorkout = useCallback(
     (workout: WorkoutType) => {
-      if (isInPlan) dispatch(plansAC.updateSelectedPlanWorkout(workout))
-      else if (userId) saveWorkout(userId, workout)
+      if (!userId) return
+      if (planId) savePlanWorkout(userId, planId, workout)
+      else saveWorkout(userId, workout)
     },
-    [dispatch, isInPlan, saveWorkout, userId]
+    [planId, saveWorkout, savePlanWorkout, userId]
   )
 
   return {
-    workout: isInPlan ? planWorkout : libraryWorkout.data ?? null,
-    isLoading: !isInPlan && libraryWorkout.isLoading,
+    workout: planId ? planWorkout : libraryWorkout.data ?? null,
     onSaveWorkout: handleSaveWorkout,
   }
 }

@@ -38,10 +38,10 @@ import styles from './workout-screen.styles'
 export default function WorkoutScreen() {
   const navigation = useNavigation<PlayableNavigation>()
   const route = useRoute<RouteProp<Record<string, WorkoutRouteParams>, string>>()
-  const isInPlan = route.name === ScreenName.WorkoutInPlan
+  const planId = route.params?.planId
   const { workout: selectedWorkout, onSaveWorkout: saveSelectedWorkout } = useSelectedWorkout({
     workoutId: route.params?.workoutId,
-    isInPlan,
+    planId,
   })
   const { isDark } = useAppTheme()
   const { onToggleTabMenu } = useContext(AppHelperContext)
@@ -135,8 +135,8 @@ export default function WorkoutScreen() {
   )
 
   const onStartPlaying = useCallback(
-    () => navigation.push(ScreenName.Playing, { workoutId: selectedWorkout?.uid ?? '', isInPlan }),
-    [navigation, selectedWorkout?.uid, isInPlan]
+    () => navigation.push(ScreenName.Playing, { workoutId: selectedWorkout?.uid ?? '', planId }),
+    [navigation, selectedWorkout?.uid, planId]
   )
 
   const onGoBack = useCallback(() => {
@@ -259,7 +259,6 @@ export default function WorkoutScreen() {
           {(isNewExercise || !!changeExercise) && (
             <EditExerciseModal
               exercise={changeExercise}
-              isImageSelectable={isInPlan}
               onClose={() => (isNewExercise ? setIsNewExercise(false) : setChangeExercise(null))}
               onSave={onSaveExercise}
               onDelete={() => onDeleteExercise(changeExercise)}

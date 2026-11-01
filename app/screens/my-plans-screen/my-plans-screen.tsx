@@ -2,9 +2,11 @@ import * as React from 'react'
 import { memo, useCallback, useState } from 'react'
 import { TouchableOpacity, Vibration } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
-import { changePlansPosition, selectPlan } from '@store/plans-reducer/plans-slice'
-import { plansAC } from '@store/plans-reducer/plans-ac'
-import { useAppDispatch, usePlans } from '@hooks/redux'
+import { useSessionUserId } from '@stores/session/use-session-store'
+import usePlans from '@services/plans/use-plans'
+import useSavePlan from '@services/plans/use-save-plan'
+import useDeletePlans from '@services/plans/use-delete-plans'
+import useReorderPlans from '@services/plans/use-reorder-plans'
 import { useAppTheme } from '@theme/use-app-theme'
 import AppHeader from '@common/app-header/app-header'
 import Card from '@common/card/card'
@@ -29,43 +31,41 @@ import { getExerciseColor } from '@theme/tokens'
 import NoDataIcon from '@assets/icons/no-data-icon'
 import styles from './my-plans-screen.styles'
 
+const NO_PLANS: PlanType[] = []
+
 export default memo(function MyPlansScreen() {
   const navigation = useNavigation<PlansNavigation>()
-  const dispatch = useAppDispatch()
-  const statePlans = usePlans()
+  const userId = useSessionUserId()
+  const { data: plans = NO_PLANS } = usePlans(userId)
+  const { savePlan } = useSavePlan()
+  const { mutate: removePlans } = useDeletePlans()
+  const { mutate: reorderPlans } = useReorderPlans()
   const { isDark } = useAppTheme()
   const [selectedPlanUids, setSelectedPlanUids] = useState<string[]>([])
   const [isNewPlanModal, setIsNewPlanModal] = useState(false)
   const [isDeleteModal, setIsDeleteModal] = useState(false)
   const [changePlan, setChangePlan] = useState<PlanType | null>(null)
   const isEditMode = !!selectedPlanUids.length
-  const plans = statePlans.plans
-    ?.slice()
-    ?.sort((a, b) => (statePlans.sortedPlanUids.indexOf(a.uid) || 0) - statePlans.sortedPlanUids.indexOf(b.uid) || 0)
 
   const onAddPlan = useCallback(
     (newPlan: PlanType) => {
-      if (isNewPlanModal) dispatch(plansAC.addPlan(newPlan))
-      else {
-        setSelectedPlanUids([])
-        dispatch(plansAC.updatePlan(newPlan))
-      }
+      if (!isNewPlanModal) setSelectedPlanUids([])
+      if (userId) savePlan(userId, newPlan)
     },
-    [isNewPlanModal]
+    [isNewPlanModal, userId, savePlan]
   )
 
   const onPlanPress = (plan: PlanType) => {
     if (isEditMode) {
       setSelectedPlanUids(p => (p.includes(plan.uid) ? p.filter(p => p !== plan.uid) : [...p, plan.uid]))
     } else {
-      dispatch(selectPlan(plan))
-      navigation.navigate(ScreenName.Plan)
+      navigation.navigate(ScreenName.Plan, { planId: plan.uid })
     }
   }
 
   const onDelete = () => {
     setSelectedPlanUids([])
-    selectedPlanUids.forEach(uid => dispatch(plansAC.deletePlan(uid)))
+    if (userId) removePlans({ userId, planIds: selectedPlanUids })
   }
 
   const renderItem = ({ item, drag, isActive }: DraggableRenderItemParams<PlanType>) => {
@@ -123,7 +123,7 @@ export default memo(function MyPlansScreen() {
             data={plans}
             renderItem={renderItem}
             keyExtractor={item => item.uid}
-            onDragEnd={({ data }) => dispatch(changePlansPosition(data.map(plan => plan.uid)))}
+            onDragEnd={({ data }) => userId && reorderPlans({ userId, planIds: data.map(plan => plan.uid) })}
           />
         </DraggableScrollContainer>
       </Screen>

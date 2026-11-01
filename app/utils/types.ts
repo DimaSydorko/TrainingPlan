@@ -48,6 +48,7 @@ export type WorkoutType = {
   exercises: ExerciseType[]
   ownerUid?: string
   lastUpdated?: number
+  sourceWorkoutId?: string
 }
 
 export type PlanType = {
@@ -83,8 +84,9 @@ export type AppTabParamList = {
 }
 
 /** Stack screens that can start a workout (both the Plans and the Workouts stacks have it). */
-export type WorkoutRouteParams = { workoutId: string }
-export type PlayingRouteParams = WorkoutRouteParams & { isInPlan?: boolean }
+export type PlanRouteParams = { planId: string }
+export type WorkoutRouteParams = { workoutId: string; planId?: string }
+export type PlayingRouteParams = WorkoutRouteParams
 
 export type PlayableStackParamList = {
   [ScreenName.Playing]: PlayingRouteParams
@@ -92,7 +94,7 @@ export type PlayableStackParamList = {
 
 export type PlansStackParamList = PlayableStackParamList & {
   [ScreenName.SavedWorkouts]: undefined
-  [ScreenName.Plan]: undefined
+  [ScreenName.Plan]: PlanRouteParams
   [ScreenName.WorkoutInPlan]: WorkoutRouteParams
 }
 

@@ -4,8 +4,8 @@ Server state — anything stored in the backend (plans, workouts, publications, 
 by **React Query** and fetched from **Supabase**. Client/UI state belongs in Zustand (`client-state.md`). Never
 copy fetched entities into a store "for convenience".
 
-> **Migration status.** Today all server data still goes through Firebase + Redux thunks (`app/store/**`). Those
-> rules are in the _Legacy Firebase_ section at the end. Everything else in this file applies to new code.
+> **Migration status.** Workouts and plans are on Supabase + React Query. Only the exercise image catalogue
+> (Realtime Database, `app/store/workout-reducer`) is still legacy — see _Legacy Firebase_ at the end.
 
 ### Layer split — non-negotiable
 
@@ -198,10 +198,10 @@ only **invalidates** (or patches) the entity's keys; it never writes to a store.
 
 ### Legacy Firebase (until removed)
 
--   Firestore calls exist only in `app/utils/firebase.ts`, `app/store/firestore.ts`, `app/store/sync.ts` and the
-    `app/store/**/*AC.ts` thunks. **Do not add new ones.** Modular API only (`firebase/compat` is ESLint-blocked).
+-   Firebase is used only for the exercise image catalogue (`app/utils/firebase.ts` `rtdb`,
+    `app/store/workout-reducer/workout-ac.ts`). No Firestore left. **Do not add new Firebase calls.**
 -   When an entity moves to Supabase, delete its Firestore code, its thunks and its Redux data in the same change;
     never dual-write or read from both.
 -   Existing user data moves once in-app after Supabase login (`import_legacy_data` RPC from persisted Redux, only
-    when the old Firebase user's e-mail matches: `app/api/legacy-import/legacy-owner.ts`). Keep `userReducer` in
-    `persist:root` (read-only `legacy-user-reducer.ts`) until then.
+    when the old Firebase user's e-mail matches: `app/api/legacy-import/legacy-owner.ts`). Keep `userReducer`,
+    `plansReducer` and the legacy `workoutReducer` fields in `persist:root` (read-only legacy reducers) until then.

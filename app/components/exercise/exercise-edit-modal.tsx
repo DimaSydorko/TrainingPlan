@@ -2,7 +2,6 @@ import * as React from 'react'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { Keyboard, View } from 'react-native'
 import { AppColorPicker, AppModal, ButtonCounter, IconButton, MyTextInput, SwipeSelector } from '@common'
-import ImageSelector from '../image-selector/image-selector'
 import { defaultApproach, defaultExercise } from '@utils/constants'
 import { ExerciseType } from '@utils/types'
 import { nanoid } from '@utils'
@@ -13,19 +12,12 @@ import styles from './styles'
 
 type ExerciseEditModalProps = {
   exercise?: ExerciseType
-  isImageSelectable: boolean
   onSave: (exercise: ExerciseType) => void
   onClose: () => void
   onDelete: () => void
 }
 
-export default memo(function EditExerciseModal({
-  exercise,
-  isImageSelectable,
-  onSave,
-  onDelete,
-  onClose,
-}: ExerciseEditModalProps) {
+export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onClose }: ExerciseEditModalProps) {
   const isNewExercise = useMemo(() => !exercise, [exercise])
   const initialEx = useMemo(() => {
     return isNewExercise ? { ...defaultExercise, uid: nanoid() } : exercise
@@ -37,7 +29,6 @@ export default memo(function EditExerciseModal({
   const [selectMinutes, setSelectMinutes] = useState<number>(Math.floor(initialEx.breakTimeInSec / 60))
   const [repeats, setRepeats] = useState<number>(initialEx.repeats)
   const [laps, setLaps] = useState<number>(initialEx.laps)
-  const [imageUrl, setImageUrl] = useState<string>(initialEx.imageUrl || '')
   const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false)
   const [isKeyboardVisible, setKeyboardVisible] = useState<boolean>(false)
   const [colorIdx, setColorIdx] = useState<number>(exercise?.colorIdx || 0)
@@ -73,12 +64,11 @@ export default memo(function EditExerciseModal({
       isVisible,
       approaches,
       colorIdx,
-      imageUrl,
       breakTimeInSec: selectMinutes * 60 + selectSeconds,
     }
     onSave(newExercise)
     onClose()
-  }, [name, colorIdx, laps, repeats, isVisible, selectMinutes, selectSeconds, initialEx, imageUrl])
+  }, [name, colorIdx, laps, repeats, isVisible, selectMinutes, selectSeconds, initialEx])
 
   return (
     <>
@@ -93,12 +83,7 @@ export default memo(function EditExerciseModal({
         disabled={selectSeconds + selectMinutes <= 0}
         header={`${isNewExercise ? 'Create' : 'Edit'} Exercise`}
         confirmText={'Save'}
-        extraPlaceLeft={
-          <>
-            <AppColorPicker value={colorIdx} onChange={setColorIdx} />
-            {isImageSelectable && <ImageSelector value={imageUrl} onSubmit={setImageUrl} />}
-          </>
-        }
+        extraPlaceLeft={<AppColorPicker value={colorIdx} onChange={setColorIdx} />}
         extraPlaceRight={
           <>
             {!isNewExercise && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}

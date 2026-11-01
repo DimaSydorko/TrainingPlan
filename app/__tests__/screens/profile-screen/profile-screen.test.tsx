@@ -13,18 +13,15 @@ jest.mock('@react-navigation/native', () => ({
   useNavigation: () => ({ navigate: jest.fn() }),
 }))
 
-const cachedPlan = { uid: 'p1', name: 'Plan', colorIdx: 0, labels: [], workouts: [], ownerUid: 'f1' }
-
 describe('ProfileScreen logout', () => {
-  it('clears cached plans and user stores after signing out', async () => {
+  it('clears cached server data and user stores after signing out', async () => {
     useNetworkStore.setState({ isOnline: true })
     useSessionStore.setState({ userId: 'u1', email: 'a@test.com' })
     const resetUserStore = jest.fn()
     USER_SCOPED_STORES.push({ getState: () => ({ reset: resetUserStore }) })
-    const store = createTestStore({
-      plansReducer: { plans: [cachedPlan] as never },
-    })
+    const store = createTestStore()
     const queryClient = new QueryClient()
+    queryClient.setQueryData(['plans', 'list', 'u1'], [{ uid: 'p1' }])
 
     await render(
       <QueryClientProvider client={queryClient}>
@@ -36,7 +33,7 @@ describe('ProfileScreen logout', () => {
     await fireEvent.press(screen.getByTestId('profile.logout'))
     await fireEvent.press(screen.getByTestId('appModal.confirm'))
 
-    await waitFor(() => expect(store.getState().plansReducer.plans).toEqual([]))
+    await waitFor(() => expect(queryClient.getQueryData(['plans', 'list', 'u1'])).toBeUndefined())
     expect(resetUserStore).toHaveBeenCalled()
     USER_SCOPED_STORES.pop()
   })

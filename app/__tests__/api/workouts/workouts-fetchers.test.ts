@@ -52,7 +52,15 @@ describe('workouts fetchers', () => {
       saveWorkout({ workout: { uid: 'w1', name: 'A', colorIdx: 0, labels: [], exercises: [] } })
     ).resolves.toBe('w1')
     expect(supabase.rpc).toHaveBeenCalledWith('save_workout', {
-      p_workout: { id: 'w1', name: 'A', color_idx: 0, labels: [], in_library: true, exercises: [] },
+      p_workout: {
+        id: 'w1',
+        name: 'A',
+        color_idx: 0,
+        labels: [],
+        in_library: true,
+        source_workout_id: null,
+        exercises: [],
+      },
     })
   })
 

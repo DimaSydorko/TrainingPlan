@@ -5,7 +5,7 @@
  */
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { legacyUserReducer } from '@store/legacy-user-reducer'
-import plansReducer from '@store/plans-reducer/plans-slice'
+import { legacyPlansReducer } from '@store/legacy-plans-reducer'
 import workoutReducer from '@store/workout-reducer/workout-slice'
 import { legacySettingsReducer } from '@store/legacy-settings-reducer'
 import type { Persistor } from 'redux-persist'
@@ -13,7 +13,7 @@ import type { RootState } from '@store'
 
 export const testRootReducer = combineReducers({
   userReducer: legacyUserReducer,
-  plansReducer,
+  plansReducer: legacyPlansReducer,
   workoutReducer,
   settingsReducer: legacySettingsReducer,
 })

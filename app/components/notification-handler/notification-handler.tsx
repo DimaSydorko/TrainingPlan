@@ -1,16 +1,12 @@
 import * as React from 'react'
 import { memo, useEffect, useState } from 'react'
-import { useAppDispatch, usePlans } from '@hooks/redux'
 import { useIsOnline } from '@stores/network/use-network-store'
-import { errorPlansClear } from '@store/plans-reducer/plans-slice'
 import { useToastStore } from '@stores/toast/use-toast-store'
 import { Toast, Toaster } from '@common'
 import { icon } from '@theme/icons'
 import { LayoutAnimation } from 'react-native'
 
 export default memo(function NotificationHandler() {
-  const dispatch = useAppDispatch()
-  const plans = usePlans()
   const errorMessage = useToastStore(state => state.errorMessage)
   const clearError = useToastStore(state => state.clearError)
   const isOnline = useIsOnline()
@@ -25,17 +21,6 @@ export default memo(function NotificationHandler() {
   return (
     <Toaster
       toasts={[
-        !!plans.error && (
-          <Toast
-            onPress={() => {
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-              dispatch(errorPlansClear())
-            }}
-            variant='error'
-            message={plans.error}
-            pressAfterTime={16000}
-          />
-        ),
         !!errorMessage && (
           <Toast
             onPress={() => {

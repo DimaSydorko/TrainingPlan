@@ -58,7 +58,7 @@ describe('store persistence', () => {
       serialize({
         userReducer: { user: { uid: 'old-user' }, data: null, isLoading: false, error: '' },
         workoutReducer: { workouts: [{ uid: 'w1' }] },
-        plansReducer: { sortedPlanUids: ['p1'] },
+        plansReducer: { plans: [{ uid: 'p1' }] },
         _persist: { version: -1, rehydrated: true },
       })
     )
@@ -66,18 +66,18 @@ describe('store persistence', () => {
     const { store } = await loadStore()
     const state = store.getState()
     expect(state.userReducer?.user).toEqual({ uid: 'old-user' })
-    expect(state.plansReducer?.sortedPlanUids).toEqual(['p1'])
+    expect(state.plansReducer?.plans).toEqual([{ uid: 'p1' }])
     expect((state.workoutReducer as unknown as { workouts: unknown[] }).workouts).toEqual([{ uid: 'w1' }])
   })
 
   it('writes state changes back to AsyncStorage', async () => {
     const { store, persistedStore } = await loadStore()
-    store.dispatch({ type: 'plans/changePlansPosition', payload: ['p2'] })
+    store.dispatch({ type: 'workout/getExerciseImages/fulfilled', payload: [{ fileName: 'a.gif' }] })
     await persistedStore.flush()
 
     const raw = await AsyncStorage.getItem(PERSIST_KEY)
     expect(raw).not.toBeNull()
-    const plans = JSON.parse(JSON.parse(raw!).plansReducer)
-    expect(plans.sortedPlanUids).toEqual(['p2'])
+    const workout = JSON.parse(JSON.parse(raw!).workoutReducer)
+    expect(workout.exerciseImages).toEqual([{ fileName: 'a.gif' }])
   })
 })

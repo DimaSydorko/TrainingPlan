@@ -1,14 +1,5 @@
 import { FirebaseApp, FirebaseOptions, getApp, getApps, initializeApp } from 'firebase/app'
-import {
-  collection,
-  CollectionReference,
-  DocumentData,
-  Firestore,
-  getFirestore,
-  initializeFirestore,
-} from 'firebase/firestore'
 import { Database, getDatabase } from 'firebase/database'
-import { FirebaseDBCollection } from './constants'
 
 // Was read from the gitignored constants.local.ts (firebaseSDK). Keys are listed in .env.example.
 // EXPO_PUBLIC_* must be referenced literally (process.env.EXPO_PUBLIC_X) so Metro can inline them.
@@ -30,22 +21,5 @@ if (__DEV__ && !firebaseConfig.apiKey) {
 const isFirstInit = getApps().length === 0
 export const app: FirebaseApp = isFirstInit ? initializeApp(firebaseConfig) : getApp()
 
-const createFirestore = (): Firestore => {
-  if (!isFirstInit) return getFirestore(app)
-  try {
-    // The old app forced long polling (WebChannel streaming is unreliable on React Native).
-    // Auto-detection picks long polling when it is needed and is the SDK default since v10;
-    // switch to `experimentalForceLongPolling: true` only if device testing shows Firestore hanging.
-    return initializeFirestore(app, { experimentalAutoDetectLongPolling: true })
-  } catch {
-    return getFirestore(app)
-  }
-}
-
-export const db: Firestore = createFirestore()
 // Realtime Database: holds the exercise GIF catalogue (FirebaseDatabase.ExerciseImages).
 export const rtdb: Database = getDatabase(app)
-
-const col = (name: FirebaseDBCollection) => collection(db, name) as CollectionReference<DocumentData>
-
-export const plansCollection = col(FirebaseDBCollection.Plans)
