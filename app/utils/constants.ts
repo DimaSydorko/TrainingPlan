@@ -25,6 +25,7 @@ export enum ScreenName {
   Profile = 'Profile',
   Settings = 'Settings',
   Playing = 'Playing',
+  Home = 'Home',
 }
 
 export const defaultPlan: PlanType = {
@@ -86,6 +87,7 @@ export const SOUND_CUE_DURATION_MS = 1000
 
 // Bottom tab route names (AppRouter). The values are the old tab names, kept unchanged.
 export enum TabName {
+  Home = 'Home',
   Plans = 'All saved Plans',
   Workouts = 'All saved Workouts',
   Profile = 'Profile',

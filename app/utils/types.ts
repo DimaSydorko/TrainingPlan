@@ -1,4 +1,5 @@
-import type { NavigatorScreenParams, ParamListBase } from '@react-navigation/native'
+import type { CompositeNavigationProp, NavigatorScreenParams, ParamListBase } from '@react-navigation/native'
+import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
 import type { StackNavigationProp } from '@react-navigation/stack'
 import { ScreenName, TabName } from './constants'
 
@@ -85,6 +86,7 @@ export type AuthStackParamList = {
 
 /** Bottom tabs (AppRouter). */
 export type AppTabParamList = {
+  [TabName.Home]: NavigatorScreenParams<HomeStackParamList> | undefined
   [TabName.Plans]: NavigatorScreenParams<PlansStackParamList> | undefined
   [TabName.Workouts]: NavigatorScreenParams<WorkoutsStackParamList> | undefined
   [TabName.Profile]: NavigatorScreenParams<ProfileStackParamList> | undefined
@@ -111,11 +113,20 @@ export type ProfileStackParamList = {
   [ScreenName.Settings]: undefined
 }
 
+export type HomeStackParamList = PlayableStackParamList & {
+  [ScreenName.Home]: undefined
+  [ScreenName.Workout]: undefined
+}
+
 export type AuthNavigation = StackNavigationProp<AuthStackParamList>
 export type PlansNavigation = StackNavigationProp<PlansStackParamList>
 export type WorkoutsNavigation = StackNavigationProp<WorkoutsStackParamList>
 export type PlayableNavigation = StackNavigationProp<PlayableStackParamList>
 export type ProfileNavigation = StackNavigationProp<ProfileStackParamList>
+export type HomeNavigation = CompositeNavigationProp<
+  StackNavigationProp<HomeStackParamList>,
+  BottomTabNavigationProp<AppTabParamList>
+>
 
 /**
  * Navigation prop for screens that only need stack actions common to every stack

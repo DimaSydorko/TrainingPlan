@@ -1,13 +1,24 @@
-import { getLocales } from 'expo-localization'
 import { DEFAULT_LANGUAGE, LANGUAGE, LANGUAGE_SETTING } from '@i18n/i18n.constants'
 import { isLanguage, resolveLanguage } from '@i18n/resolve-language'
 
-const mockedGetLocales = getLocales as jest.MockedFunction<typeof getLocales>
+type ResolveLanguageModule = typeof import('@i18n/resolve-language')
+type LocaleModule = typeof import('@platform/locale')
+type DeviceLocale = { languageCode: string | null }
 
-const DEVICE_LOCALE = getLocales()[0]
+function loadWithNativeModule<T>(modulePath: string, nativeModule: object | null): T {
+  let loadedModule: T
+  jest.isolateModules(() => {
+    jest.doMock('expo', () => ({ requireOptionalNativeModule: () => nativeModule }))
+    loadedModule = require(modulePath)
+  })
+  return loadedModule
+}
 
-const deviceLocales = (...languageCodes: (string | null)[]) =>
-  languageCodes.map(languageCode => ({ ...DEVICE_LOCALE, languageCode })) as ReturnType<typeof getLocales>
+function resolveWithDeviceLanguages(...languageCodes: (string | null)[]) {
+  const locales: DeviceLocale[] = languageCodes.map(languageCode => ({ languageCode }))
+  const module = loadWithNativeModule<ResolveLanguageModule>('@i18n/resolve-language', { getLocales: () => locales })
+  return module.resolveLanguage(LANGUAGE_SETTING.SYSTEM)
+}
 
 describe('isLanguage', () => {
   it.each(Object.values(LANGUAGE))('accepts %s', code => {
@@ -25,20 +36,25 @@ describe('resolveLanguage', () => {
   })
 
   it('follows the device language when the setting is system', () => {
-    mockedGetLocales.mockReturnValueOnce(deviceLocales('uk'))
-
-    expect(resolveLanguage(LANGUAGE_SETTING.SYSTEM)).toBe(LANGUAGE.UK)
+    expect(resolveWithDeviceLanguages('uk')).toBe(LANGUAGE.UK)
   })
 
   it('picks the first supported device language in order of preference', () => {
-    mockedGetLocales.mockReturnValueOnce(deviceLocales('pl', null, 'de', 'uk'))
-
-    expect(resolveLanguage(LANGUAGE_SETTING.SYSTEM)).toBe(LANGUAGE.DE)
+    expect(resolveWithDeviceLanguages('pl', null, 'de', 'uk')).toBe(LANGUAGE.DE)
   })
 
   it('falls back to the default language when no device language is supported', () => {
-    mockedGetLocales.mockReturnValueOnce(deviceLocales('pl', 'fr'))
+    expect(resolveWithDeviceLanguages('pl', 'fr')).toBe(DEFAULT_LANGUAGE)
+  })
+})
 
-    expect(resolveLanguage(LANGUAGE_SETTING.SYSTEM)).toBe(DEFAULT_LANGUAGE)
+describe('getDeviceLanguageCodes without the native module', () => {
+  it('reads the language from Intl', () => {
+    jest
+      .spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions')
+      .mockReturnValueOnce({ locale: 'uk-UA' } as Intl.ResolvedDateTimeFormatOptions)
+    const { getDeviceLanguageCodes } = loadWithNativeModule<LocaleModule>('@platform/locale', null)
+
+    expect(getDeviceLanguageCodes()).toEqual(['uk'])
   })
 })

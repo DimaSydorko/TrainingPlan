@@ -1,0 +1,30 @@
+{
+  "greeting": {
+    "morning": "Guten Morgen",
+    "afternoon": "Guten Tag",
+    "evening": "Guten Abend"
+  },
+  "todaySession": {
+    "label": "Heutiges Training",
+    "minutes": "{{count}} Min.",
+    "exercises_one": "{{count}} Übung",
+    "exercises_other": "{{count}} Übungen",
+    "start": "Starten",
+    "change": "Ändern"
+  },
+  "workouts": {
+    "title": "Deine Workouts",
+    "all": "Alle Workouts",
+    "minutes": "{{count}} Min."
+  },
+  "ai": {
+    "title": "KI-Vorschläge"
+  },
+  "stats": {
+    "title": "Statistik"
+  },
+  "askAi": {
+    "placeholder": "KI fragen..."
+  },
+  "comingSoon": "Demnächst"
+}

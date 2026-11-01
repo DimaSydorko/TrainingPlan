@@ -11,6 +11,7 @@ import { AppHelperContext } from '@hooks/app-helper-provider'
 import { workoutAC } from '@store/workout-reducer/workout-ac'
 import { plansAC } from '@store/plans-reducer/plans-ac'
 import NotificationHandler from '@components/notification-handler/notification-handler'
+import HomeRouter from './home-router'
 import WorkoutsRouter from './workouts-router'
 import PlanRouter from './plan-router'
 import { icon } from '@theme/icons'
@@ -32,6 +33,13 @@ type TabType = {
 }
 
 const tabs = [
+  {
+    name: TabName.Home,
+    component: HomeRouter,
+    buttonLabel: 'Home',
+    testID: 'tab.home',
+    icon: color => <Icon name={icon.tabHome} size={28} color={color} />,
+  },
   {
     name: TabName.Plans,
     component: PlanRouter,

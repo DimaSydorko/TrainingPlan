@@ -1,0 +1,32 @@
+{
+  "greeting": {
+    "morning": "Доброго ранку",
+    "afternoon": "Добрий день",
+    "evening": "Добрий вечір"
+  },
+  "todaySession": {
+    "label": "Сьогоднішнє тренування",
+    "minutes": "{{count}} хв",
+    "exercises_one": "{{count}} вправа",
+    "exercises_few": "{{count}} вправи",
+    "exercises_many": "{{count}} вправ",
+    "exercises_other": "{{count}} вправи",
+    "start": "Почати",
+    "change": "Змінити"
+  },
+  "workouts": {
+    "title": "Твої тренування",
+    "all": "Усі тренування",
+    "minutes": "{{count}} хв"
+  },
+  "ai": {
+    "title": "Поради ШІ"
+  },
+  "stats": {
+    "title": "Статистика"
+  },
+  "askAi": {
+    "placeholder": "Запитай ШІ..."
+  },
+  "comingSoon": "Незабаром"
+}
