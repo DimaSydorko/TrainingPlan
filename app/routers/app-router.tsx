@@ -1,74 +1,84 @@
 import * as React from 'react'
-import { ComponentType, useContext, useEffect } from 'react'
-import { Text } from 'react-native'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { Icon } from '@common/icon/icon'
+import { ComponentType, useEffect } from 'react'
+import { createDrawerNavigator } from '@react-navigation/drawer'
+import { getFocusedRouteNameFromRoute, RouteProp } from '@react-navigation/native'
+import { Icon, IconName } from '@common/icon/icon'
 
 import { useAppDispatch } from '@hooks/redux'
 import { useAppTheme } from '@theme/use-app-theme'
 import { useIsOnline } from '@stores/network/use-network-store'
-import { AppHelperContext } from '@hooks/app-helper-provider'
 import { workoutAC } from '@store/workout-reducer/workout-ac'
 import { plansAC } from '@store/plans-reducer/plans-ac'
 import NotificationHandler from '@components/notification-handler/notification-handler'
+import { icon } from '@theme/icons'
+import { DRAWER_ROUTE, ScreenName } from '@utils/constants'
+import { AppDrawerParamList, DrawerRouteName } from '@utils/types'
 import HomeRouter from './home-router'
 import WorkoutsRouter from './workouts-router'
 import PlanRouter from './plan-router'
-import { icon } from '@theme/icons'
+import SettingsRouter from './settings-router'
 import ProfileRouter from './profile-router'
-import { TabName } from '@utils/constants'
-import { AppTabParamList } from '@utils/types'
-import { useAppInsets } from '@theme/insets'
-import { TAB_BAR_VERTICAL_PADDING } from './app-router.constants'
-import styles from './app-router.styles'
+import AiBarScreenLayout from './ai-bar-screen-layout'
+import { DRAWER_ICON_SIZE } from './app-router.constants'
 
-const Tab = createBottomTabNavigator<AppTabParamList, 'AppTabs'>()
+const Drawer = createDrawerNavigator<AppDrawerParamList, 'AppDrawer'>()
 
-type TabType = {
-  name: keyof AppTabParamList
+type DrawerItemConfig = {
+  name: DrawerRouteName
   component: ComponentType<object>
-  buttonLabel: string
+  rootScreen: ScreenName
+  label: string
   testID: string
-  icon: (color: string) => React.JSX.Element
+  iconName: IconName
 }
 
-const tabs = [
+const drawerItems: DrawerItemConfig[] = [
   {
-    name: TabName.Home,
+    name: DRAWER_ROUTE.Home,
     component: HomeRouter,
-    buttonLabel: 'Home',
-    testID: 'tab.home',
-    icon: color => <Icon name={icon.tabHome} size={28} color={color} />,
+    rootScreen: ScreenName.Home,
+    label: 'Home',
+    testID: 'drawer.home',
+    iconName: icon.tabHome,
   },
   {
-    name: TabName.Plans,
+    name: DRAWER_ROUTE.Plans,
     component: PlanRouter,
-    buttonLabel: 'My Plans',
-    testID: 'tab.plans',
-    icon: color => <Icon name={icon.tabPlans} size={28} color={color} />,
+    rootScreen: ScreenName.SavedWorkouts,
+    label: 'My Plans',
+    testID: 'drawer.plans',
+    iconName: icon.tabPlans,
   },
   {
-    name: TabName.Workouts,
+    name: DRAWER_ROUTE.Workouts,
     component: WorkoutsRouter,
-    buttonLabel: 'My Workouts',
-    testID: 'tab.workouts',
-    icon: color => <Icon name={icon.tabWorkouts} size={28} color={color} />,
+    rootScreen: ScreenName.SavedWorkouts,
+    label: 'My Workouts',
+    testID: 'drawer.workouts',
+    iconName: icon.tabWorkouts,
   },
   {
-    name: TabName.Profile,
-    component: ProfileRouter,
-    buttonLabel: 'Profile',
-    testID: 'tab.profile',
-    icon: color => <Icon name={icon.account} size={28} color={color} />,
+    name: DRAWER_ROUTE.Settings,
+    component: SettingsRouter,
+    rootScreen: ScreenName.Settings,
+    label: 'Settings',
+    testID: 'drawer.settings',
+    iconName: icon.settings,
   },
-] as TabType[]
+  {
+    name: DRAWER_ROUTE.Profile,
+    component: ProfileRouter,
+    rootScreen: ScreenName.Profile,
+    label: 'Profile',
+    testID: 'drawer.profile',
+    iconName: icon.account,
+  },
+]
 
 export default function AppRouter() {
-  const { isTabMenu } = useContext(AppHelperContext)
   const dispatch = useAppDispatch()
   const { colors } = useAppTheme()
   const isOnline = useIsOnline()
-  const { bottom, footer } = useAppInsets()
 
   useEffect(() => {
     if (isOnline) {
@@ -81,32 +91,37 @@ export default function AppRouter() {
   return (
     <>
       <NotificationHandler />
-      <Tab.Navigator id='AppTabs' screenOptions={{ sceneStyle: { backgroundColor: colors.background } }}>
-        {tabs.map(({ name, icon, buttonLabel, testID, component }) => (
-          <Tab.Screen
+      <Drawer.Navigator
+        id='AppDrawer'
+        screenOptions={{
+          headerShown: false,
+          sceneStyle: { backgroundColor: colors.background },
+          drawerStyle: { backgroundColor: colors.surfaceElevated },
+          drawerActiveTintColor: colors.accent,
+          drawerInactiveTintColor: colors.inverse,
+        }}
+      >
+        {drawerItems.map(({ name, component, rootScreen, label, testID, iconName }) => (
+          <Drawer.Screen
             key={name}
             name={name}
             component={component}
-            options={{
-              tabBarLabel: ({ focused }) => (
-                <Text style={focused ? { color: colors.accent } : { color: colors.inverse }}>{buttonLabel}</Text>
-              ),
-              tabBarIcon: ({ focused }) => icon(focused ? colors.accent : colors.inverse),
-              headerShown: false,
-              tabBarButtonTestID: testID,
-              tabBarStyle: [
-                styles.tabBar,
-                {
-                  backgroundColor: colors.surfaceElevated,
-                  paddingBottom: TAB_BAR_VERTICAL_PADDING + bottom,
-                  height: footer,
-                  display: isTabMenu ? undefined : 'none',
-                },
-              ],
-            }}
+            layout={({ route, children }) => (
+              <AiBarScreenLayout isAiBarVisible={isRootScreenFocused(route, rootScreen)}>{children}</AiBarScreenLayout>
+            )}
+            options={({ route }) => ({
+              drawerLabel: label,
+              drawerItemTestID: testID,
+              drawerIcon: ({ color }) => <Icon name={iconName} size={DRAWER_ICON_SIZE} color={color} />,
+              swipeEnabled: isRootScreenFocused(route, rootScreen),
+            })}
           />
         ))}
-      </Tab.Navigator>
+      </Drawer.Navigator>
     </>
   )
+}
+
+function isRootScreenFocused(route: RouteProp<AppDrawerParamList>, rootScreen: ScreenName) {
+  return (getFocusedRouteNameFromRoute(route) ?? rootScreen) === rootScreen
 }

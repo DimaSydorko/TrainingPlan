@@ -16,5 +16,10 @@
     "leaveScreen": {
       "title": "Are you sure you want to go back?"
     }
+  },
+  "askAi": {
+    "placeholder": "Ask AI...",
+    "send": "Send",
+    "comingSoon": "AI answers are coming soon"
   }
 }

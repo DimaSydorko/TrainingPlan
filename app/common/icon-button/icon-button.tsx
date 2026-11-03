@@ -18,6 +18,7 @@ type IconButtonType = {
   disableVibration?: boolean
   style?: ViewStyle | ViewStyle[]
   testID?: string
+  accessibilityLabel?: string
 }
 
 export default function IconButton({
@@ -31,6 +32,7 @@ export default function IconButton({
   margin = 0,
   style,
   testID,
+  accessibilityLabel,
 }: IconButtonType) {
   const { colors } = useAppTheme()
   const isVibration = useSettingsStore(state => state.isVibration)
@@ -65,6 +67,7 @@ export default function IconButton({
       disabled={disabled}
       testID={testID}
       accessibilityRole='button'
+      accessibilityLabel={accessibilityLabel}
       accessibilityState={{ disabled }}
       style={[styles.button, { opacity: disabled ? 0.5 : 1, marginHorizontal: margin }, style]}
     >

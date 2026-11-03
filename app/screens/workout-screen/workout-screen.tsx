@@ -219,6 +219,7 @@ export default function WorkoutScreen() {
             </Stack>
           </Screen>
           <AddMoreButton
+            isAboveFooter
             icon={isEditMode ? icon.plus : icon.edit}
             testID='workout.fab'
             onPress={() => (isEditMode ? setIsNewExercise(true) : setIsEditMode(true))}

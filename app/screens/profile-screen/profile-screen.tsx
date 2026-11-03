@@ -7,7 +7,7 @@ import { useIsOnline } from '@stores/network/use-network-store'
 import { userAC } from '@store/user-reducer/user-ac'
 import UserImage from '@components/user-image/user-image'
 import { ProfileNavigation } from '@utils/types'
-import { ScreenName } from '@utils/constants'
+import { DRAWER_ROUTE } from '@utils/constants'
 import { AppModal, IconButton } from '@common'
 import Stack from '@common/stack/stack'
 import Screen from '@common/screen/screen'
@@ -42,7 +42,7 @@ export default memo(function ProfileScreen() {
         <IconButton
           iconName={icon.settings}
           testID='profile.settings'
-          onPress={() => navigation.navigate(ScreenName.Settings)}
+          onPress={() => navigation.navigate(DRAWER_ROUTE.Settings)}
           color={colors.textSecondary}
           size={36}
           style={styles.settingsButton}

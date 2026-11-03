@@ -1,0 +1,7 @@
+# Opens the sidebar with the header menu button and taps the drawer item DRAWER_ITEM.
+appId: ${APP_ID}
+---
+- tapOn:
+    id: header.menu
+- tapOn:
+    id: ${DRAWER_ITEM}

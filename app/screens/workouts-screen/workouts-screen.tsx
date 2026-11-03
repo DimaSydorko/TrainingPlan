@@ -246,7 +246,7 @@ export default memo(function WorkoutsScreen({ isInPlan = false }: PropsType) {
         </AppFooter>
       )}
       {workouts?.length <= QUERY_LIMIT && (
-        <AddMoreButton onPress={() => setIsNewWorkoutModal(true)} testID='workouts.add' />
+        <AddMoreButton isAboveFooter={!isTabMenu} onPress={() => setIsNewWorkoutModal(true)} testID='workouts.add' />
       )}
       {isChanged && isInPlan && <GoBackSubmitModal text={`Changes in '${selectedPlan?.name}' plan aren\`t saved!`} />}
       <CopyWorkoutsModal

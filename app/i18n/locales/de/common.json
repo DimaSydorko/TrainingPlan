@@ -16,5 +16,10 @@
     "leaveScreen": {
       "title": "Möchtest du wirklich zurückgehen?"
     }
+  },
+  "askAi": {
+    "placeholder": "Frag die KI...",
+    "send": "Senden",
+    "comingSoon": "KI-Antworten kommen bald"
   }
 }

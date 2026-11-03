@@ -13,11 +13,11 @@ export type ScreenProps = {
 
 const Screen = ({ children, style, scrollDisabled = false, testID }: ScreenProps) => {
   const colors = useThemeColors()
-  const { footer } = useAppInsets()
+  const { bottom } = useAppInsets()
 
   return (
     <View
-      style={[styles.container, { backgroundColor: colors.background, paddingBottom: footer }, style]}
+      style={[styles.container, { backgroundColor: colors.background, paddingBottom: bottom }, style]}
       testID={testID}
     >
       <ScrollView scrollEnabled={!scrollDisabled}>{children}</ScrollView>

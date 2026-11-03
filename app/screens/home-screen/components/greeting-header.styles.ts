@@ -7,6 +7,9 @@ export default StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
   },
+  greeting: {
+    flex: 1,
+  },
   name: {
     fontSize: GREETING_NAME_FONT_SIZE,
   },

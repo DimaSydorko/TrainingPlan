@@ -8,8 +8,10 @@ env:
 ---
 - launchApp
 - runFlow: subflows/login.yaml
-- tapOn:
-    id: tab.workouts
+- runFlow:
+    file: subflows/open-drawer-item.yaml
+    env:
+      DRAWER_ITEM: drawer.workouts
 - tapOn:
     id: workouts.add
 - extendedWaitUntil:

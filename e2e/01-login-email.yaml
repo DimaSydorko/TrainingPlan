@@ -14,7 +14,11 @@ tags:
 - assertVisible:
     id: login.submit
 - runFlow: subflows/login.yaml
+- tapOn:
+    id: header.menu
 - assertVisible:
-    id: tab.plans
+    id: drawer.plans
 - assertVisible:
-    id: tab.profile
+    id: drawer.workouts
+- assertVisible:
+    id: drawer.settings

@@ -1,5 +1,5 @@
 import { requireOptionalNativeModule } from 'expo'
-import { LOCALIZATION_MODULE_NAME } from './locale.constants'
+import { LOCALIZATION_MODULE_NAME } from './locale-constants'
 
 type NativeLocale = { languageCode: string | null }
 type LocalizationModule = { getLocales: () => NativeLocale[] }

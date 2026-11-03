@@ -3,7 +3,7 @@ import { BAR_HEIGHT } from './bar-heights.constants'
 export type BarHeights = {
   /** Stack header height including the status bar inset (the header draws behind the status bar). */
   header: number
-  /** Bottom tab bar / AppFooter height including the navigation bar inset. */
+  /** AppFooter / playing footer height including the navigation bar inset. */
   footer: number
 }
 

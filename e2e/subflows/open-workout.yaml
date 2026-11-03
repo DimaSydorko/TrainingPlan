@@ -1,8 +1,10 @@
-# Opens the "My Workouts" tab and taps the workout named WORKOUT_NAME.
+# Opens "My Workouts" from the sidebar and taps the workout named WORKOUT_NAME.
 appId: ${APP_ID}
 ---
-- tapOn:
-    id: tab.workouts
+- runFlow:
+    file: open-drawer-item.yaml
+    env:
+      DRAWER_ITEM: drawer.workouts
 - extendedWaitUntil:
     visible: ${WORKOUT_NAME}
     timeout: 20000

@@ -1,4 +1,4 @@
-# Signs in with E2E_EMAIL / E2E_PASSWORD when the login screen is showing, then waits for the tabs.
+# Signs in with E2E_EMAIL / E2E_PASSWORD when the login screen is showing, then waits for the app header menu.
 # Safe to call when already signed in (redux-persist keeps the user across launches).
 appId: ${APP_ID}
 ---
@@ -18,5 +18,5 @@ appId: ${APP_ID}
           id: login.submit
 - extendedWaitUntil:
     visible:
-      id: tab.workouts
+      id: header.menu
     timeout: 30000

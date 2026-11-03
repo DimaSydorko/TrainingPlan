@@ -1,7 +1,7 @@
 import type { CompositeNavigationProp, NavigatorScreenParams, ParamListBase } from '@react-navigation/native'
-import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
+import type { DrawerNavigationProp } from '@react-navigation/drawer'
 import type { StackNavigationProp } from '@react-navigation/stack'
-import { ScreenName, TabName } from './constants'
+import { DRAWER_ROUTE, ScreenName } from './constants'
 
 export type UserType = {
   uid: string
@@ -77,20 +77,23 @@ export type SetStateType<S> = (arg: S | ((prevState: S) => S)) => void
 // navigate() calls to screens that are not in the current stack.
 // ---------------------------------------------------------------------------
 
-/** Root stack (AuthRouter): auth screens when logged out, the tab app when logged in. */
+/** Root stack (AuthRouter): auth screens when logged out, the drawer app when logged in. */
 export type AuthStackParamList = {
   [ScreenName.Login]: undefined
   [ScreenName.Registration]: undefined
-  [ScreenName.App]: NavigatorScreenParams<AppTabParamList> | undefined
+  [ScreenName.App]: NavigatorScreenParams<AppDrawerParamList> | undefined
 }
 
-/** Bottom tabs (AppRouter). */
-export type AppTabParamList = {
-  [TabName.Home]: NavigatorScreenParams<HomeStackParamList> | undefined
-  [TabName.Plans]: NavigatorScreenParams<PlansStackParamList> | undefined
-  [TabName.Workouts]: NavigatorScreenParams<WorkoutsStackParamList> | undefined
-  [TabName.Profile]: NavigatorScreenParams<ProfileStackParamList> | undefined
+/** Sidebar drawer (AppRouter). */
+export type AppDrawerParamList = {
+  [DRAWER_ROUTE.Home]: NavigatorScreenParams<HomeStackParamList> | undefined
+  [DRAWER_ROUTE.Plans]: NavigatorScreenParams<PlansStackParamList> | undefined
+  [DRAWER_ROUTE.Workouts]: NavigatorScreenParams<WorkoutsStackParamList> | undefined
+  [DRAWER_ROUTE.Settings]: NavigatorScreenParams<SettingsStackParamList> | undefined
+  [DRAWER_ROUTE.Profile]: NavigatorScreenParams<ProfileStackParamList> | undefined
 }
+
+export type DrawerRouteName = keyof AppDrawerParamList
 
 /** Stack screens that can start a workout (both the Plans and the Workouts stacks have it). */
 export type PlayableStackParamList = {
@@ -110,6 +113,9 @@ export type WorkoutsStackParamList = PlayableStackParamList & {
 
 export type ProfileStackParamList = {
   [ScreenName.Profile]: undefined
+}
+
+export type SettingsStackParamList = {
   [ScreenName.Settings]: undefined
 }
 
@@ -122,10 +128,13 @@ export type AuthNavigation = StackNavigationProp<AuthStackParamList>
 export type PlansNavigation = StackNavigationProp<PlansStackParamList>
 export type WorkoutsNavigation = StackNavigationProp<WorkoutsStackParamList>
 export type PlayableNavigation = StackNavigationProp<PlayableStackParamList>
-export type ProfileNavigation = StackNavigationProp<ProfileStackParamList>
+export type ProfileNavigation = CompositeNavigationProp<
+  StackNavigationProp<ProfileStackParamList>,
+  DrawerNavigationProp<AppDrawerParamList>
+>
 export type HomeNavigation = CompositeNavigationProp<
   StackNavigationProp<HomeStackParamList>,
-  BottomTabNavigationProp<AppTabParamList>
+  DrawerNavigationProp<AppDrawerParamList>
 >
 
 /**

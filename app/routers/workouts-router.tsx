@@ -7,11 +7,13 @@ import { useScreenOptions } from '@theme/navigation-theme'
 import { Loading } from '@common'
 import { ScreenName } from '@utils/constants'
 import { WorkoutsStackParamList } from '@utils/types'
+import useRootScreenOptions from './use-root-screen-options'
 
 const Stack = createStackNavigator<WorkoutsStackParamList, 'WorkoutsStack'>()
 
 export default memo(function WorkoutsRouter() {
   const options = useScreenOptions()
+  const rootOptions = useRootScreenOptions('All saved Workouts')
   const { selectedWorkout, isLoading } = useWorkout()
   const plans = usePlans()
   const user = useUser()
@@ -20,11 +22,7 @@ export default memo(function WorkoutsRouter() {
     <>
       {(isLoading || plans.isLoading || user.isLoading) && <Loading />}
       <Stack.Navigator id='WorkoutsStack'>
-        <Stack.Screen
-          name={ScreenName.SavedWorkouts}
-          options={{ ...options, title: 'All saved Workouts' }}
-          component={WorkoutsScreen}
-        />
+        <Stack.Screen name={ScreenName.SavedWorkouts} options={rootOptions} component={WorkoutsScreen} />
         <Stack.Screen
           name={ScreenName.Workout}
           options={{ ...options, title: selectedWorkout?.name }}

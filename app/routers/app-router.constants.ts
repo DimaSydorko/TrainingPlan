@@ -1,1 +1,1 @@
-export const TAB_BAR_VERTICAL_PADDING = 5
+export const DRAWER_ICON_SIZE = 24

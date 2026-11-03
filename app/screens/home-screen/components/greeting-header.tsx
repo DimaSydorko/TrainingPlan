@@ -4,6 +4,7 @@ import { TouchableOpacity, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 
 import AppText from '@common/app-text/app-text'
+import MenuButton from '@common/menu-button/menu-button'
 import Stack from '@common/stack/stack'
 import UserImage from '@components/user-image/user-image'
 import { useUser } from '@hooks/redux'
@@ -28,7 +29,8 @@ export default memo(function GreetingHeader({ onProfilePress }: GreetingHeaderPr
 
   return (
     <Stack preset='spaceBetween' style={styles.container}>
-      <View>
+      <MenuButton />
+      <View style={styles.greeting}>
         <AppText variant='body' tone='secondary'>
           {t(getGreetingKey(now.getHours()))},
         </AppText>

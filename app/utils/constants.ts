@@ -85,10 +85,10 @@ export enum SoundType {
 // playSound.getDuration(). Now a fallback for SoundPlayer.durationMs while the sound is not loaded.
 export const SOUND_CUE_DURATION_MS = 1000
 
-// Bottom tab route names (AppRouter). The values are the old tab names, kept unchanged.
-export enum TabName {
-  Home = 'Home',
-  Plans = 'All saved Plans',
-  Workouts = 'All saved Workouts',
-  Profile = 'Profile',
-}
+export const DRAWER_ROUTE = {
+  Home: 'Home',
+  Plans: 'All saved Plans',
+  Workouts: 'All saved Workouts',
+  Settings: 'App Settings',
+  Profile: 'Profile',
+} as const

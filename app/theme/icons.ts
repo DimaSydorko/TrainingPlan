@@ -34,5 +34,7 @@ export const icon = {
   tabPlans: 'clipboard-list-outline',
   tabWorkouts: 'clock-fast',
   tabHome: 'home-outline',
+  menu: 'menu',
+  send: 'send',
   aiSparkles: 'creation',
 } as const satisfies Record<string, IconName>

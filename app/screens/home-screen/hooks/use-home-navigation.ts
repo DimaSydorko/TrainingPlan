@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { useAppDispatch } from '@hooks/redux'
 import { updateSelectedWorkout } from '@store/workout-reducer/workout-slice'
-import { ScreenName, TabName } from '@utils/constants'
+import { DRAWER_ROUTE, ScreenName } from '@utils/constants'
 import { HomeNavigation, WorkoutType } from '@utils/types'
 
 export default function useHomeNavigation() {
@@ -25,9 +25,9 @@ export default function useHomeNavigation() {
     [dispatch, navigation]
   )
 
-  const handleOpenAllWorkouts = useCallback(() => navigation.navigate(TabName.Workouts), [navigation])
+  const handleOpenAllWorkouts = useCallback(() => navigation.navigate(DRAWER_ROUTE.Workouts), [navigation])
 
-  const handleOpenProfile = useCallback(() => navigation.navigate(TabName.Profile), [navigation])
+  const handleOpenProfile = useCallback(() => navigation.navigate(DRAWER_ROUTE.Profile), [navigation])
 
   return { handleStartWorkout, handleOpenWorkout, handleOpenAllWorkouts, handleOpenProfile }
 }

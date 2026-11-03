@@ -6,10 +6,10 @@ tags:
 ---
 - launchApp
 - runFlow: subflows/login.yaml
-- tapOn:
-    id: tab.profile
-- tapOn:
-    id: profile.settings
+- runFlow:
+    file: subflows/open-drawer-item.yaml
+    env:
+      DRAWER_ITEM: drawer.settings
 - assertVisible: Dark Theme
 # Normalise: start from the light theme.
 - runFlow:
@@ -33,10 +33,10 @@ tags:
 - stopApp
 - launchApp
 - runFlow: subflows/login.yaml
-- tapOn:
-    id: tab.profile
-- tapOn:
-    id: profile.settings
+- runFlow:
+    file: subflows/open-drawer-item.yaml
+    env:
+      DRAWER_ITEM: drawer.settings
 - assertVisible:
     id: settings.darkTheme
     checked: true
