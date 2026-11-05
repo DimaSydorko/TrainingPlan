@@ -31,28 +31,10 @@ mockModule('expo-speech', () => require('./mocks/expo-speech'))
 mockModule('expo-keep-awake', () => require('./mocks/expo-keep-awake'))
 mockModule('expo-notifications', () => require('./mocks/expo-notifications'))
 mockModule('expo-localization', () => require('./mocks/expo-localization'))
+mockModule('expo-crypto', () => require('./mocks/expo-crypto'))
 
 // Google Sign-In.
 mockModule('@react-native-google-signin/google-signin', () => require('./mocks/google-signin'))
-
-// Firebase JS SDK: compat and modular entry points.
-const firebaseEntryPoints = [
-  'firebase/compat/app',
-  'firebase/compat/auth',
-  'firebase/compat/firestore',
-  'firebase/compat/database',
-  'firebase/compat/storage',
-  'firebase/compat/functions',
-  'firebase/app',
-  'firebase/auth',
-  'firebase/firestore',
-  'firebase/database',
-  'firebase/storage',
-  'firebase/functions',
-]
-firebaseEntryPoints.forEach(name => {
-  mockModule(name, () => require('./mocks/firebase').createStub(name))
-})
 
 // Keyboard controller: the package's own Jest mock (its native module is not linked in Jest).
 mockModule('react-native-keyboard-controller', () => require('react-native-keyboard-controller/jest'))
@@ -69,3 +51,6 @@ require('react-native-gesture-handler/jestSetup')
 
 // EXPO_PUBLIC_* values are inlined by babel-preset-expo at build time; in tests they are undefined
 // unless a test sets them. Never put real credentials here.
+
+// Supabase client (app/lib/supabase/client): no URL/key in tests, so the real createClient would throw.
+jest.doMock('../../lib/supabase/client', () => require('./mocks/supabase-client'))

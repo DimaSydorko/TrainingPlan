@@ -4,19 +4,10 @@ export const FUTURE_FLAG = {
   IS_DEV: false,
 }
 
-export enum FirebaseDBCollection {
-  UsersData = 'usersData',
-  Plans = 'plans',
-  Workouts = 'workouts',
-}
-
-export enum FirebaseDatabase {
-  ExerciseImages = '/ExerciseImages',
-}
-
 export enum ScreenName {
   Registration = 'Registration',
   Login = 'Login',
+  Onboarding = 'Onboarding',
   SavedWorkouts = 'SavedWorkouts',
   WorkoutInPlan = 'WorkoutInPlan',
   Workout = 'Workout',

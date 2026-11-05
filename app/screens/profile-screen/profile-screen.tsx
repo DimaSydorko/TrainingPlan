@@ -1,10 +1,12 @@
 import * as React from 'react'
 import { memo, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { useAppDispatch, useUser } from '@hooks/redux'
 import { useAppTheme } from '@theme/use-app-theme'
 import { useIsOnline } from '@stores/network/use-network-store'
-import { userAC } from '@store/user-reducer/user-ac'
+import { resetStores } from '@stores/reset-stores'
+import { useSessionUserId } from '@stores/session/use-session-store'
+import useProfile from '@services/profiles/use-profile'
+import useSignOut from '@services/auth/use-sign-out'
 import UserImage from '@components/user-image/user-image'
 import { ProfileNavigation } from '@utils/types'
 import { ScreenName } from '@utils/constants'
@@ -19,12 +21,21 @@ import { useScreen } from '@platform/screen'
 
 export default memo(function ProfileScreen() {
   const navigation = useNavigation<ProfileNavigation>()
-  const dispatch = useAppDispatch()
   const { colors } = useAppTheme()
   const { width } = useScreen()
   const isOnline = useIsOnline()
-  const { user } = useUser()
+  const userId = useSessionUserId()
+  const { data: profile } = useProfile(userId)
   const [isLogoutModal, setIsLogoutModal] = useState(false)
+
+  const handleSignedOut = () => {
+    resetStores()
+  }
+  const signOut = useSignOut({ onSignedOut: handleSignedOut })
+
+  const handleLogoutConfirm = () => {
+    if (!signOut.isPending) signOut.mutate()
+  }
 
   return (
     <Screen>
@@ -49,10 +60,10 @@ export default memo(function ProfileScreen() {
         />
       </Stack>
       <Stack preset='centerColumn' style={styles.profileContainer}>
-        <UserImage name={user?.displayName} photoUrl={user?.photoURL} />
-        <AppText variant='title'>{user?.displayName}</AppText>
+        <UserImage name={profile?.displayName} photoUrl={profile?.photoUrl} />
+        <AppText variant='title'>{profile?.displayName}</AppText>
         <AppText variant='caption' tone='secondary'>
-          {user?.email}
+          {profile?.email}
         </AppText>
       </Stack>
       {!isOnline && (
@@ -62,7 +73,8 @@ export default memo(function ProfileScreen() {
       )}
       <AppModal
         isWarning
-        onConfirm={() => dispatch(userAC.signOut())}
+        onConfirm={handleLogoutConfirm}
+        disabled={signOut.isPending}
         onClose={() => setIsLogoutModal(false)}
         isOpen={isLogoutModal}
         text={'Are you sure?'}

@@ -1,5 +1,5 @@
 # Signs in with E2E_EMAIL / E2E_PASSWORD when the login screen is showing, then waits for the tabs.
-# Safe to call when already signed in (redux-persist keeps the user across launches).
+# Safe to call when already signed in (the Supabase session survives launches). Skips onboarding if it shows.
 appId: ${APP_ID}
 ---
 - runFlow:
@@ -16,6 +16,22 @@ appId: ${APP_ID}
       - hideKeyboard
       - tapOn:
           id: login.submit
+- extendedWaitUntil:
+    visible:
+      id: onboarding.screen
+    timeout: 10000
+  optional: true
+- runFlow:
+    when:
+      visible:
+        id: onboarding.screen
+    commands:
+      - tapOn:
+          id: onboarding.skip
+      - tapOn:
+          id: onboarding.skip
+      - tapOn:
+          id: onboarding.skip
 - extendedWaitUntil:
     visible:
       id: tab.workouts

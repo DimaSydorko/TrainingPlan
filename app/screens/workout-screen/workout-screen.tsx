@@ -1,11 +1,9 @@
 import * as React from 'react'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
-import { useAppDispatch, useUser, useWorkout } from '@hooks/redux'
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
+import useSelectedWorkout from '@hooks/use-selected-workout'
 import { useAppTheme } from '@theme/use-app-theme'
-import { workoutAC } from '@store/workout-reducer/workout-ac'
-import { plansAC } from '@store/plans-reducer/plans-ac'
 import { AppHelperContext } from '@hooks/app-helper-provider'
 import {
   AddMoreButton,
@@ -23,7 +21,7 @@ import Exercise from '@components/exercise/exercise'
 import EditExerciseModal from '@components/exercise/exercise-edit-modal'
 import { deepCompare } from '@utils'
 import { ScreenName } from '@utils/constants'
-import { ExerciseType, PlayableNavigation, WorkoutType } from '@utils/types'
+import { ExerciseType, PlayableNavigation, WorkoutRouteParams, WorkoutType } from '@utils/types'
 import AppFooter from '@common/app-footer/app-footer'
 import AppHeader from '@common/app-header/app-header'
 import Card from '@common/card/card'
@@ -38,11 +36,14 @@ import { useScreen } from '@platform/screen'
 import styles from './workout-screen.styles'
 
 export default function WorkoutScreen() {
-  const dispatch = useAppDispatch()
   const navigation = useNavigation<PlayableNavigation>()
-  const { selectedWorkout } = useWorkout()
+  const route = useRoute<RouteProp<Record<string, WorkoutRouteParams>, string>>()
+  const planId = route.params?.planId
+  const { workout: selectedWorkout, onSaveWorkout: saveSelectedWorkout } = useSelectedWorkout({
+    workoutId: route.params?.workoutId,
+    planId,
+  })
   const { isDark } = useAppTheme()
-  const { user } = useUser()
   const { onToggleTabMenu } = useContext(AppHelperContext)
   const bars = useAppInsets()
   const screen = useScreen()
@@ -72,6 +73,10 @@ export default function WorkoutScreen() {
   const isChanged = !deepCompare(selectedWorkout, changedWorkout)
 
   useEffect(() => {
+    navigation.setOptions({ title: selectedWorkout?.name })
+  }, [navigation, selectedWorkout?.name])
+
+  useEffect(() => {
     onToggleTabMenu(false)
     return () => {
       onToggleTabMenu(true)
@@ -87,13 +92,10 @@ export default function WorkoutScreen() {
   }, [isEmpty])
 
   const onSaveWorkout = useCallback(async () => {
-    if (!workoutExercises || !user || !selectedWorkout) return
-    if (isChanged) {
-      if (changedWorkout?.ownerUid) dispatch(workoutAC.updateWorkout(changedWorkout))
-      else dispatch(plansAC.updateSelectedPlanWorkout(changedWorkout))
-    }
+    if (!workoutExercises || !selectedWorkout) return
+    if (isChanged) saveSelectedWorkout(changedWorkout)
     setIsEditMode(false)
-  }, [workoutExercises, user, selectedWorkout, isChanged, changedWorkout])
+  }, [workoutExercises, selectedWorkout, isChanged, changedWorkout, saveSelectedWorkout])
 
   const onVisibilityToggle = useCallback((exercise: ExerciseType) => {
     setWorkoutExercises(prev => prev?.map(ex => (ex.uid === exercise.uid ? exercise : ex)) || [])
@@ -132,7 +134,10 @@ export default function WorkoutScreen() {
     [isNewExercise]
   )
 
-  const onStartPlaying = useCallback(() => navigation.push(ScreenName.Playing), [])
+  const onStartPlaying = useCallback(
+    () => navigation.push(ScreenName.Playing, { workoutId: selectedWorkout?.uid ?? '', planId }),
+    [navigation, selectedWorkout?.uid, planId]
+  )
 
   const onGoBack = useCallback(() => {
     onSaveRefuse()

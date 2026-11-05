@@ -1,9 +1,8 @@
-import { fireEvent, screen } from '@testing-library/react-native'
+import { fireEvent, render, screen } from '@testing-library/react-native'
 import { useColorScheme } from 'react-native'
 import SettingsScreen from '@screens/settings-screen/settings-screen'
 import { THEME_MODE } from '@theme/themes.constants'
 import { useSettingsStore } from '@stores/settings/use-settings-store'
-import { renderWithStore } from '../../utils/render'
 import { resetTestStores } from '../../utils/reset-test-stores'
 
 jest.mock('react-native/Libraries/Utilities/useColorScheme', () => ({ __esModule: true, default: jest.fn() }))
@@ -19,14 +18,14 @@ describe('SettingsScreen theme', () => {
   })
 
   it('shows the resolved OS theme while following the system', async () => {
-    await renderWithStore(<SettingsScreen />)
+    await render(<SettingsScreen />)
 
     expect(isChecked('settings.systemTheme')).toBe(true)
     expect(isChecked('settings.darkTheme')).toBe(true)
   })
 
   it('switching the dark theme stores an explicit mode', async () => {
-    await renderWithStore(<SettingsScreen />)
+    await render(<SettingsScreen />)
 
     await fireEvent(screen.getByTestId('settings.darkTheme'), 'onValueChange')
 
@@ -36,7 +35,7 @@ describe('SettingsScreen theme', () => {
   })
 
   it('turning off the system theme keeps the current look', async () => {
-    await renderWithStore(<SettingsScreen />)
+    await render(<SettingsScreen />)
 
     await fireEvent(screen.getByTestId('settings.systemTheme'), 'onValueChange')
 
@@ -45,7 +44,7 @@ describe('SettingsScreen theme', () => {
 
   it('turning on the system theme follows the OS again', async () => {
     useSettingsStore.setState({ themeMode: THEME_MODE.LIGHT })
-    await renderWithStore(<SettingsScreen />)
+    await render(<SettingsScreen />)
 
     await fireEvent(screen.getByTestId('settings.systemTheme'), 'onValueChange')
 

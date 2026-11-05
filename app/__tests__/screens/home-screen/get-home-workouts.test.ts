@@ -6,21 +6,13 @@ const createWorkout = (uid: string): WorkoutType => ({ ...defaultWorkout, uid, n
 
 describe('getHomeWorkouts', () => {
   it('returns no today workout when the list is empty', () => {
-    expect(getHomeWorkouts([], [])).toEqual({ todayWorkout: null, upcomingWorkouts: [] })
+    expect(getHomeWorkouts([])).toEqual({ todayWorkout: null, upcomingWorkouts: [] })
   })
 
-  it('picks the first workout in the user order as today and the next three as upcoming', () => {
-    const workouts = ['a', 'b', 'c', 'd', 'e'].map(createWorkout)
-    const { todayWorkout, upcomingWorkouts } = getHomeWorkouts(workouts, ['e', 'd', 'c', 'b', 'a'])
+  it('picks the first workout in the library order as today and the next three as upcoming', () => {
+    const { todayWorkout, upcomingWorkouts } = getHomeWorkouts(['e', 'd', 'c', 'b', 'a'].map(createWorkout))
 
     expect(todayWorkout?.uid).toBe('e')
     expect(upcomingWorkouts.map(workout => workout.uid)).toEqual(['d', 'c', 'b'])
-  })
-
-  it('does not mutate the source list', () => {
-    const workouts = ['a', 'b'].map(createWorkout)
-    getHomeWorkouts(workouts, ['b', 'a'])
-
-    expect(workouts.map(workout => workout.uid)).toEqual(['a', 'b'])
   })
 })

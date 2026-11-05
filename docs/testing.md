@@ -12,8 +12,8 @@ Unit tests, the TypeScript strictness roadmap, Maestro E2E flows and the manual 
 | `app/__tests__/setup/jest.setup.js` | Registers the module mocks below (runs before each test file) |
 | `app/__tests__/setup/jest.setupAfterEnv.js` | Reanimated 4 test setup |
 | `app/__tests__/setup/mocks/*.js` | The mock implementations |
-| `app/__tests__/utils/` | `createTestStore`, `getInitialState`, `createBootstrappedPersistor`, `renderWithStore` |
-| `app/__tests__/*.test.ts(x)` | App-level tests: App smoke test, store persistence, mocks, helpers |
+| `app/__tests__/utils/` | `resetTestStores` (Zustand stores back to their initial state) |
+| `app/__tests__/*.test.ts(x)` | App-level tests: App smoke test, mocks |
 | `app/__tests__/<path>/*.test.ts(x)` | Unit tests, in a mirror of the `app/` path they test (`app/__tests__/platform/` tests `app/platform/`) |
 
 Only files named `*.test.ts`, `*.test.tsx` or `*.test.js` are run. Other files inside `app/__tests__/` (setup, utils, fixtures) are ignored by the runner.
@@ -31,7 +31,8 @@ Libraries: `jest-expo` 57, `jest` 29, `@testing-library/react-native` 14 (with i
 | `expo-keep-awake` | `mocks/expo-keep-awake.js` | All functions are `jest.fn()` |
 | `expo-notifications` | `mocks/expo-notifications.js` | Permissions granted; `scheduleNotificationAsync` returns ids and stores requests in `__scheduled`; cancel removes them; enums (`AndroidImportance`, `SchedulableTriggerInputTypes`, ...) included |
 | `@react-native-google-signin/google-signin` | `mocks/google-signin.js` | `GoogleSignin.signIn()` resolves `{ type: 'success', data: { idToken: 'mock-google-id-token', user } }`; `statusCodes`, `isSuccessResponse`, `isErrorWithCode`, `GoogleSigninButton` included |
-| `firebase/compat/*` and `firebase/app`, `firebase/auth`, `firebase/firestore`, `firebase/database`, `firebase/storage`, `firebase/functions` | `mocks/firebase.js` | A chainable stub: any property or call returns another stub, calls are awaitable, subscriptions return an unsubscribe function. Enough for module-level setup code; **not** a fake backend |
+| `app/lib/supabase/client` | `mocks/supabase-client.js` | Signed out; every query/RPC resolves `{ data: null, error: null }`; override per test with `jest.mocked(supabase.rpc).mockResolvedValueOnce(...)` |
+| `expo-crypto` | `mocks/expo-crypto.js` | `randomUUID` uses Node's crypto |
 | `react-native-worklets` | the package's own `src/mock` | Required by Reanimated 4 |
 | `react-native-gesture-handler` | `react-native-gesture-handler/jestSetup` | Official setup |
 
@@ -48,25 +49,12 @@ it('asks for permission when it was denied', async () => {
 })
 ```
 
-For data-layer tests, mock one level higher than Firebase, e.g. `jest.mock('@utils/firebase', () => ({ ... }))` or the specific modular functions your code calls (`jest.mock('firebase/firestore', () => ({ getDocs: jest.fn(), ... }))` in that test file overrides the global stub).
-
-### Store helpers
-
-```tsx
-// in app/__tests__/screens/settings-screen/
-import { renderWithStore } from '../../utils/render'
-
-const { store } = await renderWithStore(<SettingsScreen />, {
-  preloadedState: { settingsReducer: { isVibration: false } }, // deep-merged over the slices' initial state
-})
-```
-
-`createTestStore` uses the real slice reducers without redux-persist. To test persistence itself, load the real `app/store` inside `jest.isolateModules` (see `app/__tests__/store.test.ts`).
+Mock the layer below: component → hook, hook → fetcher, fetcher → Supabase client. Hook tests wrap `renderHook` in a `QueryClientProvider` with a fresh `QueryClient` (see `app/__tests__/services/`).
 
 ### Writing tests
 
 - Put them in `app/__tests__/` under the same path as the code, e.g. `app/platform/media-utils.ts` → `app/__tests__/platform/media-utils.test.ts`. Import the code under test via `@<folder>/…`; test helpers via a relative path.
-- Prefer testing pure functions (timers, formatting, reducers, mapping Firebase docs) over rendering whole screens.
+- Prefer testing pure functions (timers, formatting, row ↔ domain mappers) over rendering whole screens.
 - A missing native-module mock goes into `app/__tests__/setup/mocks/` and is registered in `jest.setup.js`.
 
 ---
@@ -81,7 +69,7 @@ const { store } = await renderWithStore(<SettingsScreen />, {
 | 1 | `strictFunctionTypes` | 2 | `WorkoutsScreen.tsx`, `MyPlansScreen.tsx`: navigator/screen component prop types |
 | 1 | `noImplicitReturns` | 2 | `UserAC.ts`, `WorkoutsScreen.tsx` |
 | 1 | `noImplicitOverride` | 2 | `common/my-switch/switch-lib.tsx` (class component) |
-| 1 | `useUnknownInCatchVariables` | 21 | All in `app/store/*/*AC.ts` `catch (e)` blocks. Fix: `e instanceof FirebaseError ? e.message : String(e)` |
+| 1 | `useUnknownInCatchVariables` | 21 | Was all in the removed Redux thunks; recount before enabling |
 | 2 | `noImplicitAny` | 29 | SwitchLib (9), SettingsScreen (5), Exercise (4), SwipeSelector (3), InfiniteScroll (3), PlansSlice (2), GoBackSubmitModal (2), usePlaying (1) |
 | 3 | `strictNullChecks` (brings `strictPropertyInitialization`, 0 extra) | 114 | The big one. Go folder by folder: `app/store` → `app/hooks` → `app/common` → `app/components` → `app/screens`. Biggest: MySwitch 20, Exercise 15, WorkoutsScreen 12. Option: use `// @ts-expect-error TODO(strict)` per remaining line to flip the flag early and burn the list down |
 | 4 | `"strict": true` and delete the individual flags | 161 today in total | Only when stages 1–3 are at 0 |
@@ -111,7 +99,7 @@ The flows live in `e2e/` and run against an installed **development or preview b
 1. Install Maestro: `curl -fsSL "https://get.maestro.mobile.dev" | bash` (needs Java 17+).
 2. Start an Android emulator or connect a device (`adb devices`), or boot an iOS simulator.
 3. Install a build: `npx expo run:android` / `npx expo run:ios`, or an EAS `development`/`preview` build.
-4. Have a Firebase **test account** (email + password) in the project the build points at. Don't use a personal account: flow 02 writes and 05 deletes workouts.
+4. Have a Supabase **test account** (email + password) in the project the build points at. Don't use a personal account: flow 02 writes and 05 deletes workouts.
 5. Run:
 
 ```bash
@@ -155,7 +143,7 @@ Run the full pass on **one real Android device** (Android 13+; ideally also one 
 ### 4.0 Before you start
 
 - [ ] Build under test recorded (EAS build id or git sha, profile, platform, device model, OS version).
-- [ ] `.env` points to the Firebase project you mean to test (test project, or production with a test account).
+- [ ] `.env` points to the Supabase project you mean to test (`EXPO_PUBLIC_SUPABASE_URL` / `_KEY`).
 - [ ] Two test accounts ready: an email/password account and a Google account.
 - [ ] Device volume up, not in silent mode (iOS ring/silent switch off), Do Not Disturb off.
 - [ ] For §4.8 (upgrade in place): the **old** Play Store / pre-migration build installed on a second device, with data, before installing the new one.
@@ -203,7 +191,7 @@ Mark each line pass / fail / n/a. On failure, note what you saw and attach a scr
 - [ ] **Copy**: select workout(s) → copy icon → choose "My workouts" or a plan → copies appear there.
 - [ ] **Delete**: select one / several / "select all" → delete → confirmation text names the workout or count → gone after relaunch.
 - [ ] Back button with unsaved changes → "Changes in '…' workout aren't saved!" modal; Confirm discards, Cancel stays.
-- [ ] Exercise image picker opens and shows images (from Firebase storage); choosing one shows it on the card.
+- [ ] No image picker in the exercise editor (exercise images come back with the exercise catalog).
 
 ### 4.5 Playing a workout
 
@@ -258,9 +246,9 @@ Use a workout with at least 3 exercises: one with repeats/weight, one time-only,
 - [ ] Start the app in airplane mode while signed in → tabs show cached data, an offline toast appears after ~1 s, no crash.
 - [ ] Profile shows the no-signal illustration; logout icon hidden.
 - [ ] Login "Log in" and Google buttons disabled when offline.
-- [ ] Turn the network back on → toast disappears, data refreshes (workouts, plans, images) without restarting.
+- [ ] Turn the network back on → toast disappears, data refreshes (workouts, plans, profile) without restarting.
 - [ ] Toggle airplane mode on/off quickly several times → no duplicate fetches visible as flicker loops, no crash.
-- [ ] Edit a workout offline and save → behaviour is clear (error toast or saved locally); note which. Back online → state is consistent with Firebase.
+- [ ] Edit a workout offline and save → the change shows at once. Kill the app, reopen online → the queued change reaches Supabase; the list matches the server.
 - [ ] Play a workout offline → works fully (sounds are bundled).
 
 ### 4.8 Upgrade in place from the old build
@@ -269,8 +257,7 @@ The new build must install **over** the old one (same Android package `com.train
 
 - [ ] On a device with the old build and data (signed in, custom settings: dark theme, sound type, TTS values, a workout mid-way through results), install the new build over it (`adb install -r` or Play internal testing track). Install succeeds without "App not installed" (signature mismatch means the keystore is wrong — stop).
 - [ ] First launch: no crash. Settings (theme, sound type, volumes, TTS, vibration, weight step) are the same as before.
-- [ ] Workouts, plans and results are the same as before.
-- [ ] Sign-in state: note whether the user is still signed in. Expected: the old Firebase v8 auth session may not carry over (different persistence); if they are asked to sign in once, that is acceptable, but after signing in all their data must be there.
+- [ ] The user signs in once (Supabase Auth, same e-mail). After that, workouts and plans are imported once and match the old build; relaunching doesn't duplicate them.
 - [ ] Old sound type values map to the new bundled sounds (cue plays, no silence).
 - [ ] No duplicate notifications left over from react-native-background-actions.
 - [ ] iOS: only applicable if an old iOS build was distributed (bundle id changed from the template placeholder, so it installs as a new app; note this).

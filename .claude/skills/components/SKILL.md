@@ -74,14 +74,13 @@ export default StyleSheet.create({
 })
 ```
 
-`workout-card/workout-card.constants.ts` — only when the component has constants (then always in this file).
+Constants at the top of `workout-card.tsx`; a `workout-card.constants.ts` only when another file shares them.
 
 ## Step 4 — Data
 
 -   Presentational components get data via props.
 -   Containers (screens, `components/`) get server data from `app/services/<entity>` hooks and UI state from
-    `app/stores` — not from new Redux selectors. Legacy screens that still use `useAppSelector` may keep it until
-    their entity is migrated.
+    `app/stores`.
 -   Theme colors: `useThemeColors()` (`@theme/use-app-theme`).
 
 ## Step 5 — Tests

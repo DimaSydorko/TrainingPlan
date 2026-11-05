@@ -4,8 +4,7 @@ Server state — anything stored in the backend (plans, workouts, publications, 
 by **React Query** and fetched from **Supabase**. Client/UI state belongs in Zustand (`client-state.md`). Never
 copy fetched entities into a store "for convenience".
 
-> **Migration status.** Today all server data still goes through Firebase + Redux thunks (`app/store/**`). Those
-> rules are in the _Legacy Firebase_ section at the end. Everything else in this file applies to new code.
+> Firebase and Redux are removed. All server data is Supabase + React Query.
 
 ### Layer split — non-negotiable
 
@@ -120,8 +119,7 @@ If an arg can be `null` / `undefined` (no session yet, no selected plan), pass `
 
 ### Offline-first — non-negotiable
 
-The app is used in gyms with poor connectivity; today it works offline through a local Redux copy. React Query must
-keep that behavior:
+The app is used in gyms with poor connectivity. React Query keeps it working offline:
 
 -   `app/lib/query-client.ts` wires `onlineManager` to NetInfo and `focusManager` to `AppState`.
 -   The cache is persisted with `PersistQueryClientProvider` + an AsyncStorage persister. Because persisted queries
@@ -191,15 +189,13 @@ only **invalidates** (or patches) the entity's keys; it never writes to a store.
 -   Supabase Auth is the session source. Email/password via `supabase.auth.signInWithPassword` / `signUp`; Google
     via `getGoogleIdToken()` from `app/platform/google-auth.ts` → `supabase.auth.signInWithIdToken({ provider:
     'google', token })`.
--   Auth calls live in `app/api/auth/`; the session is exposed through one hook (`app/services/auth/use-session.ts`)
-    driven by `onAuthStateChange`.
--   Logout: `supabase.auth.signOut()`, `signOutGoogle()`, `queryClient.clear()` (and remove the persisted cache), and
-    every store's `reset()` (`client-state.md`).
+-   Auth calls live in `app/api/auth/` (errors → `AuthRequestError.code`). `useAuthSessionListener` (`onAuthStateChange`)
+    feeds `useSessionStore` (`app/stores/session`: status, userId, email); consumers pass `userId` into hooks.
+-   Logout (`useSignOut`): `signOutGoogle()`, `signOut({ scope: 'local' })`, `queryClient.clear()` + persisted cache
+    removal; the caller resets stores (`client-state.md`).
 
-### Legacy Firebase (until removed)
+### Legacy data import
 
--   Firestore/Auth calls exist only in `app/utils/firebase.ts`, `app/store/firestore.ts`, `app/store/sync.ts` and the
-    `app/store/**/*AC.ts` thunks. **Do not add new ones.** Modular API only (`firebase/compat` is ESLint-blocked).
--   When an entity moves to Supabase, delete its Firestore code, its thunks and its Redux data in the same change;
-    never dual-write or read from both.
--   Existing user data is moved by a one-off migration script (outside the app bundle), not by app code.
+-   Old user data moves once after Supabase login: `app/api/legacy-import` reads AsyncStorage `persist:root` (never
+    written any more) and calls `import_legacy_data`, only when the old account's e-mail matches. The server runs it
+    once per profile (`legacy_imported_at`).

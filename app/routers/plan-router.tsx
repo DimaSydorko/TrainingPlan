@@ -1,10 +1,8 @@
 import * as React from 'react'
 import { memo } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import { usePlans, useUser, useWorkout } from '@hooks/redux'
 import { MyPlansScreen, PlayingScreen, WorkoutScreen, WorkoutsScreen } from '@screens'
 import { useScreenOptions } from '@theme/navigation-theme'
-import { Loading } from '@common'
 import { ScreenName } from '@utils/constants'
 import { PlansStackParamList } from '@utils/types'
 
@@ -16,30 +14,17 @@ function PlanWorkoutsScreen() {
 
 export default memo(function PlanRouter() {
   const options = useScreenOptions()
-  const user = useUser()
-
-  const workout = useWorkout()
-  const plans = usePlans()
 
   return (
     <>
-      {(workout.isLoading || plans.isLoading || user.isLoading) && <Loading />}
       <Stack.Navigator id='PlansStack'>
         <Stack.Screen
           name={ScreenName.SavedWorkouts}
           options={{ ...options, title: 'All saved Plans' }}
           component={MyPlansScreen}
         />
-        <Stack.Screen
-          name={ScreenName.Plan}
-          options={{ ...options, title: plans.selectedPlan?.name }}
-          component={PlanWorkoutsScreen}
-        />
-        <Stack.Screen
-          name={ScreenName.WorkoutInPlan}
-          options={{ ...options, title: workout.selectedWorkout?.name }}
-          component={WorkoutScreen}
-        />
+        <Stack.Screen name={ScreenName.Plan} options={options} component={PlanWorkoutsScreen} />
+        <Stack.Screen name={ScreenName.WorkoutInPlan} options={options} component={WorkoutScreen} />
         <Stack.Screen
           name={ScreenName.Playing}
           options={{ ...options, headerShown: false }}

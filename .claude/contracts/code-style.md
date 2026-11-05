@@ -9,6 +9,8 @@
 -   Import dependencies at the top of the file. Import local functions/components/assets beneath dependencies.
 -   No unused imports, props, or keys in types
 -   No `var` — use `const` and `let`
+-   Arrow functions only (`const getPlan = () => …`), no `function` declarations/expressions — components, hooks,
+    helpers alike. Convert legacy `function` when you touch it.
 -   Padding blank line after a block of `const` / `let` declarations
 -   Newline at end of every file
 

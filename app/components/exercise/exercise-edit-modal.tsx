@@ -2,7 +2,6 @@ import * as React from 'react'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { Keyboard, View } from 'react-native'
 import { AppColorPicker, AppModal, ButtonCounter, IconButton, MyTextInput, SwipeSelector } from '@common'
-import ImageSelector from '../image-selector/image-selector'
 import { defaultApproach, defaultExercise } from '@utils/constants'
 import { ExerciseType } from '@utils/types'
 import { nanoid } from '@utils'
@@ -30,7 +29,6 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
   const [selectMinutes, setSelectMinutes] = useState<number>(Math.floor(initialEx.breakTimeInSec / 60))
   const [repeats, setRepeats] = useState<number>(initialEx.repeats)
   const [laps, setLaps] = useState<number>(initialEx.laps)
-  const [imageUrl, setImageUrl] = useState<string>(initialEx.imageUrl || '')
   const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false)
   const [isKeyboardVisible, setKeyboardVisible] = useState<boolean>(false)
   const [colorIdx, setColorIdx] = useState<number>(exercise?.colorIdx || 0)
@@ -66,12 +64,11 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
       isVisible,
       approaches,
       colorIdx,
-      imageUrl,
       breakTimeInSec: selectMinutes * 60 + selectSeconds,
     }
     onSave(newExercise)
     onClose()
-  }, [name, colorIdx, laps, repeats, isVisible, selectMinutes, selectSeconds, initialEx, imageUrl])
+  }, [name, colorIdx, laps, repeats, isVisible, selectMinutes, selectSeconds, initialEx])
 
   return (
     <>
@@ -86,12 +83,7 @@ export default memo(function EditExerciseModal({ exercise, onSave, onDelete, onC
         disabled={selectSeconds + selectMinutes <= 0}
         header={`${isNewExercise ? 'Create' : 'Edit'} Exercise`}
         confirmText={'Save'}
-        extraPlaceLeft={
-          <>
-            <AppColorPicker value={colorIdx} onChange={setColorIdx} />
-            <ImageSelector value={imageUrl} onSubmit={setImageUrl} />
-          </>
-        }
+        extraPlaceLeft={<AppColorPicker value={colorIdx} onChange={setColorIdx} />}
         extraPlaceRight={
           <>
             {!isNewExercise && <IconButton iconName={icon.delete} onPress={() => setIsDeleteModal(true)} />}

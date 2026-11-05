@@ -10,7 +10,7 @@ Scope (`$ARGUMENTS`): empty → uncommitted changes (`git diff HEAD` + untracked
 2. Classify: logic changed → test; only types/styles/constants/imports/renames → skip; bug fix → regression test (ask for one sentence if the bug is unclear).
 3. Test file = `app/__tests__/<path under app>/<name>.test.ts(x)` (e.g. `app/platform/media-utils.ts` → `app/__tests__/platform/media-utils.test.ts`); app-level tests at the `app/__tests__/` root. Import the code under test via `@<folder>/…`. If it exists, add only missing cases.
 4. Cover every new branch, early return, error path and variant in the diff (`npx jest <test> --coverage --collectCoverageFrom=<src>` if unsure).
-5. Write in the style of the nearest existing test (e.g. `app/__tests__/screens/playing-screen/playback-schedule.test.ts`, `app/__tests__/app.test.tsx`). For `app/api`, `app/services`, `app/stores` read `.claude/skills/firebase-to-supabase-react-query/references/test-templates.md`.
+5. Write in the style of the nearest existing test (e.g. `app/__tests__/screens/playing-screen/playback-schedule.test.ts`, `app/__tests__/app.test.tsx`). For `app/api` / `app/services` follow `app/__tests__/api/plans/plans-api.test.ts` and `app/__tests__/services/plans/plans-mutations.test.tsx`.
 6. Run `npx jest <test files>`; fix wrong tests. **Never edit source to make a test pass** — report a suspected bug.
 7. `npx prettier --write` the test files.
 
@@ -18,7 +18,7 @@ Minimum per unit: util → each code path · component → render + interaction 
 
 Rules:
 - RNTL 14 is async: `await render`, `await renderHook`, `const user = userEvent.setup(); await user.press(...)`.
-- `renderWithStore` (`app/__tests__/utils/render.tsx`) for Redux-connected components; plain `render` otherwise.
+- Plain `render`; wrap in `QueryClientProvider` for components using React Query hooks.
 - Native modules are mocked in `app/__tests__/setup/` — extend there. Mock the layer below: component → hook, hook → fetcher, fetcher → Supabase client.
 - Queries: `getByRole` > `getByLabelText`/`getByPlaceholderText` > `getByText` > `getByTestId` (Maestro ids).
 - Fake timers for timer logic; `AsyncStorage.clear()` / store `reset()` in `beforeEach` when needed.

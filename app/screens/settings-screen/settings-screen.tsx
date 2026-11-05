@@ -4,10 +4,7 @@ import { TouchableOpacity } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 import { previewSound } from '@platform/audio'
 
-import { useAppDispatch } from '@hooks/redux'
 import { useSettingsStore } from '@stores/settings/use-settings-store'
-import { clearWorkoutResults } from '@store/workout-reducer/workout-slice'
-import { clearPlaneResults } from '@store/plans-reducer/plans-slice'
 import useTTS from '@hooks/use-tts'
 import { ConfirmButton } from '@common'
 import AppSoundPicker from '@components/app-sound-picker/app-sound-picker'
@@ -24,7 +21,6 @@ import { getSoundText } from '@utils'
 import { SoundType } from '@utils/constants'
 
 export default memo(function SettingsScreen() {
-  const dispatch = useAppDispatch()
   const onSay = useTTS()
   const { colors, isDark, name: themeName } = useAppTheme()
   const { themeMode, isVibration, tts, workout, sound, isSaveBatteryMode } = useSettingsStore(
@@ -88,11 +84,7 @@ export default memo(function SettingsScreen() {
     [isSystemTheme, themeName, setThemeMode]
   )
 
-  const clearAll = useCallback(() => {
-    dispatch(clearWorkoutResults())
-    dispatch(clearPlaneResults())
-    resetSettings()
-  }, [dispatch, resetSettings])
+  const clearAll = useCallback(() => resetSettings(), [resetSettings])
 
   return (
     <Screen>

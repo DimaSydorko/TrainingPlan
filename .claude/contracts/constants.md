@@ -1,12 +1,13 @@
 ## Constants
 
-### Component and module constants live in a co-located `<name>.constants.ts`
+### Keep constants in the file that uses them
 
-When creating or editing a component, hook, store or fetcher, move its constants (magic numbers, labels, keys,
-option lists, timings) to a co-located `<name>.constants.ts` — always, independently of how many there are.
+Constants (magic numbers, labels, keys, option lists, timings) go at the top of the file that uses them, below
+imports. Create a separate `<name>.constants.ts` only when ≥2 files share them (e.g. an entity's table name used by
+`app/api` and `app/services`), or a list is so large it buries the file's logic.
 
-App-wide constants (`ScreenName`, `QUERY_LIMIT`, table names, storage keys) live in
-`app/utils/constants.ts` (legacy) or a domain constants file (`app/api/<entity>/<entity>.constants.ts`).
+App-wide constants (`ScreenName`, `QUERY_LIMIT`, storage keys) live in `app/utils/constants.ts` (legacy) or a domain
+constants file (`app/api/<entity>/<entity>.constants.ts`).
 
 Object constants use SCREAMING_SNAKE_CASE keys and `as const`; derive the union type from them instead of using
 `enum` in new code:

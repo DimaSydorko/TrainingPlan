@@ -5,7 +5,7 @@ description: Backend side of Supabase for this app — SQL migrations, RLS polic
 
 # Supabase backend
 
-App-side code (fetchers, hooks, offline) → `services` skill + `.claude/contracts/server-state.md` (database rules there apply). Firebase move workflow → `firebase-to-supabase-react-query`.
+App-side code (fetchers, hooks, offline) → `services` skill + `.claude/contracts/server-state.md` (database rules there apply).
 
 ## Where logic goes
 

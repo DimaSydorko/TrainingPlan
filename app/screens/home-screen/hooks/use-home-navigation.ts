@@ -1,28 +1,19 @@
 import { useCallback } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { useAppDispatch } from '@hooks/redux'
-import { updateSelectedWorkout } from '@store/workout-reducer/workout-slice'
 import { ScreenName, TabName } from '@utils/constants'
 import { HomeNavigation, WorkoutType } from '@utils/types'
 
-export default function useHomeNavigation() {
-  const dispatch = useAppDispatch()
+const useHomeNavigation = () => {
   const navigation = useNavigation<HomeNavigation>()
 
   const handleStartWorkout = useCallback(
-    (workout: WorkoutType) => {
-      dispatch(updateSelectedWorkout(workout))
-      navigation.navigate(ScreenName.Playing)
-    },
-    [dispatch, navigation]
+    (workout: WorkoutType) => navigation.navigate(ScreenName.Playing, { workoutId: workout.uid }),
+    [navigation]
   )
 
   const handleOpenWorkout = useCallback(
-    (workout: WorkoutType) => {
-      dispatch(updateSelectedWorkout(workout))
-      navigation.navigate(ScreenName.Workout)
-    },
-    [dispatch, navigation]
+    (workout: WorkoutType) => navigation.navigate(ScreenName.Workout, { workoutId: workout.uid }),
+    [navigation]
   )
 
   const handleOpenAllWorkouts = useCallback(() => navigation.navigate(TabName.Workouts), [navigation])
@@ -31,3 +22,5 @@ export default function useHomeNavigation() {
 
   return { handleStartWorkout, handleOpenWorkout, handleOpenAllWorkouts, handleOpenProfile }
 }
+
+export default useHomeNavigation

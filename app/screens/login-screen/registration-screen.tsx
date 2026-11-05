@@ -2,24 +2,27 @@ import * as React from 'react'
 import { useState } from 'react'
 import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
-import { useAppDispatch, useUser } from '@hooks/redux'
 import { useAppTheme } from '@theme/use-app-theme'
 import { useIsOnline } from '@stores/network/use-network-store'
-import { userAC } from '@store/user-reducer/user-ac'
+import { useTranslation } from 'react-i18next'
+import useSignUp from '@services/auth/use-sign-up'
+import useGoogleSignIn from '@services/auth/use-google-sign-in'
 import { useNavigation } from '@react-navigation/native'
 import { FUTURE_FLAG, ScreenName } from '@utils/constants'
 import { ConfirmButton, MyTextInput } from '@common'
 import Stack from '@common/stack/stack'
 import AppText from '@common/app-text/app-text'
+import AuthErrorText from './auth-error-text'
 import AppGoogleSignInButton from './app-google-sign-in-button'
 import styles from './registration-screen.styles'
 import { AuthNavigation } from '@utils/types'
 
 export default function RegistrationScreen() {
-  const dispatch = useAppDispatch()
+  const { t } = useTranslation('auth')
+  const signUp = useSignUp()
+  const googleSignIn = useGoogleSignIn()
   const { colors } = useAppTheme()
   const isOnline = useIsOnline()
-  const { error, isLoading } = useUser()
   const navigation = useNavigation<AuthNavigation>()
   const [inputData, setInputData] = useState({ fullName: '', email: '', password: '', confirmPassword: '' })
 
@@ -29,18 +32,20 @@ export default function RegistrationScreen() {
     navigation.popTo(ScreenName.Login)
   }
 
-  const onRegister = async () => {
+  const isPending = signUp.isPending || googleSignIn.isPending
+
+  const handleRegister = () => {
     if (inputData.password !== inputData.confirmPassword) {
       alert("Passwords don't match.")
       return
     }
-    dispatch(
-      userAC.signUp({
-        email: inputData.email,
-        password: inputData.password,
-        displayName: inputData.password,
-      })
-    )
+    googleSignIn.reset()
+    signUp.mutate({ email: inputData.email, password: inputData.password, displayName: inputData.fullName })
+  }
+
+  const handleGooglePress = () => {
+    signUp.reset()
+    googleSignIn.mutate()
   }
 
   return (
@@ -51,7 +56,8 @@ export default function RegistrationScreen() {
         keyboardShouldPersistTaps='always'
         bottomOffset={20}
       >
-        <AppText variant='title'>{error}</AppText>
+        <AuthErrorText error={signUp.error ?? googleSignIn.error} />
+        {signUp.data?.needsEmailConfirmation && <AppText tone='secondary'>{t('auth:confirmEmail')}</AppText>}
         <MyTextInput
           value={inputData.fullName}
           onChangeText={fullName => setInputData({ ...inputData, fullName })}
@@ -74,8 +80,8 @@ export default function RegistrationScreen() {
           onChangeText={confirmPassword => setInputData({ ...inputData, confirmPassword })}
           placeholder='Confirm Password'
         />
-        <ConfirmButton disabled={isLoading || !isOnline} onPress={onRegister} header='Create account' />
-        {!FUTURE_FLAG.IS_DEV && <AppGoogleSignInButton disabled={!isOnline} />}
+        <ConfirmButton disabled={isPending || !isOnline} onPress={handleRegister} header='Create account' />
+        {!FUTURE_FLAG.IS_DEV && <AppGoogleSignInButton disabled={isPending || !isOnline} onPress={handleGooglePress} />}
         <Stack preset='centerColumn' style={styles.footer}>
           <AppText>
             Already got an account?{' '}

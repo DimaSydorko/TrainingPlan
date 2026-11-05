@@ -6,11 +6,12 @@ import { useTranslation } from 'react-i18next'
 import AppText from '@common/app-text/app-text'
 import Stack from '@common/stack/stack'
 import UserImage from '@components/user-image/user-image'
-import { useUser } from '@hooks/redux'
 import { GREETING_HOUR, HOME_DATE_FORMAT } from '../home-screen.constants'
 import styles from './greeting-header.styles'
 
 type GreetingHeaderProps = {
+  displayName?: string
+  photoUrl?: string
   onProfilePress: () => void
 }
 
@@ -20,9 +21,8 @@ function getGreetingKey(hour: number) {
   return 'home:greeting.evening' as const
 }
 
-export default memo(function GreetingHeader({ onProfilePress }: GreetingHeaderProps) {
+export default memo(function GreetingHeader({ displayName, photoUrl, onProfilePress }: GreetingHeaderProps) {
   const { t, i18n } = useTranslation('home')
-  const { user } = useUser()
   const now = new Date()
   const date = now.toLocaleDateString(i18n.language, HOME_DATE_FORMAT)
 
@@ -33,14 +33,14 @@ export default memo(function GreetingHeader({ onProfilePress }: GreetingHeaderPr
           {t(getGreetingKey(now.getHours()))},
         </AppText>
         <AppText variant='title' style={styles.name}>
-          {user?.displayName}
+          {displayName}
         </AppText>
         <AppText variant='caption' tone='secondary'>
           {date}
         </AppText>
       </View>
       <TouchableOpacity testID='home.profile' onPress={onProfilePress}>
-        <UserImage name={user?.displayName ?? ''} photoUrl={user?.photoURL ?? undefined} />
+        <UserImage name={displayName ?? ''} photoUrl={photoUrl} />
       </TouchableOpacity>
     </Stack>
   )

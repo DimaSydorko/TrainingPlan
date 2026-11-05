@@ -11,7 +11,7 @@ description: Create a new server-state module for one entity — Supabase fetche
 ## Step 0 — Foundation exists?
 
 Check `app/lib/supabase/client.ts`, `app/lib/supabase/database.types.ts` and `app/lib/query-client.ts`. If they are
-missing, stop and run the foundation checkpoint of `firebase-to-supabase-react-query` first.
+missing, stop and tell the user.
 
 ## Step 1 — Schema (if the table is new or changes)
 
@@ -127,10 +127,10 @@ const usePlans = ({ userId }: UsePlansArgs) =>
 export default usePlans
 ```
 
-Offline-capable mutation: use the optimistic template in
-`.claude/skills/firebase-to-supabase-react-query/references/optimistic-mutation-template.md`, give it
-`mutationKey: plansMutationKeys.save`, and register the `mutationFn` in `app/lib/query-client.ts` with
-`queryClient.setMutationDefaults(plansMutationKeys.save, { mutationFn: savePlan })`.
+Offline-capable mutation: use `references/optimistic-mutation-template.md`, give it a `mutationKey` from the key
+factory, and register its `mutationFn` + `scope` in `app/services/<entity>/mutation-defaults.ts`
+(`queryClient.setMutationDefaults`), called from `app/app.tsx` (example: `app/services/plans`). Other templates:
+`references/hook-templates.md`, `query-key-factory.md`, `stale-time-rubric.md`.
 
 Online-only mutation (publish, copy publication): invalidate on success; the screen checks
 `onlineManager.isOnline()` first and informs the user when offline.
@@ -146,7 +146,7 @@ Online-only mutation (publish, copy publication): invalidate on success; the scr
 
 ## Rules (ESLint-enforced)
 
--   `app/api/**` must not import `@tanstack/react-query`, `react`, `react-redux`, `zustand`, stores or screens.
+-   `app/api/**` must not import `@tanstack/react-query`, `react`, `zustand`, stores or screens.
 -   `app/services/**` must not import `@supabase/supabase-js` or `app/lib/supabase/**`; it imports fetchers from
     `app/api`. Hooks never read stores — inputs are arguments.
 -   Screens, components, hooks and stores must not import `app/api/**`, `app/lib/supabase/**` or

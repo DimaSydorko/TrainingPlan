@@ -12,7 +12,7 @@
 | Tier         | When to use                                         | Files                                                                           |
 | ------------ | --------------------------------------------------- | ------------------------------------------------------------------------------- |
 | **Minimal**  | Pure presentational, no own styles                  | `component-name.tsx`                                                            |
-| **Standard** | Has styles; optionally constants/helpers            | `component-name.tsx` + `component-name.styles.ts` (+ `component-name.constants.ts`) |
+| **Standard** | Has styles; optionally helpers                      | `component-name.tsx` + `component-name.styles.ts`                               |
 | **Complex**  | Has sub-components, contexts or co-located hooks    | Standard files + `components/`, `hooks/` subfolders                             |
 
 ### Naming
@@ -45,7 +45,6 @@ import { Pressable, View } from 'react-native'
 import AppText from '@common/app-text/app-text'
 import { Icon } from '@common/icon/icon'
 import { useThemeColors } from '@theme/use-app-theme'
-import { WORKOUT_CARD_ICON_SIZE } from './workout-card.constants'
 import styles from './workout-card.styles'
 ```
 

@@ -14,6 +14,7 @@ import { getWorkoutDuration } from '@utils'
 import { AppNavigationType } from '@utils/types'
 import { AppImage, ConfirmButton, GoBackSubmitModal, IconButton } from '@common'
 import { secondsToMinSec } from '@components/workout-duration/workout-duration'
+import EffortRatingModal from '@components/effort-rating-modal/effort-rating-modal'
 import Stack from '@common/stack/stack'
 import AppText from '@common/app-text/app-text'
 import { getExerciseColor } from '@theme/tokens'
@@ -55,7 +56,8 @@ export default memo(function PlayingScreen() {
     exerciseNext,
     onTogglePlay,
     onNext,
-    onSaveResult,
+    onRecordResult,
+    onFinishWorkout,
     onPrevious,
     setCurrentRepeats,
     setCurrentWeight,
@@ -69,6 +71,7 @@ export default memo(function PlayingScreen() {
   } = usePlaying()
   const [isWorkoutReview, setIsWorkoutReview] = useState<boolean>(false)
   const [isSubmitGoBack, setIsSubmitGoBack] = useState<boolean>(false)
+  const [isEffortModal, setIsEffortModal] = useState<boolean>(false)
   const [isInvisibleTimerCircle, setIsInvisibleTimerCircle] = useState<boolean>(false)
   const color = getExerciseColor(exercise?.colorIdx || 0, isDark)
   const isTheLastOneComplete = isWaitForSubmit && isTheLastOne
@@ -137,10 +140,20 @@ export default memo(function PlayingScreen() {
     setIsSubmitGoBack(true)
   }, [])
 
-  const _onSaveResult = useCallback(() => {
-    setTimeout(() => onSaveResult(), 100)
-    setIsSubmitGoBack(true)
-  }, [onSaveResult])
+  const handleSaveResult = useCallback(() => {
+    onRecordResult()
+    setIsEffortModal(true)
+  }, [onRecordResult])
+
+  const handleFinishWorkout = useCallback(
+    (effortRating?: number) => {
+      onFinishWorkout(effortRating)
+      setIsSubmitGoBack(true)
+    },
+    [onFinishWorkout]
+  )
+
+  const handleCloseEffortModal = useCallback(() => setIsEffortModal(false), [])
 
   const toggleWorkoutReview = useCallback(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -260,7 +273,7 @@ export default memo(function PlayingScreen() {
           <ConfirmButton
             header={'Save Result'}
             style={saveButtonStyle}
-            onPress={onSaveResult}
+            onPress={handleSaveResult}
             testID='playing.saveResult'
           />
         )}
@@ -325,9 +338,10 @@ export default memo(function PlayingScreen() {
           playingExerciseIdx={playing.idx}
           playingExerciseLap={playing.lap}
           isTheLastOneComplete={isTheLastOneComplete}
-          onSaveResult={_onSaveResult}
+          onSaveResult={handleSaveResult}
         />
       )}
+      <EffortRatingModal isOpen={isEffortModal} onSave={handleFinishWorkout} onClose={handleCloseEffortModal} />
       {!isSubmitGoBack && <GoBackSubmitModal text={'Current results will be lost!'} onConfirm={onGoBack} />}
     </Stack>
   )

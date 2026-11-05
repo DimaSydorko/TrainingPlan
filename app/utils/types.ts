@@ -3,26 +3,6 @@ import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
 import type { StackNavigationProp } from '@react-navigation/stack'
 import { ScreenName, TabName } from './constants'
 
-export type UserType = {
-  uid: string
-  displayName: string
-  photoURL: string | null
-  email: string
-}
-
-export type UserDataType = {
-  friendsUIDs: string[]
-}
-
-export type StoredFile = {
-  fileName: string
-  storageKey: string
-  downloadUrl: string
-}
-
-export type ExerciseImageFilterType = 'home' | 'gym' | 'street'
-export type StoredExerciseImage = StoredFile & { filter: ExerciseImageFilterType }
-
 export type ApproachType = {
   weight: number
   repeats: number
@@ -35,6 +15,7 @@ export type SelectedApproachType = ApproachType & {
 
 export type ExerciseType = {
   uid: string
+  exerciseId?: string
   name: string
   breakTimeInSec: number
   laps: number
@@ -58,6 +39,7 @@ export type WorkoutType = {
   exercises: ExerciseType[]
   ownerUid?: string
   lastUpdated?: number
+  sourceWorkoutId?: string
 }
 
 export type PlanType = {
@@ -81,6 +63,7 @@ export type SetStateType<S> = (arg: S | ((prevState: S) => S)) => void
 export type AuthStackParamList = {
   [ScreenName.Login]: undefined
   [ScreenName.Registration]: undefined
+  [ScreenName.Onboarding]: undefined
   [ScreenName.App]: NavigatorScreenParams<AppTabParamList> | undefined
 }
 
@@ -93,19 +76,23 @@ export type AppTabParamList = {
 }
 
 /** Stack screens that can start a workout (both the Plans and the Workouts stacks have it). */
+export type PlanRouteParams = { planId: string }
+export type WorkoutRouteParams = { workoutId: string; planId?: string }
+export type PlayingRouteParams = WorkoutRouteParams
+
 export type PlayableStackParamList = {
-  [ScreenName.Playing]: undefined
+  [ScreenName.Playing]: PlayingRouteParams
 }
 
 export type PlansStackParamList = PlayableStackParamList & {
   [ScreenName.SavedWorkouts]: undefined
-  [ScreenName.Plan]: undefined
-  [ScreenName.WorkoutInPlan]: undefined
+  [ScreenName.Plan]: PlanRouteParams
+  [ScreenName.WorkoutInPlan]: WorkoutRouteParams
 }
 
 export type WorkoutsStackParamList = PlayableStackParamList & {
   [ScreenName.SavedWorkouts]: undefined
-  [ScreenName.Workout]: undefined
+  [ScreenName.Workout]: WorkoutRouteParams
 }
 
 export type ProfileStackParamList = {
@@ -115,7 +102,7 @@ export type ProfileStackParamList = {
 
 export type HomeStackParamList = PlayableStackParamList & {
   [ScreenName.Home]: undefined
-  [ScreenName.Workout]: undefined
+  [ScreenName.Workout]: WorkoutRouteParams
 }
 
 export type AuthNavigation = StackNavigationProp<AuthStackParamList>
