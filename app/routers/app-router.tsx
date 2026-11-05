@@ -1,14 +1,12 @@
 import * as React from 'react'
-import { ComponentType, useContext, useEffect } from 'react'
+import { ComponentType, useContext } from 'react'
 import { Text } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Icon } from '@common/icon/icon'
 
-import { useAppDispatch } from '@hooks/redux'
 import { useAppTheme } from '@theme/use-app-theme'
 import { useIsOnline } from '@stores/network/use-network-store'
 import { AppHelperContext } from '@hooks/app-helper-provider'
-import { workoutAC } from '@store/workout-reducer/workout-ac'
 import { useSessionStore } from '@stores/session/use-session-store'
 import useProfile from '@services/profiles/use-profile'
 import useLegacyImport from '@services/legacy-import/use-legacy-import'
@@ -67,7 +65,6 @@ const tabs = [
 
 export default function AppRouter() {
   const { isTabMenu } = useContext(AppHelperContext)
-  const dispatch = useAppDispatch()
   const { colors } = useAppTheme()
   const isOnline = useIsOnline()
   const { bottom, footer } = useAppInsets()
@@ -82,12 +79,6 @@ export default function AppRouter() {
     legacyImportedAt: profile.data?.legacyImportedAt,
     isOnline,
   })
-
-  useEffect(() => {
-    if (isOnline) {
-      dispatch(workoutAC.getExerciseImages())
-    }
-  }, [isOnline])
 
   return (
     <>

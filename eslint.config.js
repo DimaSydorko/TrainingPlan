@@ -27,23 +27,23 @@ const removedLibraryPatterns = [
   { group: ['react-native-vector-icons/*'], message: 'Removed in the Expo migration. Use app/common/icon.' },
   { group: ['@expo/vector-icons/*'], message: 'Deprecated since SDK 56. Use app/common/icon.' },
 ]
-const firebaseCompatPattern = {
-  group: ['firebase/compat', 'firebase/compat/*'],
-  message: 'Use the modular Firebase API (firebase/app, firebase/auth, firebase/firestore, ...).',
+const removedBackendPattern = {
+  group: ['firebase', 'firebase/*', '@reduxjs/*', 'react-redux', 'redux', 'redux-persist', 'redux-persist/*'],
+  message: 'Removed: server data uses Supabase + React Query (app/services), client state uses Zustand (app/stores).',
 }
 
 // Layer rules for the Supabase + React Query + Zustand target architecture (CLAUDE.md, .claude/contracts/server-state.md).
 // In flat config a later `no-restricted-imports` entry replaces the earlier one for matching files, so every
 // override repeats the base list.
-// Cross-folder imports go through tsconfig `paths` (@store/…). components/screens are not listed: screens
+// Cross-folder imports go through tsconfig `paths` (@utils/…). components/screens are not listed: screens
 // have their own private components/ folder, so a relative `../components` can be legitimate.
 const relativeCoreFolderPattern = {
-  regex: '^(\\.\\./)+(assets|common|hooks|platform|routers|store|theme|utils|lib|api|services|stores)(/|$)',
+  regex: '^(\\.\\./)+(assets|common|hooks|platform|routers|theme|utils|lib|api|services|stores)(/|$)',
   message: 'Cross-folder import: use @<folder>/… instead of a relative path.',
 }
 const baseRestrictions = {
   paths: removedLibraries,
-  patterns: [...removedLibraryPatterns, firebaseCompatPattern, relativeCoreFolderPattern],
+  patterns: [...removedLibraryPatterns, removedBackendPattern, relativeCoreFolderPattern],
 }
 const supabaseClientPatterns = [
   { group: ['@supabase/supabase-js', '@supabase/*'], message: 'Only app/lib/supabase and app/api talk to Supabase.' },
@@ -100,7 +100,7 @@ module.exports = defineConfig([
       'react-hooks/exhaustive-deps': 'warn',
       'no-restricted-imports': [
         'error',
-        { paths: removedLibraries, patterns: [...removedLibraryPatterns, firebaseCompatPattern] },
+        { paths: removedLibraries, patterns: [...removedLibraryPatterns, removedBackendPattern] },
       ],
     },
   },
@@ -135,14 +135,13 @@ module.exports = defineConfig([
     rules: {
       'no-restricted-imports': restrictImports(
         {
-          group: ['@tanstack/*', 'react', 'react-native', 'react-redux', 'zustand', 'zustand/*'],
+          group: ['@tanstack/*', 'react', 'react-native', 'zustand', 'zustand/*'],
           message: 'app/api is pure transport.',
         },
         {
           group: [
             '**/services/*',
             '**/stores/*',
-            '**/store/*',
             '**/screens/*',
             '**/components/*',
             '**/common/*',
@@ -150,8 +149,6 @@ module.exports = defineConfig([
             '@services/*',
             '@stores',
             '@stores/*',
-            '@store',
-            '@store/*',
             '@screens',
             '@screens/*',
             '@components',
@@ -169,17 +166,7 @@ module.exports = defineConfig([
     files: ['app/services/**'],
     rules: {
       'no-restricted-imports': restrictImports(...supabaseClientPatterns, {
-        group: [
-          'react-redux',
-          'zustand',
-          'zustand/*',
-          '**/stores/*',
-          '**/store/*',
-          '@stores',
-          '@stores/*',
-          '@store',
-          '@store/*',
-        ],
+        group: ['zustand', 'zustand/*', '**/stores/*', '@stores', '@stores/*'],
         message: 'Hooks take inputs as arguments; never read a store.',
       }),
     },

@@ -28,7 +28,7 @@ Ignore: `package-lock.json`, `yarn.lock`, `docs/**`, `app/lib/supabase/database.
    you need its detail:
     - `app/api/**`, `app/services/**`, `app/lib/**`, `supabase/**` → Anti-Corruption, Database, Request hygiene
       (`server-state.md`)
-    - `app/stores/**`, Redux slices → Client state (`client-state.md`)
+    - `app/stores/**` → Client state (`client-state.md`)
     - components / screens → DRY, SRP, OCP, Separation of concerns (`component.md`, `styles.md`)
     - always → Primitive obsession, Migration hygiene, and the `.claude/commands/code-style.md` checklist on the
       changed lines

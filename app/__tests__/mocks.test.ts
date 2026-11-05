@@ -39,33 +39,6 @@ describe('shared native mocks', () => {
     expect(response.data.idToken).toBe('mock-google-id-token')
   })
 
-  it('stubs the Firebase compat API', () => {
-    const firebase = require('firebase/compat/app').default
-    expect(firebase.apps.length).toBe(0)
-    firebase.initializeApp({})
-    const collection = firebase.firestore().collection('users')
-    return collection
-      .doc('1')
-      .get()
-      .then((doc: any) => expect(doc.exists).toBeDefined())
-      .finally(() => {
-        const unsubscribe = firebase.auth().onAuthStateChanged(() => {})
-        expect(typeof unsubscribe).toBe('function')
-      })
-  })
-
-  it('stubs the Firebase modular API', async () => {
-    const { initializeApp } = require('firebase/app')
-    const { initializeAuth, getReactNativePersistence, onAuthStateChanged } = require('firebase/auth')
-    const { getFirestore, collection, getDocs } = require('firebase/firestore')
-    const app = initializeApp({})
-    const auth = initializeAuth(app, { persistence: getReactNativePersistence({}) })
-    expect(typeof onAuthStateChanged(auth, () => {})).toBe('function')
-    const snapshot = await getDocs(collection(getFirestore(app), 'plans'))
-    expect(snapshot).toBeDefined()
-    expect([...snapshot.docs]).toEqual([])
-  })
-
   it('uses the official AsyncStorage and NetInfo mocks', async () => {
     await AsyncStorage.setItem('k', 'v')
     await expect(AsyncStorage.getItem('k')).resolves.toBe('v')

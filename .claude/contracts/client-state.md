@@ -3,9 +3,7 @@
 Zustand holds **client/UI state only**. If a value comes from the backend, it belongs in React Query
 (`server-state.md`), not in a store.
 
-> **Migration status.** Client state is still in Redux (`app/store/**`, read via `app/hooks/redux.ts`). New features
-> use Zustand. Existing slices move with the `redux-to-zustand-migration` skill, after their server data has moved
-> to React Query.
+> Redux is removed. Do not add it back.
 
 ### The split rule (non-negotiable)
 
@@ -71,10 +69,9 @@ export const usePlaybackStore = create<PlaybackState>()(set => ({
 -   Use `persist(…, { name: '<store>-v1', storage: createJSONStorage(() => AsyncStorage), version, migrate,
     partialize })`. `partialize` excludes actions and transient fields. Shape changes bump `version` with a
     `migrate` — never rename the key.
--   **Legacy hand-over:** redux-persist stores everything under AsyncStorage key `persist:root` (each slice is a
-    JSON string inside). The settings store reads the old `settingsReducer` once on first launch when its own key is
-    absent, maps it (palette → `themeName`), and does not delete `persist:root` until Redux is fully removed.
-    Cover this with a test.
+-   **Legacy hand-over:** the old app stored everything under AsyncStorage key `persist:root` (each slice is a
+    JSON string inside). The settings store reads the old `settingsReducer` once when its own key is absent. Nothing
+    writes `persist:root`; delete it on startup one release after the legacy import shipped.
 -   The React Query cache is persisted separately (`server-state.md`); never persist server data through Zustand.
 
 ### Reset on logout

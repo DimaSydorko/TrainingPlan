@@ -1,12 +1,10 @@
 import * as React from 'react'
-import { Provider } from 'react-redux'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useNetworkStore } from '@stores/network/use-network-store'
 import { USER_SCOPED_STORES } from '@stores/reset-stores'
 import { useSessionStore } from '@stores/session/use-session-store'
 import ProfileScreen from '@screens/profile-screen/profile-screen'
-import { createTestStore } from '../../utils/test-store'
 
 jest.mock('@react-navigation/native', () => ({
   ...jest.requireActual('@react-navigation/native'),
@@ -19,15 +17,12 @@ describe('ProfileScreen logout', () => {
     useSessionStore.setState({ userId: 'u1', email: 'a@test.com' })
     const resetUserStore = jest.fn()
     USER_SCOPED_STORES.push({ getState: () => ({ reset: resetUserStore }) })
-    const store = createTestStore()
     const queryClient = new QueryClient()
     queryClient.setQueryData(['plans', 'list', 'u1'], [{ uid: 'p1' }])
 
     await render(
       <QueryClientProvider client={queryClient}>
-        <Provider store={store}>
-          <ProfileScreen />
-        </Provider>
+        <ProfileScreen />
       </QueryClientProvider>
     )
     await fireEvent.press(screen.getByTestId('profile.logout'))

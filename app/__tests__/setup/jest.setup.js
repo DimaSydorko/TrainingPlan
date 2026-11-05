@@ -36,25 +36,6 @@ mockModule('expo-crypto', () => require('./mocks/expo-crypto'))
 // Google Sign-In.
 mockModule('@react-native-google-signin/google-signin', () => require('./mocks/google-signin'))
 
-// Firebase JS SDK: compat and modular entry points.
-const firebaseEntryPoints = [
-  'firebase/compat/app',
-  'firebase/compat/auth',
-  'firebase/compat/firestore',
-  'firebase/compat/database',
-  'firebase/compat/storage',
-  'firebase/compat/functions',
-  'firebase/app',
-  'firebase/auth',
-  'firebase/firestore',
-  'firebase/database',
-  'firebase/storage',
-  'firebase/functions',
-]
-firebaseEntryPoints.forEach(name => {
-  mockModule(name, () => require('./mocks/firebase').createStub(name))
-})
-
 // Keyboard controller: the package's own Jest mock (its native module is not linked in Jest).
 mockModule('react-native-keyboard-controller', () => require('react-native-keyboard-controller/jest'))
 

@@ -4,7 +4,7 @@ Before you add code, understand what already exists, where it belongs, and how f
 
 **Organizing idea — blast radius.** Every edit to a _shared surface_ ripples to every importer. The shared surfaces
 are: `app/common/**`, `app/components/**`, `app/theme/**`, `app/hooks/**`, `app/utils/**`, `app/platform/**`,
-`app/lib/**`, `app/api/**`, `app/services/**`, `app/stores/**`, legacy `app/store/**`, `app/routers/**` (plus
+`app/lib/**`, `app/api/**`, `app/services/**`, `app/stores/**`, `app/routers/**` (plus
 `ScreenName` and the param lists), `app.config.ts`, and the Jest setup in `app/__tests__/setup/**`. A change there is
 never "just one file".
 
@@ -36,8 +36,6 @@ Run this checklist _before_ the first line, every time:
         `app/services/<entity>/` and wrap those fetchers; screens and components consume the hooks and never import
         `app/api`, `app/lib/supabase` or `@supabase/supabase-js`. Device APIs go through `app/platform/`. The layer
         rules are ESLint-enforced (`no-restricted-imports` overrides in `eslint.config.js`).
--   [ ] **Respect the migration.** No new Redux slices/thunks, no new Firestore calls (see CLAUDE.md → Current
-        stack vs target stack).
 -   [ ] **Classify the blast radius.** Is the edit _additive_ (safe) or _modifying_ a shared surface (ripples to N
         callers)? If modifying, list the callers first — review checklist Part A.
 -   [ ] **Route cross-cutting calls through their one home** (table below).
@@ -79,8 +77,8 @@ Each cross-cutting concern has exactly **one home**. Calling it inline in a leaf
 | Device APIs (audio, speech, keep-awake, notifications, Google sign-in) | `app/platform/*`                                             |
 | Theme colors / typography                | `app/theme/*` + the settings hook                                                          |
 | Icons                                    | `app/common/icon` + `app/theme/icons.ts`                                                   |
-| Error / status toasts                    | `NotificationHandler` + `common/toast` (today fed by Redux `error` fields; target: React Query `QueryCache`/`MutationCache` `onError` → a toast store) — no per-screen toast implementations |
-| Auth ("who is signed in?")               | one session seam (today `useUser()`; target: a session hook over Supabase Auth)            |
+| Error / status toasts                    | `NotificationHandler` + `common/toast`, fed by `QueryCache`/`MutationCache` `onError` → `app/stores/toast` — no per-screen toast implementations |
+| Auth ("who is signed in?")               | `useSessionStore` (fed by `useAuthSessionListener` over Supabase Auth)                     |
 | Navigation names and params              | `ScreenName` + param lists in `app/utils/types.ts` — no string screen names                |
 | Native configuration                     | `app.config.ts` / config plugins — never `android/` or `ios/`                              |
 
@@ -126,7 +124,6 @@ type, and the mapping to a clean domain type. Database shapes must not leak past
 -   Components, screens, hooks and stores never reference snake_case columns (`owner_id`, `created_at`).
 -   `app/api/<entity>/` and `app/services/<entity>/` are named after the **data domain** (`plans`, `workouts`,
     `publications`, `profiles`, `exercise-images`), never a screen (`my-plans-screen`).
--   Legacy Firestore documents follow the same rule: Firestore shapes stay inside `app/store/**` thunks.
 
 ---
 
@@ -136,7 +133,7 @@ Server state belongs to React Query; fetch once, fetch guarded. **Full rules are
 
 -   A query whose key depends on a nullable arg passes `enabled: Boolean(arg)`.
 -   Never fetch the same data from sibling components with separate effects — share one query.
--   Server entities never live in Zustand (or in new Redux code).
+-   Server entities never live in Zustand.
 -   Every mutation invalidates or optimistically updates (with rollback) the keys it affects.
 -   Offline is a first-class state: mutations must queue and resume, not fail silently.
 

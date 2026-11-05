@@ -1,1 +1,0 @@
-export const IMAGE_LIST_RESERVED_HEIGHT = 400

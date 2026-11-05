@@ -12,8 +12,8 @@ Unit tests, the TypeScript strictness roadmap, Maestro E2E flows and the manual 
 | `app/__tests__/setup/jest.setup.js` | Registers the module mocks below (runs before each test file) |
 | `app/__tests__/setup/jest.setupAfterEnv.js` | Reanimated 4 test setup |
 | `app/__tests__/setup/mocks/*.js` | The mock implementations |
-| `app/__tests__/utils/` | `createTestStore`, `getInitialState`, `createBootstrappedPersistor`, `renderWithStore` |
-| `app/__tests__/*.test.ts(x)` | App-level tests: App smoke test, store persistence, mocks, helpers |
+| `app/__tests__/utils/` | `resetTestStores` (Zustand stores back to their initial state) |
+| `app/__tests__/*.test.ts(x)` | App-level tests: App smoke test, mocks |
 | `app/__tests__/<path>/*.test.ts(x)` | Unit tests, in a mirror of the `app/` path they test (`app/__tests__/platform/` tests `app/platform/`) |
 
 Only files named `*.test.ts`, `*.test.tsx` or `*.test.js` are run. Other files inside `app/__tests__/` (setup, utils, fixtures) are ignored by the runner.
@@ -31,7 +31,8 @@ Libraries: `jest-expo` 57, `jest` 29, `@testing-library/react-native` 14 (with i
 | `expo-keep-awake` | `mocks/expo-keep-awake.js` | All functions are `jest.fn()` |
 | `expo-notifications` | `mocks/expo-notifications.js` | Permissions granted; `scheduleNotificationAsync` returns ids and stores requests in `__scheduled`; cancel removes them; enums (`AndroidImportance`, `SchedulableTriggerInputTypes`, ...) included |
 | `@react-native-google-signin/google-signin` | `mocks/google-signin.js` | `GoogleSignin.signIn()` resolves `{ type: 'success', data: { idToken: 'mock-google-id-token', user } }`; `statusCodes`, `isSuccessResponse`, `isErrorWithCode`, `GoogleSigninButton` included |
-| `firebase/compat/*` and `firebase/app`, `firebase/auth`, `firebase/firestore`, `firebase/database`, `firebase/storage`, `firebase/functions` | `mocks/firebase.js` | A chainable stub: any property or call returns another stub, calls are awaitable, subscriptions return an unsubscribe function. Enough for module-level setup code; **not** a fake backend |
+| `app/lib/supabase/client` | `mocks/supabase-client.js` | Signed out; every query/RPC resolves `{ data: null, error: null }`; override per test with `jest.mocked(supabase.rpc).mockResolvedValueOnce(...)` |
+| `expo-crypto` | `mocks/expo-crypto.js` | `randomUUID` uses Node's crypto |
 | `react-native-worklets` | the package's own `src/mock` | Required by Reanimated 4 |
 | `react-native-gesture-handler` | `react-native-gesture-handler/jestSetup` | Official setup |
 
@@ -48,25 +49,12 @@ it('asks for permission when it was denied', async () => {
 })
 ```
 
-For data-layer tests, mock one level higher than Firebase, e.g. `jest.mock('@utils/firebase', () => ({ ... }))` or the specific modular functions your code calls (`jest.mock('firebase/firestore', () => ({ getDocs: jest.fn(), ... }))` in that test file overrides the global stub).
-
-### Store helpers
-
-```tsx
-// in app/__tests__/screens/settings-screen/
-import { renderWithStore } from '../../utils/render'
-
-const { store } = await renderWithStore(<SettingsScreen />, {
-  preloadedState: { settingsReducer: { isVibration: false } }, // deep-merged over the slices' initial state
-})
-```
-
-`createTestStore` uses the real slice reducers without redux-persist. To test persistence itself, load the real `app/store` inside `jest.isolateModules` (see `app/__tests__/store.test.ts`).
+Mock the layer below: component → hook, hook → fetcher, fetcher → Supabase client. Hook tests wrap `renderHook` in a `QueryClientProvider` with a fresh `QueryClient` (see `app/__tests__/services/`).
 
 ### Writing tests
 
 - Put them in `app/__tests__/` under the same path as the code, e.g. `app/platform/media-utils.ts` → `app/__tests__/platform/media-utils.test.ts`. Import the code under test via `@<folder>/…`; test helpers via a relative path.
-- Prefer testing pure functions (timers, formatting, reducers, mapping Firebase docs) over rendering whole screens.
+- Prefer testing pure functions (timers, formatting, row ↔ domain mappers) over rendering whole screens.
 - A missing native-module mock goes into `app/__tests__/setup/mocks/` and is registered in `jest.setup.js`.
 
 ---

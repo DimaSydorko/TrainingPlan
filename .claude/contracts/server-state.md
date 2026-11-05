@@ -4,8 +4,7 @@ Server state — anything stored in the backend (plans, workouts, publications, 
 by **React Query** and fetched from **Supabase**. Client/UI state belongs in Zustand (`client-state.md`). Never
 copy fetched entities into a store "for convenience".
 
-> **Migration status.** Workouts and plans are on Supabase + React Query. Only the exercise image catalogue
-> (Realtime Database, `app/store/workout-reducer`) is still legacy — see _Legacy Firebase_ at the end.
+> Firebase and Redux are removed. All server data is Supabase + React Query.
 
 ### Layer split — non-negotiable
 
@@ -120,8 +119,7 @@ If an arg can be `null` / `undefined` (no session yet, no selected plan), pass `
 
 ### Offline-first — non-negotiable
 
-The app is used in gyms with poor connectivity; today it works offline through a local Redux copy. React Query must
-keep that behavior:
+The app is used in gyms with poor connectivity. React Query keeps it working offline:
 
 -   `app/lib/query-client.ts` wires `onlineManager` to NetInfo and `focusManager` to `AppState`.
 -   The cache is persisted with `PersistQueryClientProvider` + an AsyncStorage persister. Because persisted queries
@@ -196,12 +194,8 @@ only **invalidates** (or patches) the entity's keys; it never writes to a store.
 -   Logout (`useSignOut`): `signOutGoogle()`, `signOut({ scope: 'local' })`, `queryClient.clear()` + persisted cache
     removal; the caller resets stores (`client-state.md`).
 
-### Legacy Firebase (until removed)
+### Legacy data import
 
--   Firebase is used only for the exercise image catalogue (`app/utils/firebase.ts` `rtdb`,
-    `app/store/workout-reducer/workout-ac.ts`). No Firestore left. **Do not add new Firebase calls.**
--   When an entity moves to Supabase, delete its Firestore code, its thunks and its Redux data in the same change;
-    never dual-write or read from both.
--   Existing user data moves once in-app after Supabase login (`import_legacy_data` RPC from persisted Redux, only
-    when the old Firebase user's e-mail matches: `app/api/legacy-import/legacy-owner.ts`). Keep `userReducer`,
-    `plansReducer` and the legacy `workoutReducer` fields in `persist:root` (read-only legacy reducers) until then.
+-   Old user data moves once after Supabase login: `app/api/legacy-import` reads AsyncStorage `persist:root` (never
+    written any more) and calls `import_legacy_data`, only when the old account's e-mail matches. The server runs it
+    once per profile (`legacy_imported_at`).

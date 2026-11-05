@@ -18,7 +18,7 @@ Minimum per unit: util → each code path · component → render + interaction 
 
 Rules:
 - RNTL 14 is async: `await render`, `await renderHook`, `const user = userEvent.setup(); await user.press(...)`.
-- `renderWithStore` (`app/__tests__/utils/render.tsx`) for Redux-connected components; plain `render` otherwise.
+- Plain `render`; wrap in `QueryClientProvider` for components using React Query hooks.
 - Native modules are mocked in `app/__tests__/setup/` — extend there. Mock the layer below: component → hook, hook → fetcher, fetcher → Supabase client.
 - Queries: `getByRole` > `getByLabelText`/`getByPlaceholderText` > `getByText` > `getByTestId` (Maestro ids).
 - Fake timers for timer logic; `AsyncStorage.clear()` / store `reset()` in `beforeEach` when needed.

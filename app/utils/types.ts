@@ -3,15 +3,6 @@ import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
 import type { StackNavigationProp } from '@react-navigation/stack'
 import { ScreenName, TabName } from './constants'
 
-export type StoredFile = {
-  fileName: string
-  storageKey: string
-  downloadUrl: string
-}
-
-export type ExerciseImageFilterType = 'home' | 'gym' | 'street'
-export type StoredExerciseImage = StoredFile & { filter: ExerciseImageFilterType }
-
 export type ApproachType = {
   weight: number
   repeats: number

@@ -27,8 +27,6 @@
       "@routers/*": ["./app/routers/*"],
       "@screens": ["./app/screens"],
       "@screens/*": ["./app/screens/*"],
-      "@store": ["./app/store"],
-      "@store/*": ["./app/store/*"],
       "@theme": ["./app/theme"],
       "@theme/*": ["./app/theme/*"],
       "@utils": ["./app/utils"],

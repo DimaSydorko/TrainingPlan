@@ -25,13 +25,13 @@ git diff --name-only HEAD          # uncommitted
 | Generic UI                 | `app/common/**`                                              | used by most screens; `testID`s used by Maestro             |
 | Business components        | `app/components/**`                                          | shared across plan/workout/publication flows                |
 | Theme                      | `app/theme/**`                                               | every rendered pixel, both themes                           |
-| Hooks / providers          | `app/hooks/**`                                               | `redux.ts`, `AppHelperProvider`, `usePlaying` are app-wide  |
+| Hooks / providers          | `app/hooks/**`                                               | `AppHelperProvider`, `usePlaying` are app-wide              |
 | Utils, constants, types    | `app/utils/**`                                               | `ScreenName`, param lists, shared types                     |
 | Device seams               | `app/platform/**`                                            | audio/speech/notifications/Google sign-in for the whole app |
 | Supabase / RQ client       | `app/lib/**`                                                 | 100% of server traffic, offline behavior, auth session      |
 | Fetchers                   | `app/api/**`                                                 | a mapping change ripples to every hook above it             |
 | React Query hooks / keys   | `app/services/**`                                            | key or option change ripples to every consumer              |
-| Stores                     | `app/stores/**`, legacy `app/store/**`                       | global state; persisted shapes affect existing installs     |
+| Stores                     | `app/stores/**`                                              | global state; persisted shapes affect existing installs     |
 | Navigation                 | `app/routers/**`                                             | every screen transition and deep link                       |
 | Native config              | `app.config.ts`, `eas.json`, `package.json` deps             | needs a new build; can break store builds                   |
 | Database                   | `supabase/migrations/**`                                     | RLS and schema for all users; irreversible once applied     |
@@ -46,7 +46,6 @@ rg -l "from '.*/<dir>/<FileStem>'" app      # e.g. rg -l "from '.*/ConfirmButton
 rg -l "<ExportName>" app                    # barrel imports via app/common/index.ts
 rg -l "use<Entity>|<entity>Keys\." app      # React Query entity
 rg -l "use<Name>Store" app                  # Zustand store
-rg -l "state\.<slice>Reducer|use<Slice>\(" app   # legacy Redux slice
 ```
 
 Attach the importer list (or its count + the screens it spans) to the review note.
@@ -161,8 +160,7 @@ previous build, use it, upgrade, and confirm data survives. Run the relevant Mae
 
 #### Migration hygiene — CLAUDE.md → Current stack vs target
 
--   🔴 New Firestore call or new Redux slice/thunk.
--   🔴 Entity read or written through both Firebase and Supabase.
+-   🔴 Any `firebase`, `redux`, `react-redux` or `redux-persist` import (removed; ESLint blocks it).
 -   🟠 Existing folder renamed in the same commit as a behavior change.
 -   🟠 New `interface` / `I` prefix / non-kebab-case file/folder.
 

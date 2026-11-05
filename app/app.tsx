@@ -1,16 +1,13 @@
 import '@i18n'
 import * as React from 'react'
 import { ReactNode, useEffect } from 'react'
-import { Provider } from 'react-redux'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { KeyboardProvider } from 'react-native-keyboard-controller'
 import { StatusBar } from 'expo-status-bar'
 import * as SystemUI from 'expo-system-ui'
-import { PersistGate } from 'redux-persist/integration/react'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { decode, encode } from 'base-64'
-import { persistedStore, store } from '@store'
 import AppHelperProvider from '@hooks/app-helper-provider'
 import { useAppTheme } from '@theme/use-app-theme'
 import { useSettingsHydrated } from '@stores/settings/use-settings-hydrated'
@@ -58,21 +55,17 @@ function App() {
       persistOptions={{ persister: asyncStoragePersister }}
       onSuccess={() => queryClient.resumePausedMutations()}
     >
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistedStore}>
-          <SettingsGate>
-            <SafeAreaProvider>
-              <KeyboardProvider>
-                <ThemedRoot>
-                  <AppHelperProvider>
-                    <AuthRouter />
-                  </AppHelperProvider>
-                </ThemedRoot>
-              </KeyboardProvider>
-            </SafeAreaProvider>
-          </SettingsGate>
-        </PersistGate>
-      </Provider>
+      <SettingsGate>
+        <SafeAreaProvider>
+          <KeyboardProvider>
+            <ThemedRoot>
+              <AppHelperProvider>
+                <AuthRouter />
+              </AppHelperProvider>
+            </ThemedRoot>
+          </KeyboardProvider>
+        </SafeAreaProvider>
+      </SettingsGate>
     </PersistQueryClientProvider>
   )
 }

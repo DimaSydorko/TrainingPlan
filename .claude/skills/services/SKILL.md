@@ -11,7 +11,7 @@ description: Create a new server-state module for one entity — Supabase fetche
 ## Step 0 — Foundation exists?
 
 Check `app/lib/supabase/client.ts`, `app/lib/supabase/database.types.ts` and `app/lib/query-client.ts`. If they are
-missing, stop and run the foundation checkpoint of `firebase-to-supabase-react-query` first.
+missing, stop and tell the user.
 
 ## Step 1 — Schema (if the table is new or changes)
 
@@ -146,7 +146,7 @@ Online-only mutation (publish, copy publication): invalidate on success; the scr
 
 ## Rules (ESLint-enforced)
 
--   `app/api/**` must not import `@tanstack/react-query`, `react`, `react-redux`, `zustand`, stores or screens.
+-   `app/api/**` must not import `@tanstack/react-query`, `react`, `zustand`, stores or screens.
 -   `app/services/**` must not import `@supabase/supabase-js` or `app/lib/supabase/**`; it imports fetchers from
     `app/api`. Hooks never read stores — inputs are arguments.
 -   Screens, components, hooks and stores must not import `app/api/**`, `app/lib/supabase/**` or
