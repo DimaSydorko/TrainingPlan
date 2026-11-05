@@ -1,0 +1,30 @@
+{
+  "steps": {
+    "sex": {
+      "title": "Dein Geschlecht",
+      "hint": "Damit vergleichen wir deine Leistungen mit Kraftstandards."
+    },
+    "experience": {
+      "title": "Wie lange trainierst du schon?",
+      "hint": "Legt dein Startniveau fest. Es passt sich an, während du Workouts aufzeichnest."
+    },
+    "bodyWeight": {
+      "title": "Dein Körpergewicht",
+      "hint": "In Kilogramm. Hilft beim Schätzen der Startgewichte."
+    }
+  },
+  "sex": {
+    "male": "Männlich",
+    "female": "Weiblich"
+  },
+  "experience": {
+    "never": "Noch nie",
+    "lt_1y": "Weniger als ein Jahr",
+    "1_3y": "1–3 Jahre",
+    "3y_plus": "3+ Jahre"
+  },
+  "bodyWeightPlaceholder": "z. B. 75",
+  "invalidBodyWeight": "Gib ein Gewicht zwischen 20 und 400 kg ein.",
+  "next": "Weiter",
+  "skip": "Überspringen"
+}

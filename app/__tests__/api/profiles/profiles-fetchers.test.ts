@@ -8,6 +8,10 @@ const row = {
   email: 'a@test.com',
   photo_url: null,
   legacy_imported_at: null,
+  sex: null,
+  training_experience: null,
+  overall_level: null,
+  onboarded_at: null,
 }
 
 describe('toProfile', () => {

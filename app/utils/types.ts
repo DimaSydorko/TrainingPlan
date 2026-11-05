@@ -63,6 +63,7 @@ export type SetStateType<S> = (arg: S | ((prevState: S) => S)) => void
 export type AuthStackParamList = {
   [ScreenName.Login]: undefined
   [ScreenName.Registration]: undefined
+  [ScreenName.Onboarding]: undefined
   [ScreenName.App]: NavigatorScreenParams<AppTabParamList> | undefined
 }
 

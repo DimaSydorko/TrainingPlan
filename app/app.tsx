@@ -17,11 +17,13 @@ import { asyncStoragePersister, queryClient } from '@lib/query-client'
 import { registerWorkoutsMutationDefaults } from '@services/workouts/mutation-defaults'
 import { registerPlansMutationDefaults } from '@services/plans/mutation-defaults'
 import { registerSessionsMutationDefaults } from '@services/sessions/mutation-defaults'
+import { registerProfilesMutationDefaults } from '@services/profiles/mutation-defaults'
 import styles from './app.styles'
 
 registerWorkoutsMutationDefaults(queryClient)
 registerPlansMutationDefaults(queryClient)
 registerSessionsMutationDefaults(queryClient)
+registerProfilesMutationDefaults(queryClient)
 
 if (!globalThis.btoa) globalThis.btoa = encode
 if (!globalThis.atob) globalThis.atob = decode

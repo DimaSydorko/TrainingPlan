@@ -1,7 +1,10 @@
 export const profilesKeys = {
   all: ['profiles'] as const,
   detail: (userId: string) => [...profilesKeys.all, 'detail', userId] as const,
+  completeOnboarding: () => [...profilesKeys.all, 'complete-onboarding'] as const,
 }
 
 // Invalidations:
-// useSignOut → queryClient.clear()
+// useCompleteOnboarding → profilesKeys.detail(userId) (optimistic)
+// useLegacyImport       → profilesKeys.detail(userId)
+// useSignOut            → queryClient.clear()

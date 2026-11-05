@@ -5,11 +5,13 @@ import { createStackNavigator } from '@react-navigation/stack'
 import NetInfo from '@react-native-community/netinfo'
 import useAuthSessionListener from '@services/auth/use-auth-session-listener'
 import { useSessionStore } from '@stores/session/use-session-store'
+import useProfile from '@services/profiles/use-profile'
 import { SESSION_STATUS } from '@stores/session/session.constants'
 import { useAppTheme } from '@theme/use-app-theme'
 import { useNetworkStore } from '@stores/network/use-network-store'
 import AppRouter from './app-router'
 import { LoginScreen, RegistrationScreen } from '@screens'
+import OnboardingScreen from '@screens/onboarding-screen/onboarding-screen'
 import { buildNavigationTheme, useScreenOptions } from '@theme/navigation-theme'
 import { ScreenName } from '@utils/constants'
 import { AuthStackParamList } from '@utils/types'
@@ -23,6 +25,9 @@ const Stack = createStackNavigator<AuthStackParamList, 'AuthStack'>()
 export default function AuthRouter() {
   const options = useScreenOptions()
   const sessionStatus = useSessionStore(state => state.status)
+  const userId = useSessionStore(state => state.userId)
+  const { data: profile } = useProfile(userId)
+  const isOnboardingNeeded = !!profile && !profile.onboardedAt
   const setSession = useSessionStore(state => state.setSession)
   const appTheme = useAppTheme()
   const setIsOnline = useNetworkStore(state => state.setIsOnline)
@@ -43,9 +48,13 @@ export default function AuthRouter() {
     <NavigationContainer theme={navigationTheme}>
       <Stack.Navigator id='AuthStack'>
         {sessionStatus === SESSION_STATUS.SIGNED_IN ? (
-          <Stack.Screen name={ScreenName.App} options={{ headerShown: false }}>
-            {() => <AppRouter />}
-          </Stack.Screen>
+          isOnboardingNeeded ? (
+            <Stack.Screen name={ScreenName.Onboarding} component={OnboardingScreen} options={{ headerShown: false }} />
+          ) : (
+            <Stack.Screen name={ScreenName.App} options={{ headerShown: false }}>
+              {() => <AppRouter />}
+            </Stack.Screen>
+          )
         ) : (
           <>
             <Stack.Screen name={ScreenName.Login} component={LoginScreen} options={options} />

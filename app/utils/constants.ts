@@ -7,6 +7,7 @@ export const FUTURE_FLAG = {
 export enum ScreenName {
   Registration = 'Registration',
   Login = 'Login',
+  Onboarding = 'Onboarding',
   SavedWorkouts = 'SavedWorkouts',
   WorkoutInPlan = 'WorkoutInPlan',
   Workout = 'Workout',

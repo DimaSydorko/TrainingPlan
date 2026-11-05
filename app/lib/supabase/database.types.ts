@@ -487,6 +487,7 @@ export type Database = {
           id: string
           legacy_imported_at: string | null
           level_updated_at: string | null
+          onboarded_at: string | null
           overall_level: string | null
           photo_url: string | null
           role: string
@@ -501,6 +502,7 @@ export type Database = {
           id: string
           legacy_imported_at?: string | null
           level_updated_at?: string | null
+          onboarded_at?: string | null
           overall_level?: string | null
           photo_url?: string | null
           role?: string
@@ -515,6 +517,7 @@ export type Database = {
           id?: string
           legacy_imported_at?: string | null
           level_updated_at?: string | null
+          onboarded_at?: string | null
           overall_level?: string | null
           photo_url?: string | null
           role?: string

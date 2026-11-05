@@ -1,0 +1,30 @@
+{
+  "steps": {
+    "sex": {
+      "title": "Your sex",
+      "hint": "Used to compare your lifts with strength standards."
+    },
+    "experience": {
+      "title": "How long have you been training?",
+      "hint": "Sets your starting level. It adjusts itself as you log workouts."
+    },
+    "bodyWeight": {
+      "title": "Your body weight",
+      "hint": "In kilograms. Helps estimate starting weights."
+    }
+  },
+  "sex": {
+    "male": "Male",
+    "female": "Female"
+  },
+  "experience": {
+    "never": "Never",
+    "lt_1y": "Less than a year",
+    "1_3y": "1–3 years",
+    "3y_plus": "3+ years"
+  },
+  "bodyWeightPlaceholder": "e.g. 75",
+  "invalidBodyWeight": "Enter a weight between 20 and 400 kg.",
+  "next": "Next",
+  "skip": "Skip"
+}
