@@ -127,10 +127,10 @@ const usePlans = ({ userId }: UsePlansArgs) =>
 export default usePlans
 ```
 
-Offline-capable mutation: use the optimistic template in
-`.claude/skills/firebase-to-supabase-react-query/references/optimistic-mutation-template.md`, give it
-`mutationKey: plansMutationKeys.save`, and register the `mutationFn` in `app/lib/query-client.ts` with
-`queryClient.setMutationDefaults(plansMutationKeys.save, { mutationFn: savePlan })`.
+Offline-capable mutation: use `references/optimistic-mutation-template.md`, give it a `mutationKey` from the key
+factory, and register its `mutationFn` + `scope` in `app/services/<entity>/mutation-defaults.ts`
+(`queryClient.setMutationDefaults`), called from `app/app.tsx` (example: `app/services/plans`). Other templates:
+`references/hook-templates.md`, `query-key-factory.md`, `stale-time-rubric.md`.
 
 Online-only mutation (publish, copy publication): invalidate on success; the screen checks
 `onlineManager.isOnline()` first and informs the user when offline.

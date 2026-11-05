@@ -2,15 +2,9 @@
 
 Mobile app (Android + iOS) for building training plans and workouts, playing them with a fitness timer (audio/TTS cues, background playback) and tracking progress. Light and dark themes.
 
-**Stack:** Expo SDK 57 · React Native 0.86 (New Architecture) · React 19.2 · TypeScript · React Navigation 7 · Jest + RNTL · Maestro.
-**Migration in progress** — every area has a *legacy* and a *target* pattern. New code always uses the target.
+**Stack:** Expo SDK 57 · React Native 0.86 (New Architecture) · React 19.2 · TypeScript · React Navigation 7 · Supabase (Postgres, Auth, RPC) · React Query (offline-first, persisted) · Zustand · Jest + RNTL · Maestro.
 
-| Concern | Legacy (don't extend) | Target (use for new code) |
-|---|---|---|
-| Server data | Firebase + Redux thunks (`app/store`, `app/utils/firebase.ts`) | Supabase + React Query (`app/lib/supabase` → `app/api` → `app/services`) |
-| Client state | Redux Toolkit + redux-persist (`app/store`, `app/hooks/redux.ts`) | Zustand (`app/stores`), persist settings only |
-
-An entity lives in one backend only; migrating it deletes its Firebase + Redux code in the same change. Expo migration history: git tag `archive/expo-migration-docs`.
+Server data: Supabase + React Query (`app/lib/supabase` → `app/api` → `app/services`). Client state: Zustand (`app/stores`), persist settings only. Firebase and Redux were removed in Nov 2026; old on-device data (`persist:root`) is imported once after login (`app/api/legacy-import`). Expo migration history: git tag `archive/expo-migration-docs`.
 
 ## Quick start
 
@@ -50,23 +44,23 @@ app/
   screens/          one folder per screen; components/ feature components; common/ shared wrappers (reuse first)
   common/icon       the only way to render icons
   routers/          React Navigation stacks/tabs
-  utils/            ScreenName/TabName (constants.ts), route param lists (types.ts); firebase.ts = legacy
+  utils/            ScreenName/TabName (constants.ts), route param lists (types.ts)
   theme/            colors (light + dark), theme, icons, insets
   platform/         the only place that touches device APIs (audio, speech, keep-awake, background, Google auth, media)
-  hooks/            hooks; redux.ts = legacy typed Redux hooks
-  store/            LEGACY Redux slices + Firestore sync (redux-persist key `root`, keep it)
-  lib/supabase      TARGET Supabase client + generated types
-  api/<entity>      TARGET fetchers + row→domain mappers
-  services/<entity> TARGET React Query hooks + query-keys.ts
-  stores/<name>     TARGET Zustand stores
+  hooks/            app-wide hooks (playback, selected workout)
+  lib/supabase      Supabase client + generated types; lib/query-client.ts
+  api/<entity>      fetchers + row→domain mappers
+  services/<entity> React Query hooks, query-keys.ts, mutation-defaults.ts
+  stores/<name>     Zustand stores
   __tests__/        all tests: Jest setup, utils, app-level tests; unit tests mirror app/ paths
 e2e/                Maestro flows — rely on testID = `screen.element`
-admin/              separate web admin (MUI, own package.json) — not covered by root lint, hooks or CI
-docs/               build (EAS, signing, Firebase), testing, release checklist
+admin/              separate web admin (MUI, own package.json, still on Firebase) — not covered by root lint, hooks or CI
+supabase/           migrations, pgTAP tests (supabase/tests), config.toml
+docs/               build (EAS, signing, Supabase, Google sign-in), testing, release checklist
 .claude/            agent rules: contracts/, skills/, commands/, hooks/
 ```
 
-Imports: `@<folder>/…` across core folders (`@store/workout-reducer/workout-ac`), relative inside one folder; aliases in `tsconfig.json` `paths` + `jest.config.js`.
+Imports: `@<folder>/…` across core folders (`@services/plans/use-plans`), relative inside one folder; aliases in `tsconfig.json` `paths` + `jest.config.js`.
 
 Data flow (enforced by ESLint): `lib/supabase` → `api/<entity>` → `services/<entity>` → UI. Supabase only in `lib`/`api`; `api` only imported by `services`; services never import `stores`.
 
@@ -78,8 +72,7 @@ Rules live in [`.claude/contracts/`](.claude/contracts) — read the one for the
 |---|---|---|
 | New or changed component/screen | `app/screens`, `app/components`; reuse `app/common` | skill `components`; `component.md`, `styles.md`, `constants.md` |
 | New server query/mutation | `app/api/<entity>` + `app/services/<entity>` | skill `services`; `server-state.md` |
-| Move an entity off Firebase | delete its Firebase + Redux code in the same change | skill `firebase-to-supabase-react-query` |
-| Client/UI state | Zustand in `app/stores` | skill `redux-to-zustand-migration`; `client-state.md` |
+| Client/UI state | Zustand in `app/stores` | `client-state.md` |
 | Device API (audio, speech, notifications…) | use or extend `app/platform/*` (e.g. `audio.ts`, `speech.ts`) | `architecture.md` |
 | New route | `app/routers` + `ScreenName` and param list in `app/utils` | `architecture.md` |
 | Native config / permissions | `app.config.ts` (config plugins) | — |
@@ -87,7 +80,7 @@ Rules live in [`.claude/contracts/`](.claude/contracts) — read the one for the
 
 ## Hard rules
 
-- No new Redux slices/thunks or Firestore calls.
+- No Firebase or Redux (ESLint blocks them). Schema changes only as migrations in `supabase/migrations`.
 - `type` only — no `interface`, no `I` prefix. No `any`.
 - Styles: `StyleSheet` in `<name>.styles.ts`, colors from theme (light + dark); inline only runtime values. Constants in `<name>.constants.ts`.
 - Handlers `handle*`, callback props `on*`.

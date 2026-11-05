@@ -1,6 +1,6 @@
 # Building TrainingPlan with EAS
 
-Covers build variants, environment variables, EAS profiles, signing credentials and the Firebase / Google Cloud setup that Google Sign-In needs.
+Covers build variants, environment variables, EAS profiles, signing credentials, the Supabase project and the Google Cloud setup that Google Sign-In needs.
 
 ## 1. Build variants
 
@@ -12,7 +12,7 @@ Covers build variants, environment variables, EAS profiles, signing credentials 
 | preview | Training Plan (Preview) | `com.trainingplantogether_cli.preview` | `com.trainingplantogether-cli.preview` | `trainingplan-preview` |
 | production | Training Plan | `com.trainingplantogether_cli` | `com.trainingplantogether-cli` | `trainingplan` |
 
-Each variant has its own ID, so all three can be installed on one phone. For EAS, Firebase and Google they are three separate apps, each with its own credentials and its own OAuth clients.
+Each variant has its own ID, so all three can be installed on one phone. For EAS and Google they are three separate apps, each with its own credentials and its own OAuth clients. All three talk to the same Supabase project until a production project exists.
 
 The iOS bundle ID is still an open question ([release-checklist.md](release-checklist.md) Q1). Apple does not allow `_`, so `com.trainingplantogether-cli` is used for now. If Dmytro picks another ID, change `IOS_BUNDLE_ID` in `app.config.ts` before the first iOS build.
 
@@ -22,8 +22,9 @@ The iOS bundle ID is still an open question ([release-checklist.md](release-chec
 
 | Key | Environments | Visibility | Notes |
 |---|---|---|---|
-| `EXPO_PUBLIC_FIREBASE_API_KEY` … `EXPO_PUBLIC_FIREBASE_APP_ID` (7 keys) | all three | Plain text or Sensitive | Firebase web app config. Inlined into the JS bundle, so these are not secrets |
-| `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` | all three, same value | Plain text | OAuth client of type "Web application" in the Firebase project's Google Cloud project (Firebase creates it as "Web client (auto created by Google Service)") |
+| `EXPO_PUBLIC_SUPABASE_URL` | all three | Plain text | `https://<project-ref>.supabase.co` (Supabase → Project Settings → API) |
+| `EXPO_PUBLIC_SUPABASE_KEY` | all three | Plain text | The publishable (anon) key. Public by design — RLS protects the data. Never use the secret/service-role key here |
+| `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` | all three, same value | Plain text | OAuth client of type "Web application" in the Google Cloud project (the one Firebase originally created, "Web client (auto created by Google Service)") |
 | `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID` | **different value per environment** | Plain text | OAuth client of type "iOS" for that variant's bundle ID. `app.config.ts` turns it into the iOS URL scheme. An EAS iOS build fails early if it is missing |
 | `APP_VARIANT` | set by `eas.json` | n/a | Do not add it as an EAS variable |
 | `EAS_PROJECT_ID` | optional | n/a | Only needed if the project ID is not hard-coded in `app.config.ts` (see §3) |
@@ -67,18 +68,19 @@ What to do depends on what the Play Console shows under *Setup → App signing*:
 
 Never commit a keystore. EAS keeps credentials on its servers. The development and preview variants have different package names, so EAS can generate fresh keystores for them.
 
-## 5. Firebase and Google Cloud checklist
+## 5. Supabase and Google Sign-In checklist
 
-Google Sign-In fails with `DEVELOPER_ERROR` (Android) or an invalid-client error (iOS) until this is done for each variant you build.
+The app signs in with native Google Sign-In, then hands the ID token to Supabase (`signInWithIdToken`). Google Sign-In fails with `DEVELOPER_ERROR` (Android) or an invalid-client error (iOS) until steps 2–3 are done for each variant you build; Supabase rejects the token until step 4 is done.
 
-1. **Web client ID**: Firebase console → Authentication → Sign-in method → Google → enabled. Copy the *Web client ID* shown there into `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID`. It has to belong to the same project as the `EXPO_PUBLIC_FIREBASE_*` config.
-2. **Android apps**: Firebase console → Project settings → Your apps, one Android app per package in §1 (`com.trainingplantogether_cli` probably exists already, add `.dev` and `.preview`). Add these SHA-1 and SHA-256 fingerprints:
+1. **Supabase project**: schema changes only through `supabase/migrations` (`npx supabase db push` after `npx supabase test db`), then regenerate `app/lib/supabase/database.types.ts`. Auth → Email: confirmations on, minimum password length 8. Run the Security and Performance Advisors after schema changes.
+2. **Android OAuth clients**: Google Cloud console (the project that owns the web client) → APIs & Services → Credentials → create one client of type *Android* per package in §1 with these SHA-1 fingerprints:
    - production: the **Play App Signing key** (Play Console → App signing → "App signing key certificate"), the **upload key** (EAS: `eas credentials` → Android → production), and the old debug key above while it is still in use;
    - development and preview: the EAS keystore of that profile (`eas credentials` → Android → development / preview). For local `expo run:android` debug builds, also add `~/.android/debug.keystore` (`keytool -list -v -keystore ~/.android/debug.keystore -storepass android`).
-   Firebase then creates the matching Android OAuth clients. The JS SDK doesn't need `google-services.json`, so don't download it into the repo.
-3. **iOS apps**: one iOS app per bundle ID in §1. For each, Google Cloud console → APIs & Services → Credentials → the "iOS client" OAuth client (Firebase creates it when you add the iOS app, or create one of type iOS with that bundle ID). Put its client ID into `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID` in the matching EAS environment. `GoogleService-Info.plist` isn't needed.
-4. **OAuth consent screen**: make sure it is published (not "Testing"), or add testers' accounts.
-5. **Remove leftovers**: the old `google-services.json` in git history at `ee75ad7` isn't used any more.
+   No `google-services.json` is needed.
+3. **iOS OAuth clients**: one client of type *iOS* per bundle ID in §1. Put its client ID into `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID` in the matching EAS environment. No `GoogleService-Info.plist` is needed.
+4. **Supabase Google provider**: Supabase → Authentication → Providers → Google → enabled. *Client IDs*: the web client ID and every iOS client ID, comma-separated (web first). *Client secret*: the web client's secret. Turn on *Skip nonce check* (the native iOS SDK sets a nonce the app can't read). Locally the same values come from `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID` / `..._SECRET` (`supabase/config.toml`).
+5. **OAuth consent screen**: make sure it is published (not "Testing"), or add testers' accounts.
+6. **Leftovers**: the Firebase project is no longer used by the app (only by `admin/` until it moves). Its Google Cloud project stays — it owns the OAuth clients.
 
 ## 6. Native config is generated
 
