@@ -3,14 +3,12 @@ import { AppState, Vibration } from 'react-native'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 
 import useSelectedWorkout from './use-selected-workout'
+import { useSessionUserId } from '@stores/session/use-session-store'
+import useFinishSession from '@services/sessions/use-finish-session'
+import buildSetLogs from '@screens/playing-screen/build-set-logs'
+import { createUuid } from '@platform/uuid'
 import { useSettingsStore } from '@stores/settings/use-settings-store'
-import {
-  AppNavigationType,
-  PlayingRouteParams,
-  SelectedExerciseType,
-  SelectedWorkoutType,
-  WorkoutType,
-} from '@utils/types'
+import { AppNavigationType, PlayingRouteParams, SelectedExerciseType, SelectedWorkoutType } from '@utils/types'
 import { SOUND_CUE_DURATION_MS, VIBRATION } from '@utils/constants'
 import useTTS from './use-tts'
 import { createSoundPlayer, SoundPlayer } from '@platform/audio'
@@ -50,11 +48,15 @@ type PlayingType = typeof initialPlaying
 export default function usePlaying() {
   const onSay = useTTS()
   const { params } = useRoute<RouteProp<Record<string, PlayingRouteParams>, string>>()
-  const { workout, onSaveWorkout } = useSelectedWorkout({
+  const { workout } = useSelectedWorkout({
     workoutId: params?.workoutId,
     planId: params?.planId,
   })
   const selectedWorkout: SelectedWorkoutType | null = workout
+  const userId = useSessionUserId()
+  const { mutate: finishSession } = useFinishSession()
+  const sessionIdRef = useRef<string>(createUuid())
+  const startedAtRef = useRef<string>(new Date().toISOString())
   const navigation = useNavigation<AppNavigationType>()
   const isVibration = useSettingsStore(state => state.isVibration)
   const sound = useSettingsStore(state => state.sound)
@@ -100,52 +102,26 @@ export default function usePlaying() {
     [setPlayingWorkout]
   )
 
-  const onWorkoutSaveResult = useCallback(
-    (newExercise: SelectedExerciseType) => {
-      const newWorkout: WorkoutType = {
-        ...selectedWorkout,
-        exercises: selectedWorkout?.exercises
-          .map(ex => (ex.isVisible ? playingWorkout.exercises.find(pEx => pEx.uid === ex.uid) : ex))
-          .map(ex => (ex.uid === newExercise.uid ? newExercise : ex))
-          .map(ex => ({
-            ...ex,
-            approaches: ex.approaches.map(ap => ({
-              weight: ap.currentWeight === undefined ? ap.weight : ap.currentWeight,
-              repeats: ap.currentRepeats === undefined ? ap.repeats : ap.currentRepeats,
-            })),
-          })),
+  const onApproachUpdate = useCallback(() => {
+    setExercise(p => {
+      const newExercise = {
+        ...p,
+        approaches: p.approaches.map((ap, idx) =>
+          idx + 1 === playing.lap
+            ? {
+                ...ap,
+                currentRepeats,
+                currentWeight,
+              }
+            : ap
+        ),
       }
-      onSaveWorkout(newWorkout)
-    },
-    [selectedWorkout, playingWorkout, onSaveWorkout]
-  )
+      onChangePlayingWorkout(newExercise)
+      return newExercise
+    })
+  }, [playing.lap, currentRepeats, currentWeight, onChangePlayingWorkout])
 
-  const onApproachUpdate = useCallback(
-    (isSaveData = false) => {
-      setExercise(p => {
-        const newExercise = {
-          ...p,
-          approaches: p.approaches.map((ap, idx) =>
-            idx + 1 === playing.lap
-              ? {
-                  ...ap,
-                  currentRepeats,
-                  currentWeight,
-                }
-              : ap
-          ),
-        }
-        if (isSaveData) onWorkoutSaveResult(newExercise)
-        onChangePlayingWorkout(newExercise)
-        return newExercise
-      })
-    },
-    [playing.lap, currentRepeats, currentWeight, onWorkoutSaveResult, onChangePlayingWorkout]
-  )
-
-  const onSaveResult = useCallback(() => {
-    onApproachUpdate(true)
-  }, [onApproachUpdate])
+  const onRecordResult = useCallback(() => onApproachUpdate(), [onApproachUpdate])
 
   const onChangeTimer = useCallback(
     (isPrev = false) => {
@@ -250,6 +226,32 @@ export default function usePlaying() {
   // player is; the clock tracks *when* the current segment started, so remaining time is derived
   // from Date.now() and survives the JS thread being suspended (locked screen / background).
   const isTheLastOneComplete = isWaitForSubmit && isTheLastOne
+
+  const onFinishWorkout = useCallback(
+    (effortRating?: number) => {
+      if (!userId || !selectedWorkout) return
+      const finishedAt = new Date().toISOString()
+      finishSession({
+        session: {
+          id: sessionIdRef.current,
+          workoutId: selectedWorkout.uid,
+          planId: params?.planId,
+          workoutName: selectedWorkout.name,
+          startedAt: startedAtRef.current,
+          finishedAt,
+          effortRating,
+        },
+        sets: buildSetLogs({
+          exercises: playingWorkout.exercises,
+          position: playing,
+          isComplete: isTheLastOneComplete,
+          loggedAt: finishedAt,
+          createId: createUuid,
+        }),
+      })
+    },
+    [userId, selectedWorkout, finishSession, params?.planId, playingWorkout.exercises, playing, isTheLastOneComplete]
+  )
   const segments = useMemo<Segment[]>(() => buildSegments(playingWorkout.exercises), [playingWorkout.exercises])
   const segmentIndex = useMemo(
     () => findSegmentIndex(segments, playing.idx, playing.lap),
@@ -406,7 +408,8 @@ export default function usePlaying() {
     onPrevious,
     onTogglePlay,
     onTimerComplete,
-    onSaveResult,
+    onRecordResult,
+    onFinishWorkout,
     onReload,
     setCurrentRepeats,
     setCurrentWeight,

@@ -37,6 +37,22 @@ env:
 - assertVisible:
     id: playing.screen
 - takeScreenshot: e2e-playing-after-30s
+# Finished in time: save the session with an effort rating; the app goes back to the workout.
+- runFlow:
+    when:
+      visible:
+        id: playing.saveResult
+    commands:
+      - tapOn:
+          id: playing.saveResult
+      - tapOn:
+          id: effortRating.option3
+      - tapOn:
+          id: appModal.confirm
+      - extendedWaitUntil:
+          visible:
+            id: workout.start
+          timeout: 10000
 # Pause if still running, then leave the screen.
 - runFlow:
     when:

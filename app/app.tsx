@@ -19,10 +19,12 @@ import { statusBarStyleFor } from '@theme/navigation-theme'
 import { asyncStoragePersister, queryClient } from '@lib/query-client'
 import { registerWorkoutsMutationDefaults } from '@services/workouts/mutation-defaults'
 import { registerPlansMutationDefaults } from '@services/plans/mutation-defaults'
+import { registerSessionsMutationDefaults } from '@services/sessions/mutation-defaults'
 import styles from './app.styles'
 
 registerWorkoutsMutationDefaults(queryClient)
 registerPlansMutationDefaults(queryClient)
+registerSessionsMutationDefaults(queryClient)
 
 if (!globalThis.btoa) globalThis.btoa = encode
 if (!globalThis.atob) globalThis.atob = decode
