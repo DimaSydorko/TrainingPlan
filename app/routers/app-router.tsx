@@ -96,6 +96,7 @@ export default function AppRouter() {
         screenOptions={{
           headerShown: false,
           sceneStyle: { backgroundColor: colors.background },
+          drawerPosition: 'right',
           drawerStyle: { backgroundColor: colors.surfaceElevated },
           drawerActiveTintColor: colors.accent,
           drawerInactiveTintColor: colors.inverse,

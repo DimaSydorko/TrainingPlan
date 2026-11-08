@@ -28,8 +28,15 @@ export default memo(function GreetingHeader({ onProfilePress }: GreetingHeaderPr
   const date = now.toLocaleDateString(i18n.language, HOME_DATE_FORMAT)
 
   return (
-    <Stack preset='spaceBetween' style={styles.container}>
-      <MenuButton />
+    <Stack preset='spaceBetween' gap='md' style={styles.container}>
+      <TouchableOpacity
+        testID='home.profile'
+        onPress={onProfilePress}
+        accessibilityRole='button'
+        accessibilityLabel={user?.displayName}
+      >
+        <UserImage name={user?.displayName ?? ''} photoUrl={user?.photoURL ?? undefined} />
+      </TouchableOpacity>
       <View style={styles.greeting}>
         <AppText variant='body' tone='secondary'>
           {t(getGreetingKey(now.getHours()))},
@@ -41,9 +48,7 @@ export default memo(function GreetingHeader({ onProfilePress }: GreetingHeaderPr
           {date}
         </AppText>
       </View>
-      <TouchableOpacity testID='home.profile' onPress={onProfilePress}>
-        <UserImage name={user?.displayName ?? ''} photoUrl={user?.photoURL ?? undefined} />
-      </TouchableOpacity>
+      <MenuButton />
     </Stack>
   )
 })
